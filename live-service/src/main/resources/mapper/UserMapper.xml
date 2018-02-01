@@ -45,8 +45,8 @@
       )
     values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR}, 
-      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=DATETIME},
-      #{updateTime,jdbcType=DATETIME}, #{lastLoginTime,jdbcType=DATETIME}, #{userIp,jdbcType=VARCHAR}
+      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR}
       )
     <selectKey resultType="java.lang.Long" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id

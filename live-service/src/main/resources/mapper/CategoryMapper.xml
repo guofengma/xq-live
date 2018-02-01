@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.live.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.xq.live.model.Category">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_code" jdbcType="VARCHAR" property="categoryCode" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="category_parent_id" jdbcType="BIGINT" property="categoryParentId" />
+    <result column="category_description" jdbcType="VARCHAR" property="categoryDescription" />
+    <result column="category_keyword" jdbcType="VARCHAR" property="categoryKeyword" />
+    <result column="category_is_leaf" jdbcType="TINYINT" property="categoryIsLeaf" />
+    <result column="back_operator_id" jdbcType="VARCHAR" property="backOperatorId" />
+    <result column="category_level" jdbcType="SMALLINT" property="categoryLevel" />
+    <result column="list_order" jdbcType="INTEGER" property="listOrder" />
+    <result column="category_search_name" jdbcType="VARCHAR" property="categorySearchName" />
+    <result column="category_seo_title" jdbcType="VARCHAR" property="categorySeoTitle" />
+    <result column="category_seo_keyword" jdbcType="VARCHAR" property="categorySeoKeyword" />
+    <result column="category_seo_description" jdbcType="VARCHAR" property="categorySeoDescription" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="forum_id" jdbcType="BIGINT" property="forumId" />
+    <result column="is_visible" jdbcType="TINYINT" property="isVisible" />
+    <result column="data_exchange_flag" jdbcType="TINYINT" property="dataExchangeFlag" />
+    <result column="search_visible" jdbcType="TINYINT" property="searchVisible" />
+    <result column="landing_page" jdbcType="VARCHAR" property="landingPage" />
+    <result column="can_tran_order_limit_price" jdbcType="DECIMAL" property="canTranOrderLimitPrice" />
+    <result column="can_tran_order_limit_weigth" jdbcType="DECIMAL" property="canTranOrderLimitWeigth" />
+    <result column="rebate" jdbcType="DECIMAL" property="rebate" />
+    <result column="quality_assurance_day_percent" jdbcType="DECIMAL" property="qualityAssuranceDayPercent" />
+    <result column="days_on_way_trans" jdbcType="SMALLINT" property="daysOnWayTrans" />
+    <result column="smax_day" jdbcType="INTEGER" property="smaxDay" />
+    <result column="smin_day" jdbcType="INTEGER" property="sminDay" />
+    <result column="sale_trend_modulus" jdbcType="DECIMAL" property="saleTrendModulus" />
+    <result column="category_contacter_email" jdbcType="VARCHAR" property="categoryContacterEmail" />
+    <result column="is_sent" jdbcType="TINYINT" property="isSent" />
+    <result column="is_must_invoice" jdbcType="TINYINT" property="isMustInvoice" />
+    <result column="invoice_update_flag" jdbcType="TINYINT" property="invoiceUpdateFlag" />
+    <result column="delivery_partition_id" jdbcType="BIGINT" property="deliveryPartitionId" />
+    <result column="seprate_so_update_flag" jdbcType="TINYINT" property="seprateSoUpdateFlag" />
+    <result column="update_operator_id" jdbcType="BIGINT" property="updateOperatorId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="show_guide_num" jdbcType="BIGINT" property="showGuideNum" />
+    <result column="brand_order" jdbcType="BIGINT" property="brandOrder" />
+    <result column="brand_visible" jdbcType="TINYINT" property="brandVisible" />
+    <result column="price_order" jdbcType="BIGINT" property="priceOrder" />
+    <result column="price_visible" jdbcType="TINYINT" property="priceVisible" />
+    <result column="max_cancel_day" jdbcType="BIGINT" property="maxCancelDay" />
+    <result column="max_barter_day" jdbcType="BIGINT" property="maxBarterDay" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="sby_rate" jdbcType="DECIMAL" property="sbyRate" />
+    <result column="attr_lock_status" jdbcType="SMALLINT" property="attrLockStatus" />
+    <result column="is_neworold_categoryattr_flag" jdbcType="TINYINT" property="isNeworoldCategoryattrFlag" />
+    <result column="issue_caption" jdbcType="VARCHAR" property="issueCaption" />
+    <result column="issue_pic_url" jdbcType="VARCHAR" property="issuePicUrl" />
+    <result column="is_sby_rate" jdbcType="TINYINT" property="isSbyRate" />
+    <result column="is_fqdelivery_ontimereach" jdbcType="TINYINT" property="isFqdeliveryOntimereach" />
+    <result column="is_onekey_buy" jdbcType="TINYINT" property="isOnekeyBuy" />
+    <result column="full_path" jdbcType="VARCHAR" property="fullPath" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, category_code, category_name, category_parent_id, category_description, category_keyword, 
+    category_is_leaf, back_operator_id, category_level, list_order, category_search_name, 
+    category_seo_title, category_seo_keyword, category_seo_description, is_delete, forum_id, 
+    is_visible, data_exchange_flag, search_visible, landing_page, can_tran_order_limit_price, 
+    can_tran_order_limit_weigth, rebate, quality_assurance_day_percent, days_on_way_trans, 
+    smax_day, smin_day, sale_trend_modulus, category_contacter_email, is_sent, is_must_invoice, 
+    invoice_update_flag, delivery_partition_id, seprate_so_update_flag, update_operator_id, 
+    update_time, show_guide_num, brand_order, brand_visible, price_order, price_visible, 
+    max_cancel_day, max_barter_day, create_time, sby_rate, attr_lock_status, is_neworold_categoryattr_flag, 
+    issue_caption, issue_pic_url, is_sby_rate, is_fqdelivery_ontimereach, is_onekey_buy, 
+    full_path
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from category
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateFullPath" parameterType="com.xq.live.model.Category">
+      update category set full_path = #fullPath# where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List" />   from category
+  </select>
+
+  <insert id="insert" parameterType="com.xq.live.model.Category">
+    insert into category (id, category_code, category_name, 
+      category_parent_id, category_description, category_keyword, 
+      category_is_leaf, back_operator_id, category_level, 
+      list_order, category_search_name, category_seo_title, 
+      category_seo_keyword, category_seo_description, 
+      is_delete, forum_id, is_visible, 
+      data_exchange_flag, search_visible, landing_page, 
+      can_tran_order_limit_price, can_tran_order_limit_weigth, 
+      rebate, quality_assurance_day_percent, days_on_way_trans, 
+      smax_day, smin_day, sale_trend_modulus, 
+      category_contacter_email, is_sent, is_must_invoice, 
+      invoice_update_flag, delivery_partition_id, 
+      seprate_so_update_flag, update_operator_id, update_time, 
+      show_guide_num, brand_order, brand_visible, 
+      price_order, price_visible, max_cancel_day, 
+      max_barter_day, create_time, sby_rate, 
+      attr_lock_status, is_neworold_categoryattr_flag, 
+      issue_caption, issue_pic_url, is_sby_rate, 
+      is_fqdelivery_ontimereach, is_onekey_buy, full_path
+      )
+    values (#{id,jdbcType=BIGINT}, #{categoryCode,jdbcType=VARCHAR}, #{categoryName,jdbcType=VARCHAR}, 
+      #{categoryParentId,jdbcType=BIGINT}, #{categoryDescription,jdbcType=VARCHAR}, #{categoryKeyword,jdbcType=VARCHAR}, 
+      #{categoryIsLeaf,jdbcType=TINYINT}, #{backOperatorId,jdbcType=VARCHAR}, #{categoryLevel,jdbcType=SMALLINT}, 
+      #{listOrder,jdbcType=INTEGER}, #{categorySearchName,jdbcType=VARCHAR}, #{categorySeoTitle,jdbcType=VARCHAR}, 
+      #{categorySeoKeyword,jdbcType=VARCHAR}, #{categorySeoDescription,jdbcType=VARCHAR}, 
+      #{isDelete,jdbcType=TINYINT}, #{forumId,jdbcType=BIGINT}, #{isVisible,jdbcType=TINYINT}, 
+      #{dataExchangeFlag,jdbcType=TINYINT}, #{searchVisible,jdbcType=TINYINT}, #{landingPage,jdbcType=VARCHAR}, 
+      #{canTranOrderLimitPrice,jdbcType=DECIMAL}, #{canTranOrderLimitWeigth,jdbcType=DECIMAL}, 
+      #{rebate,jdbcType=DECIMAL}, #{qualityAssuranceDayPercent,jdbcType=DECIMAL}, #{daysOnWayTrans,jdbcType=SMALLINT}, 
+      #{smaxDay,jdbcType=INTEGER}, #{sminDay,jdbcType=INTEGER}, #{saleTrendModulus,jdbcType=DECIMAL}, 
+      #{categoryContacterEmail,jdbcType=VARCHAR}, #{isSent,jdbcType=TINYINT}, #{isMustInvoice,jdbcType=TINYINT}, 
+      #{invoiceUpdateFlag,jdbcType=TINYINT}, #{deliveryPartitionId,jdbcType=BIGINT}, 
+      #{seprateSoUpdateFlag,jdbcType=TINYINT}, #{updateOperatorId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{showGuideNum,jdbcType=BIGINT}, #{brandOrder,jdbcType=BIGINT}, #{brandVisible,jdbcType=TINYINT}, 
+      #{priceOrder,jdbcType=BIGINT}, #{priceVisible,jdbcType=TINYINT}, #{maxCancelDay,jdbcType=BIGINT}, 
+      #{maxBarterDay,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{sbyRate,jdbcType=DECIMAL}, 
+      #{attrLockStatus,jdbcType=SMALLINT}, #{isNeworoldCategoryattrFlag,jdbcType=TINYINT}, 
+      #{issueCaption,jdbcType=VARCHAR}, #{issuePicUrl,jdbcType=VARCHAR}, #{isSbyRate,jdbcType=TINYINT}, 
+      #{isFqdeliveryOntimereach,jdbcType=TINYINT}, #{isOnekeyBuy,jdbcType=TINYINT}, #{fullPath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xq.live.model.Category">
+    insert into category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="categoryCode != null">
+        category_code,
+      </if>
+      <if test="categoryName != null">
+        category_name,
+      </if>
+      <if test="categoryParentId != null">
+        category_parent_id,
+      </if>
+      <if test="categoryDescription != null">
+        category_description,
+      </if>
+      <if test="categoryKeyword != null">
+        category_keyword,
+      </if>
+      <if test="categoryIsLeaf != null">
+        category_is_leaf,
+      </if>
+      <if test="backOperatorId != null">
+        back_operator_id,
+      </if>
+      <if test="categoryLevel != null">
+        category_level,
+      </if>
+      <if test="listOrder != null">
+        list_order,
+      </if>
+      <if test="categorySearchName != null">
+        category_search_name,
+      </if>
+      <if test="categorySeoTitle != null">
+        category_seo_title,
+      </if>
+      <if test="categorySeoKeyword != null">
+        category_seo_keyword,
+      </if>
+      <if test="categorySeoDescription != null">
+        category_seo_description,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="forumId != null">
+        forum_id,
+      </if>
+      <if test="isVisible != null">
+        is_visible,
+      </if>
+      <if test="dataExchangeFlag != null">
+        data_exchange_flag,
+      </if>
+      <if test="searchVisible != null">
+        search_visible,
+      </if>
+      <if test="landingPage != null">
+        landing_page,
+      </if>
+      <if test="canTranOrderLimitPrice != null">
+        can_tran_order_limit_price,
+      </if>
+      <if test="canTranOrderLimitWeigth != null">
+        can_tran_order_limit_weigth,
+      </if>
+      <if test="rebate != null">
+        rebate,
+      </if>
+      <if test="qualityAssuranceDayPercent != null">
+        quality_assurance_day_percent,
+      </if>
+      <if test="daysOnWayTrans != null">
+        days_on_way_trans,
+      </if>
+      <if test="smaxDay != null">
+        smax_day,
+      </if>
+      <if test="sminDay != null">
+        smin_day,
+      </if>
+      <if test="saleTrendModulus != null">
+        sale_trend_modulus,
+      </if>
+      <if test="categoryContacterEmail != null">
+        category_contacter_email,
+      </if>
+      <if test="isSent != null">
+        is_sent,
+      </if>
+      <if test="isMustInvoice != null">
+        is_must_invoice,
+      </if>
+      <if test="invoiceUpdateFlag != null">
+        invoice_update_flag,
+      </if>
+      <if test="deliveryPartitionId != null">
+        delivery_partition_id,
+      </if>
+      <if test="seprateSoUpdateFlag != null">
+        seprate_so_update_flag,
+      </if>
+      <if test="updateOperatorId != null">
+        update_operator_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="showGuideNum != null">
+        show_guide_num,
+      </if>
+      <if test="brandOrder != null">
+        brand_order,
+      </if>
+      <if test="brandVisible != null">
+        brand_visible,
+      </if>
+      <if test="priceOrder != null">
+        price_order,
+      </if>
+      <if test="priceVisible != null">
+        price_visible,
+      </if>
+      <if test="maxCancelDay != null">
+        max_cancel_day,
+      </if>
+      <if test="maxBarterDay != null">
+        max_barter_day,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="sbyRate != null">
+        sby_rate,
+      </if>
+      <if test="attrLockStatus != null">
+        attr_lock_status,
+      </if>
+      <if test="isNeworoldCategoryattrFlag != null">
+        is_neworold_categoryattr_flag,
+      </if>
+      <if test="issueCaption != null">
+        issue_caption,
+      </if>
+      <if test="issuePicUrl != null">
+        issue_pic_url,
+      </if>
+      <if test="isSbyRate != null">
+        is_sby_rate,
+      </if>
+      <if test="isFqdeliveryOntimereach != null">
+        is_fqdelivery_ontimereach,
+      </if>
+      <if test="isOnekeyBuy != null">
+        is_onekey_buy,
+      </if>
+      <if test="fullPath != null">
+        full_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="categoryCode != null">
+        #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryName != null">
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryParentId != null">
+        #{categoryParentId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryDescription != null">
+        #{categoryDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryKeyword != null">
+        #{categoryKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryIsLeaf != null">
+        #{categoryIsLeaf,jdbcType=TINYINT},
+      </if>
+      <if test="backOperatorId != null">
+        #{backOperatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryLevel != null">
+        #{categoryLevel,jdbcType=SMALLINT},
+      </if>
+      <if test="listOrder != null">
+        #{listOrder,jdbcType=INTEGER},
+      </if>
+      <if test="categorySearchName != null">
+        #{categorySearchName,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoTitle != null">
+        #{categorySeoTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoKeyword != null">
+        #{categorySeoKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoDescription != null">
+        #{categorySeoDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="forumId != null">
+        #{forumId,jdbcType=BIGINT},
+      </if>
+      <if test="isVisible != null">
+        #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="dataExchangeFlag != null">
+        #{dataExchangeFlag,jdbcType=TINYINT},
+      </if>
+      <if test="searchVisible != null">
+        #{searchVisible,jdbcType=TINYINT},
+      </if>
+      <if test="landingPage != null">
+        #{landingPage,jdbcType=VARCHAR},
+      </if>
+      <if test="canTranOrderLimitPrice != null">
+        #{canTranOrderLimitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="canTranOrderLimitWeigth != null">
+        #{canTranOrderLimitWeigth,jdbcType=DECIMAL},
+      </if>
+      <if test="rebate != null">
+        #{rebate,jdbcType=DECIMAL},
+      </if>
+      <if test="qualityAssuranceDayPercent != null">
+        #{qualityAssuranceDayPercent,jdbcType=DECIMAL},
+      </if>
+      <if test="daysOnWayTrans != null">
+        #{daysOnWayTrans,jdbcType=SMALLINT},
+      </if>
+      <if test="smaxDay != null">
+        #{smaxDay,jdbcType=INTEGER},
+      </if>
+      <if test="sminDay != null">
+        #{sminDay,jdbcType=INTEGER},
+      </if>
+      <if test="saleTrendModulus != null">
+        #{saleTrendModulus,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryContacterEmail != null">
+        #{categoryContacterEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="isSent != null">
+        #{isSent,jdbcType=TINYINT},
+      </if>
+      <if test="isMustInvoice != null">
+        #{isMustInvoice,jdbcType=TINYINT},
+      </if>
+      <if test="invoiceUpdateFlag != null">
+        #{invoiceUpdateFlag,jdbcType=TINYINT},
+      </if>
+      <if test="deliveryPartitionId != null">
+        #{deliveryPartitionId,jdbcType=BIGINT},
+      </if>
+      <if test="seprateSoUpdateFlag != null">
+        #{seprateSoUpdateFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateOperatorId != null">
+        #{updateOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showGuideNum != null">
+        #{showGuideNum,jdbcType=BIGINT},
+      </if>
+      <if test="brandOrder != null">
+        #{brandOrder,jdbcType=BIGINT},
+      </if>
+      <if test="brandVisible != null">
+        #{brandVisible,jdbcType=TINYINT},
+      </if>
+      <if test="priceOrder != null">
+        #{priceOrder,jdbcType=BIGINT},
+      </if>
+      <if test="priceVisible != null">
+        #{priceVisible,jdbcType=TINYINT},
+      </if>
+      <if test="maxCancelDay != null">
+        #{maxCancelDay,jdbcType=BIGINT},
+      </if>
+      <if test="maxBarterDay != null">
+        #{maxBarterDay,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sbyRate != null">
+        #{sbyRate,jdbcType=DECIMAL},
+      </if>
+      <if test="attrLockStatus != null">
+        #{attrLockStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="isNeworoldCategoryattrFlag != null">
+        #{isNeworoldCategoryattrFlag,jdbcType=TINYINT},
+      </if>
+      <if test="issueCaption != null">
+        #{issueCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePicUrl != null">
+        #{issuePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isSbyRate != null">
+        #{isSbyRate,jdbcType=TINYINT},
+      </if>
+      <if test="isFqdeliveryOntimereach != null">
+        #{isFqdeliveryOntimereach,jdbcType=TINYINT},
+      </if>
+      <if test="isOnekeyBuy != null">
+        #{isOnekeyBuy,jdbcType=TINYINT},
+      </if>
+      <if test="fullPath != null">
+        #{fullPath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.Category">
+    update category
+    <set>
+      <if test="categoryCode != null">
+        category_code = #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryName != null">
+        category_name = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryParentId != null">
+        category_parent_id = #{categoryParentId,jdbcType=BIGINT},
+      </if>
+      <if test="categoryDescription != null">
+        category_description = #{categoryDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryKeyword != null">
+        category_keyword = #{categoryKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryIsLeaf != null">
+        category_is_leaf = #{categoryIsLeaf,jdbcType=TINYINT},
+      </if>
+      <if test="backOperatorId != null">
+        back_operator_id = #{backOperatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryLevel != null">
+        category_level = #{categoryLevel,jdbcType=SMALLINT},
+      </if>
+      <if test="listOrder != null">
+        list_order = #{listOrder,jdbcType=INTEGER},
+      </if>
+      <if test="categorySearchName != null">
+        category_search_name = #{categorySearchName,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoTitle != null">
+        category_seo_title = #{categorySeoTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoKeyword != null">
+        category_seo_keyword = #{categorySeoKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="categorySeoDescription != null">
+        category_seo_description = #{categorySeoDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="forumId != null">
+        forum_id = #{forumId,jdbcType=BIGINT},
+      </if>
+      <if test="isVisible != null">
+        is_visible = #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="dataExchangeFlag != null">
+        data_exchange_flag = #{dataExchangeFlag,jdbcType=TINYINT},
+      </if>
+      <if test="searchVisible != null">
+        search_visible = #{searchVisible,jdbcType=TINYINT},
+      </if>
+      <if test="landingPage != null">
+        landing_page = #{landingPage,jdbcType=VARCHAR},
+      </if>
+      <if test="canTranOrderLimitPrice != null">
+        can_tran_order_limit_price = #{canTranOrderLimitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="canTranOrderLimitWeigth != null">
+        can_tran_order_limit_weigth = #{canTranOrderLimitWeigth,jdbcType=DECIMAL},
+      </if>
+      <if test="rebate != null">
+        rebate = #{rebate,jdbcType=DECIMAL},
+      </if>
+      <if test="qualityAssuranceDayPercent != null">
+        quality_assurance_day_percent = #{qualityAssuranceDayPercent,jdbcType=DECIMAL},
+      </if>
+      <if test="daysOnWayTrans != null">
+        days_on_way_trans = #{daysOnWayTrans,jdbcType=SMALLINT},
+      </if>
+      <if test="smaxDay != null">
+        smax_day = #{smaxDay,jdbcType=INTEGER},
+      </if>
+      <if test="sminDay != null">
+        smin_day = #{sminDay,jdbcType=INTEGER},
+      </if>
+      <if test="saleTrendModulus != null">
+        sale_trend_modulus = #{saleTrendModulus,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryContacterEmail != null">
+        category_contacter_email = #{categoryContacterEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="isSent != null">
+        is_sent = #{isSent,jdbcType=TINYINT},
+      </if>
+      <if test="isMustInvoice != null">
+        is_must_invoice = #{isMustInvoice,jdbcType=TINYINT},
+      </if>
+      <if test="invoiceUpdateFlag != null">
+        invoice_update_flag = #{invoiceUpdateFlag,jdbcType=TINYINT},
+      </if>
+      <if test="deliveryPartitionId != null">
+        delivery_partition_id = #{deliveryPartitionId,jdbcType=BIGINT},
+      </if>
+      <if test="seprateSoUpdateFlag != null">
+        seprate_so_update_flag = #{seprateSoUpdateFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateOperatorId != null">
+        update_operator_id = #{updateOperatorId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showGuideNum != null">
+        show_guide_num = #{showGuideNum,jdbcType=BIGINT},
+      </if>
+      <if test="brandOrder != null">
+        brand_order = #{brandOrder,jdbcType=BIGINT},
+      </if>
+      <if test="brandVisible != null">
+        brand_visible = #{brandVisible,jdbcType=TINYINT},
+      </if>
+      <if test="priceOrder != null">
+        price_order = #{priceOrder,jdbcType=BIGINT},
+      </if>
+      <if test="priceVisible != null">
+        price_visible = #{priceVisible,jdbcType=TINYINT},
+      </if>
+      <if test="maxCancelDay != null">
+        max_cancel_day = #{maxCancelDay,jdbcType=BIGINT},
+      </if>
+      <if test="maxBarterDay != null">
+        max_barter_day = #{maxBarterDay,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sbyRate != null">
+        sby_rate = #{sbyRate,jdbcType=DECIMAL},
+      </if>
+      <if test="attrLockStatus != null">
+        attr_lock_status = #{attrLockStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="isNeworoldCategoryattrFlag != null">
+        is_neworold_categoryattr_flag = #{isNeworoldCategoryattrFlag,jdbcType=TINYINT},
+      </if>
+      <if test="issueCaption != null">
+        issue_caption = #{issueCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="issuePicUrl != null">
+        issue_pic_url = #{issuePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isSbyRate != null">
+        is_sby_rate = #{isSbyRate,jdbcType=TINYINT},
+      </if>
+      <if test="isFqdeliveryOntimereach != null">
+        is_fqdelivery_ontimereach = #{isFqdeliveryOntimereach,jdbcType=TINYINT},
+      </if>
+      <if test="isOnekeyBuy != null">
+        is_onekey_buy = #{isOnekeyBuy,jdbcType=TINYINT},
+      </if>
+      <if test="fullPath != null">
+        full_path = #{fullPath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.model.Category">
+    update category
+    set category_code = #{categoryCode,jdbcType=VARCHAR},
+      category_name = #{categoryName,jdbcType=VARCHAR},
+      category_parent_id = #{categoryParentId,jdbcType=BIGINT},
+      category_description = #{categoryDescription,jdbcType=VARCHAR},
+      category_keyword = #{categoryKeyword,jdbcType=VARCHAR},
+      category_is_leaf = #{categoryIsLeaf,jdbcType=TINYINT},
+      back_operator_id = #{backOperatorId,jdbcType=VARCHAR},
+      category_level = #{categoryLevel,jdbcType=SMALLINT},
+      list_order = #{listOrder,jdbcType=INTEGER},
+      category_search_name = #{categorySearchName,jdbcType=VARCHAR},
+      category_seo_title = #{categorySeoTitle,jdbcType=VARCHAR},
+      category_seo_keyword = #{categorySeoKeyword,jdbcType=VARCHAR},
+      category_seo_description = #{categorySeoDescription,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      forum_id = #{forumId,jdbcType=BIGINT},
+      is_visible = #{isVisible,jdbcType=TINYINT},
+      data_exchange_flag = #{dataExchangeFlag,jdbcType=TINYINT},
+      search_visible = #{searchVisible,jdbcType=TINYINT},
+      landing_page = #{landingPage,jdbcType=VARCHAR},
+      can_tran_order_limit_price = #{canTranOrderLimitPrice,jdbcType=DECIMAL},
+      can_tran_order_limit_weigth = #{canTranOrderLimitWeigth,jdbcType=DECIMAL},
+      rebate = #{rebate,jdbcType=DECIMAL},
+      quality_assurance_day_percent = #{qualityAssuranceDayPercent,jdbcType=DECIMAL},
+      days_on_way_trans = #{daysOnWayTrans,jdbcType=SMALLINT},
+      smax_day = #{smaxDay,jdbcType=INTEGER},
+      smin_day = #{sminDay,jdbcType=INTEGER},
+      sale_trend_modulus = #{saleTrendModulus,jdbcType=DECIMAL},
+      category_contacter_email = #{categoryContacterEmail,jdbcType=VARCHAR},
+      is_sent = #{isSent,jdbcType=TINYINT},
+      is_must_invoice = #{isMustInvoice,jdbcType=TINYINT},
+      invoice_update_flag = #{invoiceUpdateFlag,jdbcType=TINYINT},
+      delivery_partition_id = #{deliveryPartitionId,jdbcType=BIGINT},
+      seprate_so_update_flag = #{seprateSoUpdateFlag,jdbcType=TINYINT},
+      update_operator_id = #{updateOperatorId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      show_guide_num = #{showGuideNum,jdbcType=BIGINT},
+      brand_order = #{brandOrder,jdbcType=BIGINT},
+      brand_visible = #{brandVisible,jdbcType=TINYINT},
+      price_order = #{priceOrder,jdbcType=BIGINT},
+      price_visible = #{priceVisible,jdbcType=TINYINT},
+      max_cancel_day = #{maxCancelDay,jdbcType=BIGINT},
+      max_barter_day = #{maxBarterDay,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      sby_rate = #{sbyRate,jdbcType=DECIMAL},
+      attr_lock_status = #{attrLockStatus,jdbcType=SMALLINT},
+      is_neworold_categoryattr_flag = #{isNeworoldCategoryattrFlag,jdbcType=TINYINT},
+      issue_caption = #{issueCaption,jdbcType=VARCHAR},
+      issue_pic_url = #{issuePicUrl,jdbcType=VARCHAR},
+      is_sby_rate = #{isSbyRate,jdbcType=TINYINT},
+      is_fqdelivery_ontimereach = #{isFqdeliveryOntimereach,jdbcType=TINYINT},
+      is_onekey_buy = #{isOnekeyBuy,jdbcType=TINYINT},
+      full_path = #{fullPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

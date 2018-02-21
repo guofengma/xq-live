@@ -3,15 +3,15 @@
 <mapper namespace="com.xq.live.dao.TopicMapper">
   <resultMap id="BaseResultMap" type="com.xq.live.model.Topic">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="operator_id" jdbcType="BIGINT" property="operatorId" />
-    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, content, create_time, operator_id, operator_name, update_time
+    id, title, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -24,21 +24,21 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.Topic">
-    insert into topic (id, name, content, 
-      create_time, operator_id, operator_name, 
-      update_time)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{operatorId,jdbcType=BIGINT}, #{operatorName,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into topic (title, content,
+      create_time, user_id, user_name,
+      update_time, nick_name)
+    values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+      now(), #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
+      now(), #{nickName,jdbcType=VARCHAR})
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+        select last_insert_id() as id
+    </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.Topic">
     insert into topic
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        name,
+      <if test="title != null">
+        title,
       </if>
       <if test="content != null">
         content,
@@ -46,22 +46,19 @@
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="operatorId != null">
-        operator_id,
+      <if test="userId != null">
+        user_id,
       </if>
-      <if test="operatorName != null">
-        operator_name,
+      <if test="userName != null">
+        user_name,
       </if>
       <if test="updateTime != null">
         update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
       </if>
       <if test="content != null">
         #{content,jdbcType=VARCHAR},
@@ -69,22 +66,25 @@
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="operatorId != null">
-        #{operatorId,jdbcType=BIGINT},
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
       </if>
-      <if test="operatorName != null">
-        #{operatorName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      select last_insert_id() as id
+    </selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.Topic">
     update topic
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
       </if>
       <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
@@ -92,11 +92,20 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="operatorId != null">
-        operator_id = #{operatorId,jdbcType=BIGINT},
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="operatorName != null">
-        operator_name = #{operatorName,jdbcType=VARCHAR},
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="tpStatus != null">
+        tp_status = #{tpStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -106,12 +115,47 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.xq.live.model.Topic">
     update topic
-    set name = #{name,jdbcType=VARCHAR},
+    set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      operator_id = #{operatorId,jdbcType=BIGINT},
-      operator_name = #{operatorName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      user_id = #{userId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="list" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from topic
+    <where>
+      <if test="id != null">
+        id =#{id}
+      </if>
+      <if test="title != null">
+        and title =#{title}
+      </if>
+      <if test="content != null">
+        and content =#{content}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="listTotal" resultType="java.lang.Integer">
+    select count(1)
+    from topic
+    <where>
+      <if test="id != null">
+        id =#{id}
+      </if>
+      <if test="title != null">
+        and title =#{title}
+      </if>
+      <if test="content != null">
+        and content =#{content}
+      </if>
+    </where>
+  </select>
 </mapper>

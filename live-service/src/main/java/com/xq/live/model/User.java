@@ -2,20 +2,24 @@ package com.xq.live.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class User {
     private Long id;
 
+    @NotNull(message = "userName必填")
     private String userName;
 
+    @NotNull(message = "password必填")
     private String password;
 
     private String nickName;
 
-    private Integer iconUrl;
+    private String iconUrl;
 
+    @NotNull(message = "mobile必填")
     private String mobile;
 
     private BigDecimal locationX;
@@ -62,11 +66,11 @@ public class User {
         this.nickName = nickName == null ? null : nickName.trim();
     }
 
-    public Integer getIconUrl() {
+    public String getIconUrl() {
         return iconUrl;
     }
 
-    public void setIconUrl(Integer iconUrl) {
+    public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
     }
 

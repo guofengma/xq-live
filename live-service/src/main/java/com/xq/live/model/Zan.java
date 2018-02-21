@@ -1,30 +1,46 @@
 package com.xq.live.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class Zan extends ZanKey {
-    private Long actId;
+public class Zan {
+    private Long id;
 
-    private Long merchantId;
+    @NotNull(message = "refId必填")
+    private Long refId;
 
+    @NotNull(message = "type点赞类型必填")
+    private Integer type;
+
+    @NotNull(message = "userId必填")
     private Long userId;
+
+    private Byte isDeleted;
 
     private Date createTime;
 
-    public Long getActId() {
-        return actId;
+    public Long getId() {
+        return id;
     }
 
-    public void setActId(Long actId) {
-        this.actId = actId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getMerchantId() {
-        return merchantId;
+    public Long getRefId() {
+        return refId;
     }
 
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
+    public void setRefId(Long refId) {
+        this.refId = refId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Long getUserId() {
@@ -33,6 +49,14 @@ public class Zan extends ZanKey {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Byte getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Byte isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Date getCreateTime() {

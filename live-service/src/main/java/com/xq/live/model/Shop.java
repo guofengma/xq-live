@@ -1,11 +1,14 @@
 package com.xq.live.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class Shop {
     private Long id;
-
+    @NotBlank(message = "shopName必填")
     private String shopName;
 
     private String address;
@@ -16,18 +19,22 @@ public class Shop {
 
     private String indexUrl;
 
+    private String logoUrl;
+
     private String shopInfo;
 
     private BigDecimal locationX;
 
     private BigDecimal locationY;
 
-    private Byte isDelete;
+    private Integer isDeleted;
 
     private String remark;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     public Long getId() {
@@ -102,13 +109,6 @@ public class Shop {
         this.locationY = locationY;
     }
 
-    public Byte getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Byte isDelete) {
-        this.isDelete = isDelete;
-    }
 
     public String getRemark() {
         return remark;
@@ -132,5 +132,21 @@ public class Shop {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.xq.live.model.Vote">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="act_id" jdbcType="BIGINT" property="actId" />
-    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, act_id, merchant_id, user_id, create_time
+    id, act_id, shop_id, user_id, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -22,10 +22,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.Vote">
-    insert into vote (id, act_id, merchant_id, 
+    insert into vote (id, act_id, shop_id,
       user_id, create_time)
-    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT}, 
-      #{userId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
+      #{userId,jdbcType=BIGINT}, now())
+      <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+        select last_insert_id() as id
+      </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.Vote">
     insert into vote
@@ -36,8 +39,8 @@
       <if test="actId != null">
         act_id,
       </if>
-      <if test="merchantId != null">
-        merchant_id,
+      <if test="shopId != null">
+        shop_id,
       </if>
       <if test="userId != null">
         user_id,
@@ -53,8 +56,8 @@
       <if test="actId != null">
         #{actId,jdbcType=BIGINT},
       </if>
-      <if test="merchantId != null">
-        #{merchantId,jdbcType=BIGINT},
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
@@ -70,8 +73,8 @@
       <if test="actId != null">
         act_id = #{actId,jdbcType=BIGINT},
       </if>
-      <if test="merchantId != null">
-        merchant_id = #{merchantId,jdbcType=BIGINT},
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=BIGINT},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
@@ -85,9 +88,24 @@
   <update id="updateByPrimaryKey" parameterType="com.xq.live.model.Vote">
     update vote
     set act_id = #{actId,jdbcType=BIGINT},
-      merchant_id = #{merchantId,jdbcType=BIGINT},
+      shop_id = #{shopId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByInVo">
+    delete from vote
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="shopId != null">
+        and shop_id = #{shopId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+    </where>
+  </delete>
 </mapper>

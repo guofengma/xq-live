@@ -1,21 +1,36 @@
 package com.xq.live.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class Topic {
     private Long id;
 
-    private String name;
+    @NotBlank(message = "title必填")
+    private String title;
 
     private String content;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    private Long operatorId;
+    @NotNull(message = "userId必填")
+    private Long userId;
 
-    private String operatorName;
+    @NotNull(message = "userName必填")
+    private String userName;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    private Integer isDeleted;
+
+    private Integer tpStatus;
+
+    private String nickName;
 
     public Long getId() {
         return id;
@@ -25,12 +40,12 @@ public class Topic {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
     }
 
     public String getContent() {
@@ -49,24 +64,48 @@ public class Topic {
         this.createTime = createTime;
     }
 
-    public Long getOperatorId() {
-        return operatorId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getOperatorName() {
-        return operatorName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName == null ? null : operatorName.trim();
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getUpdateTime() {
         return updateTime;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public Integer getTpStatus() {
+        return tpStatus;
+    }
+
+    public void setTpStatus(Integer tpStatus) {
+        this.tpStatus = tpStatus;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public void setUpdateTime(Date updateTime) {

@@ -1,14 +1,18 @@
 package com.xq.live.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class Vote {
     private Long id;
 
+    @NotNull(message = "actId必填")
     private Long actId;
 
-    private Long merchantId;
+    @NotNull(message = "shopId必填")
+    private Long shopId;
 
+    @NotNull(message = "userId必填")
     private Long userId;
 
     private Date createTime;
@@ -29,14 +33,6 @@ public class Vote {
         this.actId = actId;
     }
 
-    public Long getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -51,5 +47,13 @@ public class Vote {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

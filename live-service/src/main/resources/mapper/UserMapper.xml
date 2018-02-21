@@ -6,7 +6,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="icon_url" jdbcType="INTEGER" property="iconUrl" />
+    <result column="icon_url" jdbcType="VARCHAR" property="iconUrl" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="location_x" jdbcType="DECIMAL" property="locationX" />
     <result column="location_y" jdbcType="DECIMAL" property="locationY" />
@@ -16,11 +16,11 @@
     <result column="user_ip" jdbcType="VARCHAR" property="userIp" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_name, password, nick_name, icon_url, mobile, location_x, location_y, create_time, 
+    id, user_name, password, nick_name, icon_url, mobile, location_x, location_y, create_time,
     update_time, last_login_time, user_ip
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user
     where id = #{id,jdbcType=BIGINT}
@@ -33,18 +33,45 @@
     where user_name = #{userName,jdbcType=VARCHAR}
   </select>
 
+  <select id="list" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+      <where>
+          <if test="id != null ">
+              id=#{id}
+          </if>
+          <if test="userName != null">
+              and user_name = #{userName}
+          </if>
+      </where>
+      limit #{start}, #{rows}
+  </select>
+
+  <select id="listTotal" resultType="java.lang.Integer">
+    select count(1) from user
+    <where>
+        <if test="id != null ">
+            id=#{id}
+        </if>
+        <if test="userName != null">
+            and user_name = #{userName}
+        </if>
+    </where>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.User">
-    insert into user (id, user_name, password, 
-      nick_name, icon_url, mobile, 
-      location_x, location_y, create_time, 
+    insert into user (user_name, password,
+      nick_name, icon_url, mobile,
+      location_x, location_y, create_time,
       update_time, last_login_time, user_ip
       )
-    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
       #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR}
       )
@@ -106,7 +133,7 @@
         #{nickName,jdbcType=VARCHAR},
       </if>
       <if test="iconUrl != null">
-        #{iconUrl,jdbcType=INTEGER},
+        #{iconUrl,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null">
         #{mobile,jdbcType=VARCHAR},
@@ -144,7 +171,7 @@
         nick_name = #{nickName,jdbcType=VARCHAR},
       </if>
       <if test="iconUrl != null">
-        icon_url = #{iconUrl,jdbcType=INTEGER},
+        icon_url = #{iconUrl,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null">
         mobile = #{mobile,jdbcType=VARCHAR},
@@ -175,7 +202,7 @@
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},
-      icon_url = #{iconUrl,jdbcType=INTEGER},
+      icon_url = #{iconUrl,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       location_x = #{locationX,jdbcType=DECIMAL},
       location_y = #{locationY,jdbcType=DECIMAL},
@@ -185,4 +212,5 @@
       user_ip = #{userIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

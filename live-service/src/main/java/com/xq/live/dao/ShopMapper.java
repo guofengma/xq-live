@@ -1,11 +1,16 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.Shop;
+import com.xq.live.vo.in.ShopInVo;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface ShopMapper {
     int deleteByPrimaryKey(Long id);
 
-    Long insert(Shop record);
+    int insert(Shop record);
 
     int insertSelective(Shop record);
 
@@ -14,4 +19,19 @@ public interface ShopMapper {
     int updateByPrimaryKeySelective(Shop record);
 
     int updateByPrimaryKey(Shop record);
+
+    /**
+     * 分页查询列表
+     * @param inVo
+     * @return
+     */
+    List<Shop> list(ShopInVo inVo);
+
+    /**
+     * 查询记录总数
+     * @param inVo
+     * @return
+     */
+    int listTotal(ShopInVo inVo);
+
 }

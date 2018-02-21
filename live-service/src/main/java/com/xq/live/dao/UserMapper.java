@@ -1,10 +1,11 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.User;
+import com.xq.live.vo.in.UserInVo;
 
 import java.util.List;
 
-public interface UserMapper {
+public interface UserMapper{
     int deleteByPrimaryKey(Long id);
 
     Long insert(User record);
@@ -19,5 +20,7 @@ public interface UserMapper {
 
     User loadUserByUserName(String userName);
 
-    List<User> list();
+    List<User> list(UserInVo inVo);
+
+    int listTotal(UserInVo inVo);
 }

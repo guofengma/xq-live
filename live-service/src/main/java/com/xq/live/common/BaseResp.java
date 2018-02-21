@@ -98,4 +98,5 @@ public class BaseResp<T> {
         this.data = data;
         this.currentTime = System.currentTimeMillis();
     }
+
 }

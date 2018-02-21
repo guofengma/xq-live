@@ -1,7 +1,10 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.Vote;
+import com.xq.live.vo.in.VoteInVo;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface VoteMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +17,6 @@ public interface VoteMapper {
     int updateByPrimaryKeySelective(Vote record);
 
     int updateByPrimaryKey(Vote record);
+
+    int deleteByInVo(VoteInVo inVo);
 }

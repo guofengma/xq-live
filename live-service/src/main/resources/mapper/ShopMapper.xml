@@ -8,6 +8,7 @@
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="index_url" jdbcType="VARCHAR" property="indexUrl" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
     <result column="shop_info" jdbcType="VARCHAR" property="shopInfo" />
     <result column="location_x" jdbcType="DECIMAL" property="locationX" />
     <result column="location_y" jdbcType="DECIMAL" property="locationY" />
@@ -17,7 +18,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, shop_name, address, mobile, phone, index_url, shop_info, location_x, location_y, 
+    id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
     is_deleted, remark, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -31,23 +32,22 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.Shop">
-    insert into shop (id, shop_name, address, 
-      mobile, phone, index_url, 
+    insert into shop (shop_name, address,
+      mobile, phone, index_url,logo_url,
       shop_info, location_x, location_y, 
-      is_deleted, remark, create_time,
+      remark, create_time,
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, 
-      #{shopInfo,jdbcType=VARCHAR}, #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, 
-      #{isDeleted,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP})
+    values (#{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+      #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR},
+      #{shopInfo,jdbcType=VARCHAR}, #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL},
+      #{remark,jdbcType=VARCHAR}, now(), now())
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.Shop">
     insert into shop
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="shopName != null">
         shop_name,
       </if>
@@ -62,6 +62,9 @@
       </if>
       <if test="indexUrl != null">
         index_url,
+      </if>
+      <if test="logoUrl != null">
+        logo_url,
       </if>
       <if test="shopInfo != null">
         shop_info,
@@ -86,9 +89,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="shopName != null">
         #{shopName,jdbcType=VARCHAR},
       </if>
@@ -103,6 +103,9 @@
       </if>
       <if test="indexUrl != null">
         #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        #{logoUrl,jdbcType=VARCHAR},
       </if>
       <if test="shopInfo != null">
         #{shopInfo,jdbcType=VARCHAR},
@@ -126,10 +129,14 @@
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.Shop">
     update shop
     <set>
+      update_time = now(),
       <if test="shopName != null">
         shop_name = #{shopName,jdbcType=VARCHAR},
       </if>
@@ -144,6 +151,9 @@
       </if>
       <if test="indexUrl != null">
         index_url = #{indexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="logoUrl != null">
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
       </if>
       <if test="shopInfo != null">
         shop_info = #{shopInfo,jdbcType=VARCHAR},
@@ -160,12 +170,6 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -176,13 +180,41 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       index_url = #{indexUrl,jdbcType=VARCHAR},
+      logo_url = #{logoUrl,jdbcType=VARCHAR},
       shop_info = #{shopInfo,jdbcType=VARCHAR},
       location_x = #{locationX,jdbcType=DECIMAL},
       location_y = #{locationY,jdbcType=DECIMAL},
       is_deleted = #{isDeleted,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="list" parameterType="com.xq.live.model.Shop" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from shop
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="shopName != null">
+        and shop_name = #{shopName}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="listTotal" resultType="java.lang.Integer">
+    select count(1) from shop
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="shopName != null">
+        and shop_name = #{shopName}
+      </if>
+    </where>
+  </select>
 </mapper>

@@ -5,7 +5,11 @@ package com.xq.live.service;/**
  * @create 2018-01-17 17:56
  */
 
+import com.xq.live.common.Pager;
 import com.xq.live.model.Shop;
+import com.xq.live.vo.in.ShopInVo;
+
+import java.util.List;
 
 /**
  * 商家/餐厅service
@@ -40,4 +44,18 @@ public interface ShopService {
      * @return
      */
     public  int deleteShopById(Long id);
+
+    /**
+     * 根据查询条件查询商家列表
+     * @param inVo
+     * @return
+     */
+    Pager<Shop> list(ShopInVo inVo);
+
+    /**
+     * 热门商家
+     * @param inVo
+     * @return
+     */
+    List<Shop> top(ShopInVo inVo);
 }

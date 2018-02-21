@@ -1,6 +1,8 @@
 package com.xq.live.service;
 
+import com.xq.live.common.Pager;
 import com.xq.live.model.User;
+import com.xq.live.vo.in.UserInVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -11,9 +13,16 @@ import java.util.List;
 public interface UserService {
     public User getUserById(@Param("id") Long id);
 
-    public Long insert(User user);
+    public Long add(User user);
 
     public User findByUsername(@Param("userName") String userName);
 
-    public List<User> findAll();
+    public Pager<User> list(UserInVo inVo);
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    public Integer update(User user);
 }

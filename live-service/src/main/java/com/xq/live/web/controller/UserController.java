@@ -1,20 +1,26 @@
 package com.xq.live.web.controller;
 
-import com.xq.live.exception.UsernameIsExitedException;
+import com.xq.live.common.BaseResp;
+import com.xq.live.common.Pager;
+import com.xq.live.common.ResultStatus;
 import com.xq.live.model.User;
 import com.xq.live.service.UserService;
+import com.xq.live.vo.in.UserInVo;
+import com.xq.live.web.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.DigestUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhangpeng32 on 2017/12/14.
+ * 用户信息相关controller
  */
 
 @RestController
@@ -24,57 +30,84 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public User getUserbyId(@PathVariable("id") Long id) {
+    public BaseResp<User> getUserbyId(@PathVariable("id") Long id) {
         User user = user = userService.getUserById(id);
-        return user;
+        return new BaseResp<User>(ResultStatus.SUCCESS, user);
     }
 
-    @RequestMapping(value = "/add/{username}", method = RequestMethod.GET)
-    public Long addUser(@PathVariable("username") String username){
-        User user = new User();
-        user.setUserName(username);
-        user.setPassword("123456");
-        Long id  = userService.insert(user);
-        return id;
+    /**
+     * 新增用户
+     * @param in
+     * @return
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public BaseResp<Long> addUser(@Valid User in, HttpServletRequest request, BindingResult result){
+        if(result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        in.setUserIp(IpUtils.getIpAddr(request));
+        User user = userService.findByUsername(in.getUserName());
+        if(user != null){
+            return new BaseResp<Long>(ResultStatus.error_user_exist);
+        }
+
+        Long id  = userService.add(in);
+        return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
-/*        public UserController(UserRepository myUserRepository,
-                          BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.applicationUserRepository = myUserRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }*/
-
-    @RequestMapping("/userList")
+    /**
+     * 查询用户列表信息
+     * @return
+     */
+    @RequestMapping("/list")
     @ResponseBody
-    public Map<String, Object> userList(){
-        List<User> myUsers = userService.findAll();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("users",myUsers);
-        return map;
+    public BaseResp<Pager<User>> userList(UserInVo inVo){
+        Pager<User> result = userService.list(inVo);
+        return new BaseResp<Pager<User>>(ResultStatus.SUCCESS, result);
     }
 
     /**
      * 该方法是注册用户的方法，默认放开访问控制
-     * @param user
+     * @param in
      */
     @PostMapping("/signup")
-    public void signUp(@RequestBody User user) {
-        User user1 = userService.findByUsername(user.getUserName());
-        if(null != user1){
-            throw new UsernameIsExitedException("用户已经存在~");
+    public BaseResp<Long> signUp(@RequestBody User in) {
+        User user = userService.findByUsername(in.getUserName());
+        if(user != null){
+            return new BaseResp<Long>(ResultStatus.error_user_exist);
         }
-        user.setPassword(DigestUtils.md5DigestAsHex((user.getPassword()).getBytes()));
-        user.setCreateTime(new Date());
-        userService.insert(user);
+//        String pwd = bCryptPasswordEncoder.encode(in.getPassword());
+        in.setPassword(DigestUtils.md5DigestAsHex(in.getPassword().getBytes()));
+        Long id  = userService.add(in);
+        return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
-//    @RequestMapping(value = "/get/{userName}", method = RequestMethod.GET)
-//    public User getUserByName(@PathVariable("userName") String userName){
-//        User user = userService.findByUsername(userName);
-//        return user;
-//    }
+    /**
+     * 根据用户名查询用户信息
+     * @param userName
+     * @return
+     */
+    @RequestMapping(value = "/findUserByName/{userName}", method = RequestMethod.GET)
+    public BaseResp<User> findUserByName(@PathVariable("userName") String userName){
+        User user = userService.findByUsername(userName);
+        return new BaseResp<User>(ResultStatus.SUCCESS, user);
+    }
+
+    /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public BaseResp<Integer> update(User user){
+        Integer result = userService.update(user);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
+    }
 }

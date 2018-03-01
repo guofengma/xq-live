@@ -20,4 +20,21 @@ public class Constants {
     public final static String BUCKET_NAME = "xq-1256079679";
 
     public final static String COS_IMAGE_BASE_PATH = "https://xq-1256079679.file.myqcloud.com";
+
+    /**
+     * 腾讯短信服务常量
+     */
+    public final static int SMS_APP_ID = 1400070009;
+
+    public final static String SMS_APP_KEY = "19f12a3dd8177de5ec27be21b26ff9ee";
+
+    public final static String SMS_NATION_CODE = "86";
+
+    public final static int TEMP_ID_PAID_SUCCESS = 88505;
+
+    /**
+     * 全局域名常量
+     */
+    public final static String DOMAIN_XQ_URL = "http://www.hbxq001.cn";
+
 }

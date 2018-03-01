@@ -1,9 +1,4 @@
-package com.xq.live.web.controller;/**
- * 商家controller
- *
- * @author zhangpeng32
- * @create 2018-01-17 18:01
- */
+package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
@@ -11,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Shop;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.web.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -45,6 +42,22 @@ public class ShopController {
     public BaseResp<Shop> getShopById(@PathVariable(value = "id") Long id) {
         Shop result = shopService.getShopById(id);
         return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 进入商家详细页
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public BaseResp<Shop> detail(@Valid ShopInVo inVo, BindingResult result, HttpServletRequest request){
+        if(result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Shop>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        inVo.setUserIp(IpUtils.getIpAddr(request));
+        Shop shop = shopService.detail(inVo);
+        return new BaseResp<Shop>(ResultStatus.SUCCESS, shop);
     }
 
     /**
@@ -76,7 +89,7 @@ public class ShopController {
     }*/
 
     /**
-     * 删除一条商家记录
+     * 更新一条商家记录
      *
      * @param shop
      * @return
@@ -98,6 +111,11 @@ public class ShopController {
         return new BaseResp<Pager<Shop>>(ResultStatus.SUCCESS, result);
     }
 
+    /**
+     * 排序查热门商家——后续优化
+     * @param inVo
+     * @return
+     */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResp<List<Shop>> top(ShopInVo inVo){
         List<Shop> result = shopService.top(inVo);

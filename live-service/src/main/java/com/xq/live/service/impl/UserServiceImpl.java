@@ -1,7 +1,9 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.UserMapper;
+import com.xq.live.model.AccessLog;
 import com.xq.live.model.User;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private AccessLogMapper accessLogMapper;
 
     @Override
     public User getUserById(@Param("id") Long id) {
@@ -51,6 +57,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer update(User user) {
-        return userMapper.updateByPrimaryKey(user);
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public List<User> top(UserInVo inVo){
+        return userMapper.list(inVo);
+    }
+
+    @Override
+    public User findByUserNameAndPwd(UserInVo inVo){
+        return userMapper.findByUserNameAndPwd(inVo);
+    }
+
+    @Override
+    public Integer updateLoginInfo(User user){
+        Date now = new Date();
+        //1、更新用户表登录ip，登录次数等
+        user.setUpdateTime(now);
+        user.setLastLoginTime(now);
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 }

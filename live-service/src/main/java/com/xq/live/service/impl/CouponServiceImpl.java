@@ -54,4 +54,9 @@ public class CouponServiceImpl implements CouponService {
         }
         return coupon.getId();
     }
+
+    @Override
+    public Coupon getByCouponCode(String couponCode) {
+        return couponMapper.getByCouponCode(couponCode);
+    }
 }

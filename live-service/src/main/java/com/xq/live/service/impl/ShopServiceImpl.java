@@ -6,7 +6,9 @@ package com.xq.live.service.impl;/**
  */
 
 import com.xq.live.common.Pager;
+import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.ShopMapper;
+import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
@@ -27,6 +29,10 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopMapper shopMapper;
+
+
+    @Autowired
+    private AccessLogMapper accessLogMapper;
 
     @Override
     public Shop getShopById(Long id) {
@@ -80,5 +86,35 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public List<Shop> top(ShopInVo inVo){
         return shopMapper.list(inVo);
+    }
+
+    @Override
+    public Shop detail(ShopInVo inVo) {
+        /**
+         * 1、查询用户是否存在访问记录
+         * 2、记录用户访问日志
+         */
+        AccessLog accessLog = new AccessLog();
+        accessLog.setUserId(inVo.getUserId());
+        accessLog.setUserName(inVo.getUserName());
+        accessLog.setUserIp(inVo.getUserIp());
+        accessLog.setSource(inVo.getSourceType());
+        accessLog.setRefId(inVo.getId());
+        accessLog.setBizType(AccessLog.BIZ_TYPE_SHOP_VIEW);
+        int cnt = accessLogMapper.checkRecordExist(accessLog);
+        if(cnt == 0){
+            try {
+                int logCnt = accessLogMapper.insert(accessLog);
+                if(logCnt > 0){
+                    shopMapper.updatePopNum(inVo.getId());  //增加人气数值
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        //3、根据id查询商家信息
+        Shop shop = shopMapper.selectByPrimaryKey(inVo.getId());
+        return shop;
     }
 }

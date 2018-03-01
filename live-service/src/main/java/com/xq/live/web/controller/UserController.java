@@ -4,6 +4,7 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.User;
+import com.xq.live.service.AccessLogService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.IpUtils;
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AccessLogService accessLogService;
 
     /**
      * 根据id查询用户信息
@@ -109,5 +113,39 @@ public class UserController {
     public BaseResp<Integer> update(User user){
         Integer result = userService.update(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 查询用户列表
+     * @return
+     */
+    @RequestMapping(value = "/top", method = RequestMethod.GET)
+    @ResponseBody
+    public BaseResp<List<User>> top(UserInVo inVo){
+        List<User> result = userService.top(inVo);
+        return new BaseResp<List<User>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 登录身份验证
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public BaseResp<User> login(UserInVo inVo, HttpServletRequest request){
+        if(inVo == null || inVo.getUserName() == null || inVo.getPassword() == null){
+            return new BaseResp<User>(ResultStatus.error_para_user_empty);
+        }
+        inVo.setPassword(DigestUtils.md5DigestAsHex(inVo.getPassword().getBytes()));
+        User user = userService.findByUserNameAndPwd(inVo);
+        if(user != null){
+            //更新登录时间，更新登录次数
+            user.setUserIp(IpUtils.getIpAddr(request));
+            user.setLoginTimes(user.getLoginTimes() + 1);   //登录次数+1
+            userService.updateLoginInfo(user);
+        }else{
+            return new BaseResp<User>(ResultStatus.error_para_user_login);
+        }
+        return new BaseResp<User>(ResultStatus.SUCCESS, user);
     }
 }

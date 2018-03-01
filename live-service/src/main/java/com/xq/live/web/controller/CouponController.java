@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Coupon;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.CouponInVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,20 @@ public class CouponController {
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     public BaseResp<Coupon> get(@PathVariable("id") Long id){
         Coupon cp = couponService.get(id);
+        return new BaseResp<Coupon>(ResultStatus.SUCCESS, cp);
+    }
+
+    /**
+     * 根据id查一条记录
+     * @param couponCode
+     * @return
+     */
+    @RequestMapping(value = "/getByCode/{couponCode}", method = RequestMethod.GET)
+    public BaseResp<Coupon> getByCode(@PathVariable("couponCode")String couponCode){
+        if(StringUtils.isEmpty(couponCode)){
+            return new BaseResp<Coupon>(ResultStatus.error_para_coupon_code_empty);
+        }
+        Coupon cp = couponService.getByCouponCode(couponCode);
         return new BaseResp<Coupon>(ResultStatus.SUCCESS, cp);
     }
 

@@ -25,4 +25,20 @@ public interface UserService {
      * @return
      */
     public Integer update(User user);
+
+    public List<User> top(UserInVo inVo);
+
+    /**
+     * 根据入参查询用户信息
+     * @param inVo
+     * @return
+     */
+    public User findByUserNameAndPwd(UserInVo inVo);
+
+    /**
+     * 更新用户登录信息
+     * @param user
+     * @return
+     */
+    public Integer updateLoginInfo(User user);
 }

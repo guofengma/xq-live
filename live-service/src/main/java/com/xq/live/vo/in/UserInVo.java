@@ -9,6 +9,7 @@ package com.xq.live.vo.in;
 public class UserInVo extends BaseInVo {
     private Long id;
     private String userName;
+    private String password;
     private String nickName;
     private Integer sourceType;
     private String userIp;
@@ -51,5 +52,13 @@ public class UserInVo extends BaseInVo {
 
     public void setUserIp(String userIp) {
         this.userIp = userIp;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

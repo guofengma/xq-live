@@ -34,4 +34,11 @@ public interface ShopMapper {
      */
     int listTotal(ShopInVo inVo);
 
+    /**
+     * 更新人气数值
+     * @param id
+     * @return
+     */
+    int updatePopNum(Long id);
+
 }

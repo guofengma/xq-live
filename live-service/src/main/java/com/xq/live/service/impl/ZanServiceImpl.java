@@ -39,4 +39,9 @@ public class ZanServiceImpl implements ZanService {
     public int delete(Long id) {
         return zanMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public int total(ZanInVo inVo) {
+        return zanMapper.total(inVo);
+    }
 }

@@ -24,4 +24,11 @@ public interface ZanMapper {
      * @return
      */
     int deleteZan(ZanInVo inVo);
+
+    /**
+     * 查询点赞总数
+     * @param inVo
+     * @return
+     */
+    public int total(ZanInVo inVo);
 }

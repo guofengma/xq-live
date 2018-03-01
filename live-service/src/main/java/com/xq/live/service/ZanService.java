@@ -32,4 +32,11 @@ public interface ZanService {
      */
     public int delete(Long id);
 
+    /**
+     * 根据refid和type查询点赞总数
+     * @param inVo
+     * @return
+     */
+    public int total(ZanInVo inVo);
+
 }

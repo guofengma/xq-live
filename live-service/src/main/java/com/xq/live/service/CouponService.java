@@ -41,4 +41,11 @@ public interface CouponService {
      * @return
      */
     Long add(Coupon coupon);
+
+    /**
+     * 根据couponCode查询记录
+     * @param couponCode
+     * @return
+     */
+    Coupon getByCouponCode(String couponCode);
 }

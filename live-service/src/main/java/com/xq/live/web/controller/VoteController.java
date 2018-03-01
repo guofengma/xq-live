@@ -1,4 +1,5 @@
-package com.xq.live.web.controller;/**
+package com.xq.live.web.controller;
+/**
  * 投票管理类
  *
  * @author zhangpeng32

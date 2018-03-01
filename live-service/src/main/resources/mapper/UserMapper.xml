@@ -13,11 +13,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="login_times" jdbcType="INTEGER" property="loginTimes" />
     <result column="user_ip" jdbcType="VARCHAR" property="userIp" />
+    <result column="source_type" jdbcType="TINYINT" property="sourceType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, password, nick_name, icon_url, mobile, location_x, location_y, create_time,
-    update_time, last_login_time, user_ip
+    update_time, last_login_time, login_times, user_ip, source_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -68,12 +70,12 @@
     insert into user (user_name, password,
       nick_name, icon_url, mobile,
       location_x, location_y, create_time,
-      update_time, last_login_time, user_ip
+      update_time, last_login_time, user_ip, source_type, login_times
       )
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
       #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR}
+      #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},#{sourceType,jdbcType=TINYINT}, 0
       )
     <selectKey resultType="java.lang.Long" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
@@ -194,6 +196,12 @@
       <if test="userIp != null">
         user_ip = #{userIp,jdbcType=VARCHAR},
       </if>
+      <if test="sourceType != null">
+        source_type = #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="loginTimes != null">
+        login_times = #{loginTimes,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -206,11 +214,20 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       location_x = #{locationX,jdbcType=DECIMAL},
       location_y = #{locationY,jdbcType=DECIMAL},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = now(),
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      user_ip = #{userIp,jdbcType=VARCHAR}
+      login_times = #{loginTimes,jdbcType=INTEGER},
+      user_ip = #{userIp,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <select id="findByUserNameAndPwd" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where user_name = #{userName}
+      and password = #{password}
+    limit 1
+  </select>
 </mapper>

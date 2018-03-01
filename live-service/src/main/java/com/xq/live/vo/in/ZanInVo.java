@@ -15,7 +15,7 @@ public class ZanInVo extends BaseInVo {
     private Long refId;
     @NotNull(message = "type必填")
     private Integer type;
-    @NotNull(message = "userId必填")
+
     private Long userId;
 
     public Long getId() {

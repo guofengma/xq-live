@@ -2,9 +2,11 @@ package com.xq.live.dao;
 
 import com.xq.live.model.User;
 import com.xq.live.vo.in.UserInVo;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface UserMapper{
     int deleteByPrimaryKey(Long id);
 
@@ -23,4 +25,6 @@ public interface UserMapper{
     List<User> list(UserInVo inVo);
 
     int listTotal(UserInVo inVo);
+
+    User findByUserNameAndPwd(UserInVo inVo);
 }

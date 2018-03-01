@@ -13,13 +13,14 @@
     <result column="location_x" jdbcType="DECIMAL" property="locationX" />
     <result column="location_y" jdbcType="DECIMAL" property="locationY" />
     <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="pop_num" jdbcType="INTEGER" property="popNum" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
-    is_deleted, remark, create_time, update_time
+    is_deleted, pop_num, remark, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -217,4 +218,8 @@
       </if>
     </where>
   </select>
+
+  <update id="updatePopNum" parameterType="java.lang.Long">
+    update shop set pop_num = pop_num + 1 where id = #{id}
+  </update>
 </mapper>

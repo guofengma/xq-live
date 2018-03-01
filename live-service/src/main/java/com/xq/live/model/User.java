@@ -34,6 +34,10 @@ public class User {
 
     private String userIp;
 
+    private Integer loginTimes; //记录用户登录次数
+
+    private Integer sourceType;
+
     public Long getId() {
         return id;
     }
@@ -128,5 +132,21 @@ public class User {
 
     public void setUserIp(String userIp) {
         this.userIp = userIp == null ? null : userIp.trim();
+    }
+
+    public Integer getLoginTimes() {
+        return loginTimes;
+    }
+
+    public void setLoginTimes(Integer loginTimes) {
+        this.loginTimes = loginTimes;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 }

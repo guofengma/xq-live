@@ -67,6 +67,11 @@ public class ActInfoController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
     }
 
+    /**
+     * 分页查询活动
+     * @param inVo
+     * @return
+     */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public BaseResp<Pager<ActInfo>> userList(ActInfoInVo inVo){
         Pager<ActInfo> result = actInfoService.list(inVo);

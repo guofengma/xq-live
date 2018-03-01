@@ -106,6 +106,7 @@ public class SoController {
             return new BaseResp<Integer>(ResultStatus.error_so_not_exist);
         }
 
+        inVo.setSkuId(soOut.getSkuId());
         int ret = soService.paid(inVo);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }

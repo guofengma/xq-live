@@ -58,4 +58,12 @@ public interface ShopService {
      * @return
      */
     List<Shop> top(ShopInVo inVo);
+
+    /**
+     * 根据id查询商家详细
+     * @param inVo
+     * @return
+     */
+    public Shop detail(ShopInVo inVo);
+
 }

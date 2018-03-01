@@ -120,4 +120,10 @@
       </if>
     </where>
   </delete>
+
+  <select id="total" resultType="java.lang.Integer">
+    select count(1)
+     from zan z
+     where z.ref_id = #{refId} and z.type = #{type}
+  </select>
 </mapper>

@@ -82,4 +82,20 @@ public class ZanController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
     }*/
 
+    /**
+     * 查询点赞总数
+     * refId与type必填
+     * @param inVo
+     * @param result
+     * @return
+     */
+    @RequestMapping(value = "/total", method = RequestMethod.GET)
+    public BaseResp<Integer> total(@Valid ZanInVo inVo, BindingResult result){
+        if (result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        int total = zanService.total(inVo);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, total);
+    }
 }

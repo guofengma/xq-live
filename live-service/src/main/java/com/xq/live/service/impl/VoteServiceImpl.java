@@ -19,6 +19,12 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     private VoteMapper voteMapper;
+
+    @Override
+    public Vote get(Long id) {
+        return voteMapper.selectByPrimaryKey(id);
+    }
+
     @Override
     public Long add(Vote vote) {
         int ret = voteMapper.insert(vote);
@@ -35,6 +41,6 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public int deleteByInVo(VoteInVo inVo) {
-        return 0;
+        return voteMapper.deleteByInVo(inVo);
     }
 }

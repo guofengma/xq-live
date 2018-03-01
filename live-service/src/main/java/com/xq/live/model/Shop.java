@@ -29,6 +29,8 @@ public class Shop {
 
     private Integer isDeleted;
 
+    private Integer popNum;
+
     private String remark;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -148,5 +150,13 @@ public class Shop {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Integer getPopNum() {
+        return popNum;
+    }
+
+    public void setPopNum(Integer popNum) {
+        this.popNum = popNum;
     }
 }

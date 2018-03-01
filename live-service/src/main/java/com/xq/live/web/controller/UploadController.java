@@ -8,15 +8,15 @@ import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
-import com.xq.live.common.BaseResp;
-import com.xq.live.common.Constants;
-import com.xq.live.common.ImageUtil;
-import com.xq.live.common.ResultStatus;
+import com.xq.live.common.*;
 import com.xq.live.model.User;
+import com.xq.live.service.UploadService;
+import com.xq.live.vo.in.CouponInVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,14 +44,8 @@ import java.util.List;
 public class UploadController {
     private static Logger logger = Logger.getLogger(UploadController.class);
 
-    // 1 初始化用户身份信息(secretId, secretKey)
-    private COSCredentials cred = new BasicCOSCredentials(Constants.ACCESS_KEY, Constants.SECRET_KEY);
-    // 2 设置bucket的区域, COS地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
-    private ClientConfig clientConfig = new ClientConfig(new Region(Constants.REGION_NAME));
-    // 3 生成cos客户端
-    private COSClient cosClient = new COSClient(cred, clientConfig);
-
-    private final String bucketName = Constants.BUCKET_NAME;
+    @Autowired
+    private UploadService uploadService;
 
     /**
      * 单个文件上传
@@ -82,6 +76,7 @@ public class UploadController {
 
     /**
      * 上传多个图片
+     *
      * @param uploadfiles
      * @param user
      * @param request
@@ -109,6 +104,34 @@ public class UploadController {
         }
     }
 
+    @PostMapping("/qrcode")
+    public BaseResp<String> upload(CouponInVo inVo, HttpServletRequest request) {
+        if (inVo == null || inVo.getId() == null) {
+            return new BaseResp<String>(ResultStatus.error_param_empty);
+        }
+        String imagePath = this.getImagePath(request) + "logo.jpg";
+        String destPath = this.getUploadPath(request) + inVo.getCouponCode() + ".jpg";
+        String text = Constants.DOMAIN_XQ_URL + "/cp/get/" + inVo.getId();
+
+        //生成logo图片到destPath
+        try {
+            QRCodeUtil.encode(text, imagePath, destPath, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //上传文件到腾讯云cos--缩放0.8
+        String imgUrl = uploadService.uploadFileToCos(destPath, "coupon");
+        if (StringUtils.isEmpty(imgUrl)) {
+            return null;
+        }
+
+        //删除服务器上临时文件
+        uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
+        return new BaseResp<String>(ResultStatus.SUCCESS, imgUrl);
+    }
+
+
     /**
      * 上传文件到临时目录，并上传到云COS
      *
@@ -129,33 +152,36 @@ public class UploadController {
             path.toFile().getParentFile().mkdirs();
         }
         Files.write(path, bytes);
-        logger.error("图片上传成功："+localPath);
+        logger.error("图片上传成功：" + localPath);
         //图片压缩
         String sourceImgPath = ImageUtil.compressByQuality(localPath, 0.8f);
         String smallImgPath = ImageUtil.compressByQuality(localPath, 0.3f);
 
         //上传文件到腾讯云cos--缩放0.8
-        String imgUrl = uploadFileToCos(sourceImgPath, userName);
+        String imgUrl = uploadService.uploadFileToCos(sourceImgPath, userName);
         if (StringUtils.isEmpty(imgUrl)) {
             return null;
         }
         //上传文件到腾讯云cos--缩放0.3
-        String smallImgUrl = uploadFileToCos(smallImgPath, userName);
+        String smallImgUrl = uploadService.uploadFileToCos(smallImgPath, userName);
         if (StringUtils.isEmpty(smallImgUrl)) {
             return null;
         }
 
         //删除服务器上临时文件
-        deleteTempImage(new Triplet<String, String, String>(localPath, sourceImgPath, smallImgPath));
+        uploadService.deleteTempImage(new Triplet<String, String, String>(localPath, sourceImgPath, smallImgPath));
         return Pair.with(imgUrl, smallImgUrl);
     }
+/*
 
-    /**
+    */
+/**
      * 上传文件到腾讯云cos
      *
      * @param localPath
      * @return
-     */
+     *//*
+
     public String uploadFileToCos(String localPath, String userName) {
         String cosPath = null;
         // 获取文件名
@@ -177,13 +203,15 @@ public class UploadController {
     }
 
 
-    /**
+    */
+/**
      * 删除临时文件
      *
      * @param triplet
      * @return
-     */
-    private boolean deleteTempImage(Triplet<String, String, String> triplet) {
+     *//*
+
+    private boolean d   eleteTempImage(Triplet<String, String, String> triplet) {
         try {
             for (Object tl : triplet) {
                 if (tl == null) {
@@ -200,9 +228,26 @@ public class UploadController {
         }
         return false;
     }
+*/
 
+    /**
+     * 获取上传图片临时目录
+     *
+     * @param request
+     * @return
+     */
     public String getUploadPath(HttpServletRequest request) {
-        return request.getSession().getServletContext().getRealPath("") + File.separator + "WEB-INF" + File.separator + "upload" + File.separator;
+        return Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator;
+    }
+
+    /**
+     * 本地图片路径
+     *
+     * @param request
+     * @return
+     */
+    public String getImagePath(HttpServletRequest request) {
+        return Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator;
     }
 
 }

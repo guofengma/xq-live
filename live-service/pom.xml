@@ -113,11 +113,7 @@
             <artifactId>javase</artifactId>
             <version>3.3.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.swetake</groupId>
-            <artifactId>QRCode</artifactId>
-            <version>1.0</version>
-        </dependency>
+
         <!-- spring-security 和 jwt -->
         <!--		<dependency>
                     <groupId>org.springframework.boot</groupId>

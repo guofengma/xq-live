@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.Hashtable;
-import java.util.Random;
 
 /**
  * 二维码生成工具类

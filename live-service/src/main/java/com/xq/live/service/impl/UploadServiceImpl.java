@@ -10,7 +10,6 @@ import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.xq.live.common.Constants;
 import com.xq.live.service.UploadService;
-import com.xq.live.web.controller.UploadController;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.javatuples.Triplet;

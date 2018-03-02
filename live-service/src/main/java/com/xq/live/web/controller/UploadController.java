@@ -1,13 +1,5 @@
 package com.xq.live.web.controller;
 
-import com.qcloud.cos.COSClient;
-import com.qcloud.cos.ClientConfig;
-import com.qcloud.cos.auth.BasicCOSCredentials;
-import com.qcloud.cos.auth.COSCredentials;
-import com.qcloud.cos.exception.CosClientException;
-import com.qcloud.cos.exception.CosServiceException;
-import com.qcloud.cos.model.PutObjectResult;
-import com.qcloud.cos.region.Region;
 import com.xq.live.common.*;
 import com.xq.live.model.User;
 import com.xq.live.service.UploadService;

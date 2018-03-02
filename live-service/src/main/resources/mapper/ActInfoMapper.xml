@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.live.dao.ActInfoMapper">
+  <resultMap id="BaseResultMap" type="com.xq.live.model.ActInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="act_name" jdbcType="VARCHAR" property="actName" />
+    <result column="act_status" jdbcType="INTEGER" property="actStatus" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="main_pic" jdbcType="VARCHAR" property="mainPic" />
+    <result column="act_url" jdbcType="VARCHAR" property="actUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, act_name, act_status, start_time, end_time, main_pic, act_url, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from act_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from act_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xq.live.model.ActInfo">
+    insert into act_info (act_name, start_time, end_time, create_time, main_pic, act_url)
+    values (#{actName,jdbcType=VARCHAR},
+      #{startTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP},
+      now(),
+      #{mainPic,jdbcType=VARCHAR},
+      #{actUrl,jdbcType=VARCHAR}
+    )
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID() AS ID
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.xq.live.model.ActInfo">
+    insert into act_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="actName != null">
+        act_name,
+      </if>
+      <if test="actStatus != null">
+        act_status,
+      </if>
+      <if test="mainPic != null">
+        main_pic,
+      </if>
+      <if test="actUrl != null">
+        act_url,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="actName != null">
+        #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="actStatus != null">
+        #{actStatus, jdbcType=INTEGER},
+      </if>
+      <if test="mainPic != null">
+        #{actUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="actUrl != null">
+        #{actUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Long" keyProperty="id">
+      SELECT last_insert_id() as id
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.ActInfo">
+    update act_info
+    <set>
+      <if test="actName != null">
+        act_name = #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actStatus != null">
+        act_status = #{actStatus,jdbcType=INTEGER},
+      </if>
+      <if test="actUrl != null">
+        act_url = #{actUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mainPic != null">
+        main_pic = #{mainPic,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.model.ActInfo">
+    update act_info
+    set act_name = #{actName,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="listTotal" resultType="java.lang.Integer">
+    select count(1) from act_info
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="actName != null">
+        act_name = #{actName}
+      </if>
+    </where>
+  </select>
+
+  <select id="list" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_info
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="actName != null">
+        act_name = #{actName}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+</mapper>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.live.dao.SoMapper">
+    <resultMap id="BaseResultMap" type="com.xq.live.model.So">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="so_amount" jdbcType="DECIMAL" property="soAmount"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="pay_type" jdbcType="TINYINT" property="payType"/>
+        <result column="so_status" jdbcType="TINYINT" property="soStatus"/>
+        <result column="so_type" jdbcType="TINYINT" property="soType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="SoOutResultMap" type="com.xq.live.vo.out.SoOut" extends="BaseResultMap">
+        <result column="so_id" jdbcType="BIGINT" property="soId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="sku_code" jdbcType="VARCHAR" property="skuCode"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, so_amount, user_id, user_name, pay_type, so_status, so_type, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from so
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPk" parameterType="java.lang.Long" resultMap="SoOutResultMap">
+        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        from so s
+        inner join so_detail sd on s.id = sd.so_id
+        where s.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="list" resultMap="SoOutResultMap">
+        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        from so s
+        inner join so_detail sd on s.id = sd.so_id
+        <where>
+            <if test="id != null">
+                s.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and s.user_id = #{userId}
+            </if>
+            <if test="soStatus != null">
+                and s.so_status = #{soStatus}
+            </if>
+            <if test="soType != null">
+                and s.so_type = #{soType}
+            </if>
+        </where>
+        order by id desc
+        limit #{start}, #{rows}
+    </select>
+
+    <select id="listTotal" resultType="java.lang.Integer">
+        select count(s.id)
+        from so s
+        inner join so_detail sd on s.id = sd.so_id
+        <where>
+            <if test="id != null">
+                s.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and s.user_id = #{userId}
+            </if>
+            <if test="soStatus != null">
+                and s.so_status = #{soStatus}
+            </if>
+            <if test="soType != null">
+                and s.so_type = #{soType}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+      delete from so   where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.xq.live.model.So">
+        insert into so (so_amount, user_id,
+        user_name, pay_type, so_status,
+        so_type, create_time, update_time
+        )
+        values (#{soAmount,jdbcType=DECIMAL}, #{userId,jdbcType=BIGINT},
+        #{userName,jdbcType=VARCHAR}, #{payType,jdbcType=TINYINT}, #{soStatus,jdbcType=TINYINT},
+        #{soType,jdbcType=TINYINT}, now(), now()
+        )
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            select last_insert_id() as id
+        </selectKey>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.So">
+        update so
+        <set>
+            <if test="soAmount != null">
+                so_amount = #{soAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=TINYINT},
+            </if>
+            <if test="soStatus != null">
+                so_status = #{soStatus,jdbcType=TINYINT},
+            </if>
+            <if test="soType != null">
+                so_type = #{soType,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.xq.live.model.So">
+        update so
+        set so_amount = #{soAmount,jdbcType=DECIMAL},
+          user_id = #{userId,jdbcType=BIGINT},
+          user_name = #{userName,jdbcType=VARCHAR},
+          pay_type = #{payType,jdbcType=TINYINT},
+          so_status = #{soStatus,jdbcType=TINYINT},
+          so_type = #{soType,jdbcType=TINYINT},
+          create_time = #{createTime,jdbcType=TIMESTAMP},
+          update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="paid" parameterType="com.xq.live.vo.in.SoInVo">
+        update so set so_status = #{soStatus,jdbcType=TINYINT},
+            paid_time = now(),
+            update_time = now()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="hexiao" parameterType="com.xq.live.vo.in.SoInVo">
+        update so set so_status = #{soStatus,jdbcType=TINYINT},
+        hx_time = now(),
+        update_time = now()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="cancel" parameterType="com.xq.live.vo.in.SoInVo">
+        update so set so_status = #{soStatus,jdbcType=TINYINT},
+        update_time = now()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

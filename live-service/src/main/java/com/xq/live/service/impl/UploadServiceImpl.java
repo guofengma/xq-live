@@ -9,10 +9,14 @@ import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.xq.live.common.Constants;
+import com.xq.live.common.ImageUtil;
+import com.xq.live.dao.AttachmentMapper;
+import com.xq.live.model.Attachment;
 import com.xq.live.service.UploadService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.javatuples.Triplet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -27,6 +31,10 @@ import java.io.File;
 @Service
 public class UploadServiceImpl implements UploadService {
 
+    @Autowired
+    private AttachmentMapper attachmentMapper;
+
+
     private static Logger logger = Logger.getLogger(UploadServiceImpl.class);
 
     // 1 初始化用户身份信息(secretId, secretKey)
@@ -39,7 +47,30 @@ public class UploadServiceImpl implements UploadService {
     private final String bucketName = Constants.BUCKET_NAME;
 
     @Override
-    public String uploadFileToCos(String localPath, String userName) {
+    public Attachment uploadPicToCos(String localPath,  String name){
+        Attachment attachment = new Attachment();
+        //图片压缩
+        String sourceImgPath = ImageUtil.compressByQuality(localPath, 0.8f);
+        String smallImgPath = ImageUtil.compressByQuality(localPath, 0.3f);
+        String sourceImgRet = this.uploadFileToCos(sourceImgPath, name);      //上传原图到cos，压缩比例0.8
+        if(StringUtils.isNotEmpty(sourceImgRet)){
+            attachment.setPicUrl(sourceImgRet);
+            String smallImgRet = this.uploadFileToCos(smallImgPath, name);      //上传原图到cos，压缩比例0.3
+            if(StringUtils.isNotEmpty(smallImgRet)){
+                attachment.setSmallPicUrl(smallImgRet);
+                //图片都上传成功了，写入attachment文件附件表
+                this.insertAttachment(attachment);
+            }
+        }
+        /**
+         * 删除服务器上的临时图片文件
+         */
+        this.deleteTempImage(new Triplet<String, String, String>(localPath, sourceImgPath, smallImgPath));
+        return attachment;
+    }
+
+    @Override
+    public String uploadFileToCos(String localPath,  String userName) {
         String cosPath = null;
         // 获取文件名
         File file = new File(localPath);
@@ -77,4 +108,19 @@ public class UploadServiceImpl implements UploadService {
         }
         return false;
     }
+
+    /**
+     * 写入数据到attachment表
+     * @param attachment
+     * @return
+     */
+    @Override
+    public Long insertAttachment(Attachment attachment){
+        int ret = attachmentMapper.insert(attachment);
+        if(ret > 0){
+            return attachment.getId();
+        }
+        return null;
+    }
+
 }

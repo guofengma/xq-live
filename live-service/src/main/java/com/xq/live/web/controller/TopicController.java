@@ -1,14 +1,8 @@
-package com.xq.live.web.controller;/**
- * 主题controller
- *
- * @author zhangpeng32
- * @create 2018-01-17 18:56
- */
+package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.dao.TopicMapper;
 import com.xq.live.model.Topic;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
@@ -93,6 +87,7 @@ public class TopicController {
 
     /**
      * 查询热门主题
+     *
      * @param inVo
      * @return
      */

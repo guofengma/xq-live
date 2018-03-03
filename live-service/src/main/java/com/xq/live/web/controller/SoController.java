@@ -106,6 +106,10 @@ public class SoController {
             return new BaseResp<Integer>(ResultStatus.error_so_not_exist);
         }
 
+        //订单不是待支付状态，不能修改支付状态
+        if(soOut.getPayType() != So.SO_STATUS_WAIT_PAID){
+            return new BaseResp<Integer>(ResultStatus.error_so_not_wait_pay);
+        }
         inVo.setSkuId(soOut.getSkuId());
         int ret = soService.paid(inVo);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);

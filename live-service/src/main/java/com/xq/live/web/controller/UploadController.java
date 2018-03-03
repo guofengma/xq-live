@@ -1,6 +1,7 @@
 package com.xq.live.web.controller;
 
 import com.xq.live.common.*;
+import com.xq.live.model.Attachment;
 import com.xq.live.model.User;
 import com.xq.live.service.UploadService;
 import com.xq.live.vo.in.CouponInVo;
@@ -47,21 +48,21 @@ public class UploadController {
      * @return
      */
     @PostMapping("/upload")
-    public BaseResp<Pair<String, String>> upload(@RequestParam("file") MultipartFile uploadFile, User user, HttpServletRequest request) {
+    public BaseResp<Attachment> upload(@RequestParam("file") MultipartFile uploadFile, User user, HttpServletRequest request) {
         if (user == null || StringUtils.isEmpty(user.getUserName())) {
-            return new BaseResp<Pair<String, String>>(ResultStatus.error_para_user_empty);
+            return new BaseResp<Attachment>(ResultStatus.error_para_user_empty);
         }
 
         if (uploadFile.isEmpty()) {
-            return new BaseResp<Pair<String, String>>(ResultStatus.error_file_upload_empty);
+            return new BaseResp<Attachment>(ResultStatus.error_file_upload_empty);
         }
 
         try {
-            Pair<String, String> result = this.uploadToCos(uploadFile, this.getUploadPath(request), user.getUserName());
-            return new BaseResp<Pair<String, String>>(ResultStatus.SUCCESS, result);
+            Attachment result = this.uploadToCos(uploadFile, this.getUploadPath(request), user.getUserName());
+            return new BaseResp<Attachment>(ResultStatus.SUCCESS, result);
         } catch (IOException e) {
             e.printStackTrace();
-            return new BaseResp<Pair<String, String>>(ResultStatus.error_file_upload_error);
+            return new BaseResp<Attachment>(ResultStatus.error_file_upload_error);
         }
     }
 
@@ -75,30 +76,30 @@ public class UploadController {
      * @return
      */
     @PostMapping("/upload/multi")
-    public BaseResp<List<Pair<String, String>>> upload(@RequestParam("file") MultipartFile[] uploadfiles, User user, HttpServletRequest request) {
+    public BaseResp<List<Attachment>> upload(@RequestParam("file") MultipartFile[] uploadfiles, User user, HttpServletRequest request) {
         if (user == null || StringUtils.isEmpty(user.getUserName())) {
-            return new BaseResp<List<Pair<String, String>>>(ResultStatus.error_para_user_empty);
+            return new BaseResp<List<Attachment>>(ResultStatus.error_para_user_empty);
         }
 
         if (uploadfiles.length == 0) {
-            return new BaseResp<List<Pair<String, String>>>(ResultStatus.error_file_upload_empty);
+            return new BaseResp<List<Attachment>>(ResultStatus.error_file_upload_empty);
         }
-        List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+        List<Attachment> result = new ArrayList<Attachment>();
         try {
             for (MultipartFile uploadFile : uploadfiles) {
-                Pair<String, String> p = this.uploadToCos(uploadFile, this.getUploadPath(request), user.getUserName());
+                Attachment p = this.uploadToCos(uploadFile, this.getUploadPath(request), user.getUserName());
                 result.add(p);
             }
-            return new BaseResp<List<Pair<String, String>>>(ResultStatus.SUCCESS, result);
+            return new BaseResp<List<Attachment>>(ResultStatus.SUCCESS, result);
         } catch (IOException e) {
             e.printStackTrace();
-            return new BaseResp<List<Pair<String, String>>>(ResultStatus.error_file_upload_error);
+            return new BaseResp<List<Attachment>>(ResultStatus.error_file_upload_error);
         }
     }
 
     @PostMapping("/qrcode")
     public BaseResp<String> upload(CouponInVo inVo, HttpServletRequest request) {
-        if (inVo == null || inVo.getId() == null) {
+        if (inVo == null || inVo.getId() == null || StringUtils.isEmpty(inVo.getCouponCode())) {
             return new BaseResp<String>(ResultStatus.error_param_empty);
         }
         String imagePath = this.getImagePath(request) + "logo.jpg";
@@ -133,7 +134,7 @@ public class UploadController {
      * @return
      * @throws IOException
      */
-    private Pair<String, String> uploadToCos(MultipartFile file, String uploadPath, String userName) throws IOException {
+    private Attachment uploadToCos(MultipartFile file, String uploadPath, String userName) throws IOException {
         if (file.isEmpty()) {
             return null;
         }
@@ -144,30 +145,18 @@ public class UploadController {
             path.toFile().getParentFile().mkdirs();
         }
         Files.write(path, bytes);
-        logger.error("图片上传成功：" + localPath);
-        //图片压缩
-        String sourceImgPath = ImageUtil.compressByQuality(localPath, 0.8f);
-        String smallImgPath = ImageUtil.compressByQuality(localPath, 0.3f);
+        logger.error("图片上传到服务器成功：" + localPath);
 
-        //上传文件到腾讯云cos--缩放0.8
-        String imgUrl = uploadService.uploadFileToCos(sourceImgPath, userName);
-        if (StringUtils.isEmpty(imgUrl)) {
-            return null;
+        Attachment result = uploadService.uploadPicToCos(localPath, userName);
+        if (result != null && result.getId() != null) {
+            return result;
         }
-        //上传文件到腾讯云cos--缩放0.3
-        String smallImgUrl = uploadService.uploadFileToCos(smallImgPath, userName);
-        if (StringUtils.isEmpty(smallImgUrl)) {
-            return null;
-        }
-
-        //删除服务器上临时文件
-        uploadService.deleteTempImage(new Triplet<String, String, String>(localPath, sourceImgPath, smallImgPath));
-        return Pair.with(imgUrl, smallImgUrl);
+        return null;
     }
 /*
 
     */
-/**
+    /**
      * 上传文件到腾讯云cos
      *
      * @param localPath
@@ -196,7 +185,7 @@ public class UploadController {
 
 
     */
-/**
+    /**
      * 删除临时文件
      *
      * @param triplet
@@ -229,7 +218,8 @@ public class UploadController {
      * @return
      */
     public String getUploadPath(HttpServletRequest request) {
-        return Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator;
+        //        return Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator;
+        return request.getSession().getServletContext().getRealPath("") + File.separator + "WEB-INF" + File.separator + "classes" + File.separator + "upload" + File.separator;
     }
 
     /**

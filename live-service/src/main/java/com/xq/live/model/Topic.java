@@ -6,6 +6,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+/**
+ * 主题实体类
+ */
 public class Topic {
     private Long id;
 
@@ -13,6 +16,8 @@ public class Topic {
     private String title;
 
     private String content;
+
+    private String picIds;  //主题包含的图片id
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
@@ -110,5 +115,13 @@ public class Topic {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPicIds() {
+        return picIds;
+    }
+
+    public void setPicIds(String picIds) {
+        this.picIds = picIds;
     }
 }

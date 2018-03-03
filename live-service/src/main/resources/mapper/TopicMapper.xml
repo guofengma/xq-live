@@ -5,13 +5,17 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
+    <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+    <result column="tp_status" jdbcType="INTEGER" property="tpStatus" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, title, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name
+    id, title, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -26,10 +30,10 @@
   <insert id="insert" parameterType="com.xq.live.model.Topic">
     insert into topic (title, content,
       create_time, user_id, user_name,
-      update_time, nick_name)
+      update_time, nick_name, pic_ids)
     values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       now(), #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
-      now(), #{nickName,jdbcType=VARCHAR})
+      now(), #{nickName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id
     </selectKey>
@@ -89,6 +93,9 @@
       <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
       </if>
+      <if test="picIds != null">
+        pic_ids = #{picIds,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -133,7 +140,7 @@
         id =#{id}
       </if>
       <if test="title != null">
-        and title =#{title}
+        and title like concat('%', #{title}, '%')
       </if>
       <if test="content != null">
         and content =#{content}

@@ -4,7 +4,9 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Shop;
+import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.web.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class ShopController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 根据商家id查询商家信息
@@ -68,10 +73,23 @@ public class ShopController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public BaseResp<Long> add(@Valid Shop shop, BindingResult result) {
+        //必填参数校验
         if(result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
+        //检查用户id是否正确
+        User user = userService.getUserById(shop.getUserId());
+        if(user == null){
+            return new BaseResp<Long>(ResultStatus.error_input_user_id);
+        }
+
+        //该用户是否已经入驻，如果存在记录不允许再入驻
+        Shop s = shopService.getShopByUserId(user.getId());
+        if(s != null){
+            return new BaseResp<Long>(ResultStatus.error_user_shop_exist);
+        }
+
         Long id = shopService.addShop(shop);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
@@ -120,5 +138,17 @@ public class ShopController {
     public BaseResp<List<Shop>> top(ShopInVo inVo){
         List<Shop> result = shopService.top(inVo);
         return new BaseResp<List<Shop>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 根据用户id（userId）查询商家信息
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/getByUserId/{userId}", method = RequestMethod.GET)
+    public BaseResp<Shop> getShopByUserId(@PathVariable(value = "userId") Long userId) {
+        Shop result = shopService.getShopByUserId(userId);
+        return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
     }
 }

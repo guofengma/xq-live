@@ -66,4 +66,11 @@ public interface ShopService {
      */
     public Shop detail(ShopInVo inVo);
 
+    /**
+     * 根据用户信息查询自己的店铺
+     * @param userId
+     * @return
+     */
+    public Shop getShopByUserId(Long userId);
+
 }

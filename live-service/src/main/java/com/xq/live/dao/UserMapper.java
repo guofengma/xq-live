@@ -27,4 +27,11 @@ public interface UserMapper{
     int listTotal(UserInVo inVo);
 
     User findByUserNameAndPwd(UserInVo inVo);
+
+    /**
+     * 商家入驻更新企业客户类型，写入商家id
+     * @param record
+     * @return
+     */
+    int updateUserType(User record);
 }

@@ -41,4 +41,11 @@ public interface ShopMapper {
      */
     int updatePopNum(Long id);
 
+    /**
+     * 根据用户id查询自己的店铺
+     * @param userId
+     * @return
+     */
+    Shop getShopByUserId(Long userId);
+
 }

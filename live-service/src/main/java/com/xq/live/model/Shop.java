@@ -1,14 +1,14 @@
 package com.xq.live.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class Shop {
     private Long id;
-    @NotBlank(message = "shopName必填")
+    @NotNull(message = "shopName必填")
     private String shopName;
 
     private String address;
@@ -38,6 +38,9 @@ public class Shop {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @NotNull(message = "userId必填")
+    private Long userId;       //店铺关联的账号id
 
     public Long getId() {
         return id;
@@ -158,5 +161,13 @@ public class Shop {
 
     public void setPopNum(Integer popNum) {
         this.popNum = popNum;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

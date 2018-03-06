@@ -7,6 +7,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class User {
+    /**
+     * 用户类型  1 普通用户 2 商家用户
+     */
+    public final static int USER_TYPE_PT = 1;
+    public final static int USER_TYPE_SJ = 2;
+
     private Long id;
 
     @NotNull(message = "userName必填")
@@ -25,6 +31,17 @@ public class User {
     private BigDecimal locationX;
 
     private BigDecimal locationY;
+
+    /**
+     * 用户类型  1 普通用户 2 商家用户
+     */
+    private Integer userType;
+
+    /**
+     * 商家id
+     */
+    private Long shopId;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -148,5 +165,21 @@ public class User {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

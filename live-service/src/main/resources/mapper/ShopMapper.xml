@@ -28,6 +28,29 @@
     from shop
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="getShopByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT
+        s.id,
+        s.shop_name,
+        s.address,
+        s.mobile,
+        s.phone,
+        s.index_url,
+        s.logo_url,
+        s.shop_info,
+        s.location_x,
+        s.location_y,
+        s.is_deleted,
+        s.pop_num,
+        s.remark,
+        s.create_time,
+        s.update_time
+    FROM
+        shop s inner join user u on s.id = u.shop_id
+    where u.id = #{id,jdbcType=BIGINT}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from shop
     where id = #{id,jdbcType=BIGINT}

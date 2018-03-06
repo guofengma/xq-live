@@ -8,6 +8,7 @@ package com.xq.live.service.impl;/**
 import com.xq.live.common.Pager;
 import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.ShopMapper;
+import com.xq.live.dao.UserMapper;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
@@ -34,6 +35,9 @@ public class ShopServiceImpl implements ShopService {
     @Autowired
     private AccessLogMapper accessLogMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public Shop getShopById(Long id) {
         return shopMapper.selectByPrimaryKey(id);
@@ -41,10 +45,20 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public Long addShop(Shop shop) {
+        //保存记录到shop表
         int r = shopMapper.insert(shop);
         if(r < 1){
             return null;
         }
+
+        //更新user表，升级为商家账号，记录商家id
+        User user = new User();
+        user.setUserType(User.USER_TYPE_SJ);
+        user.setShopId(shop.getId());
+        user.setId(shop.getUserId());
+        userMapper.updateUserType(user);
+
+        //返回商家主键
         return shop.getId();
     }
 
@@ -116,5 +130,10 @@ public class ShopServiceImpl implements ShopService {
         //3、根据id查询商家信息
         Shop shop = shopMapper.selectByPrimaryKey(inVo.getId());
         return shop;
+    }
+
+    @Override
+    public Shop getShopByUserId(Long userId) {
+        return shopMapper.getShopByUserId(userId);
     }
 }

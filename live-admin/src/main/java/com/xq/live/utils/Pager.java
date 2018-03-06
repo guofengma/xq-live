@@ -22,7 +22,7 @@ public class Pager {
 	private int pageCount = 0; // 总页数
 	private int pageOffset = 0;// 当前页起始记录
 	private int pageTail = 0;// 当前页到达的记录
-	private String orderField;
+	private String orderField = "id";
 	private boolean orderDirection;
 
 	// 页面显示分页按钮个数
@@ -118,7 +118,7 @@ public class Pager {
 		String condition = "";
 		if (this.orderField != null && this.orderField.length() != 0) {
 			condition = " order by " + orderField
-					+ (orderDirection ? " " : " desc ");
+					+ (orderDirection ? " desc " : " ");
 		}
 		return condition;
 	}

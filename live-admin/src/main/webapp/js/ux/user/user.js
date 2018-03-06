@@ -29,13 +29,8 @@ YiYa.user = function(){
 							return "保密";
 						}
 					}},
-					{field:'city',title:'城市',width:80,sortable:true},
+                    {field:'iconUrl',title:'头像url',width:200,sortable:true},
 					{field:'birthday',title:'生日',width:100,sortable:true,formatter: formatDatebox},
-					{field:'orderNum',title:'成功发单数',align:'right',width:100,sortable:true},
-					{field:'receiverOrderNum',title:'成功接单数',align:'right',width:100,sortable:true},
-					{field:'secretKey',title:'授权key',align:'right',width:120,sortable:true},
-					{field:'deviceType',title:'设备类型',width:120,sortable:true},
-					{field:'deviceId',title:'设备id',width:100,sortable:true},
 					{field:'createTime',title:'创建时间',width:150,sortable:true}
 				]]
 			}

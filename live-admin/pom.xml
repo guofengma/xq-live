@@ -191,7 +191,13 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
-        </dependency>		
+        </dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.10</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>live-admin</finalName>
@@ -228,6 +234,43 @@
 					<outputDirectory>${war.outpath}</outputDirectory>
 				</configuration>
 			</plugin>
+
+			<!-- mybatis generator 自动生成代码插件 -->
+<!--			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.5</version>
+				<dependencies>
+					<dependency>
+						<groupId> mysql</groupId>
+						<artifactId> mysql-connector-java</artifactId>
+						<version>5.1.30</version>
+					</dependency>
+					<dependency>
+						<groupId>org.mybatis.generator</groupId>
+						<artifactId>mybatis-generator-core</artifactId>
+						<version>1.3.5</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>Generate MyBatis Artifacts</id>
+						<phase>package</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					&lt;!&ndash;允许移动生成的文件 &ndash;&gt;
+					<verbose>true</verbose>
+					&lt;!&ndash; 是否覆盖 &ndash;&gt;
+					<overwrite>true</overwrite>
+					&lt;!&ndash; 自动生成的配置 &ndash;&gt;
+					<configurationFile>
+						src/main/resources/generator/mybatis-generator.xml</configurationFile>
+				</configuration>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>

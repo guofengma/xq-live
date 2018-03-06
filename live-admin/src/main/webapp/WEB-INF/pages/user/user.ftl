@@ -40,11 +40,7 @@
 		               <label>昵称:</label>  
 		               <input class="easyui-validatebox" type="text" name="nickName" data-options="required:true" />
 		           </div> 		           
-		            <div class="fitem">  
-		               <label>城市:</label>  
-		               <input class="easyui-validatebox" type="text" name="city" data-options="required:true" />
-		           </div> 
-		           <div class="fitem">  
+		           <div class="fitem">
 		               <label>年龄:</label>  
 		               <input class="easyui-numberbox" type="text" name="age" />
 		           </div> 
@@ -60,18 +56,10 @@
 		               <label>出生日期:</label>  
 		               <input class="easyui-datebox" type="text" name="birthday" />
 		           </div>		           
-		           <div class="fitem">  
-		               <label>密钥:</label>  
-		               <input class="easyui-numberbox" type="text" name="secretKey" />
-		           </div> 	
-		           <div class="fitem">  
+		           <div class="fitem">
 		               <label>头像:</label>  
 		               <input class="easyui-validatebox" type="text" value="http://" name="iconUrl" data-options="required:true,validType:'url'">
 		           </div> 			           	           
-		           <div class="fitem">  
-		               <label>描述:</label>  
-		               <textarea class="easyui-validatebox" data-options="required:false,length:[0,100]" name="description"></textarea>
-		           </div> 
 	         </div>
      	</form>
   	 </div> 

@@ -93,13 +93,12 @@ public class SysUserController extends BaseController {
 		}
 		return str.toString();
 	}
-	
+
 	/**
 	 * 添加或修改数据
-	 * @param url
-	 * @param classifyId
-	 * @return
-	 * @throws Exception 
+	 * @param bean
+	 * @param response
+	 * @throws Exception
 	 */
 	@RequestMapping("/save")
 	public void save(SysUser bean,HttpServletResponse response) throws Exception{
@@ -138,14 +137,16 @@ public class SysUserController extends BaseController {
 		sysUserService.delete(ids);
 		sendSuccessMessage(response, "删除成功");
 	}
-	
-	
+
+
 	/**
-	 * 添加或修改数据
-	 * @param url
-	 * @param classifyId
-	 * @return
-	 * @throws Exception 
+	 * 更改密码
+	 * @param id
+	 * @param oldPwd
+	 * @param newPwd
+	 * @param request
+	 * @param response
+	 * @throws Exception
 	 */
 	@RequestMapping("/updatePwd")
 	public void updatePwd(Integer id,String oldPwd,String newPwd,HttpServletRequest request,HttpServletResponse response) throws Exception{

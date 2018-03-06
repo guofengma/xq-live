@@ -5,13 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import com.xq.live.vo.SysUserInVo;
 
-@Repository("sysUserDao")
+@Repository
 public interface SysUserDao extends BaseDao<SysUser>{
-	
+
 	/**
 	 * 检查登录
-	 * @param email
-	 * @param pwd
+	 * @param inVo
 	 * @return
 	 */
 	public SysUser queryLogin(SysUserInVo inVo);

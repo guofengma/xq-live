@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.ActInfo;
 import com.xq.live.vo.in.ActInfoInVo;
+import com.xq.live.vo.out.ActInfoOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface ActInfoMapper{
 
     int listTotal(ActInfoInVo inVo);
 
-    List<ActInfo> list(ActInfoInVo inVo);
+    List<ActInfoOut> list(ActInfoInVo inVo);
+
+    ActInfoOut findActInfoById(Long id);
 }

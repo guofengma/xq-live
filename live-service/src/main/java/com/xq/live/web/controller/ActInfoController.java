@@ -4,15 +4,20 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ActInfo;
-import com.xq.live.model.User;
 import com.xq.live.service.ActInfoService;
 import com.xq.live.vo.in.ActInfoInVo;
-import com.xq.live.vo.in.UserInVo;
+import com.xq.live.vo.out.ActInfoOut;
+import com.xq.live.web.utils.IpUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -73,9 +78,9 @@ public class ActInfoController {
      * @return
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public BaseResp<Pager<ActInfo>> userList(ActInfoInVo inVo){
-        Pager<ActInfo> result = actInfoService.list(inVo);
-        return new BaseResp<Pager<ActInfo>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<ActInfoOut>> userList(ActInfoInVo inVo){
+        Pager<ActInfoOut> result = actInfoService.list(inVo);
+        return new BaseResp<Pager<ActInfoOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**
@@ -84,8 +89,25 @@ public class ActInfoController {
      * @return
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResp<List<ActInfo>> findHotActInfos(ActInfoInVo inVo){
-        List<ActInfo> list = actInfoService.top(inVo);
-        return new BaseResp<List<ActInfo>>(ResultStatus.SUCCESS, list);
+    public BaseResp<List<ActInfoOut>> findHotActInfos(ActInfoInVo inVo){
+        List<ActInfoOut> list = actInfoService.top(inVo);
+        return new BaseResp<List<ActInfoOut>>(ResultStatus.SUCCESS, list);
+    }
+
+    /**
+     * 查询活动详细页，包括访问量、参与数、投票数信息
+     * @param inVo
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public BaseResp<ActInfoOut> detail(ActInfoInVo inVo, HttpServletRequest request){
+        if(inVo == null || inVo.getId() == null || inVo.getUserId() == null || StringUtils.isEmpty(inVo.getUserName()) || inVo.getSourceType() == null){
+            return new BaseResp<ActInfoOut>(ResultStatus.error_param_empty);
+        }
+
+        inVo.setUserIp(IpUtils.getIpAddr(request));
+        ActInfoOut actInfoOut = actInfoService.detail(inVo);
+        return new BaseResp<ActInfoOut>(ResultStatus.SUCCESS, actInfoOut);
     }
 }

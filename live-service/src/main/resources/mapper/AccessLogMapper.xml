@@ -21,7 +21,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="checkRecordExist" resultType="java.lang.Long">
+  <select id="checkRecordExist" resultType="java.lang.Integer">
     select count(1)
     from access_log
     <where>
@@ -30,6 +30,9 @@
       </if>
       <if test="bizType != null">
          and biz_type = #{bizType}
+      </if>
+      <if test="refId != null">
+        and ref_id = #{refId}
       </if>
     </where>
   </select>
@@ -133,4 +136,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="countViewNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(1) from access_log
+    <where>
+      <if test="bizType != null">
+        and biz_type = #{bizType}
+      </if>
+      <if test="refId != null">
+        and ref_id = #{refId}
+      </if>
+    </where>
+  </select>
 </mapper>

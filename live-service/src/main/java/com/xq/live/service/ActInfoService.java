@@ -5,6 +5,7 @@ package com.xq.live.service;/**
 import com.xq.live.common.Pager;
 import com.xq.live.model.ActInfo;
 import com.xq.live.vo.in.ActInfoInVo;
+import com.xq.live.vo.out.ActInfoOut;
 
 import java.util.List;
 
@@ -47,12 +48,19 @@ public interface ActInfoService {
      * 分页查询活动列表
      * @return
      */
-    Pager<ActInfo> list(ActInfoInVo inVo);
+    Pager<ActInfoOut> list(ActInfoInVo inVo);
 
     /**
      * 查询热门活动列表
      * @param inVo
      * @return
      */
-    List<ActInfo> top(ActInfoInVo inVo);
+    List<ActInfoOut> top(ActInfoInVo inVo);
+
+    /**
+     * 活动详情页
+     * @param inVo
+     * @return
+     */
+    ActInfoOut detail(ActInfoInVo inVo);
 }

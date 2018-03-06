@@ -19,4 +19,11 @@ public interface VoteMapper {
     int updateByPrimaryKey(Vote record);
 
     int deleteByInVo(VoteInVo inVo);
+
+    /**
+     * 根据活动查询投票数
+     * @param actId
+     * @return
+     */
+    int countByActId(Long actId);
 }

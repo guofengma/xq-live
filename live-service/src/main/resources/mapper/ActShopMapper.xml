@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xq.live.dao.VoteMapper">
-  <resultMap id="BaseResultMap" type="com.xq.live.model.Vote">
+<mapper namespace="com.xq.live.dao.ActShopMapper">
+  <resultMap id="BaseResultMap" type="com.xq.live.model.ActShop">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="act_id" jdbcType="BIGINT" property="actId" />
     <result column="shop_id" jdbcType="BIGINT" property="shopId" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, act_id, shop_id, user_id, create_time
+    id, act_id, shop_id, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from vote
+    from act_shop
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from vote
+    delete from act_shop
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.xq.live.model.Vote">
-    insert into vote (id, act_id, shop_id,
-      user_id, create_time)
-    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
-      #{userId,jdbcType=BIGINT}, now())
-      <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
-        select last_insert_id() as id
-      </selectKey>
+  <insert id="insert" parameterType="com.xq.live.model.ActShop">
+    insert into act_shop (id, act_id, shop_id, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.xq.live.model.Vote">
-    insert into vote
+  <insert id="insertSelective" parameterType="com.xq.live.model.ActShop">
+    insert into act_shop
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -42,11 +39,11 @@
       <if test="shopId != null">
         shop_id,
       </if>
-      <if test="userId != null">
-        user_id,
-      </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -59,16 +56,16 @@
       <if test="shopId != null">
         #{shopId,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.Vote">
-    update vote
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.ActShop">
+    update act_shop
     <set>
       <if test="actId != null">
         act_id = #{actId,jdbcType=BIGINT},
@@ -76,43 +73,25 @@
       <if test="shopId != null">
         shop_id = #{shopId,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.xq.live.model.Vote">
-    update vote
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.model.ActShop">
+    update act_shop
     set act_id = #{actId,jdbcType=BIGINT},
       shop_id = #{shopId,jdbcType=BIGINT},
-      user_id = #{userId,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <delete id="deleteByInVo">
-    delete from vote
-    <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="shopId != null">
-        and shop_id = #{shopId}
-      </if>
-      <if test="userId != null">
-        and user_id = #{userId}
-      </if>
-      <if test="actId != null">
-        and act_id = #{actId}
-      </if>
-    </where>
-  </delete>
-
-  <select id="countByActId" resultType="java.lang.Integer" parameterType="java.lang.Long">
-    select count(1) from vote where act_id = #{actId,jdbcType=BIGINT}
+  <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(1) from act_shop where act_id = #{actId,jdbcType=BIGINT}
   </select>
 </mapper>

@@ -9,6 +9,14 @@ public class ActInfoInVo extends BaseInVo {
 
     private String actName;
 
+    private Long userId;
+
+    private String userName;
+
+    private String userIp;
+
+    private Integer sourceType;
+
     public Long getId() {
         return id;
     }
@@ -23,5 +31,37 @@ public class ActInfoInVo extends BaseInVo {
 
     public void setActName(String actName) {
         this.actName = actName;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 }

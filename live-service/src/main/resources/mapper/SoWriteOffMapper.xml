@@ -40,7 +40,7 @@
       user_id, user_name, cashier_id, 
       cashier_name, paid_amount, create_time, 
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{soIdsoIdsoIdsoIdsoIdsoIdsoId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
+    values (#{id,jdbcType=BIGINT}, #{soId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
       #{shopName,jdbcType=VARCHAR}, #{shopAmount,jdbcType=DECIMAL}, #{couponId,jdbcType=BIGINT}, 
       #{couponCode,jdbcType=VARCHAR}, #{skuId,jdbcType=BIGINT}, #{couponAmount,jdbcType=DECIMAL}, 
       #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{cashierId,jdbcType=BIGINT}, 

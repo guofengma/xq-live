@@ -2,9 +2,11 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Favorites;
 import com.xq.live.vo.in.FavoritesInVo;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface FavoritesMapper {
     int deleteByPrimaryKey(Long id);
 

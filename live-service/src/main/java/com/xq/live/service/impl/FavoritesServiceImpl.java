@@ -50,10 +50,7 @@ public class FavoritesServiceImpl implements FavoritesService {
 
     @Override
     public Long add(Favorites favorites) {
-        Favorites result = favoritesMapper.selectByUserIdAndShopId(favorites);
-        if(result!=null){
-            return null;
-        }
+        
         int res = favoritesMapper.insert(favorites);
         if(res < 1){
             return null;

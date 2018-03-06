@@ -30,11 +30,12 @@ public class FavoritesController {
 
     /**
      * 根据主键查询一条记录
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/get/{id}",method = RequestMethod.GET)
-    public BaseResp<Favorites> get(@PathVariable("id") Long id){
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+    public BaseResp<Favorites> get(@PathVariable("id") Long id) {
         Favorites cp = favoritesService.get(id);
         return new BaseResp<Favorites>(ResultStatus.SUCCESS, cp);
     }
@@ -42,69 +43,75 @@ public class FavoritesController {
 
     /**
      * 根据用户id查询收藏列表，并且查询商家详情 分页查询
+     *
      * @param inVo
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<Shop>> list(FavoritesInVo inVo){
+    public BaseResp<Pager<Shop>> list(FavoritesInVo inVo) {
         Pager<Shop> result = favoritesService.list(inVo);
         return new BaseResp<Pager<Shop>>(ResultStatus.SUCCESS, result);
     }
 
 
-
     /**
      * 根据用户id和商家id,增加一条记录到收藏列表中
+     *
      * @param favorites
      * @return
      */
-    @RequestMapping(value = "/add",  method = RequestMethod.POST)
-    public BaseResp<Long>  put(@Valid Favorites favorites, BindingResult result){
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public BaseResp<Long> put(@Valid Favorites favorites, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
+        Boolean collected = favoritesService.isCollected(favorites);
+        if(collected!=null){
+            return new BaseResp<Long>(0, "该商品已在商品列表", null);
+        }
+
         Long id = favoritesService.add(favorites);
-        if(id==null){
-            return new BaseResp<Long>(0,"该商品已在商品列表",id);
+        if (id == null) {
+            return new BaseResp<Long>(ResultStatus.FAIL, id);
         }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
 
-
     /**
      * 根据用户id和商家id,删除一条记录
+     *
      * @param favorites
      * @param result
      * @return
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.POST)
-     public  BaseResp<Integer> delete(@Valid Favorites favorites, BindingResult result){
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseResp<Integer> delete(@Valid Favorites favorites, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Integer res = favoritesService.delete(favorites);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
-     }
+    }
 
     /**
      * 根据商家id查询商家详细信息
      */
-    @RequestMapping(value = "/shopDetail",method = RequestMethod.GET)
-     public BaseResp<Shop> shopDetail(@RequestParam(value = "shopId")Long shopId){
-          Shop res = favoritesService.shopDetail(shopId);
-          return new BaseResp<Shop>(ResultStatus.SUCCESS,res);
-     }
+    @RequestMapping(value = "/shopDetail", method = RequestMethod.GET)
+    public BaseResp<Shop> shopDetail(@RequestParam(value = "shopId") Long shopId) {
+        Shop res = favoritesService.shopDetail(shopId);
+        return new BaseResp<Shop>(ResultStatus.SUCCESS, res);
+    }
 
     /**
      * 根据用户id和商家id，查询是否已经收藏
      */
-    @RequestMapping(value = "/isCollected",method = RequestMethod.POST)
-    public BaseResp<Boolean> isCollected(Favorites favorites){
-        Boolean  res =   favoritesService.isCollected(favorites);
-        return new BaseResp<Boolean>(ResultStatus.SUCCESS,res);
+    @RequestMapping(value = "/isCollected", method = RequestMethod.POST)
+    public BaseResp<Boolean> isCollected(Favorites favorites) {
+        Boolean res = favoritesService.isCollected(favorites);
+        return new BaseResp<Boolean>(ResultStatus.SUCCESS, res);
     }
 
 }

@@ -13,17 +13,29 @@ import java.util.Date;
  * @copyright:hbxq
  **/
 public class CommentOut {
-
     private Long id;
+
+    @NotNull(message = "refId必填")
     private Long refId; //关联的id
+    @NotNull(message = "cmtType必填")
     private Integer cmtType;  //评论类型 1 活动 2 主题 3 直播 4 评论 5 商家
+    @NotNull(message = "content必填")
     private String content;
+    @NotNull(message = "userId必填")
     private Long userId;
+    @NotNull(message = "userName必填")
     private String userName;
+    @NotNull(message = "nickName必填")
     private String nickName;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
     private String userIp;
+
+    private String userPic;  //用户头像
+
+    private int zan;  //点赞数
+
     private Integer isZan;   //是否点赞 0 未点 1 点过
 
     public Long getId() {
@@ -55,7 +67,7 @@ public class CommentOut {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.content = content == null ? null : content.trim();
     }
 
     public Long getUserId() {
@@ -71,7 +83,7 @@ public class CommentOut {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = userName == null ? null : userName.trim();
     }
 
     public String getNickName() {
@@ -79,7 +91,7 @@ public class CommentOut {
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        this.nickName = nickName == null ? null : nickName.trim();
     }
 
     public Date getCreateTime() {
@@ -95,7 +107,23 @@ public class CommentOut {
     }
 
     public void setUserIp(String userIp) {
-        this.userIp = userIp;
+        this.userIp = userIp == null ? null : userIp.trim();
+    }
+
+    public String getUserPic() {
+        return userPic;
+    }
+
+    public void setUserPic(String userPic) {
+        this.userPic = userPic;
+    }
+
+    public int getZan() {
+        return zan;
+    }
+
+    public void setZan(int zan) {
+        this.zan = zan;
     }
 
     public Integer getIsZan() {

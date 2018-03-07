@@ -1,7 +1,10 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.*;
+import com.xq.live.dao.AccessLogMapper;
+import com.xq.live.dao.ActInfoMapper;
+import com.xq.live.dao.ActShopMapper;
+import com.xq.live.dao.VoteMapper;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.ActInfo;
 import com.xq.live.service.ActInfoService;
@@ -11,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 活动实现类

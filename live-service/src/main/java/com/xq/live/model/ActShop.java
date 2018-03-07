@@ -1,13 +1,27 @@
 package com.xq.live.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ActShop {
+    /**
+     * 参与活动申请审批状态 0 待审批 1 审批通过 2 审批不通过
+     */
+    public final static int ACT_SHOP_APPLY_STATUS_WAIT_APPLIED = 0;
+
+    public final static int ACT_SHOP_APPLY_STATUS_APPLIED = 1;
+
+    public final static int ACT_SHOP_APPLY_STATUS_REFUSED = 2;
+
     private Long id;
-
+    @NotNull(message = "actId必填")
     private Long actId;
-
+    @NotNull(message = "shopId必填")
     private Long shopId;
+
+    private String shopCode;
+
+    private Integer applyStatus;
 
     private Date createTime;
 
@@ -51,5 +65,21 @@ public class ActShop {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
+
+    public Integer getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(Integer applyStatus) {
+        this.applyStatus = applyStatus;
     }
 }

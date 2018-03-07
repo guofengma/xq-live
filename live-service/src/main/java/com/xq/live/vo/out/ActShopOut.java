@@ -10,6 +10,7 @@ import java.util.Date;
  * @copyright:hbxq
  **/
 public class ActShopOut {
+
     private Long id;
 
     private Long actId;
@@ -21,6 +22,14 @@ public class ActShopOut {
     private Date createTime;
 
     private Date updateTime;
+
+    private String logoUrl;
+
+    private String shopName;
+
+    private String shopInfo;    //商家简介
+
+    private int voteNum;
 
     public Long getId() {
         return id;
@@ -68,5 +77,37 @@ public class ActShopOut {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getShopInfo() {
+        return shopInfo;
+    }
+
+    public void setShopInfo(String shopInfo) {
+        this.shopInfo = shopInfo;
+    }
+
+    public int getVoteNum() {
+        return voteNum;
+    }
+
+    public void setVoteNum(int voteNum) {
+        this.voteNum = voteNum;
     }
 }

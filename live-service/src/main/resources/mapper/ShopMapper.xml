@@ -222,8 +222,8 @@
       <if test="id != null">
         id = #{id}
       </if>
-      <if test="shopName != null">
-        and shop_name = #{shopName}
+      <if test="searcheKey != null">
+        and shop_name like concat('%', #{searcheKey}, '%')
       </if>
     </where>
     order by id desc

@@ -23,6 +23,9 @@ public class ShopInVo extends BaseInVo {
     private Integer sourceType;
 
 
+    private String searcheKey;
+
+
     public String getShopName() {
         return shopName;
     }

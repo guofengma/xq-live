@@ -219,11 +219,8 @@
     <include refid="Base_Column_List" />
     from shop
     <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="shopName != null">
-        and shop_name = #{shopName}
+      <if test="searchKey !=null">
+        id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
       </if>
     </where>
     order by id desc
@@ -233,11 +230,8 @@
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1) from shop
     <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="shopName != null">
-        and shop_name = #{shopName}
+      <if test="searchKey !=null">
+        id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
       </if>
     </where>
   </select>

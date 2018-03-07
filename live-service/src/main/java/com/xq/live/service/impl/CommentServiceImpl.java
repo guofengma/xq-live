@@ -1,6 +1,5 @@
 package com.xq.live.service.impl;
 
-import com.xq.live.common.BeanUtil;
 import com.xq.live.common.Pager;
 import com.xq.live.dao.CommentMapper;
 import com.xq.live.dao.UserMapper;
@@ -71,9 +70,9 @@ public class CommentServiceImpl implements CommentService {
         Pager<CommentOut> result = new Pager<CommentOut>();
         int total = commentMapper.listTotal(inVo);
         if(total > 0){
-            List<Comment> list = commentMapper.list(inVo);
+            List<CommentOut> list = commentMapper.list(inVo);
             List<CommentOut> listForOut = new ArrayList<CommentOut>();
-            for (Comment comment : list) {
+            for (CommentOut comment : list) {
                 User user = userMapper.selectByPrimaryKey(comment.getUserId());
                 int total1ForZan;
                 if(comment.getRefId()!=null&&comment.getCmtType()!=null){
@@ -100,7 +99,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> top(CommentInVo inVo) {
+    public List<CommentOut> top(CommentInVo inVo) {
         return commentMapper.list(inVo);
     }
 }

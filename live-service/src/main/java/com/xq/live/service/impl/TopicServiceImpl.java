@@ -33,22 +33,7 @@ public class TopicServiceImpl implements TopicService {
     public Topic selectOne(Long id) {
         Topic topic = topicMapper.selectByPrimaryKey(id);
         if(topic != null){
-            if(StringUtils.isNotEmpty(topic.getPicIds())){
-                String picIds = topic.getPicIds();
-                String[] temPicIds = picIds.split(",");
-                if(temPicIds != null && temPicIds.length > 0){
-                    List<Long> ids = new ArrayList<Long>();
-                    for(String picId : temPicIds){
-                        ids.add(Long.valueOf(picId));
-                    }
-                    if(ids.size() > 0){
-                        Map<String, Object> paramsMap = new HashMap<String, Object>();
-                        paramsMap.put("ids", ids);
-                        List<Attachment> picUrls = attachmentMapper.selectByIds(paramsMap);
-                        topic.setPicUrls(picUrls);
-                    }
-                }
-            }
+            topic = getPicUrls(topic);
         }
         return topic;
     }
@@ -80,6 +65,9 @@ public class TopicServiceImpl implements TopicService {
 
         if(total > 0){
             List<Topic> list = topicMapper.list(inVo);
+            for(Topic t : list){
+                t = getPicUrls(t);
+            }
             pager.setList(list);
         }
         pager.setTotal(total);  //总记录数

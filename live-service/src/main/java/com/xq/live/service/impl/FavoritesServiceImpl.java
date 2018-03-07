@@ -3,8 +3,10 @@ package com.xq.live.service.impl;
 import com.xq.live.common.Pager;
 import com.xq.live.dao.FavoritesMapper;
 import com.xq.live.dao.ShopMapper;
+import com.xq.live.dao.TopicMapper;
 import com.xq.live.model.Favorites;
 import com.xq.live.model.Shop;
+import com.xq.live.model.Topic;
 import com.xq.live.service.FavoritesService;
 import com.xq.live.vo.in.FavoritesInVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class FavoritesServiceImpl implements FavoritesService {
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Autowired
+    private TopicMapper topicMapper;
 
     @Override
     public Favorites get(Long id) {
@@ -84,5 +89,14 @@ public class FavoritesServiceImpl implements FavoritesService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Boolean isActive(Favorites favorites) {
+        List<Topic> topic = topicMapper.selectByUserId(favorites);
+        if(topic!=null||topic.size()>0){
+            return true;
+        }
+        return false;
     }
 }

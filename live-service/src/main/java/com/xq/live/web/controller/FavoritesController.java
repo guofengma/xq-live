@@ -114,4 +114,15 @@ public class FavoritesController {
         return new BaseResp<Boolean>(ResultStatus.SUCCESS, res);
     }
 
+    /**
+     * 根据用户id查询是否有动态消息
+     * @param favorites
+     * @return
+     */
+    @RequestMapping(value = "isActive",method = RequestMethod.GET)
+    public BaseResp<Boolean> isActive(Favorites favorites){
+        Boolean res = favoritesService.isActive(favorites);
+        return new BaseResp<Boolean>(ResultStatus.SUCCESS, res);
+    }
+
 }

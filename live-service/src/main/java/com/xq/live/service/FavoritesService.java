@@ -57,4 +57,11 @@ public interface FavoritesService {
      * 根据用户id和商家id，查询数据
      */
     Boolean isCollected(Favorites favorites);
+
+    /**
+     * 根据用户id查询是否有动态消息
+     * @param favorites
+     * @return
+     */
+    Boolean isActive(Favorites favorites);
 }

@@ -1,5 +1,6 @@
 package com.xq.live.dao;
 
+import com.xq.live.model.Favorites;
 import com.xq.live.model.Topic;
 import com.xq.live.vo.in.TopicInVo;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,8 @@ public interface TopicMapper{
     int insertSelective(Topic record);
 
     Topic selectByPrimaryKey(Long id);
+
+    List<Topic> selectByUserId(Favorites favorites);
 
     int updateByPrimaryKeySelective(Topic record);
 

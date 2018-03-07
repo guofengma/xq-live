@@ -5,6 +5,7 @@ import com.xq.live.dao.CommentMapper;
 import com.xq.live.model.Comment;
 import com.xq.live.service.CommentService;
 import com.xq.live.vo.in.CommentInVo;
+import com.xq.live.vo.out.CommentOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +54,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Pager<Comment> list(CommentInVo inVo) {
-        Pager<Comment> result = new Pager<Comment>();
+    public Pager<CommentOut> list(CommentInVo inVo) {
+        Pager<CommentOut> result = new Pager<CommentOut>();
         int total = commentMapper.listTotal(inVo);
         if(total > 0){
-            List<Comment> list = commentMapper.list(inVo);
+            List<CommentOut> list = commentMapper.list(inVo);
             result.setList(list);
         }
         result.setTotal(total);
@@ -66,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> top(CommentInVo inVo) {
+    public List<CommentOut> top(CommentInVo inVo) {
         return commentMapper.list(inVo);
     }
 }

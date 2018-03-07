@@ -124,7 +124,7 @@ public class ShopController {
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<Shop>> list(ShopInVo inVo){
+    public BaseResp<Pager<Shop>> list(ShopInVo inVo, HttpServletRequest request){
         Pager<Shop> result = shopService.list(inVo);
         return new BaseResp<Pager<Shop>>(ResultStatus.SUCCESS, result);
     }

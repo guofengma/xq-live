@@ -34,7 +34,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long add(User user) {
-        return userMapper.insert(user);
+        int ret = userMapper.insert(user);
+        if(ret > 0){
+            return user.getId();
+        }
+        return null;
     }
 
     @Override

@@ -93,4 +93,14 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByIds" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from attachment
+    where id in
+    <foreach item="item" collection="ids" separator="," open="(" close=")" index="">
+      #{item, jdbcType=BIGINT}
+    </foreach>
+  </select>
 </mapper>

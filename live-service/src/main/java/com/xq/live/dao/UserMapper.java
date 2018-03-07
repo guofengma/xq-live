@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserMapper{
     int deleteByPrimaryKey(Long id);
 
-    Long insert(User record);
+    int insert(User record);
 
     int insertSelective(User record);
 

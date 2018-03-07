@@ -11,6 +11,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Comment;
 import com.xq.live.service.CommentService;
 import com.xq.live.vo.in.CommentInVo;
+import com.xq.live.vo.out.CommentOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -86,14 +87,14 @@ public class CommentController {
      * @return
      */
     @RequestMapping(value = "/top",  method = RequestMethod.GET)
-    public BaseResp<List<Comment>> top(CommentInVo inVo){
-        List<Comment> list = commentService.top(inVo);
-        return new BaseResp<List<Comment>>(ResultStatus.SUCCESS, list);
+    public BaseResp<List<CommentOut>> top(CommentInVo inVo){
+        List<CommentOut> list = commentService.top(inVo);
+        return new BaseResp<List<CommentOut>>(ResultStatus.SUCCESS, list);
     }
 
     @RequestMapping(value = "/list",  method = RequestMethod.GET)
-    public BaseResp<Pager<Comment>> list(CommentInVo inVo){
-        Pager<Comment> page = commentService.list(inVo);
-        return new BaseResp<Pager<Comment>>(ResultStatus.SUCCESS, page);
+    public BaseResp<Pager<CommentOut>> list(CommentInVo inVo){
+        Pager<CommentOut> page = commentService.list(inVo);
+        return new BaseResp<Pager<CommentOut>>(ResultStatus.SUCCESS, page);
     }
 }

@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Comment;
 import com.xq.live.vo.in.CommentInVo;
+import com.xq.live.vo.out.CommentOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface CommentMapper {
      * @param inVo
      * @return
      */
-    List<Comment> list(CommentInVo inVo);
+    List<CommentOut> list(CommentInVo inVo);
 
     /**
      * 记录总数

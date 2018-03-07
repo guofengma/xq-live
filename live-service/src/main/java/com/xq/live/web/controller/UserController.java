@@ -2,12 +2,14 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
+import com.xq.live.common.RandomStringUtil;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.User;
 import com.xq.live.service.AccessLogService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.IpUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
@@ -81,13 +83,18 @@ public class UserController {
      * 该方法是注册用户的方法，默认放开访问控制
      * @param in
      */
-    @PostMapping("/signup")
-    public BaseResp<Long> signUp(@RequestBody User in) {
-        User user = userService.findByUsername(in.getUserName());
-        if(user != null){
+//    @PostMapping("/signup")
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public BaseResp<Long> signUp(User in) {
+        if(in == null || StringUtils.isEmpty(in.getUserName())){
             return new BaseResp<Long>(ResultStatus.error_user_exist);
         }
+        User user = userService.findByUsername(in.getUserName());
+        if(user != null){
+            return new BaseResp<Long>(ResultStatus.error_para_user_empty);
+        }
 //        String pwd = bCryptPasswordEncoder.encode(in.getPassword());
+        in.setPassword(RandomStringUtil.getRandomCode(6,3));
         in.setPassword(DigestUtils.md5DigestAsHex(in.getPassword().getBytes()));
         Long id  = userService.add(in);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);

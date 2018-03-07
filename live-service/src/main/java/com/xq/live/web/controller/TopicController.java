@@ -37,8 +37,9 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public Topic getTopicById(@PathVariable(value = "id") Long id) {
-        return new Topic();
+    public BaseResp<Topic> getTopicById(@PathVariable(value = "id") Long id) {
+        Topic topic = topicService.selectOne(id);
+        return new BaseResp<Topic>(ResultStatus.SUCCESS, topic);
     }
 
     /**

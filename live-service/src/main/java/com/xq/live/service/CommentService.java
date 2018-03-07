@@ -8,6 +8,7 @@ package com.xq.live.service;/**
 import com.xq.live.common.Pager;
 import com.xq.live.model.Comment;
 import com.xq.live.vo.in.CommentInVo;
+import com.xq.live.vo.out.CommentOut;
 
 import java.util.List;
 
@@ -57,12 +58,12 @@ public interface CommentService {
      * @param inVo
      * @return
      */
-    Pager<Comment> list(CommentInVo inVo);
+    Pager<CommentOut> list(CommentInVo inVo);
 
     /**
      * 热门评论
      * @param inVo
      * @return
      */
-    List<Comment> top(CommentInVo inVo);
+    List<CommentOut> top(CommentInVo inVo);
 }

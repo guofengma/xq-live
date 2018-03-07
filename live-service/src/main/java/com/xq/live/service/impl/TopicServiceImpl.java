@@ -1,15 +1,17 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.dao.AttachmentMapper;
 import com.xq.live.dao.TopicMapper;
+import com.xq.live.model.Attachment;
 import com.xq.live.model.Topic;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * ${DESCRIPTION}
@@ -23,10 +25,32 @@ public class TopicServiceImpl implements TopicService {
     @Autowired
     private TopicMapper topicMapper;
 
+    @Autowired
+    private AttachmentMapper attachmentMapper;
+
 
     @Override
     public Topic selectOne(Long id) {
-        return topicMapper.selectByPrimaryKey(id);
+        Topic topic = topicMapper.selectByPrimaryKey(id);
+        if(topic != null){
+            if(StringUtils.isNotEmpty(topic.getPicIds())){
+                String picIds = topic.getPicIds();
+                String[] temPicIds = picIds.split(",");
+                if(temPicIds != null && temPicIds.length > 0){
+                    List<Long> ids = new ArrayList<Long>();
+                    for(String picId : temPicIds){
+                        ids.add(Long.valueOf(picId));
+                    }
+                    if(ids.size() > 0){
+                        Map<String, Object> paramsMap = new HashMap<String, Object>();
+                        paramsMap.put("ids", ids);
+                        List<Attachment> picUrls = attachmentMapper.selectByIds(paramsMap);
+                        topic.setPicUrls(picUrls);
+                    }
+                }
+            }
+        }
+        return topic;
     }
 
     @Override
@@ -66,5 +90,29 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<Topic> top(TopicInVo inVo) {
         return topicMapper.list(inVo);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Topic getPicUrls(Topic topic){
+        if(StringUtils.isNotEmpty(topic.getPicIds())){
+            String picIds = topic.getPicIds();
+            String[] temPicIds = picIds.split(",");
+            if(temPicIds != null && temPicIds.length > 0){
+                List<Long> ids = new ArrayList<Long>();
+                for(String picId : temPicIds){
+                    ids.add(Long.valueOf(picId));
+                }
+                if(ids.size() > 0){
+                    Map<String, Object> paramsMap = new HashMap<String, Object>();
+                    paramsMap.put("ids", ids);
+                    List<Attachment> picUrls = attachmentMapper.selectByIds(paramsMap);
+                    topic.setPicUrls(picUrls);
+                }
+            }
+        }
+        return topic;
     }
 }

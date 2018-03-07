@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 主题实体类
@@ -34,6 +35,8 @@ public class Topic {
     private Integer isDeleted;
 
     private Integer tpStatus;
+
+    private List<Attachment> picUrls;
 
     private String nickName;
 
@@ -123,5 +126,13 @@ public class Topic {
 
     public void setPicIds(String picIds) {
         this.picIds = picIds;
+    }
+
+    public List<Attachment> getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(List<Attachment> picUrls) {
+        this.picUrls = picUrls;
     }
 }

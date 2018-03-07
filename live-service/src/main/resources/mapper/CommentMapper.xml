@@ -12,6 +12,11 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="user_ip" jdbcType="VARCHAR" property="userIp"/>
     </resultMap>
+
+    <resultMap id="CommentOutResultMap" type="com.xq.live.vo.out.CommentOut" extends="BaseResultMap">
+        <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
     id, ref_id, cmt_type, content, user_id, user_name, nick_name, create_time, user_ip
   </sql>
@@ -161,9 +166,10 @@
         </where>
     </delete>
 
-    <select id="list" resultMap="BaseResultMap">
+    <select id="list" resultMap="CommentOutResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>,
+        (select count(1) from zan where zan.ref_id = comment.id and zan.type = 4) as is_zan
         from comment
         <where>
             <if test="id != null">
@@ -201,4 +207,5 @@
             </if>
         </where>
     </select>
+
 </mapper>

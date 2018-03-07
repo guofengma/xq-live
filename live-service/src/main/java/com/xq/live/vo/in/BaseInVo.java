@@ -1,9 +1,4 @@
-package com.xq.live.vo.in;/**
- * 入参基础类
- *
- * @author zhangpeng32
- * @create 2018-02-07 15:02
- */
+package com.xq.live.vo.in;
 
 /**
  * 入参基础类
@@ -16,6 +11,10 @@ public class BaseInVo {
     private Integer start;
 
     private Integer rows = 10;
+    /**
+     * 搜索关键字
+     */
+    private String searchKey;
 
     public Integer getStart() {
         start = rows * (page - 1);
@@ -36,5 +35,13 @@ public class BaseInVo {
 
     public void setPage(Integer page) {
         this.page = page;
+    }
+
+    public String getSearchKey() {
+        return searchKey;
+    }
+
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
     }
 }

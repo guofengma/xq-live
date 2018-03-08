@@ -128,6 +128,9 @@
             <if test="id != null">
                 a.id = #{id,jdbcType=BIGINT}
             </if>
+            <if test="actId != null">
+                AND  a.act_id = #{actId,jdbcType=BIGINT}
+            </if>
             <if test="searchKey != null">
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
                 or a.shop_code = #{searchKey,jdbcType=VARCHAR})
@@ -144,6 +147,9 @@
         <where>
             <if test="id != null">
                 a.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="actId != null">
+                AND  a.act_id = #{actId,jdbcType=BIGINT}
             </if>
             <if test="searchKey != null">
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')

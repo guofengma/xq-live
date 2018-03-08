@@ -20,10 +20,10 @@ public interface ZanService {
 
     /**
      * 取消赞
-     * @param inVo
+     * @param zan
      * @return
      */
-    public int deleteByInVo(ZanInVo inVo);
+    public int deleteByZan(Zan zan);
 
     /**
      * 取消赞

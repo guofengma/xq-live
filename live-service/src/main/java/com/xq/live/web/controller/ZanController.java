@@ -62,25 +62,26 @@ public class ZanController {
 
     /**
      * 取消赞
-     * @param id
+     * @param zan
      * @return
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/delete", method = RequestMethod.POST)
     public BaseResp<Integer> delete(Long id){
         if(id == null){
             return new BaseResp<Integer>(ResultStatus.error_param_empty_id);
         }
         int res = zanService.delete(id);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
-    }
-    /*public BaseResp<Integer> delete(@Valid ZanInVo inVo, BindingResult result) {
+    }*/
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseResp<Integer> delete(@Valid Zan zan, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
-            return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), 0);
+            return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
-        int res = zanService.delete(inVo);
+        int res = zanService.deleteByZan(zan);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
-    }*/
+    }
 
     /**
      * 查询点赞总数

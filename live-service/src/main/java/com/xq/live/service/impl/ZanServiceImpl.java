@@ -31,8 +31,8 @@ public class ZanServiceImpl implements ZanService {
     }
 
     @Override
-    public int deleteByInVo(ZanInVo inVo) {
-        return zanMapper.deleteZan(inVo);
+    public int deleteByZan(Zan zan) {
+        return zanMapper.deleteZan(zan);
     }
 
     @Override

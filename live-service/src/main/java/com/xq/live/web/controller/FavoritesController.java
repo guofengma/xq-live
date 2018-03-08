@@ -67,7 +67,7 @@ public class FavoritesController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Boolean collected = favoritesService.isCollected(favorites);
-        if(collected!=null){
+        if(collected==true){
             return new BaseResp<Long>(0, "该商品已在商品列表", null);
         }
 

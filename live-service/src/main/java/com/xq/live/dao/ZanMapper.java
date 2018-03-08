@@ -20,10 +20,10 @@ public interface ZanMapper {
 
     /**
      * 根据userId, refId, type取消赞
-     * @param inVo
+     * @param zan
      * @return
      */
-    int deleteZan(ZanInVo inVo);
+    int deleteZan(Zan zan);
 
     /**
      * 查询点赞总数

@@ -16,6 +16,8 @@ public class ActShopInVo extends BaseInVo{
 
     private Long shopId;
 
+    private Long voteUserId;//投票的用户id
+
     public Long getId() {
         return id;
     }
@@ -46,5 +48,13 @@ public class ActShopInVo extends BaseInVo{
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public Long getVoteUserId() {
+        return voteUserId;
+    }
+
+    public void setVoteUserId(Long voteUserId) {
+        this.voteUserId = voteUserId;
     }
 }

@@ -31,6 +31,8 @@ public class ActShopOut {
 
     private int voteNum;
 
+    private int isVote;//是否已投
+
     public Long getId() {
         return id;
     }
@@ -109,5 +111,13 @@ public class ActShopOut {
 
     public void setVoteNum(int voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public int getIsVote() {
+        return isVote;
+    }
+
+    public void setIsVote(int isVote) {
+        this.isVote = isVote;
     }
 }

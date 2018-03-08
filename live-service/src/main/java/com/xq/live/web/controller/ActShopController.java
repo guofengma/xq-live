@@ -38,6 +38,9 @@ public class ActShopController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResp<Pager<ActShopOut>> list(ActShopInVo inVo){
+        if(inVo.getVoteUserId()==null){
+            return new BaseResp<Pager<ActShopOut>>(0,"voteUserId必填", null);
+        }
         Pager<ActShopOut> result = actShopService.list(inVo);
         return new BaseResp<Pager<ActShopOut>>(ResultStatus.SUCCESS, result);
     }
@@ -49,6 +52,9 @@ public class ActShopController {
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResp<List<ActShopOut>> top(ActShopInVo inVo){
+        if(inVo.getVoteUserId()==null){
+            return new BaseResp<List<ActShopOut>>(0,"voteUserId必填", null);
+        }
         List<ActShopOut> result = actShopService.top(inVo);
         return new BaseResp<List<ActShopOut>>(ResultStatus.SUCCESS, result);
     }

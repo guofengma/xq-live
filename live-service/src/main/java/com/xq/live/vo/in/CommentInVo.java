@@ -19,6 +19,8 @@ public class CommentInVo extends BaseInVo {
     @NotNull(message = "userId必填")
     private Long userId;
 
+    private Long zanUserId;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class CommentInVo extends BaseInVo {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getZanUserId() {
+        return zanUserId;
+    }
+
+    public void setZanUserId(Long zanUserId) {
+        this.zanUserId = zanUserId;
     }
 }

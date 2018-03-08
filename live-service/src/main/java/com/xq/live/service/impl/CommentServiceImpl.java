@@ -75,9 +75,9 @@ public class CommentServiceImpl implements CommentService {
             for (CommentOut comment : list) {
                 User user = userMapper.selectByPrimaryKey(comment.getUserId());
                 int total1ForZan;
-                if(comment.getRefId()!=null&&comment.getCmtType()!=null){
+                if(comment.getId()!=null&&comment.getCmtType()!=null){
                     ZanInVo zanInVo = new ZanInVo();
-                    zanInVo.setRefId(comment.getRefId());
+                    zanInVo.setRefId(comment.getId());
                     zanInVo.setType(comment.getCmtType());
                     total1ForZan = zanMapper.total(zanInVo);
                 }else{

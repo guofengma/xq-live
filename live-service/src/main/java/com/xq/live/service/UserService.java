@@ -17,6 +17,8 @@ public interface UserService {
 
     public User findByUsername(@Param("userName") String userName);
 
+    public User findByOpenId(String openId);
+
     public Pager<User> list(UserInVo inVo);
 
     /**

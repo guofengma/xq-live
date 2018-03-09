@@ -112,6 +112,17 @@ public class UserController {
     }
 
     /**
+     * 根据openId查询用户信息
+     * @param openId
+     * @return
+     */
+    @RequestMapping(value = "/findByOpenId/{openId}", method = RequestMethod.GET)
+    public BaseResp<User> findByOpenId(@PathVariable("openId") String openId){
+        User user = userService.findByOpenId(openId);
+        return new BaseResp<User>(ResultStatus.SUCCESS, user);
+    }
+
+    /**
      * 更新用户信息
      * @param user
      * @return

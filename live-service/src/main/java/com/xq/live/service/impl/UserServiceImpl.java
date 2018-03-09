@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByOpenId(String openId) {
+        return userMapper.findByOpenId(openId);
+    }
+
+    @Override
     public Pager<User> list(UserInVo inVo) {
         Pager<User> result= new Pager<User>();
         int total = userMapper.listTotal(inVo);

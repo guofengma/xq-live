@@ -42,6 +42,8 @@ public class User {
      */
     private Long shopId;
 
+    private String openId;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -181,5 +183,13 @@ public class User {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }

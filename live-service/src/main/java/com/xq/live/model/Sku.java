@@ -8,12 +8,19 @@ import java.util.Date;
  * 商品SKU 实体entity
  */
 public class Sku {
+    /**
+     * sku_type 1 平台券  2 特色菜
+     */
+    public final static int SKU_TYPE_XQQ = 1;   //享七券
+
+    public final static int SKU_TYPE_TSC = 2;   //特色菜
+
     private Long id;
     private String skuCode;
     @NotNull(message = "skuName必填")
     private String skuName;
     @NotNull(message = "skuType必填")
-    private Byte skuType;   //sku类型 1 券 2 其他
+    private Integer skuType;   //sku类型 1 券 2 其他
 
     private BigDecimal sellPrice;
 
@@ -31,6 +38,8 @@ public class Sku {
     private String opreatorName;
 
     private Integer isDeleted;
+
+    private String picUrl;
 
     public Long getId() {
         return id;
@@ -56,11 +65,11 @@ public class Sku {
         this.skuName = skuName == null ? null : skuName.trim();
     }
 
-    public Byte getSkuType() {
+    public Integer getSkuType() {
         return skuType;
     }
 
-    public void setSkuType(Byte skuType) {
+    public void setSkuType(Integer skuType) {
         this.skuType = skuType;
     }
 
@@ -126,5 +135,13 @@ public class Sku {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl == null ? null : picUrl.trim();
     }
 }

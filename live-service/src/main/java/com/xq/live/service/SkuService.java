@@ -50,4 +50,11 @@ public interface SkuService {
      * @return
      */
     SkuOut selectById(Long id);
+
+    /**
+     * 分页查询特色菜
+     * @param inVo
+     * @return
+     */
+    Pager<Sku> queryTscList(SkuInVo inVo);
 }

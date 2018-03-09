@@ -19,7 +19,7 @@ public class Pager<T> implements Serializable {
     private int start; // start表示当前页开始的记录数,start=每页行数*(当前页数-1)
 //    private int end; // 当前页结束的记录行数
     private int total; // 总行数
-    private int rows = 5; // 每页行数，默认5
+    private int rows = 10; // 每页行数，默认5
     private int page; // 当前页数
 //    private int pageListSize = 6;// 页码列表大小，默认6
 //    private List<Integer> pageNumList = new ArrayList<Integer>();

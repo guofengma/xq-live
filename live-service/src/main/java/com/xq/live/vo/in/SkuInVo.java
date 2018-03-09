@@ -15,6 +15,12 @@ public class SkuInVo extends BaseInVo {
 
     private String skuName;
 
+    private String picUrl;
+
+    private Integer skuType;   //sku类型 1 券 2 特色菜 3 其他
+
+    private Long shopId;
+
     public Long getId() {
         return id;
     }
@@ -37,5 +43,29 @@ public class SkuInVo extends BaseInVo {
 
     public void setSkuName(String skuName) {
         this.skuName = skuName;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public Integer getSkuType() {
+        return skuType;
+    }
+
+    public void setSkuType(Integer skuType) {
+        this.skuType = skuType;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

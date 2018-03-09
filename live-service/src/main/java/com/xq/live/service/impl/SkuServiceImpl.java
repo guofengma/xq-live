@@ -44,6 +44,20 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
+    public Pager<Sku> queryTscList(SkuInVo inVo){
+        Pager<Sku> result =  new Pager<Sku>();
+        int total = skuMapper.tscListTotal(inVo);
+        if(total > 0){
+            List<Sku> list = skuMapper.queryTscList(inVo);
+            result.setList(list);
+        }
+        result.setTotal(total);
+        result.setPage(inVo.getPage());
+        return result;
+    }
+
+
+    @Override
     public List<SkuOut> top(SkuInVo inVo) {
         return skuMapper.list(inVo);
     }

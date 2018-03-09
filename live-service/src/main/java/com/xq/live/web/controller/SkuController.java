@@ -50,6 +50,7 @@ public class SkuController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResp<Pager<SkuOut>> list(SkuInVo inVo){
+        inVo.setSkuType(Sku.SKU_TYPE_XQQ);
         Pager<SkuOut> result = skuService.list(inVo);
         return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
     }
@@ -78,5 +79,24 @@ public class SkuController {
         }
         Long skuId = skuService.add(sku);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
+    }
+
+    /**
+     * 分页特色菜列表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/tsc", method = RequestMethod.GET)
+    public BaseResp<Pager<Sku>> tscList(SkuInVo inVo){
+        if(inVo == null){
+            return new BaseResp<Pager<Sku>>(ResultStatus.error_param_empty);
+        }
+
+        if(inVo.getShopId() == null){
+            return new BaseResp<Pager<Sku>>(ResultStatus.error_param_shop_id_empty);
+        }
+        inVo.setSkuType(Sku.SKU_TYPE_TSC);
+        Pager<Sku> result = skuService.queryTscList(inVo);
+        return new BaseResp<Pager<Sku>>(ResultStatus.SUCCESS, result);
     }
 }

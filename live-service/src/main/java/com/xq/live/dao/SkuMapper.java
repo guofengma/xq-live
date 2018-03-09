@@ -26,4 +26,8 @@ public interface SkuMapper {
     int listTotal(SkuInVo inVo);
 
     SkuOut selectById(Long id);
+
+    List<Sku> queryTscList(SkuInVo inVo);
+
+    int tscListTotal(SkuInVo inVo);
 }

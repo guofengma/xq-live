@@ -5,10 +5,12 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
     <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
-    <result column="sku_type" jdbcType="TINYINT" property="skuType" />
+    <result column="sku_type" jdbcType="INTEGER" property="skuType" />
     <result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
     <result column="in_price" jdbcType="DECIMAL" property="inPrice" />
     <result column="stock_num" jdbcType="INTEGER" property="stockNum" />
+    <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="opreator_id" jdbcType="BIGINT" property="opreatorId" />
@@ -33,7 +35,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, sku_code, sku_name, sku_type, sell_price, in_price, stock_num, create_time, update_time, 
+    id, sku_code, sku_name, sku_type, sell_price, in_price, is_deleted, pic_url, stock_num, create_time, update_time,
     opreator_id, opreator_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -53,6 +55,7 @@
       sku.sell_price,
       sku.in_price,
       sku.stock_num,
+      sku.pic_url,
       sku.create_time,
       sku.update_time,
       sku.opreator_id,
@@ -78,6 +81,9 @@
       <if test="skuName != null">
         and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
       </if>
+      <if test="skuType != null">
+        and sku.sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
     </where>
     order by sku.id desc
     limit #{start}, #{rows}
@@ -93,6 +99,7 @@
       sku.sell_price,
       sku.in_price,
       sku.stock_num,
+      sku.pic_url,
       sku.create_time,
       sku.update_time,
       sku.opreator_id,
@@ -111,26 +118,6 @@
     where sku.id = #{id,jdbcType=BIGINT}
   </select>
 
-  <!--分页查询 start-->
-<!--  <select id="list" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from sku
-    <where>
-      <if test="id != null">
-        id = #{id,jdbcType=BIGINT}
-      </if>
-      <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR}
-      </if>
-      <if test="skuName != null">
-        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
-      </if>
-    </where>
-    order by id desc
-    limit #{start}, #{rows}
-  </select>-->
-
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
     from sku
@@ -144,9 +131,73 @@
       <if test="skuName != null">
         and sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
       </if>
+      <if test="skuType != null">
+        and sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
     </where>
   </select>
 
+
+  <!--分页查询 start-->
+  <select id="queryTscList" resultMap="BaseResultMap">
+    select
+      sku.id,
+      sku.sku_code,
+      sku.sku_name,
+      sku.sku_type,
+      sku.sell_price,
+      sku.in_price,
+      sku.stock_num,
+      sku.pic_url,
+      sku.create_time,
+      sku.update_time,
+      sku.opreator_id,
+      sku.opreator_name
+    from sku sku
+      inner join sku_shop ss on sku.id = ss.sku_id
+    <where>
+      <if test="id != null">
+        sku.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="skuCode != null">
+        and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="skuName != null">
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="skuType != null">
+        and sku.sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
+      <if test="shopId != null">
+        and ss.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="tscListTotal" resultType="java.lang.Integer">
+    select count(1)
+    from sku sku
+    inner join sku_shop ss on sku.id = ss.sku_id
+    <where>
+      <if test="id != null">
+        sku.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="skuCode != null">
+        and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="skuName != null">
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="skuType != null">
+        and sku.sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
+      <if test="shopId != null">
+        and ss.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </select>
   <!--分页查询 end-->
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -160,7 +211,7 @@
       stock_num, create_time, update_time, 
       opreator_id, opreator_name)
     values (#{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR},
-      #{skuType,jdbcType=TINYINT}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL}, 
+      #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},
       #{stockNum,jdbcType=INTEGER}, now(), now(),
       #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR})
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -209,7 +260,7 @@
         #{skuName,jdbcType=VARCHAR},
       </if>
       <if test="skuType != null">
-        #{skuType,jdbcType=TINYINT},
+        #{skuType,jdbcType=INTEGER},
       </if>
       <if test="sellPrice != null">
         #{sellPrice,jdbcType=DECIMAL},
@@ -247,7 +298,7 @@
         sku_name = #{skuName,jdbcType=VARCHAR},
       </if>
       <if test="skuType != null">
-        sku_type = #{skuType,jdbcType=TINYINT},
+        sku_type = #{skuType,jdbcType=INTEGER},
       </if>
       <if test="sellPrice != null">
         sell_price = #{sellPrice,jdbcType=DECIMAL},
@@ -277,7 +328,7 @@
     update sku
     set sku_code = #{skuCode,jdbcType=VARCHAR},
       sku_name = #{skuName,jdbcType=VARCHAR},
-      sku_type = #{skuType,jdbcType=TINYINT},
+      sku_type = #{skuType,jdbcType=INTEGER},
       sell_price = #{sellPrice,jdbcType=DECIMAL},
       in_price = #{inPrice,jdbcType=DECIMAL},
       stock_num = #{stockNum,jdbcType=INTEGER},

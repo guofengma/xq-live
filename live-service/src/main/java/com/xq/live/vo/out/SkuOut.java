@@ -18,10 +18,11 @@ public class SkuOut {
     private Long id;
     private String skuCode;
     private String skuName;
-    private Byte skuType;   //sku类型 1 券 2 其他
+    private Integer skuType;   //sku类型 1 券 2 其他
     private BigDecimal sellPrice;
     private BigDecimal inPrice;
     private Integer stockNum;
+    private String picUrl;
     private Date createTime;
     private Date updateTime;
     private Long opreatorId;
@@ -56,11 +57,11 @@ public class SkuOut {
         this.skuName = skuName;
     }
 
-    public Byte getSkuType() {
+    public Integer getSkuType() {
         return skuType;
     }
 
-    public void setSkuType(Byte skuType) {
+    public void setSkuType(Integer skuType) {
         this.skuType = skuType;
     }
 
@@ -150,5 +151,13 @@ public class SkuOut {
 
     public void setSellNum(Integer sellNum) {
         this.sellNum = sellNum;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 }

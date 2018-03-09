@@ -24,6 +24,8 @@ public class ShopEnter {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    private String token;//用户的唯一标志信息
+
     public Long getId() {
         return id;
     }
@@ -78,5 +80,13 @@ public class ShopEnter {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

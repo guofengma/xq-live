@@ -9,9 +9,10 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="per_capita" jdbcType="DECIMAL" property="perCapita" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_name, mobile, shop_name, address, per_capita, create_time
+    id, user_name, mobile, shop_name, address, per_capita, create_time,token
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -28,6 +29,12 @@
     shop_name = #{shopName,jdbcType=VARCHAR} AND
     address = #{address,jdbcType=VARCHAR}
   </select>
+  <select id="selectByToken" parameterType="com.xq.live.model.ShopEnter" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from shop_enter
+    where token = #{token,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from shop_enter
     where id = #{id,jdbcType=BIGINT}
@@ -35,10 +42,10 @@
   <insert id="insert" parameterType="com.xq.live.model.ShopEnter">
     insert into shop_enter (id, user_name, mobile, 
       shop_name, address, per_capita,
-      create_time)
+      create_time,token)
     values (#{id,jdbcType=BIGINT},#{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
       #{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{perCapita,jdbcType=DECIMAL},
-      now())
+      now(),#{token,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -67,6 +74,9 @@
       <if test="createTime != null">
         create_time,
       </if>
+      <if test="token != null">
+        token,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -89,6 +99,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -113,6 +126,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -123,7 +139,8 @@
       shop_name = #{shopName,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       per_capita = #{perCapita,jdbcType=DECIMAL},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      token = #{token,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

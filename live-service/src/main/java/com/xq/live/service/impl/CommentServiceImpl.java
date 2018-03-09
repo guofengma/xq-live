@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
                 if(comment.getId()!=null&&comment.getCmtType()!=null){
                     ZanInVo zanInVo = new ZanInVo();
                     zanInVo.setRefId(comment.getId());
-                    zanInVo.setType(comment.getCmtType());
+                    zanInVo.setType(4);
                     total1ForZan = zanMapper.total(zanInVo);
                 }else{
                     total1ForZan = 0;

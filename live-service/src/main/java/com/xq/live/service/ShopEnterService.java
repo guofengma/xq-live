@@ -10,4 +10,6 @@ public interface ShopEnterService {
     Long add(ShopEnter shopEnter);
 
     ShopEnter selectByUserNameAndShopNameAndMobileAndAddress(ShopEnter shopEnter);
+
+    ShopEnter selectByToken(ShopEnter shopEnter);
 }

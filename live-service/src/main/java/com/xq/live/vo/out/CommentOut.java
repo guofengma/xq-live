@@ -12,7 +12,7 @@ import java.util.Date;
  * @date 2018-03-07 20:05
  * @copyright:hbxq
  **/
-public class CommentOut {
+public class CommentOut implements Comparable<CommentOut>{
     private Long id;
 
     @NotNull(message = "refId必填")
@@ -132,5 +132,11 @@ public class CommentOut {
 
     public void setIsZan(Integer isZan) {
         this.isZan = isZan;
+    }
+
+    @Override
+    public int compareTo(CommentOut o) {
+        int i = o.getZan() - this.getZan();
+        return i;
     }
 }

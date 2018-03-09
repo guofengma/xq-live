@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.Sku;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuOut;
 
 import java.util.List;
 
@@ -27,14 +28,14 @@ public interface SkuService {
      * @param inVo
      * @return
      */
-    Pager<Sku> list(SkuInVo inVo);
+    Pager<SkuOut> list(SkuInVo inVo);
 
     /**
      * 查询列表
      * @param inVo
      * @return
      */
-    List<Sku> top(SkuInVo inVo);
+    List<SkuOut> top(SkuInVo inVo);
 
     /**
      * 新增sku
@@ -42,4 +43,11 @@ public interface SkuService {
      * @return
      */
     Long add(Sku sku);
+
+    /**
+     * 根据id查询，返回结果包含促销信息
+     * @param id
+     * @return
+     */
+    SkuOut selectById(Long id);
 }

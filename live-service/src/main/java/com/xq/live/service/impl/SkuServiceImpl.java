@@ -6,6 +6,7 @@ import com.xq.live.dao.SkuMapper;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,11 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
-    public Pager<Sku> list(SkuInVo inVo) {
-        Pager<Sku> result =  new Pager<Sku>();
+    public Pager<SkuOut> list(SkuInVo inVo) {
+        Pager<SkuOut> result =  new Pager<SkuOut>();
         int total = skuMapper.listTotal(inVo);
         if(total > 0){
-            List<Sku> list = skuMapper.list(inVo);
+            List<SkuOut> list = skuMapper.list(inVo);
             result.setList(list);
         }
         result.setTotal(total);
@@ -43,7 +44,7 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
-    public List<Sku> top(SkuInVo inVo) {
+    public List<SkuOut> top(SkuInVo inVo) {
         return skuMapper.list(inVo);
     }
 
@@ -55,5 +56,10 @@ public class SkuServiceImpl implements SkuService {
             return null;
         }
         return sku.getId();
+    }
+
+    @Override
+    public SkuOut selectById(Long id) {
+        return skuMapper.selectById(id);
     }
 }

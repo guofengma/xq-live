@@ -14,6 +14,24 @@
     <result column="opreator_id" jdbcType="BIGINT" property="opreatorId" />
     <result column="opreator_name" jdbcType="VARCHAR" property="opreatorName" />
   </resultMap>
+  
+  <resultMap id="SkuOutResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.SkuOut">
+    <!--票券的面值-->
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <!--已售数量-->
+    <result column="sell_num" jdbcType="INTEGER" property="sellNum" />
+    <!-- 一个商品sku对应多个促销规则 -->
+    <collection property="promotionRules" ofType="com.xq.live.model.PromotionRules">
+      <result column="rule_id" jdbcType="BIGINT" property="id" />
+      <result column="rule_type" jdbcType="INTEGER" property="ruleType" />
+      <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc" />
+      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+      <result column="sku_id" jdbcType="BIGINT" property="skuId" />
+    </collection>
+
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, sku_code, sku_name, sku_type, sell_price, in_price, stock_num, create_time, update_time, 
     opreator_id, opreator_name
@@ -26,37 +44,101 @@
   </select>
 
   <!--分页查询 start-->
-  <select id="list" resultMap="BaseResultMap">
+  <select id="list" resultMap="SkuOutResultMap">
+    SELECT
+      sku.id,
+      sku.sku_code,
+      sku.sku_name,
+      sku.sku_type,
+      sku.sell_price,
+      sku.in_price,
+      sku.stock_num,
+      sku.create_time,
+      sku.update_time,
+      sku.opreator_id,
+      sku.opreator_name,
+      pr.id rule_id,
+      pr.rule_type,
+      pr.rule_desc,
+      pr.end_time,
+      pr.shop_id,
+      pr.sku_id,
+      cs.amount,
+    (select count(1) from coupon where sku_id = sku.id) sell_num
+    FROM sku sku
+    LEFT JOIN promotion_rules pr ON sku.id = pr.sku_id
+    LEFT JOIN coupon_sku cs on sku.id = cs.sku_id
+    <where>
+      <if test="id != null">
+        sku.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="skuCode != null">
+        and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="skuName != null">
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
+      </if>
+    </where>
+    order by sku.id desc
+    limit #{start}, #{rows}
+  </select>
+
+  <!--分页查询 start-->
+  <select id="selectById" parameterType="java.lang.Long" resultMap="SkuOutResultMap">
+    SELECT
+      sku.id,
+      sku.sku_code,
+      sku.sku_name,
+      sku.sku_type,
+      sku.sell_price,
+      sku.in_price,
+      sku.stock_num,
+      sku.create_time,
+      sku.update_time,
+      sku.opreator_id,
+      sku.opreator_name,
+      pr.id rule_id,
+      pr.rule_type,
+      pr.rule_desc,
+      pr.end_time,
+      pr.shop_id
+    FROM sku sku
+    LEFT JOIN promotion_rules pr ON sku.id = pr.sku_id
+    where sku.id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--分页查询 start-->
+<!--  <select id="list" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from sku
     <where>
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
+        id = #{id,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR},
+        and sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
       <if test="skuName != null">
-        and sku_name = #{sku_code,jdbcType=VARCHAR},
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
       </if>
     </where>
     order by id desc
     limit #{start}, #{rows}
-  </select>
+  </select>-->
 
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
     from sku
     <where>
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
+        id = #{id,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR},
+        and sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
       <if test="skuName != null">
-        and sku_name = #{sku_code,jdbcType=VARCHAR},
+        and sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
       </if>
     </where>
   </select>

@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Sku;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,9 @@ public interface SkuMapper {
 
     int updateByPrimaryKey(Sku record);
 
-    List<Sku> list(SkuInVo inVo);
+    List<SkuOut> list(SkuInVo inVo);
 
     int listTotal(SkuInVo inVo);
+
+    SkuOut selectById(Long id);
 }

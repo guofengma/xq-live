@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -37,9 +38,9 @@ public class SkuController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public BaseResp<Sku> get(@PathVariable("id") Long id){
-        Sku sku = skuService.get(id);
-        return new BaseResp<Sku>(ResultStatus.SUCCESS, sku);
+    public BaseResp<SkuOut> get(@PathVariable("id") Long id){
+        SkuOut skuOut = skuService.selectById(id);
+        return new BaseResp<SkuOut>(ResultStatus.SUCCESS, skuOut);
     }
 
     /**
@@ -48,9 +49,9 @@ public class SkuController {
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<Sku>> list(SkuInVo inVo){
-        Pager<Sku> result = skuService.list(inVo);
-        return new BaseResp<Pager<Sku>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<SkuOut>> list(SkuInVo inVo){
+        Pager<SkuOut> result = skuService.list(inVo);
+        return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**
@@ -59,9 +60,9 @@ public class SkuController {
      * @return
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResp<List<Sku>> top(SkuInVo inVo){
-        List<Sku> result = skuService.top(inVo);
-        return new BaseResp<List<Sku>>(ResultStatus.SUCCESS, result);
+    public BaseResp<List<SkuOut>> top(SkuInVo inVo){
+        List<SkuOut> result = skuService.top(inVo);
+        return new BaseResp<List<SkuOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**

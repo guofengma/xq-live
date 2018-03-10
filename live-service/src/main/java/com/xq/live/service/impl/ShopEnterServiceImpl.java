@@ -28,4 +28,10 @@ public class ShopEnterServiceImpl implements ShopEnterService{
         ShopEnter res = shopEnterMapper.selectByUserNameAndShopNameAndMobileAndAddress(shopEnter);
         return res;
     }
+
+    @Override
+    public ShopEnter selectByToken(ShopEnter shopEnter) {
+        ShopEnter res = shopEnterMapper.selectByToken(shopEnter);
+        return res;
+    }
 }

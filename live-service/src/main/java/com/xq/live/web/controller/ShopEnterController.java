@@ -24,18 +24,39 @@ public class ShopEnterController {
     @Autowired
     private ShopEnterService shopEnterService;
 
+
+    /**
+     * 商家入驻---新增一条记录
+     * @param shopEnter
+     * @param result
+     * @return
+     */
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public BaseResp<Long> add(@Valid ShopEnter shopEnter, BindingResult result){
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
-        ShopEnter sp = shopEnterService.selectByUserNameAndShopNameAndMobileAndAddress(shopEnter);
+        ShopEnter sp = shopEnterService.selectByToken(shopEnter);
         if(sp!=null){
             return new BaseResp<Long>(0, "该商家已入驻", null);
         }
         Long skuId = shopEnterService.add(shopEnter);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
+    }
+
+    /**
+     * 通过token查询是否为商家
+     * @param shopEnter
+     * @return
+     */
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    public BaseResp<ShopEnter> search(ShopEnter shopEnter){
+        if(shopEnter.getToken()==null){
+            return new BaseResp<ShopEnter>(0,"token必填",null);
+        }
+        ShopEnter res = shopEnterService.selectByToken(shopEnter);
+        return new BaseResp<ShopEnter>(ResultStatus.SUCCESS,res);
     }
 
 }

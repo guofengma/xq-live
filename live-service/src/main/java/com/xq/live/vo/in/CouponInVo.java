@@ -1,6 +1,7 @@
 package com.xq.live.vo.in;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * ${DESCRIPTION}
@@ -32,6 +33,8 @@ public class CouponInVo extends BaseInVo {
     private String userName;
 
     private Integer isUsed;
+
+    private Date expiryDate;
 
     public Long getId() {
         return id;
@@ -120,4 +123,5 @@ public class CouponInVo extends BaseInVo {
     public void setIsUsed(Integer isUsed) {
         this.isUsed = isUsed;
     }
+
 }

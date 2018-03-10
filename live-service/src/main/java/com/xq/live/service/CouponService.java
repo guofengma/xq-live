@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.Coupon;
 import com.xq.live.vo.in.CouponInVo;
+import com.xq.live.vo.out.CouponOut;
 
 import java.util.List;
 
@@ -26,14 +27,14 @@ public interface CouponService {
      * @param inVo
      * @return
      */
-    Pager<Coupon> list(CouponInVo inVo);
+    Pager<CouponOut> list(CouponInVo inVo);
 
     /**
      * 查最热
      * @param inVo
      * @return
      */
-    List<Coupon> top(CouponInVo inVo);
+    List<CouponOut> top(CouponInVo inVo);
 
     /**
      * 新增
@@ -47,5 +48,12 @@ public interface CouponService {
      * @param couponCode
      * @return
      */
-    Coupon getByCouponCode(String couponCode);
+    CouponOut getByCouponCode(String couponCode);
+
+    /**
+     * 根据id查询详情
+     * @param id
+     * @return
+     */
+    CouponOut selectById(Long id);
 }

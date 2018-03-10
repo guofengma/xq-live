@@ -2,6 +2,7 @@ package com.xq.live.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPayConstants;
+import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.RandomStringUtil;
 import com.xq.live.common.ResultStatus;
@@ -12,6 +13,7 @@ import com.xq.live.vo.in.WeixinInVo;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
 import com.xq.live.web.utils.PayUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -28,6 +30,8 @@ import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,37 +111,24 @@ public class WeixinPayController {
             packageParams.put("mch_id", WeixinPayConstants.mch_id);
             packageParams.put("nonce_str", nonce_str);
             packageParams.put("body", soOut.getSkuName());    //商品描述
-            packageParams.put("detail", soOut.getSkuCode());    //商品描述
+//            packageParams.put("detail", "testdetail");    //商品描述
             packageParams.put("out_trade_no", soOut.getId().toString());//商户订单号
-            packageParams.put("total_fee", soOut.getSoAmount().toString());//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            packageParams.put("total_fee", Integer.valueOf(soOut.getSoAmount().multiply(new BigDecimal(100)).intValue()).toString());//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             packageParams.put("spbill_create_ip", spbill_create_ip);
             packageParams.put("notify_url", WeixinPayConstants.notify_url);//支付成功后的回调地址
             packageParams.put("trade_type", WeixinPayConstants.TRADETYPE);//支付方式
             packageParams.put("openid", inVo.getOpenId());
 
-            String prestr = PayUtils.createLinkString(packageParams); // 把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
+            String reqStrXMl = WXPayUtil.mapToXml(packageParams);
+            System.out.println("reqStrXMl : "+reqStrXMl);
+            String sign = WXPayUtil.generateSignature(packageParams, WeixinPayConstants.key);
+            System.out.println("sign : "+sign);
+            String xml = WXPayUtil.generateSignedXml(packageParams, WeixinPayConstants.key);
 
-            //MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
-            String mysign = PayUtils.sign(prestr, WeixinPayConstants.key, "utf-8").toUpperCase();
-
-            //拼接统一下单接口使用的xml数据，要将上一步生成的签名一起拼接进去
-            String xml = "<xml>" + "<appid>" + WeixinPayConstants.appid + "</appid>"
-                    + "<body><![CDATA[" + soOut.getSkuName() + "]]></body>"
-                    + "<mch_id>" + WeixinPayConstants.mch_id + "</mch_id>"
-                    + "<nonce_str>" + nonce_str + "</nonce_str>"
-                    + "<notify_url>" + WeixinPayConstants.notify_url + "</notify_url>"
-                    + "<openid>" + inVo.getOpenId() + "</openid>"
-                    + "<out_trade_no>" + soOut.getId() + "</out_trade_no>"
-                    + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
-                    + "<total_fee>" + soOut.getSoAmount() + "</total_fee>"
-                    + "<trade_type>" + WeixinPayConstants.TRADETYPE + "</trade_type>"
-                    + "<sign>" + mysign + "</sign>"
-                    + "</xml>";
-
-            System.out.println("调试模式_统一下单接口 请求XML数据：" + xml);
-
+            System.out.println("xml : "+xml);
             //调用统一下单接口，并接受返回的结果
             String result = PayUtils.httpRequest(WeixinPayConstants.pay_url, "POST", xml);
+
 
             System.out.println("调试模式_统一下单接口 返回XML数据：" + result);
 
@@ -175,7 +166,7 @@ public class WeixinPayController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value="/wxNotify")
+    @RequestMapping(value="/notify")
     @ResponseBody
     public void wxNotify(HttpServletRequest request,HttpServletResponse response)throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream)request.getInputStream()));

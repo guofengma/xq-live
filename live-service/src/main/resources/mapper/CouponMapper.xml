@@ -15,15 +15,29 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="is_used" jdbcType="INTEGER" property="isUsed" />
     <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+    <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="used_time" jdbcType="TIMESTAMP" property="usedTime" />
     <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="shop_cashier_id" jdbcType="BIGINT" property="shopCashierId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  
+  <resultMap id="CouponOutResultMap" type="com.xq.live.vo.out.CouponOut" extends="BaseResultMap">
+      <!-- 一个商品sku对应多个促销规则 -->
+      <collection property="promotionRules" ofType="com.xq.live.model.PromotionRules">
+        <result column="rule_id" jdbcType="BIGINT" property="id" />
+        <result column="rule_type" jdbcType="INTEGER" property="ruleType" />
+        <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="coupon_shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="coupon_sku_id" jdbcType="BIGINT" property="skuId" />
+      </collection>
+  </resultMap>
+  
   <sql id="Base_Column_List">
     id, so_id, coupon_code, sku_id, sku_code, sku_name, coupon_amount, type,qrcode_url, user_id,
-    user_name, is_used, is_deleted, create_time, used_time, shop_id, shop_cashier_id, 
+    user_name, is_used, is_deleted, expiry_date, create_time, used_time, shop_id, shop_cashier_id,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -33,42 +47,130 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="getByCouponCode" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from coupon
-    where coupon_code = #{couponCode,jdbcType=VARCHAR}
+  <select id="getByCouponCode" parameterType="java.lang.String" resultMap="CouponOutResultMap">
+    SELECT
+      c.id,
+      c.so_id,
+      c.coupon_code,
+      c.sku_id,
+      c.sku_code,
+      c.sku_name,
+      c.coupon_amount,
+      c.type,
+      c.qrcode_url,
+      c.user_id,
+      c.user_name,
+      c.is_used,
+      c.is_deleted,
+      c.expiry_date,
+      c.create_time,
+      c.used_time,
+      c.shop_id,
+      c.shop_cashier_id,
+      c.update_time,
+      pr.id rule_id,
+      pr.rule_type,
+      pr.rule_desc,
+      pr.end_time,
+      pr.shop_id coupon_shop_id,
+      pr.sku_id coupon_sku_id
+    FROM
+      coupon c
+    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
+    where c.coupon_code = #{couponCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectById" parameterType="java.lang.Long" resultMap="CouponOutResultMap">
+    SELECT
+      c.id,
+      c.so_id,
+      c.coupon_code,
+      c.sku_id,
+      c.sku_code,
+      c.sku_name,
+      c.coupon_amount,
+      c.type,
+      c.qrcode_url,
+      c.user_id,
+      c.user_name,
+      c.is_used,
+      c.is_deleted,
+      c.expiry_date,
+      c.create_time,
+      c.used_time,
+      c.shop_id,
+      c.shop_cashier_id,
+      c.update_time,
+      pr.id rule_id,
+      pr.rule_type,
+      pr.rule_desc,
+      pr.end_time,
+      pr.shop_id coupon_shop_id,
+      pr.sku_id coupon_sku_id
+    FROM
+    coupon c
+    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
+    where c.id = #{id,jdbcType=BIGINT}
   </select>
 
   <!-- 分页查询 start-->
-  <select id="list" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from coupon
+  <select id="list" resultMap="CouponOutResultMap">
+    SELECT
+      c.id,
+      c.so_id,
+      c.coupon_code,
+      c.sku_id,
+      c.sku_code,
+      c.sku_name,
+      c.coupon_amount,
+      c.type,
+      c.qrcode_url,
+      c.user_id,
+      c.user_name,
+      c.is_used,
+      c.is_deleted,
+      c.expiry_date,
+      c.create_time,
+      c.used_time,
+      c.shop_id,
+      c.shop_cashier_id,
+      c.update_time,
+      pr.id rule_id,
+      pr.rule_type,
+      pr.rule_desc,
+      pr.end_time,
+      pr.shop_id coupon_shop_id,
+      pr.sku_id coupon_sku_id
+    FROM
+      coupon c
+    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
     <where>
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
+        c.id = #{id,jdbcType=BIGINT}
       </if>
       <if test="couponCode != null">
-        and coupon_code = #{couponCode,jdbcType=VARCHAR},
+        and c.coupon_code = #{couponCode,jdbcType=VARCHAR}
       </if>
       <if test="skuId != null">
-        and sku_id = #{skuId,jdbcType=BIGINT},
+        and c.sku_id = #{skuId,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR},
+        and c.sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
       <if test="userId != null">
-        and user_id = #{userId,jdbcType=BIGINT},
+        and c.user_id = #{userId,jdbcType=BIGINT}
       </if>
       <if test="userName != null">
-        and user_name = #{userName,jdbcType=VARCHAR},
+        and c.user_name = #{userName,jdbcType=VARCHAR}
       </if>
-      <if test="isUsed != null">
-        and is_used = #{isUsed,jdbcType=INTEGER},
+      <if test="isUsed != null and isUsed == 0">
+        and c.is_used = 0
+      </if>
+      <if test="isUsed != null and isUsed == 1"><!--查询已使用和已过期的-->
+        <![CDATA[ and (c.is_used = 1 or (c.is_used = 0 and c.expiry_date < now())) ]]>
       </if>
     </where>
-    order by id desc
+    order by c.id desc
     limit #{start}, #{rows}
   </select>
 
@@ -77,29 +179,30 @@
     from coupon
     <where>
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
+        id = #{id,jdbcType=BIGINT}
       </if>
       <if test="couponCode != null">
-        and coupon_code = #{couponCode,jdbcType=VARCHAR},
+        and coupon_code = #{couponCode,jdbcType=VARCHAR}
       </if>
       <if test="skuId != null">
-        and sku_id = #{skuId,jdbcType=BIGINT},
+        and sku_id = #{skuId,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR},
+        and sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
       <if test="userId != null">
-        and user_id = #{userId,jdbcType=BIGINT},
+        and user_id = #{userId,jdbcType=BIGINT}
       </if>
       <if test="userName != null">
-        and user_name = #{userName,jdbcType=VARCHAR},
+        and user_name = #{userName,jdbcType=VARCHAR}
       </if>
-      <if test="isUsed != null">
-        and is_used = #{isUsed,jdbcType=INTEGER},
+      <if test="isUsed != null and isUsed == 0">
+        and is_used = 0
+      </if>
+      <if test="isUsed != null and isUsed == 1"><!--查询已使用和已过期的-->
+        <![CDATA[ and (is_used = 1 or (is_used = 0 and expiry_date < now())) ]]>
       </if>
     </where>
-    order by id desc
-    limit #{start}, #{rows}
   </select>
   <!-- 分页查询 end-->
 
@@ -112,11 +215,11 @@
     insert into coupon (so_id, coupon_code,
       sku_id, sku_code, sku_name, 
       coupon_amount, type, qrcode_url, user_id,
-      user_name, create_time, update_time)
+      user_name, expiry_date, create_time, update_time)
     values (#{soId,jdbcType=BIGINT}, #{couponCode,jdbcType=VARCHAR},
       #{skuId,jdbcType=BIGINT}, #{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR}, 
       #{couponAmount,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{qrcodeUrl,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT},
-      #{userName,jdbcType=VARCHAR}, now(), now())
+      #{userName,jdbcType=VARCHAR}, #{expiryDate, jdbcType=DATE}, now(), now())
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id
       </selectKey>

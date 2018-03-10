@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -133,6 +135,8 @@ public class SoServiceImpl implements SoService {
         inVo.setSoStatus(So.SO_STATUS_PAID);
         int ret = soMapper.paid(inVo);
         if (ret > 0) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, 3);     //有效时间为3个月
             //2、支付成功生成抵用券
             for (int i = 0; i < inVo.getSkuNum(); i++) {
                 //3、查询券信息
@@ -152,6 +156,7 @@ public class SoServiceImpl implements SoService {
                 //上传二维码图片到腾讯COS服务器
                 String qrcodeUrl = uploadQRCodeToCos(coupon.getCouponCode());
                 coupon.setQrcodeUrl(qrcodeUrl);
+                coupon.setExpiryDate(cal.getTime());
                 couponMapper.insert(coupon);
                 //            //新开一个线程上传二维码并生成抵用券
                 //            new Thread(new Runnable() {

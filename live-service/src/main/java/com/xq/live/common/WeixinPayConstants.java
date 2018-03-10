@@ -15,7 +15,7 @@ public class WeixinPayConstants {
     //微信支付的商户密钥
     public static final String key = "f8fa91ff595a529f2b208b5cd859e693";
     //支付成功后的服务器回调url
-    public static final String notify_url = "https://hbxq001.cn/wxpay/wxNotify";
+    public static final String notify_url = "https://hbxq001.cn/wxpay/notify";
 
     public static final String grant_type = "authorization_code";
 

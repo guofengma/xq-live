@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Coupon;
 import com.xq.live.vo.in.CouponInVo;
+import com.xq.live.vo.out.CouponOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface CouponMapper {
 
     int updateByPrimaryKey(Coupon record);
 
-    List<Coupon> list(CouponInVo inVo);
+    List<CouponOut> list(CouponInVo inVo);
 
     int listTotal(CouponInVo inVo);
 
@@ -32,6 +33,8 @@ public interface CouponMapper {
      */
     int useCoupon(Coupon record);
 
-    Coupon getByCouponCode(String couponCode);
+    CouponOut getByCouponCode(String couponCode);
+
+    public CouponOut selectById(Long id);
 
 }

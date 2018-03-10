@@ -1,5 +1,6 @@
 package com.xq.live.vo.out;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xq.live.model.CouponSku;
 import com.xq.live.model.PromotionRules;
 
@@ -23,7 +24,9 @@ public class SkuOut {
     private BigDecimal inPrice;
     private Integer stockNum;
     private String picUrl;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private Long opreatorId;
     private String opreatorName;

@@ -5,6 +5,7 @@ import com.xq.live.dao.CouponMapper;
 import com.xq.live.model.Coupon;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.CouponInVo;
+import com.xq.live.vo.out.CouponOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,11 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Pager<Coupon> list(CouponInVo inVo) {
-        Pager<Coupon> result = new Pager<Coupon>();
+    public Pager<CouponOut> list(CouponInVo inVo) {
+        Pager<CouponOut> result = new Pager<CouponOut>();
         int total = couponMapper.listTotal(inVo);
         if(total > 0){
-            List<Coupon> list = couponMapper.list(inVo);
+            List<CouponOut> list = couponMapper.list(inVo);
             result.setList(list);
         }
         result.setPage(inVo.getPage());
@@ -42,7 +43,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> top(CouponInVo inVo) {
+    public List<CouponOut> top(CouponInVo inVo) {
         return couponMapper.list(inVo);
     }
 
@@ -56,7 +57,12 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Coupon getByCouponCode(String couponCode) {
+    public CouponOut getByCouponCode(String couponCode) {
         return couponMapper.getByCouponCode(couponCode);
+    }
+
+    @Override
+    public CouponOut selectById(Long id){
+        return couponMapper.selectById(id);
     }
 }

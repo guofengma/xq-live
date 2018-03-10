@@ -1,24 +1,19 @@
-package com.xq.live.model;
+package com.xq.live.vo.out;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xq.live.model.PromotionRules;
 
-import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class Coupon {
-
-    /**
-     * 券类型 1 平台券
-     */
-    public final static int COUPON_TYPE_PLAT = 1;
-
-    /**
-     * 抵用券是否使用
-     */
-    public final static int COUPON_IS_USED_YES = 1;
-
-    public final static int COUPON_IS_USED_NO = 0;
-
+/**
+ * ${DESCRIPTION}
+ *
+ * @author zhangpeng32
+ * @date 2018-03-10 15:12
+ * @copyright:hbxq
+ **/
+public class CouponOut {
     private Long id;
 
     private Long soId;
@@ -61,6 +56,8 @@ public class Coupon {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date expiryDate;
 
+    private List<PromotionRules> promotionRules;
+
     public Long getId() {
         return id;
     }
@@ -82,7 +79,7 @@ public class Coupon {
     }
 
     public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode == null ? null : couponCode.trim();
+        this.couponCode = couponCode;
     }
 
     public Long getSkuId() {
@@ -98,7 +95,7 @@ public class Coupon {
     }
 
     public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode == null ? null : skuCode.trim();
+        this.skuCode = skuCode;
     }
 
     public String getSkuName() {
@@ -106,7 +103,7 @@ public class Coupon {
     }
 
     public void setSkuName(String skuName) {
-        this.skuName = skuName == null ? null : skuName.trim();
+        this.skuName = skuName;
     }
 
     public Integer getCouponAmount() {
@@ -130,7 +127,7 @@ public class Coupon {
     }
 
     public void setQrcodeUrl(String qrcodeUrl) {
-        this.qrcodeUrl = qrcodeUrl == null ? null : qrcodeUrl.trim();
+        this.qrcodeUrl = qrcodeUrl;
     }
 
     public Long getUserId() {
@@ -146,7 +143,7 @@ public class Coupon {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
     public Integer getIsUsed() {
@@ -211,5 +208,13 @@ public class Coupon {
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public List<PromotionRules> getPromotionRules() {
+        return promotionRules;
+    }
+
+    public void setPromotionRules(List<PromotionRules> promotionRules) {
+        this.promotionRules = promotionRules;
     }
 }

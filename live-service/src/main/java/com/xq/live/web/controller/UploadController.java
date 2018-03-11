@@ -167,12 +167,12 @@ public class UploadController {
         String cosPath = null;
         // 获取文件名
         File file = new File(localPath);
-        String key = "/" + userName + "_" + file.getName();
+        String API_KEY = "/" + userName + "_" + file.getName();
         try {
-            PutObjectResult putObjectResult = cosClient.putObject(bucketName, key, file);
+            PutObjectResult putObjectResult = cosClient.putObject(bucketName, API_KEY, file);
             String etag = putObjectResult.getETag();
             if (StringUtils.isNotEmpty(etag)) {
-                cosPath = Constants.COS_IMAGE_BASE_PATH + key;
+                cosPath = Constants.COS_IMAGE_BASE_PATH + API_KEY;
                 return cosPath;
             }
         } catch (CosServiceException e) {

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
 // mapper 接口类扫描包配置
 @MapperScan("com.xq.live.dao")
 public class LiveServiceApplication extends SpringBootServletInitializer {
@@ -22,10 +21,5 @@ public class LiveServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(LiveServiceApplication.class, args);
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(){
-        return "hello, hbxq";
     }
 }

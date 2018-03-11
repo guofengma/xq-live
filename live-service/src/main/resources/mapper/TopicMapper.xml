@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="com.xq.live.model.Topic">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="home_pic" jdbcType="VARCHAR" property="homePic" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
     <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
@@ -15,7 +17,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, title, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
+    id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -34,10 +36,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.Topic">
-    insert into topic (title, content,
+    insert into topic (title, summary, home_pic, content,
       create_time, user_id, user_name,
       update_time, nick_name, pic_ids)
-    values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+    values (#{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, #{homePic,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       now(), #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
       now(), #{nickName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -149,7 +151,10 @@
         and title like concat('%', #{title}, '%')
       </if>
       <if test="content != null">
-        and content =#{content}
+        and content like concat('%', #{content}, '%')
+      </if>
+      <if test="summary != null">
+        and summary like concat('%', #{summary}, '%')
       </if>
     </where>
     order by id desc
@@ -164,10 +169,13 @@
         id =#{id}
       </if>
       <if test="title != null">
-        and title =#{title}
+        and title like concat('%', #{title}, '%')
       </if>
       <if test="content != null">
-        and content =#{content}
+        and content like concat('%', #{content}, '%')
+      </if>
+      <if test="summary != null">
+        and summary like concat('%', #{summary}, '%')
       </if>
     </where>
   </select>

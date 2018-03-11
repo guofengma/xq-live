@@ -18,6 +18,10 @@ public class Topic {
 
     private String content;
 
+    private String summary;     //摘要
+
+    private String homePic;     //封面
+
     private String picIds;  //主题包含的图片id
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -134,5 +138,21 @@ public class Topic {
 
     public void setPicUrls(List<Attachment> picUrls) {
         this.picUrls = picUrls;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public String getHomePic() {
+        return homePic;
+    }
+
+    public void setHomePic(String homePic) {
+        this.homePic = homePic;
     }
 }

@@ -46,7 +46,7 @@ public enum ResultStatus {
 
     error_act_shop_exist(200011, "已经报名该活动，不能重复报名"),
 
-    error_weixin_user_code_empty(200012, "已经报名该活动，不能重复报名"),
+    error_weixin_user_code_empty(200012, "获取openId异常，缺少参数code"),
 
     error_so_paid(200013, "订单已支付，不能重复支付"),
 

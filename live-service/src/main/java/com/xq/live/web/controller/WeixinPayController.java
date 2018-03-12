@@ -209,22 +209,22 @@ public class WeixinPayController {
         data.put("out_trade_no", soOut.getId().toString());//商户订单号
         data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
         data.put("spbill_create_ip", spbill_create_ip);
-        data.put("WX_NOTIFY_URL", PaymentConfig.WX_NOTIFY_URL);//支付成功后的回调地址
+        data.put("notify_url", PaymentConfig.WX_NOTIFY_URL);//支付成功后的回调地址
         data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
         data.put("openid", inVo.getOpenId());
 
         //返回给小程序端需要的参数
         Map<String, String> response = new HashMap<String, String>();
         response.put("appid", config.getAppID());
-        response.put("package", "Sign=WXPay");
-        response.put("noncestr", WXPayUtil.generateNonceStr());
-        Long timeStamp = System.currentTimeMillis() / 1000;
-        response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);
             System.out.println("统一下单接口返回: " + rMap);
             String return_code = (String) rMap.get("return_code");//返回状态码
             String result_code = (String) rMap.get("result_code");//
+            response.put("package", "Sign=WXPay");
+            response.put("noncestr", WXPayUtil.generateNonceStr());
+            Long timeStamp = System.currentTimeMillis() / 1000;
+            response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
             if ("SUCCESS".equals(return_code) && return_code.equals(result_code)) {
                 response.put("prepayid", rMap.get("prepay_id"));
                 //再次签名，这个签名用于小程序端调用wx.requesetPayment方法

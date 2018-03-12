@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/m")
 public class RichScanController {
-    @RequestMapping(value="/home",method= RequestMethod.GET)
+    @RequestMapping(value="/hx",method= RequestMethod.GET)
     public String getScan(Model model){
         return "scan";
     }

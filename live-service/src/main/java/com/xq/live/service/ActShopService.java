@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.ActShop;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface ActShopService {
      * @return
      */
     ActShop findByInVo(ActShopInVo inVo);
+
+    List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo);
 }

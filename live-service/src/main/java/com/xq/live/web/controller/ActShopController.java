@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ActShop;
 import com.xq.live.service.ActShopService;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -76,5 +77,22 @@ public class ActShopController {
 
         Long id = actShopService.add(actShop);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
+     * 查询商家参与的活动列表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "listForActByShopId",method = RequestMethod.GET)
+    public BaseResp<List<ActShopByShopIdOut>> listForActByShopId(ActShopInVo inVo){
+             if(inVo.getVoteUserId()==null){
+                 return new BaseResp<List<ActShopByShopIdOut>>(0,"voteUserId必填",null);
+             }
+             if (inVo.getShopId()==null){
+                 return new BaseResp<List<ActShopByShopIdOut>>(0,"shopId必填",null);
+             }
+        List<ActShopByShopIdOut> result = actShopService.listForActByShopId(inVo);
+        return new BaseResp<List<ActShopByShopIdOut>>(ResultStatus.SUCCESS,result);
     }
 }

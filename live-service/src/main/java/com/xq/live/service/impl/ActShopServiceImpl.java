@@ -6,10 +6,12 @@ import com.xq.live.model.ActShop;
 import com.xq.live.service.ActShopService;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.out.ActInfoOut;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,5 +58,12 @@ public class ActShopServiceImpl implements ActShopService {
     @Override
     public ActShop findByInVo(ActShopInVo inVo){
         return actShopMapper.findByInVo(inVo);
+    }
+
+    @Override
+    public List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo) {
+        List<ActShopByShopIdOut> res = actShopMapper.listForActByShopId(inVo);
+        Collections.sort(res);
+        return res;
     }
 }

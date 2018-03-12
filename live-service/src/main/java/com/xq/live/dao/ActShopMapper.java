@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.ActShop;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,8 @@ public interface ActShopMapper {
     int countByActId(Long actId);
 
     List<ActShopOut> list(ActShopInVo inVo);
+
+    List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo);
 
     int listTotal(ActShopInVo inVo);
 

@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.Topic;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicOut;
 
 import java.util.List;
 
@@ -47,12 +48,12 @@ public interface TopicService {
      * @param inVo
      * @return
      */
-    Pager<Topic> list(TopicInVo inVo);
+    Pager<TopicOut> list(TopicInVo inVo);
 
     /**
      * 查询最热
      * @param inVo
      * @return
      */
-    List<Topic> top(TopicInVo inVo);
+    List<TopicOut> top(TopicInVo inVo);
 }

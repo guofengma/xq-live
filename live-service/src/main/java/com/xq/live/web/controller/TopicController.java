@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Topic;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -81,9 +82,9 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<Topic>> list(TopicInVo inVo) {
-        Pager<Topic> result = topicService.list(inVo);
-        return new BaseResp<Pager<Topic>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<TopicOut>> list(TopicInVo inVo) {
+        Pager<TopicOut> result = topicService.list(inVo);
+        return new BaseResp<Pager<TopicOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**
@@ -93,8 +94,8 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResp<List<Topic>> top(TopicInVo inVo) {
-        List<Topic> result = topicService.top(inVo);
-        return new BaseResp<List<Topic>>(ResultStatus.SUCCESS, result);
+    public BaseResp<List<TopicOut>> top(TopicInVo inVo) {
+        List<TopicOut> result = topicService.top(inVo);
+        return new BaseResp<List<TopicOut>>(ResultStatus.SUCCESS, result);
     }
 }

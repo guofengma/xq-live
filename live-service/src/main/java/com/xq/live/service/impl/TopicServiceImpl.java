@@ -2,12 +2,18 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.AttachmentMapper;
+import com.xq.live.dao.CommentMapper;
 import com.xq.live.dao.TopicMapper;
+import com.xq.live.dao.UserMapper;
 import com.xq.live.model.Attachment;
 import com.xq.live.model.Topic;
+import com.xq.live.model.User;
 import com.xq.live.service.TopicService;
+import com.xq.live.vo.in.CommentInVo;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicOut;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +33,12 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private AttachmentMapper attachmentMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private CommentMapper commentMapper;
 
 
     @Override
@@ -59,16 +71,27 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Pager<Topic> list(TopicInVo inVo) {
-        Pager<Topic> pager = new Pager<Topic>();
+    public Pager<TopicOut> list(TopicInVo inVo) {
+        Pager<TopicOut> pager = new Pager<TopicOut>();
         int total = topicMapper.listTotal(inVo);
 
         if(total > 0){
             List<Topic> list = topicMapper.list(inVo);
+            List<TopicOut> listForOut = new ArrayList<TopicOut>();
             for(Topic t : list){
                 t = getPicUrls(t);
+                User user = userMapper.selectByPrimaryKey(t.getUserId());
+                CommentInVo commentInVo = new CommentInVo();
+                commentInVo.setRefId(t.getId());
+                commentInVo.setCmtType(2);
+                int listTotal = commentMapper.listTotal(commentInVo);
+                TopicOut topicOut = new TopicOut();
+                BeanUtils.copyProperties(t,topicOut);
+                topicOut.setIconUrl(user.getIconUrl());
+                topicOut.setCommentNum(listTotal);
+                listForOut.add(topicOut);
             }
-            pager.setList(list);
+            pager.setList(listForOut);
         }
         pager.setTotal(total);  //总记录数
         pager.setPage(inVo.getPage());     //当前页
@@ -76,8 +99,23 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<Topic> top(TopicInVo inVo) {
-        return topicMapper.list(inVo);
+    public List<TopicOut> top(TopicInVo inVo) {
+        List<Topic> list = topicMapper.list(inVo);
+        List<TopicOut> listForOut = new ArrayList<TopicOut>();
+        for(Topic t : list){
+            t = getPicUrls(t);
+            User user = userMapper.selectByPrimaryKey(t.getUserId());
+            CommentInVo commentInVo = new CommentInVo();
+            commentInVo.setRefId(t.getId());
+            commentInVo.setCmtType(2);
+            int listTotal = commentMapper.listTotal(commentInVo);
+            TopicOut topicOut = new TopicOut();
+            BeanUtils.copyProperties(t,topicOut);
+            topicOut.setIconUrl(user.getIconUrl());
+            topicOut.setCommentNum(listTotal);
+            listForOut.add(topicOut);
+        }
+        return listForOut;
     }
 
     /**

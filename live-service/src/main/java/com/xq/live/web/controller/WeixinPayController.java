@@ -221,15 +221,16 @@ public class WeixinPayController {
             System.out.println("统一下单接口返回: " + rMap);
             String return_code = (String) rMap.get("return_code");//返回状态码
             String result_code = (String) rMap.get("result_code");//
-            response.put("package", "Sign=WXPay");
             response.put("noncestr", WXPayUtil.generateNonceStr());
             response.put("total_fee",String.valueOf(price100));
             Long timeStamp = System.currentTimeMillis() / 1000;
             response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
             if ("SUCCESS".equals(return_code) && return_code.equals(result_code)) {
-                response.put("prepayid", rMap.get("prepay_id"));
+//                response.put("prepayid", rMap.get("prepay_id"));
+                response.put("package", "prepay_id="+rMap.get("prepay_id"));
                 //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
                 String sign = WXPayUtil.generateSignature(response, PaymentConfig.API_KEY);
+                response.put("signType", "MD5");
                 response.put("sign", sign);
                 return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, response);
             }

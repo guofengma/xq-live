@@ -1,5 +1,7 @@
 $(function() {
-    var qrCode = GetQueryString('qrCode');
+    //从链接获取qrCode和userId参数
+    var qrCode = GetQueryString('qrCode') || '';
+    var cashierId = GetQueryString('userId') || '';
     var compareMoney = 0, discountMoney = 0, hxData = {};
 
     //验证input中输入的是否为数字：
@@ -7,13 +9,12 @@ $(function() {
 
     $.ajax({
         type: "GET",
-        url: "http://www.xiangqi.com/cp/getByCode/" + qrCode,
-        dataType: "jsonp",
+        url: "http://182.254.130.252/cp/getByCode/" + qrCode,
+        dataType: "json",
         success: function(res) {
-            var data = res.data;
-            console.log(data)
-            if(data.code == 0) {
-                var data = data.data;
+            console.log(res)
+            if(res.code == 0) {
+                var data = res.data;
                 console.log(data);
                 discountMoney = data.couponAmount;
                 $('#discountTicket').html(data.skuName + '(' + data.promotionRules[0].ruleDesc + ')');
@@ -30,7 +31,7 @@ $(function() {
                     couponAmount: data.couponAmount,	//电子券面额	BigDecimal
                     userId: data.userId,	//消费人id	Long
                     userName: data.userName,  //消费人账号	String
-                    cashierId: "",	    //收银id	Long
+                    cashierId: cashierId,	    //收银id	Long
                     cashierName: ""	    //收银账号	String
                 }
             }
@@ -63,21 +64,22 @@ $(function() {
         if(val != '') {
             hxData.shopAmount = val;
             $.ajax({
-                type: "GET",
-                url: "http://www.xiangqi.com/hx/add",
+                type: "POST",
+                url: "http://182.254.130.252/hx/add",
                 dataType: "json",
-                data: JSON.stringify(hxData),
+                data: hxData,
                 success: function(res) {
                     console.log(res)
                     var data = res.data;
-                    if(data.code == 0) {
+                    if(res.code == 0) {
+                        console.log("核销成功,hxId : "+ data);
                         // wx.miniProgram.navigateTo({
                         //     url: "pages/personal-center/personal-center"
                         // });
                     }
                 },
                 error: function(err) {
-                    console.log("error");
+                    console.log(err);
                 }
             });
         } else {
@@ -87,28 +89,28 @@ $(function() {
 })
 
 //限制输入框只能输入金额
-function bindKeyEvent(obj){  
-    obj.keyup(function () {  
-        var reg = $(this).val().match(/\d+\.?\d{0,2}/);  
-        var txt = '';  
-        if (reg != null) {  
-            txt = reg[0];  
-        }  
-        $(this).val(txt);  
-    }).change(function () {  
-        $(this).keypress();  
-        var v = $(this).val();  
-        if (/\.$/.test(v))  
-        {  
-            $(this).val(v.substr(0, v.length - 1));  
-        }  
-    });  
-}  
+function bindKeyEvent(obj){
+    obj.keyup(function () {
+        var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+        var txt = '';
+        if (reg != null) {
+            txt = reg[0];
+        }
+        $(this).val(txt);
+    }).change(function () {
+        $(this).keypress();
+        var v = $(this).val();
+        if (/\.$/.test(v))
+        {
+            $(this).val(v.substr(0, v.length - 1));
+        }
+    });
+}
 
 //获取链接后参数
 function GetQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
-    if (r != null) return r[2] 
+    if (r != null) return r[2]
     return null;
 }

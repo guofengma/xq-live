@@ -2,9 +2,12 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.Shop;
 import com.xq.live.model.SoWriteOff;
 import com.xq.live.model.User;
+import com.xq.live.service.ShopService;
 import com.xq.live.service.SoWriteOffService;
+import com.xq.live.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,6 +33,12 @@ public class SoWriteOffController {
     @Autowired
     private SoWriteOffService soWriteOffService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ShopService shopService;
+
     /**
      * 根据id查询记录
      * @param id
@@ -54,7 +63,27 @@ public class SoWriteOffController {
         if(ret != 0){
             return new BaseResp<Long>(ResultStatus.FAIL);
         }
+        //验证扫码人id
+        User cashier = userService.getUserById(soWriteOff.getCashierId());
+        if(cashier == null){
+            return new BaseResp<Long>(ResultStatus.error_para_cashier_id);
+        }
 
+        //验证账号类型：商家账号
+        if(cashier.getUserType() != User.USER_TYPE_SJ){
+            return new BaseResp<Long>(ResultStatus.error_para_cashier_user_type);
+        }
+
+        if(cashier.getShopId() == null){
+            return new BaseResp<Long>(ResultStatus.error_para_user_shop_id);
+        }
+        Shop shop = shopService.getShopByUserId(cashier.getId());
+        if(shop ==  null){
+            return new BaseResp<Long>(ResultStatus.error_shop_info_empty);
+        }
+        soWriteOff.setShopId(shop.getId());
+        soWriteOff.setShopName(shop.getShopName());
+        soWriteOff.setPaidAmount(soWriteOff.getShopAmount().subtract(soWriteOff.getCouponAmount()));
         //2、核销抵用券
         Long id = soWriteOffService.add(soWriteOff);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);

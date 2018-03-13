@@ -11,10 +11,8 @@ public class SoWriteOff {
     @NotNull(message = "soId必填")
     private Long soId;
 
-    @NotNull(message = "shopId必填")
     private Long shopId;
 
-    @NotNull(message = "shopName必填")
     private String shopName;
 
     @NotNull(message = "shopAmount必填")

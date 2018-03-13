@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface UserMapper{
+
     int deleteByPrimaryKey(Long id);
 
     int insert(User record);

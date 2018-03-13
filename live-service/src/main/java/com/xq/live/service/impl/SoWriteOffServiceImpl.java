@@ -1,10 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.CouponMapper;
-import com.xq.live.dao.SoLogMapper;
-import com.xq.live.dao.SoMapper;
-import com.xq.live.dao.SoWriteOffMapper;
+import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.SoWriteOffService;
 import com.xq.live.vo.in.CouponInVo;
@@ -41,6 +38,11 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public Pager<SoWriteOff> list(SoWriteOffInVo inVo) {

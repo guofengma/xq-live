@@ -65,3 +65,6 @@ html, body {
     font-size: 0.36rem;
     text-align: center;
 }
+.okBtn.active {
+    background-color: #fc5e2d;
+}

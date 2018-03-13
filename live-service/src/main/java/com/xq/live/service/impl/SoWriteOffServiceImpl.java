@@ -39,11 +39,6 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     @Autowired
     private CouponMapper couponMapper;
 
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private ShopMapper shopMapper;
-
     @Override
     public Pager<SoWriteOff> list(SoWriteOffInVo inVo) {
         Pager<SoWriteOff> ret = new Pager<SoWriteOff>();

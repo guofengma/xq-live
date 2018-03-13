@@ -1,16 +1,14 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.AttachmentMapper;
-import com.xq.live.dao.CommentMapper;
-import com.xq.live.dao.TopicMapper;
-import com.xq.live.dao.UserMapper;
+import com.xq.live.dao.*;
 import com.xq.live.model.Attachment;
 import com.xq.live.model.Topic;
 import com.xq.live.model.User;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.CommentInVo;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.in.ZanInVo;
 import com.xq.live.vo.out.TopicOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +37,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private ZanMapper zanMapper;
 
 
     @Override
@@ -85,10 +86,15 @@ public class TopicServiceImpl implements TopicService {
                 commentInVo.setRefId(t.getId());
                 commentInVo.setCmtType(2);
                 int listTotal = commentMapper.listTotal(commentInVo);
+                ZanInVo zanInVo = new ZanInVo();
+                zanInVo.setRefId(t.getId());
+                zanInVo.setType(2);
+                int zan = zanMapper.total(zanInVo);
                 TopicOut topicOut = new TopicOut();
                 BeanUtils.copyProperties(t,topicOut);
                 topicOut.setIconUrl(user.getIconUrl());
                 topicOut.setCommentNum(listTotal);
+                topicOut.setZan(zan);
                 listForOut.add(topicOut);
             }
             pager.setList(listForOut);

@@ -45,9 +45,11 @@ public class TopicOut {
 
     private String nickName;
 
-    private String iconUrl;
+    private String iconUrl;//文章用户的头像
 
-    private int commentNum;
+    private int commentNum;//文章列表的评论数
+
+    private int zan;//点赞数
 
     public Long getId() {
         return id;
@@ -175,5 +177,13 @@ public class TopicOut {
 
     public void setCommentNum(int commentNum) {
         this.commentNum = commentNum;
+    }
+
+    public int getZan() {
+        return zan;
+    }
+
+    public void setZan(int zan) {
+        this.zan = zan;
     }
 }

@@ -16,6 +16,11 @@
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="ZanSelect" extends="BaseResultMap" type="com.xq.live.vo.out.TopicForZanOut">
+    <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
   </sql>
@@ -25,6 +30,19 @@
     from topic
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByZan" parameterType="com.xq.live.vo.in.TopicInVo" resultMap="ZanSelect">
+    select
+    <include refid="Base_Column_List" />,
+    (select count(1) from zan where ref_id = a.id
+    <if test="zanUserId != null">
+      AND  user_id = #{zanUserId}
+    </if>
+    ) as is_zan
+    from topic a
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
   <select id="selectByUserId" parameterType="com.xq.live.model.Favorites" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

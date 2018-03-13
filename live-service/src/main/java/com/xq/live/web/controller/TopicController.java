@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Topic;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicForZanOut;
 import com.xq.live.vo.out.TopicOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,17 @@ public class TopicController {
     public BaseResp<Topic> getTopicById(@PathVariable(value = "id") Long id) {
         Topic topic = topicService.selectOne(id);
         return new BaseResp<Topic>(ResultStatus.SUCCESS, topic);
+    }
+
+    @RequestMapping(value = "/getTopicByZan", method = RequestMethod.GET)
+    public BaseResp<TopicForZanOut> getTopicById(TopicInVo inVo) {
+        if(inVo.getZanUserId()==null){
+            return  new BaseResp<TopicForZanOut>(0,"zanUserId必填",null);
+        }
+
+        TopicForZanOut topic = topicService.selectByZan(inVo);
+
+        return new BaseResp<TopicForZanOut>(ResultStatus.SUCCESS, topic);
     }
 
     /**

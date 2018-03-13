@@ -12,6 +12,7 @@ public class TopicInVo extends BaseInVo {
     private String title;
     private String content;
     private String summary;
+    private String zanUserId;
 
     public Long getId() {
         return id;
@@ -43,5 +44,13 @@ public class TopicInVo extends BaseInVo {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getZanUserId() {
+        return zanUserId;
+    }
+
+    public void setZanUserId(String zanUserId) {
+        this.zanUserId = zanUserId;
     }
 }

@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.Topic;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicForZanOut;
 import com.xq.live.vo.out.TopicOut;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface TopicService {
      * @return
      */
     public Topic selectOne(Long id);
+
+    public TopicForZanOut selectByZan(TopicInVo inVo);
 
     /**
      * 新增

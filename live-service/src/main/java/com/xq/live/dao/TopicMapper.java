@@ -3,6 +3,7 @@ package com.xq.live.dao;
 import com.xq.live.model.Favorites;
 import com.xq.live.model.Topic;
 import com.xq.live.vo.in.TopicInVo;
+import com.xq.live.vo.out.TopicForZanOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface TopicMapper{
     int insertSelective(Topic record);
 
     Topic selectByPrimaryKey(Long id);
+
+    TopicForZanOut selectByZan(TopicInVo inVo);
 
     List<Topic> selectByUserId(Favorites favorites);
 

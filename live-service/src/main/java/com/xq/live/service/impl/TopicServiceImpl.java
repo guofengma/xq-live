@@ -9,6 +9,7 @@ import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.CommentInVo;
 import com.xq.live.vo.in.TopicInVo;
 import com.xq.live.vo.in.ZanInVo;
+import com.xq.live.vo.out.TopicForZanOut;
 import com.xq.live.vo.out.TopicOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -49,6 +50,12 @@ public class TopicServiceImpl implements TopicService {
             topic = getPicUrls(topic);
         }
         return topic;
+    }
+
+    @Override
+    public TopicForZanOut selectByZan(TopicInVo inVo) {
+        TopicForZanOut result = topicMapper.selectByZan(inVo);
+        return result;
     }
 
     @Override

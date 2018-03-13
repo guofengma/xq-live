@@ -42,6 +42,9 @@ public class ActShopController {
         if(inVo.getVoteUserId()==null){
             return new BaseResp<Pager<ActShopOut>>(0,"voteUserId必填", null);
         }
+        if(inVo.getActId()==null){
+            return new BaseResp<Pager<ActShopOut>>(0,"actId必填", null);
+        }
         Pager<ActShopOut> result = actShopService.list(inVo);
         return new BaseResp<Pager<ActShopOut>>(ResultStatus.SUCCESS, result);
     }

@@ -2,9 +2,11 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.Coupon;
 import com.xq.live.model.Shop;
 import com.xq.live.model.SoWriteOff;
 import com.xq.live.model.User;
+import com.xq.live.service.CouponService;
 import com.xq.live.service.ShopService;
 import com.xq.live.service.SoWriteOffService;
 import com.xq.live.service.UserService;
@@ -38,6 +40,9 @@ public class SoWriteOffController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private CouponService couponService;
 
     /**
      * 根据id查询记录
@@ -74,6 +79,7 @@ public class SoWriteOffController {
             return new BaseResp<Long>(ResultStatus.error_para_cashier_user_type);
         }
 
+        //验证商家信息
         if(cashier.getShopId() == null){
             return new BaseResp<Long>(ResultStatus.error_para_user_shop_id);
         }
@@ -81,6 +87,13 @@ public class SoWriteOffController {
         if(shop ==  null){
             return new BaseResp<Long>(ResultStatus.error_shop_info_empty);
         }
+
+        //验证券是否被核销过
+        Coupon coupon = couponService.get(soWriteOff.getCouponId());
+        if(coupon == null || coupon.getIsUsed() == Coupon.COUPON_IS_USED_YES){
+            return new BaseResp<Long>(ResultStatus.error_coupon_is_used);
+        }
+
         soWriteOff.setShopId(shop.getId());
         soWriteOff.setShopName(shop.getShopName());
         soWriteOff.setPaidAmount(soWriteOff.getShopAmount().subtract(soWriteOff.getCouponAmount()));

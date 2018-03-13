@@ -223,6 +223,7 @@ public class WeixinPayController {
             String result_code = (String) rMap.get("result_code");//
             response.put("package", "Sign=WXPay");
             response.put("noncestr", WXPayUtil.generateNonceStr());
+            response.put("total_fee",String.valueOf(price100));
             Long timeStamp = System.currentTimeMillis() / 1000;
             response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
             if ("SUCCESS".equals(return_code) && return_code.equals(result_code)) {

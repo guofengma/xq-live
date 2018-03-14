@@ -39,7 +39,7 @@ public class ShopEnterController {
         }
         ShopEnter sp = shopEnterService.selectByToken(shopEnter);
         if(sp!=null){
-            return new BaseResp<Long>(0, "该商家已入驻", null);
+            return new BaseResp<Long>(-1, "该商家已入驻", null);
         }
         Long skuId = shopEnterService.add(shopEnter);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
@@ -53,7 +53,7 @@ public class ShopEnterController {
     @RequestMapping(value = "/search",method = RequestMethod.GET)
     public BaseResp<ShopEnter> search(ShopEnter shopEnter){
         if(shopEnter.getToken()==null){
-            return new BaseResp<ShopEnter>(0,"token必填",null);
+            return new BaseResp<ShopEnter>(-1,"token必填",null);
         }
         ShopEnter res = shopEnterService.selectByToken(shopEnter);
         return new BaseResp<ShopEnter>(ResultStatus.SUCCESS,res);

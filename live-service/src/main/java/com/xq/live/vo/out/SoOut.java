@@ -48,6 +48,8 @@ public class SoOut {
     @NumberFormat
     private BigDecimal unitPrice;
 
+    private String ruleDesc;
+
     public Long getId() {
         return id;
     }
@@ -166,5 +168,13 @@ public class SoOut {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getRuleDesc() {
+        return ruleDesc;
+    }
+
+    public void setRuleDesc(String ruleDesc) {
+        this.ruleDesc = ruleDesc;
     }
 }

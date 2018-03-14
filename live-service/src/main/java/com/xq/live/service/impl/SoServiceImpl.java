@@ -8,6 +8,7 @@ import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.SoService;
 import com.xq.live.service.UploadService;
+import com.xq.live.vo.in.ProRuInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoOut;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +59,9 @@ public class SoServiceImpl implements SoService {
     @Autowired
     private UploadService uploadService;
 
+    @Autowired
+    private PromotionRulesMapper promotionRulesMapper;
+
     @Override
     public Pager<SoOut> list(SoInVo inVo) {
         Pager<SoOut> ret = new Pager<SoOut>();
@@ -73,7 +77,17 @@ public class SoServiceImpl implements SoService {
 
     @Override
     public List<SoOut> findSoList(SoInVo inVo) {
-        return soMapper.list(inVo);
+        List<SoOut> list = soMapper.list(inVo);
+        for (SoOut soOut : list) {
+            ProRuInVo proRuInVo = new ProRuInVo();
+            proRuInVo.setSkuId(soOut.getSkuId());
+            proRuInVo.setSkuCode(soOut.getSkuCode());
+            PromotionRules rules = promotionRulesMapper.selectBySkuIdAndSkuCode(proRuInVo);
+            if(rules!=null){
+                soOut.setRuleDesc(rules.getRuleDesc());
+            }
+        }
+        return list;
     }
 
     @Override

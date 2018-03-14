@@ -47,7 +47,7 @@ public class TopicController {
     @RequestMapping(value = "/getTopicByZan", method = RequestMethod.GET)
     public BaseResp<TopicForZanOut> getTopicById(TopicInVo inVo) {
         if(inVo.getZanUserId()==null){
-            return  new BaseResp<TopicForZanOut>(0,"zanUserId必填",null);
+            return  new BaseResp<TopicForZanOut>(-1,"zanUserId必填",null);
         }
 
         TopicForZanOut topic = topicService.selectByZan(inVo);

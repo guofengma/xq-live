@@ -46,6 +46,8 @@ public class TopicForZanOut {
 
     private String nickName;
 
+    private Integer zan;
+
     private Integer isZan;
 
     public Long getId() {
@@ -166,5 +168,13 @@ public class TopicForZanOut {
 
     public void setIsZan(Integer isZan) {
         this.isZan = isZan;
+    }
+
+    public Integer getZan() {
+        return zan;
+    }
+
+    public void setZan(Integer zan) {
+        this.zan = zan;
     }
 }

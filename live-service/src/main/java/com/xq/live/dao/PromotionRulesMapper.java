@@ -2,7 +2,9 @@ package com.xq.live.dao;
 
 import com.xq.live.model.PromotionRules;
 import com.xq.live.vo.in.ProRuInVo;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PromotionRulesMapper {
     int deleteByPrimaryKey(Long id);
 

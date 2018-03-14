@@ -19,6 +19,8 @@ public class ActShopOut {
 
     private String shopCode;
 
+    private Integer applyStatus;
+
     private Date createTime;
 
     private Date updateTime;
@@ -119,5 +121,13 @@ public class ActShopOut {
 
     public void setIsVote(int isVote) {
         this.isVote = isVote;
+    }
+
+    public Integer getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(Integer applyStatus) {
+        this.applyStatus = applyStatus;
     }
 }

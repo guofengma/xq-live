@@ -50,6 +50,9 @@ public class SoOut {
 
     private String ruleDesc;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date paidTime;
+
     public Long getId() {
         return id;
     }
@@ -176,5 +179,13 @@ public class SoOut {
 
     public void setRuleDesc(String ruleDesc) {
         this.ruleDesc = ruleDesc;
+    }
+
+    public Date getPaidTime() {
+        return paidTime;
+    }
+
+    public void setPaidTime(Date paidTime) {
+        this.paidTime = paidTime;
     }
 }

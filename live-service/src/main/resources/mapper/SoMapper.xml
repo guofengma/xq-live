@@ -20,6 +20,7 @@
         <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
         <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -34,7 +35,7 @@
 
     <select id="selectByPk" parameterType="java.lang.Long" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         where s.id = #{id,jdbcType=BIGINT}
@@ -42,7 +43,7 @@
 
     <select id="list" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         <where>

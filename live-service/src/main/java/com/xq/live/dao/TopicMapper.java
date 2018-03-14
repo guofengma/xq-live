@@ -29,5 +29,9 @@ public interface TopicMapper{
 
     List<Topic> list(TopicInVo inVo);
 
+    List<Topic> myList(TopicInVo inVo);
+
     int listTotal(TopicInVo inVo);
+
+    int myListTotal(TopicInVo inVo);
 }

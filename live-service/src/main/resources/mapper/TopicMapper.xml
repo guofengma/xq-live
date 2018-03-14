@@ -181,6 +181,36 @@
     limit #{start}, #{rows}
   </select>
 
+  <select id="myList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from topic
+    <where>
+      <if test="id != null">
+        id =#{id}
+      </if>
+      <if test="userId !=null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="myListTotal" resultType="java.lang.Integer">
+    select count(1)
+    from topic
+    <where>
+      <if test="id != null">
+        id =#{id}
+      </if>
+      <if test="userId !=null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by id desc
+  </select>
+
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
     from topic

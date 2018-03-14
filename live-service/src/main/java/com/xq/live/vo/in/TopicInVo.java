@@ -12,7 +12,8 @@ public class TopicInVo extends BaseInVo {
     private String title;
     private String content;
     private String summary;
-    private String zanUserId;
+    private String zanUserId;//点赞中,当前用户的user_id
+    private Long userId;//我的文章中,当前用户的user_id
 
     public Long getId() {
         return id;
@@ -52,5 +53,13 @@ public class TopicInVo extends BaseInVo {
 
     public void setZanUserId(String zanUserId) {
         this.zanUserId = zanUserId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

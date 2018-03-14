@@ -53,6 +53,8 @@ public interface TopicService {
      */
     Pager<TopicOut> list(TopicInVo inVo);
 
+    Pager<TopicOut> myList(TopicInVo inVo);
+
     /**
      * 查询最热
      * @param inVo

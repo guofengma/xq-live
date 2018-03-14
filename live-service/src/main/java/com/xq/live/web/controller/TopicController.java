@@ -99,6 +99,12 @@ public class TopicController {
         return new BaseResp<Pager<TopicOut>>(ResultStatus.SUCCESS, result);
     }
 
+    @RequestMapping(value = "/myList", method = RequestMethod.GET)
+    public BaseResp<Pager<TopicOut>> myList(TopicInVo inVo) {
+        Pager<TopicOut> result = topicService.myList(inVo);
+        return new BaseResp<Pager<TopicOut>>(ResultStatus.SUCCESS, result);
+    }
+
     /**
      * 查询热门主题
      *

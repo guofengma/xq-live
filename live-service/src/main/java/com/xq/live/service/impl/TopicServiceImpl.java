@@ -112,6 +112,39 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
+    public Pager<TopicOut> myList(TopicInVo inVo) {
+        Pager<TopicOut> pager = new Pager<TopicOut>();
+        int total = topicMapper.myListTotal(inVo);
+
+        if(total > 0){
+            List<Topic> list = topicMapper.myList(inVo);
+            List<TopicOut> listForOut = new ArrayList<TopicOut>();
+            for(Topic t : list){
+                t = getPicUrls(t);
+                User user = userMapper.selectByPrimaryKey(t.getUserId());
+                CommentInVo commentInVo = new CommentInVo();
+                commentInVo.setRefId(t.getId());
+                commentInVo.setCmtType(2);
+                int listTotal = commentMapper.listTotal(commentInVo);
+                ZanInVo zanInVo = new ZanInVo();
+                zanInVo.setRefId(t.getId());
+                zanInVo.setType(2);
+                int zan = zanMapper.total(zanInVo);
+                TopicOut topicOut = new TopicOut();
+                BeanUtils.copyProperties(t,topicOut);
+                topicOut.setIconUrl(user.getIconUrl());
+                topicOut.setCommentNum(listTotal);
+                topicOut.setZan(zan);
+                listForOut.add(topicOut);
+            }
+            pager.setList(listForOut);
+        }
+        pager.setTotal(total);  //总记录数
+        pager.setPage(inVo.getPage());     //当前页
+        return pager;
+    }
+
+    @Override
     public List<TopicOut> top(TopicInVo inVo) {
         List<Topic> list = topicMapper.list(inVo);
         List<TopicOut> listForOut = new ArrayList<TopicOut>();

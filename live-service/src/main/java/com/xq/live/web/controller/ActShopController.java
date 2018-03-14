@@ -40,10 +40,10 @@ public class ActShopController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResp<Pager<ActShopOut>> list(ActShopInVo inVo){
         if(inVo.getVoteUserId()==null){
-            return new BaseResp<Pager<ActShopOut>>(0,"voteUserId必填", null);
+            return new BaseResp<Pager<ActShopOut>>(-1,"voteUserId必填", null);
         }
         if(inVo.getActId()==null){
-            return new BaseResp<Pager<ActShopOut>>(0,"actId必填", null);
+            return new BaseResp<Pager<ActShopOut>>(-1,"actId必填", null);
         }
         Pager<ActShopOut> result = actShopService.list(inVo);
         return new BaseResp<Pager<ActShopOut>>(ResultStatus.SUCCESS, result);
@@ -57,7 +57,7 @@ public class ActShopController {
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResp<List<ActShopOut>> top(ActShopInVo inVo){
         if(inVo.getVoteUserId()==null){
-            return new BaseResp<List<ActShopOut>>(0,"voteUserId必填", null);
+            return new BaseResp<List<ActShopOut>>(-1,"voteUserId必填", null);
         }
         List<ActShopOut> result = actShopService.top(inVo);
         return new BaseResp<List<ActShopOut>>(ResultStatus.SUCCESS, result);
@@ -90,10 +90,10 @@ public class ActShopController {
     @RequestMapping(value = "listForActByShopId",method = RequestMethod.GET)
     public BaseResp<List<ActShopByShopIdOut>> listForActByShopId(ActShopInVo inVo){
              if(inVo.getVoteUserId()==null){
-                 return new BaseResp<List<ActShopByShopIdOut>>(0,"voteUserId必填",null);
+                 return new BaseResp<List<ActShopByShopIdOut>>(-1,"voteUserId必填",null);
              }
              if (inVo.getShopId()==null){
-                 return new BaseResp<List<ActShopByShopIdOut>>(0,"shopId必填",null);
+                 return new BaseResp<List<ActShopByShopIdOut>>(-1,"shopId必填",null);
              }
         List<ActShopByShopIdOut> result = actShopService.listForActByShopId(inVo);
         return new BaseResp<List<ActShopByShopIdOut>>(ResultStatus.SUCCESS,result);

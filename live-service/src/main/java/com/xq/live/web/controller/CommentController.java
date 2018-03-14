@@ -95,7 +95,7 @@ public class CommentController {
     @RequestMapping(value = "/list",  method = RequestMethod.GET)
     public BaseResp<Pager<CommentOut>> list(CommentInVo inVo){
         if(inVo.getZanUserId()==null){
-            return new BaseResp<Pager<CommentOut>>(0,"zanUserId必填",null);
+            return new BaseResp<Pager<CommentOut>>(-1,"zanUserId必填",null);
         }
         Pager<CommentOut> page = commentService.list(inVo);
         return new BaseResp<Pager<CommentOut>>(ResultStatus.SUCCESS, page);

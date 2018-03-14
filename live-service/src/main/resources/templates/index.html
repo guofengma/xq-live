@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+  	<head>
+	    <meta charset="utf-8"/>
+	    <title>Lock Screen</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	    <meta name="description" content=""/>
+	    <meta name="author" content=""/>
+
+	    <!-- Bootstrap core CSS -->
+		<link th:href="@{/admin/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+		
+		<!-- Font Awesome -->
+		<link th:href="@{/admin/css/font-awesome.min.css}"  rel="stylesheet" />
+		
+		<!-- Simplify -->
+		<link th:href="@{/admin/css/simplify.min.css}" rel="stylesheet"/>
+
+  	</head>
+
+  	<body>
+	
+		<!--Modal-->
+		<div class="modal fade lock-screen-wrapper" id="lockScreen">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				    <div class="modal-body">
+						<div class="lock-screen-img">
+							<img th:src="@{/admin/images/profile/logo.png}" alt="" />
+						</div>
+						
+						<div class="text-center m-top-sm">
+							<div class="h4 text-white">享七科技</div>
+							
+							<div class="input-group m-top-sm"> 
+								<input type="password" class="form-control text-sm" placeholder="Enter your password" />
+								<span class="input-group-btn"> 
+									<a class="btn btn-success" href="#">
+										<i class="fa fa-arrow-right"></i>
+									</a>
+								</span> 
+							</div>
+						</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+	    <!-- Le javascript
+	    ================================================== -->
+	    <!-- Placed at the end of the document so the pages load faster -->
+	    
+	    <!-- Jquery -->
+		<script th:src="@{/admin/js/jquery.min.js}"></script>
+		
+		<!-- Bootstrap -->
+		<script th:src="@{/admin/js/bootstrap.min.js}"></script>
+	   
+		<!-- Modernizr -->
+		<script th:src='@{/admin/js/modernizr.min.js}'></script>
+	   
+		<!-- Popup Overlay -->
+		<script th:src='@{/admin/js/jquery.popupoverlay.min.js}'></script>
+	   
+	    <!-- Slimscroll -->
+		<script th:src='@{/admin/js/jquery.slimscroll.min.js}'></script>
+	   
+		<!-- Simplify -->
+		<script th:src="@{/admin/js/simplify/simplify.js}"></script>
+		
+		<script>
+			$(function()	{
+				$('#lockScreen').modal({
+					show: true,
+					backdrop: 'static'
+				})
+			});
+		</script>
+  	</body>
+</html>

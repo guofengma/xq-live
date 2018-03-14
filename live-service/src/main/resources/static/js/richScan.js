@@ -9,7 +9,7 @@ $(function() {
 
     $.ajax({
         type: "GET",
-        url: "http://182.254.130.252/cp/getByCode/" + qrCode,
+        url: "/cp/getByCode/" + qrCode,
         dataType: "json",
         success: function(res) {
             console.log(res)
@@ -65,17 +65,22 @@ $(function() {
             hxData.shopAmount = val;
             $.ajax({
                 type: "POST",
-                url: "http://182.254.130.252/hx/add",
+                url: "/hx/add",
                 dataType: "json",
                 data: hxData,
                 success: function(res) {
                     console.log(res)
                     var data = res.data;
                     if(res.code == 0) {
-                        console.log("核销成功,hxId : "+ data);
-                        // wx.miniProgram.navigateTo({
-                        //     url: "pages/personal-center/personal-center"
-                        // });
+                        $('#okBtn').removeClass('active').html('核销成功');
+                        $('#accountInp').val('');
+                        $('#discountMoney').html(0);
+                        $('#actualAmount').html(0);
+
+                        $(".notice").fadeIn(1000);
+                        setTimeout(function(){
+                            $(".notice").fadeOut(500);
+                        }, 3000);
                     }
                 },
                 error: function(err) {

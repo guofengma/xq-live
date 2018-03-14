@@ -62,12 +62,12 @@ public class SoWriteOffController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
 
-        //1、参数校验
-        Integer ret = soWriteOffService.validInput(soWriteOff);
-
-        if(ret != 0){
-            return new BaseResp<Long>(ResultStatus.FAIL);
+        //1、参数校验--验证券是否被核销过
+        Coupon coupon = couponService.get(soWriteOff.getCouponId());
+        if(coupon == null || coupon.getIsUsed() == Coupon.COUPON_IS_USED_YES){
+            return new BaseResp<Long>(ResultStatus.error_coupon_is_used);
         }
+
         //验证扫码人id
         User cashier = userService.getUserById(soWriteOff.getCashierId());
         if(cashier == null){
@@ -88,11 +88,7 @@ public class SoWriteOffController {
             return new BaseResp<Long>(ResultStatus.error_shop_info_empty);
         }
 
-        //验证券是否被核销过
-        Coupon coupon = couponService.get(soWriteOff.getCouponId());
-        if(coupon == null || coupon.getIsUsed() == Coupon.COUPON_IS_USED_YES){
-            return new BaseResp<Long>(ResultStatus.error_coupon_is_used);
-        }
+
 
         soWriteOff.setShopId(shop.getId());
         soWriteOff.setShopName(shop.getShopName());

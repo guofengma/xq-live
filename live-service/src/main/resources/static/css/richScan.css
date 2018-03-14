@@ -68,3 +68,22 @@ html, body {
 .okBtn.active {
     background-color: #fc5e2d;
 }
+.notice {
+    position: fixed;
+    top: 5rem;
+    left: 50%;
+    margin-left: -1.5rem;
+    z-index: 100;
+    width: 3rem;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    background-color: #B1B1B1;
+    border-radius: 0.2rem;
+    color: #fff;
+    opacity: 0.7;
+    font-size: 0.36rem;
+}
+.hide {
+    display: block;
+}

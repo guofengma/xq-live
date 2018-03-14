@@ -230,16 +230,18 @@ public class WeixinPayController {
                 response.put("package", "prepay_id="+prepayid);
                 response.put("signType", "MD5");
                 response.put("timeStamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
+                System.out.println("二次签名参数response ： "+response);
+
                 //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
                 String sign = WXPayUtil.generateSignature(response, PaymentConfig.API_KEY);
                 response.put("paySign", sign);
-/*                //拼接签名需要的参数
+                //拼接签名需要的参数
                 String stringSignTemp = "appId=" + PaymentConfig.APPID + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepayid + "&signType=MD5&timeStamp=" + timeStamp;
                 //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
                 String paySign1 = PayUtils.sign(stringSignTemp, "&key="+PaymentConfig.API_KEY, "utf-8").toUpperCase();
-                System.out.println("paySign : "+ sign + " and  paySign1 : "+ paySign1);*/
+                System.out.println("paySign : "+ sign + " and  paySign1 : "+ paySign1);
                 System.out.println("生成的签名paySign : "+ sign);
-                System.out.println("签名正确性检查 ："+WXPayUtil.isSignatureValid(response, PaymentConfig.API_KEY));
+//                System.out.println("签名正确性检查 ："+WXPayUtil.isSignatureValid(response, PaymentConfig.API_KEY));
                 return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, response);
             }
         } catch (Exception e) {

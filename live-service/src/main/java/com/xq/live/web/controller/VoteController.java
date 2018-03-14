@@ -11,6 +11,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Vote;
 import com.xq.live.service.VoteService;
 import com.xq.live.vo.in.VoteInVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/vote")
 public class VoteController {
-
+    @Autowired
     private VoteService voteService;
 
     /**

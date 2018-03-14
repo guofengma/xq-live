@@ -76,7 +76,14 @@ $(function() {
                         $('#accountInp').val('');
                         $('#discountMoney').html(0);
                         $('#actualAmount').html(0);
-
+                        $('.notice').html('核销成功');
+                        $(".notice").fadeIn(1000);
+                        setTimeout(function(){
+                            $(".notice").fadeOut(500);
+                        }, 3000);
+                    } else {
+                        $('#okBtn').removeClass('active').html('确认核销');
+                        $('.notice').html("核销失败");
                         $(".notice").fadeIn(1000);
                         setTimeout(function(){
                             $(".notice").fadeOut(500);

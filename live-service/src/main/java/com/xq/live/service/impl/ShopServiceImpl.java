@@ -8,15 +8,21 @@ package com.xq.live.service.impl;/**
 import com.xq.live.common.Pager;
 import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.ShopMapper;
+import com.xq.live.dao.SkuMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
+import com.xq.live.model.Sku;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.ShopOut;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +43,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private SkuMapper skuMapper;
 
     @Override
     public Shop getShopById(Long id) {
@@ -85,13 +94,27 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Pager<Shop> list(ShopInVo inVo){
-        Pager<Shop> result = new Pager<Shop>();
+    public Pager<ShopOut> list(ShopInVo inVo){
+        Pager<ShopOut> result = new Pager<ShopOut>();
         int listTotal = shopMapper.listTotal(inVo);
         result.setTotal(listTotal);
         if(listTotal > 0){
             List<Shop> list = shopMapper.list(inVo);
-            result.setList(list);
+            List<ShopOut> listForOut = new ArrayList<ShopOut>();
+            for (Shop shop : list) {
+                SkuInVo skuInVo = new SkuInVo();
+                skuInVo.setShopId(shop.getId());
+                skuInVo.setSkuType(Sku.SKU_TYPE_TSC);
+                List<Sku> skus = skuMapper.queryTscList(skuInVo);
+                ShopOut shopOut = new ShopOut();
+                BeanUtils.copyProperties(shop,shopOut);
+                if(skus.size()>0&&skus!=null){
+                    shopOut.setSkuName(skus.get(0).getSkuName());
+                }
+                listForOut.add(shopOut);
+
+            }
+            result.setList(listForOut);
         }
         result.setPage(inVo.getPage());
         return result;

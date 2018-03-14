@@ -8,6 +8,7 @@ package com.xq.live.service;/**
 import com.xq.live.common.Pager;
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ShopOut;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public interface ShopService {
      * @param inVo
      * @return
      */
-    Pager<Shop> list(ShopInVo inVo);
+    Pager<ShopOut> list(ShopInVo inVo);
 
     /**
      * 热门商家

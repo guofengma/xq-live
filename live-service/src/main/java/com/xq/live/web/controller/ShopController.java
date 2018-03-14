@@ -8,6 +8,7 @@ import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ShopOut;
 import com.xq.live.web.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -124,9 +125,9 @@ public class ShopController {
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<Shop>> list(ShopInVo inVo, HttpServletRequest request){
-        Pager<Shop> result = shopService.list(inVo);
-        return new BaseResp<Pager<Shop>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<ShopOut>> list(ShopInVo inVo, HttpServletRequest request){
+        Pager<ShopOut> result = shopService.list(inVo);
+        return new BaseResp<Pager<ShopOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**

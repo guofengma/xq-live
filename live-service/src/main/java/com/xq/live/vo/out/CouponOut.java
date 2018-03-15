@@ -58,8 +58,6 @@ public class CouponOut {
 
     private List<PromotionRules> promotionRules;
 
-    private Integer soStatus;//卷所在订单的支付状态
-
     public Long getId() {
         return id;
     }
@@ -218,13 +216,5 @@ public class CouponOut {
 
     public void setPromotionRules(List<PromotionRules> promotionRules) {
         this.promotionRules = promotionRules;
-    }
-
-    public Integer getSoStatus() {
-        return soStatus;
-    }
-
-    public void setSoStatus(Integer soStatus) {
-        this.soStatus = soStatus;
     }
 }

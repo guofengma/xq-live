@@ -2,9 +2,7 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.CouponMapper;
-import com.xq.live.dao.SoMapper;
 import com.xq.live.model.Coupon;
-import com.xq.live.model.So;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.CouponInVo;
 import com.xq.live.vo.out.CouponOut;
@@ -25,9 +23,6 @@ public class CouponServiceImpl implements CouponService {
 
     @Autowired
     private CouponMapper couponMapper;
-
-    @Autowired
-    private SoMapper soMapper;
 
     @Override
     public Coupon get(Long id) {
@@ -63,12 +58,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public CouponOut getByCouponCode(String couponCode) {
-        CouponOut result = couponMapper.getByCouponCode(couponCode);
-        So so = soMapper.selectByPrimaryKey(result.getSoId());
-        if(so!=null) {
-            result.setSoStatus(so.getSoStatus());
-        }
-        return result;
+        return couponMapper.getByCouponCode(couponCode);
     }
 
     @Override

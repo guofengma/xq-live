@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.So;
 import com.xq.live.service.SoService;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,18 @@ public class SoController {
     public BaseResp<SoOut> get(@PathVariable("id") Long id) {
         SoOut soOut = soService.get(id);
         return new BaseResp<SoOut>(ResultStatus.SUCCESS, soOut);
+    }
+
+    /**
+     * 查询我的订单中的订单详情
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/getForOrder/{id}", method = RequestMethod.GET)
+    public BaseResp<SoForOrderOut> getForOrder(@PathVariable("id") Long id) {
+        SoForOrderOut forOrder = soService.getForOrder(id);
+        return new BaseResp<SoForOrderOut>(ResultStatus.SUCCESS, forOrder);
     }
 
     /**

@@ -23,6 +23,35 @@
         <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
     </resultMap>
 
+    <resultMap id="SoOutForOrderResultMap" type="com.xq.live.vo.out.SoForOrderOut" extends="BaseResultMap">
+        <result column="so_id" jdbcType="BIGINT" property="soId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="sku_code" jdbcType="VARCHAR" property="skuCode"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
+        <collection property="coupons" ofType="com.xq.live.vo.out.CouponForOrderOut">
+            <result column="coupon_id" jdbcType="BIGINT" property="couponId"/>
+            <result column="coupon_code" jdbcType="VARCHAR" property="couponCode" />
+            <result column="coupon_amount" jdbcType="INTEGER" property="couponAmount" />
+            <result column="type" jdbcType="INTEGER" property="type" />
+            <result column="qrcode_url" jdbcType="VARCHAR" property="qrcodeUrl" />
+            <result column="is_used" jdbcType="INTEGER" property="isUsed" />
+            <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+            <result column="expiry_date" jdbcType="DATE" property="expiryDate" />
+            <result column="used_time" jdbcType="TIMESTAMP" property="usedTime" />
+            <collection property="promotionRules" ofType="com.xq.live.model.PromotionRules">
+                <result column="rule_id" jdbcType="BIGINT" property="id" />
+                <result column="rule_type" jdbcType="INTEGER" property="ruleType" />
+                <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc" />
+                <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+                <result column="coupon_shop_id" jdbcType="BIGINT" property="shopId" />
+                <result column="coupon_sku_id" jdbcType="BIGINT" property="skuId" />
+            </collection>
+        </collection>
+    </resultMap>
+
     <sql id="Base_Column_List">
     id, so_amount, user_id, user_name, pay_type, so_status, so_type, create_time, update_time
     </sql>
@@ -38,6 +67,18 @@
         s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
+        where s.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPkForOrder" parameterType="java.lang.Long" resultMap="SoOutForOrderResultMap">
+        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
+        c.id as coupon_id,c.coupon_code,c.coupon_amount,c.type,c.qrcode_url,c.is_used,c.is_deleted,c.expiry_date,
+        c.used_time,pr.id rule_id,pr.rule_type,pr.rule_desc,pr.end_time,pr.shop_id coupon_shop_id,pr.sku_id coupon_sku_id
+        from so s
+        inner join so_detail sd on s.id = sd.so_id
+        INNER JOIN coupon c on s.id = c.so_id
+        INNER JOIN promotion_rules pr ON sd.sku_id = pr.sku_id
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 

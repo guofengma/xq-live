@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.So;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 
 import java.util.List;
@@ -38,6 +39,13 @@ public interface SoService {
      * @return
      */
     SoOut get(Long id);
+
+    /**
+     * 查询我的订单中的订单详情
+     * @param id
+     * @return
+     */
+    SoForOrderOut getForOrder(Long id);
 
     /**
      * 订单支付

@@ -10,6 +10,7 @@ import com.xq.live.service.SoService;
 import com.xq.live.service.UploadService;
 import com.xq.live.vo.in.ProRuInVo;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -143,6 +144,12 @@ public class SoServiceImpl implements SoService {
     public SoOut get(Long id) {
         return soMapper.selectByPk(id);
     }
+
+    @Override
+    public SoForOrderOut getForOrder(Long id) {
+        return soMapper.selectByPkForOrder(id);
+    }
+
 
     @Override
     public Integer paid(SoInVo inVo) {

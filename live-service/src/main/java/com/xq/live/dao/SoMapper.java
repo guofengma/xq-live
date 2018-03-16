@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.So;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,8 @@ public interface SoMapper {
     List<SoOut> list(SoInVo inVo);
 
     SoOut selectByPk(Long id);
+
+    SoForOrderOut selectByPkForOrder(Long id);
 
     int paid(SoInVo inVo);
 

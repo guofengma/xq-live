@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @Service
+@Transactional
 public class SoServiceImpl implements SoService {
 
     private Logger logger = Logger.getLogger(SoServiceImpl.class);

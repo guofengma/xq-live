@@ -3,6 +3,7 @@ $(function() {
     var qrCode = GetQueryString('qrCode') || '';
     var cashierId = GetQueryString('userId') || '';
     var compareMoney = 0, discountMoney = 0, hxData = {};
+    var flag = true;
 
     //验证input中输入的是否为数字：
     bindKeyEvent($('#accountInp'));
@@ -60,42 +61,44 @@ $(function() {
 
     //点击核销按钮调取确认核销接口
     $('#okBtn').click(function() {
-        var val = $('#accountInp').val();
-        if(val != '') {
-            hxData.shopAmount = val;
-            $.ajax({
-                type: "POST",
-                url: "/hx/add",
-                dataType: "json",
-                data: hxData,
-                success: function(res) {
-                    console.log(res)
-                    var data = res.data;
-                    if(res.code == 0) {
-                        $('#okBtn').removeClass('active').html('核销成功');
-                        $('#accountInp').val('');
-                        $('#discountMoney').html(0);
-                        $('#actualAmount').html(0);
-                        $('.notice').html('核销成功');
-                        $(".notice").fadeIn(1000);
-                        setTimeout(function(){
-                            $(".notice").fadeOut(500);
-                        }, 3000);
-                    } else {
-                        $('#okBtn').removeClass('active').html('确认核销');
-                        $('.notice').html("核销失败");
-                        $(".notice").fadeIn(1000);
-                        setTimeout(function(){
-                            $(".notice").fadeOut(500);
-                        }, 3000);
+        if(flag) {
+            var val = $('#accountInp').val();
+            if(val != '') {
+                hxData.shopAmount = val;
+                $.ajax({
+                    type: "POST",
+                    url: "/hx/add",
+                    dataType: "json",
+                    data: hxData,
+                    success: function(res) {
+                        var data = res.data;
+                        flag = false;
+                        if(res.code == 0) {
+                            $('#okBtn').removeClass('active').html('核销成功');
+                            $('#accountInp').val('');
+                            $('#discountMoney').html(0);
+                            $('#actualAmount').html(0);
+                            layer.open({
+                                content: res.message,
+                                skin: 'msg',
+                                time: 5
+                            });
+                        } else {
+                            $('#okBtn').removeClass('active').html('确认核销');
+                            layer.open({
+                                content: res.message,
+                                skin: 'msg',
+                                time: 7
+                            });
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
                     }
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        } else {
-            console.log('error');
+                });
+            } else {
+                console.log('error');
+            }
         }
     })
 })

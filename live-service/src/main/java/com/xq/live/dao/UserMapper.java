@@ -2,10 +2,13 @@ package com.xq.live.dao;
 
 import com.xq.live.model.User;
 import com.xq.live.vo.in.UserInVo;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@CacheConfig(cacheNames = "users")
 @Repository
 public interface UserMapper{
 
@@ -36,5 +39,6 @@ public interface UserMapper{
      */
     int updateUserType(User record);
 
+    @Cacheable(key = "#p0")
     User findByOpenId(String openId);
 }

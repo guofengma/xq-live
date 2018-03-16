@@ -35,6 +35,6 @@ public class Constants {
     /**
      * 全局域名常量
      */
-    public final static String DOMAIN_XQ_URL = "http://www.hbxq001.cn";
+    public final static String DOMAIN_XQ_URL = "https://www.hbxq001.cn";
 
 }

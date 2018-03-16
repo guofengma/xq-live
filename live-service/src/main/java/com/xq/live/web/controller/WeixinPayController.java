@@ -243,12 +243,13 @@ public class WeixinPayController {
                 System.out.println("生成的签名paySign : "+ sign);
 //                System.out.println("签名正确性检查 ："+WXPayUtil.isSignatureValid(response, PaymentConfig.API_KEY));
                 return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, response);
+            }else{
+                return new BaseResp<Map<String, String>>(ResultStatus.error_unified_order_fail.getErrorCode(), rMap.get("err_code_des"), null);
             }
         } catch (Exception e) {
             e.printStackTrace();
             return new BaseResp<Map<String, String>>(ResultStatus.FAIL, response);
         }
-        return new BaseResp<Map<String, String>>(ResultStatus.FAIL, response);
     }
 
 
@@ -299,6 +300,7 @@ public class WeixinPayController {
                         inVo.setUserId(soOut.getUserId());
                         inVo.setUserName(soOut.getUserName());
                         inVo.setSkuId(soOut.getSkuId());
+                        inVo.setSkuNum(soOut.getSkuNum());
                         int ret = soService.paid(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {

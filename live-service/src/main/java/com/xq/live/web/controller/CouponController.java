@@ -45,7 +45,7 @@ public class CouponController {
      * @param couponCode
      * @return
      */
-    @RequestMapping(value = "/getByCode/{couponCode}", method = RequestMethod.GET)
+        @RequestMapping(value = "/getByCode/{couponCode}", method = RequestMethod.GET)
     public BaseResp<CouponOut> getByCode(@PathVariable("couponCode")String couponCode){
         if(StringUtils.isEmpty(couponCode)){
             return new BaseResp<CouponOut>(ResultStatus.error_para_coupon_code_empty);

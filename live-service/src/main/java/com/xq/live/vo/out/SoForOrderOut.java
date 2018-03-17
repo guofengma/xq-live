@@ -50,6 +50,8 @@ public class SoForOrderOut {
 
     private List<CouponForOrderOut> coupons;
 
+    private String moblie;
+
     public Long getId() {
         return id;
     }
@@ -184,5 +186,13 @@ public class SoForOrderOut {
 
     public void setCoupons(List<CouponForOrderOut> coupons) {
         this.coupons = coupons;
+    }
+
+    public String getMoblie() {
+        return moblie;
+    }
+
+    public void setMoblie(String moblie) {
+        this.moblie = moblie;
     }
 }

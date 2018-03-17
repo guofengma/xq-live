@@ -65,6 +65,9 @@ public class SoServiceImpl implements SoService {
     @Autowired
     private PromotionRulesMapper promotionRulesMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public Pager<SoOut> list(SoInVo inVo) {
         Pager<SoOut> ret = new Pager<SoOut>();
@@ -147,7 +150,10 @@ public class SoServiceImpl implements SoService {
 
     @Override
     public SoForOrderOut getForOrder(Long id) {
-        return soMapper.selectByPkForOrder(id);
+        SoForOrderOut soForOrderOut = soMapper.selectByPkForOrder(id);
+        User user = userMapper.selectByPrimaryKey(soForOrderOut.getUserId());
+        soForOrderOut.setMoblie(user.getMobile());
+        return soForOrderOut;
     }
 
 

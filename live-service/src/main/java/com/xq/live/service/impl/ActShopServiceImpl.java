@@ -34,6 +34,7 @@ public class ActShopServiceImpl implements ActShopService {
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActShopOut> list = actShopMapper.list(inVo);
+            Collections.sort(list);
             result.setList(list);
         }
         result.setPage(inVo.getPage());
@@ -42,7 +43,9 @@ public class ActShopServiceImpl implements ActShopService {
 
     @Override
     public List<ActShopOut> top(ActShopInVo inVo) {
-        return actShopMapper.list(inVo);
+        List<ActShopOut> list = actShopMapper.list(inVo);
+        Collections.sort(list);
+        return list;
     }
 
     @Override

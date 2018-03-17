@@ -9,7 +9,7 @@ import java.util.Date;
  * @date 2018-03-06 21:12
  * @copyright:hbxq
  **/
-public class ActShopOut {
+public class ActShopOut implements Comparable<ActShopOut>{
 
     private Long id;
 
@@ -129,5 +129,17 @@ public class ActShopOut {
 
     public void setApplyStatus(Integer applyStatus) {
         this.applyStatus = applyStatus;
+    }
+
+    @Override
+    public int compareTo(ActShopOut o) {
+        int a = this.getVoteNum();
+        int b = o.getVoteNum();
+        if(a>b){
+            return -1;
+        }else {
+            return 1;
+        }
+
     }
 }

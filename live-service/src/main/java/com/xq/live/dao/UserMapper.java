@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@CacheConfig(cacheNames = "users")
 @Repository
 public interface UserMapper{
 
@@ -39,6 +38,5 @@ public interface UserMapper{
      */
     int updateUserType(User record);
 
-    @Cacheable(key = "#p0")
     User findByOpenId(String openId);
 }

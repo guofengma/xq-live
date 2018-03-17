@@ -235,13 +235,7 @@ public class WeixinPayController {
                 //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
                 String sign = WXPayUtil.generateSignature(response, PaymentConfig.API_KEY);
                 response.put("paySign", sign);
-                //拼接签名需要的参数
-                String stringSignTemp = "appId=" + PaymentConfig.APPID + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepayid + "&signType=MD5&timeStamp=" + timeStamp;
-                //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
-                String paySign1 = PayUtils.sign(stringSignTemp, "&key="+PaymentConfig.API_KEY, "utf-8").toUpperCase();
-                System.out.println("paySign : "+ sign + " and  paySign1 : "+ paySign1);
                 System.out.println("生成的签名paySign : "+ sign);
-//                System.out.println("签名正确性检查 ："+WXPayUtil.isSignatureValid(response, PaymentConfig.API_KEY));
                 return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, response);
             }else{
                 return new BaseResp<Map<String, String>>(ResultStatus.error_unified_order_fail.getErrorCode(), rMap.get("err_code_des"), null);

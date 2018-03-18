@@ -43,4 +43,11 @@ public interface UserService {
      * @return
      */
     public Integer updateLoginInfo(User user);
+
+    /**
+     * 使用openid更新用户信息
+     * @param user
+     * @return
+     */
+    public Integer updateByOpenId(User user);
 }

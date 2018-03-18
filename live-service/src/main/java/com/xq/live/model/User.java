@@ -1,6 +1,7 @@
 package com.xq.live.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -15,17 +16,14 @@ public class User {
 
     private Long id;
 
-    @NotNull(message = "userName必填")
     private String userName;
 
-    @NotNull(message = "password必填")
     private String password;
 
     private String nickName;
 
     private String iconUrl;
 
-    @NotNull(message = "mobile必填")
     private String mobile;
 
     private BigDecimal locationX;
@@ -42,6 +40,7 @@ public class User {
      */
     private Long shopId;
 
+    @NotNull(message = "openId必填")
     private String openId;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -56,6 +55,12 @@ public class User {
     private Integer loginTimes; //记录用户登录次数
 
     private Integer sourceType;
+
+    private Integer sex;    //性别
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
+
 
     public Long getId() {
         return id;
@@ -191,5 +196,21 @@ public class User {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 }

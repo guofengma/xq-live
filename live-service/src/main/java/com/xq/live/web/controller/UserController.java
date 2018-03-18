@@ -1,14 +1,14 @@
 package com.xq.live.web.controller;
 
-import com.xq.live.common.BaseResp;
-import com.xq.live.common.Pager;
-import com.xq.live.common.RandomStringUtil;
-import com.xq.live.common.ResultStatus;
+import com.alibaba.fastjson.JSONObject;
+import com.xq.live.common.*;
 import com.xq.live.model.User;
 import com.xq.live.service.AccessLogService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.IpUtils;
+import com.xq.live.web.utils.PayUtils;
+import javafx.scene.input.DataFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -19,7 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangpeng32 on 2017/12/14.
@@ -49,23 +53,45 @@ public class UserController {
 
     /**
      * 新增用户
-     * @param in
+     * @param code
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public BaseResp<Long> addUser(@Valid User in, HttpServletRequest request, BindingResult result){
-        if(result.hasErrors()) {
-            List<ObjectError> list = result.getAllErrors();
-            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+    public BaseResp<Long> addUser(String code, HttpServletRequest request){
+        //获取openId
+        if (StringUtils.isEmpty(code)) {
+            return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);
         }
-        in.setUserIp(IpUtils.getIpAddr(request));
-        User user = userService.findByUsername(in.getUserName());
-        if(user != null){
-            return new BaseResp<Long>(ResultStatus.error_user_exist);
+        //获取openId
+        String param = "?grant_type=" + PaymentConfig.GRANT_TYPE + "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.API_KEY + "&js_code=" + code;
+        //创建请求对象
+        String httpRet = PayUtils.httpRequest(PaymentConfig.GET_OPEN_ID_URL, "GET", param);
+        Map<String, String> result = new HashMap<String, String>();
+        JSONObject jsonObject = JSONObject.parseObject(httpRet);
+        if (jsonObject != null) {
+            Integer errcode = jsonObject.getInteger("errcode");
+            if (errcode != null) {
+                //返回异常信息
+                return new BaseResp<Long>(errcode, jsonObject.getString("errmsg"), null);
+            }
+            String openId = jsonObject.getString("openid");
+            User user = userService.findByOpenId(openId);
+            if(user != null){
+                return new BaseResp<Long>(ResultStatus.error_user_exist);
+            }
+            user = new User();
+            user.setOpenId(openId);
+            user.setUserIp(IpUtils.getIpAddr(request));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
+            user.setUserName("xq_"+sdf.format(date));
+            user.setPassword(RandomStringUtil.getRandomCode(6,3));
+            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            user.setSourceType(1);  //来源小程序
+            Long id  = userService.add(user);
+            return new BaseResp<Long>(ResultStatus.SUCCESS, id);
         }
-
-        Long id  = userService.add(in);
-        return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+        return new BaseResp<Long>(ResultStatus.FAIL);
     }
 
     /**
@@ -129,7 +155,14 @@ public class UserController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public BaseResp<Integer> update(User user){
-        Integer result = userService.update(user);
+        if(user == null || user.getOpenId() == null){
+            return new BaseResp<Integer>(ResultStatus.error_param_open_id_empty);
+        }
+        User u = userService.findByOpenId(user.getOpenId());
+        if(u == null){
+            return new BaseResp<Integer>(ResultStatus.error_param_open_id);
+        }
+        Integer result = userService.updateByOpenId(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
     }
 

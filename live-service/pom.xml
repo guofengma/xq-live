@@ -140,6 +140,11 @@
             <artifactId>jdom</artifactId>
             <version>1.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>LATEST</version>
+        </dependency>
         <!-- spring-security 和 jwt -->
         <!--		<dependency>
                     <groupId>org.springframework.boot</groupId>

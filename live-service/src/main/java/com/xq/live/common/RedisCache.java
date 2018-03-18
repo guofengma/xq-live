@@ -29,12 +29,25 @@ public class RedisCache<K, V>{
         ValueOperations<K, V> operations = redisTemplate.opsForValue();
         return operations.get(key);
     }
-
+    /**
+     * @Description: 缓存时间的put
+     * @param: key,value
+     * @Return:
+     * @Author: zhangpeng32
+     * @Date: 2018/3/17 17:32
+     * @Version: 1.0.0
+     */
     public void set(K key, V value, final long timeout, final TimeUnit unit){
         ValueOperations<K, V> operations = redisTemplate.opsForValue();
         operations.set(key, value, timeout, unit);
     }
 
+    /**
+     * @Description: 是否缓存
+     * @Author: zhangpeng32
+     * @Date: 2018/3/17 17:32
+     * @Version: 1.0.0
+     */
     public boolean hasKey(K key){
         boolean result = redisTemplate.hasKey(key);
         return result;

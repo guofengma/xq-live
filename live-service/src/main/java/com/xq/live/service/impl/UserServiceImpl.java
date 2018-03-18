@@ -107,4 +107,13 @@ public class UserServiceImpl implements UserService {
         user.setLastLoginTime(now);
         return userMapper.updateByPrimaryKeySelective(user);
     }
+
+    @Override
+    public Integer updateByOpenId(User user){
+        Date now = new Date();
+        //1、更新用户表登录ip，登录次数等
+        user.setUpdateTime(now);
+        user.setLastLoginTime(now);
+        return userMapper.updateByOpenId(user);
+    }
 }

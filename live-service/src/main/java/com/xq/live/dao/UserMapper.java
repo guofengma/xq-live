@@ -39,4 +39,6 @@ public interface UserMapper{
     int updateUserType(User record);
 
     User findByOpenId(String openId);
+
+    Integer updateByOpenId(User user);
 }

@@ -22,7 +22,9 @@ public class ShopInVo extends BaseInVo {
     @NotNull(message = "sourceType必填")
     private Integer sourceType;
 
-
+    /**
+     * 搜索关键字
+     */
     private String searcheKey;
 
 

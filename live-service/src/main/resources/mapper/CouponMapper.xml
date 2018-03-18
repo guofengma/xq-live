@@ -312,7 +312,7 @@
         used_time = #{usedTime,jdbcType=TIMESTAMP},
       shop_id = #{shopId,jdbcType=BIGINT},
       shop_cashier_id = #{shopCashierId,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id}
       and user_id = #{userId}
       and is_used = 0

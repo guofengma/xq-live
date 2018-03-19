@@ -11,6 +11,7 @@ import com.xq.live.vo.out.ActShopOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,6 +51,13 @@ public class ActShopServiceImpl implements ActShopService {
 
     @Override
     public Long add(ActShop actShop) {
+        if(actShop==null||actShop.getActId()==null){
+            return null;
+        }
+        int i = actShopMapper.countByActId(actShop.getActId());
+        DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+        String s = mFormat.format(i+1);
+        actShop.setShopCode(s);
         int ret = actShopMapper.insert(actShop);
         if(ret > 0){
             return actShop.getId();

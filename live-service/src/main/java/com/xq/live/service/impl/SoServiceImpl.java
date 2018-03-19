@@ -151,6 +151,9 @@ public class SoServiceImpl implements SoService {
     @Override
     public SoForOrderOut getForOrder(Long id) {
         SoForOrderOut soForOrderOut = soMapper.selectByPkForOrder(id);
+        if(soForOrderOut==null||soForOrderOut.getUserId()==null){
+            return null;
+        }
         User user = userMapper.selectByPrimaryKey(soForOrderOut.getUserId());
         soForOrderOut.setMoblie(user.getMobile());
         return soForOrderOut;

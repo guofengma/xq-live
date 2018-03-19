@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long add(User user) {
+        String key = "USER_OPEN_ID_" + user.getOpenId();
+        redisCache.set(key, user, 10, TimeUnit.MINUTES);
         int ret = userMapper.insert(user);
         if(ret > 0){
             return user.getId();

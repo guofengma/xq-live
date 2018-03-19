@@ -77,7 +77,7 @@ public class UserController {
             String openId = jsonObject.getString("openid");
             User user = userService.findByOpenId(openId);
             if(user != null){
-                return new BaseResp<Long>(ResultStatus.error_user_exist);
+                return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
             }
             user = new User();
             user.setOpenId(openId);

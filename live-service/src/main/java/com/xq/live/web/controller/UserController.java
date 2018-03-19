@@ -46,7 +46,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public BaseResp<User> getUserbyId(@PathVariable("id") Long id) {
+    public BaseResp<User> getUserbyId(@PathVariable Long id) {
         User user = user = userService.getUserById(id);
         return new BaseResp<User>(ResultStatus.SUCCESS, user);
     }

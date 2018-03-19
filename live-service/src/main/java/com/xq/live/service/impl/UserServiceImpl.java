@@ -43,9 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long add(User user) {
-        String key = "USER_OPEN_ID_" + user.getOpenId();
         user.setIconUrl("https://xq-1256079679.file.myqcloud.com/test_图层 24_0.8.jpg");
-        redisCache.set(key, user, 10, TimeUnit.MINUTES);
         int ret = userMapper.insert(user);
         if(ret > 0){
             return user.getId();
@@ -60,18 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByOpenId(String openId) {
-        User user = null;
-        // 从缓存中获取用户信息
-        String key = "USER_OPEN_ID_" + openId;
-        // 缓存存在
-        if(redisCache.hasKey(key)){
-            user = redisCache.get(key);
-            return user;
-        }
-        user = userMapper.findByOpenId(openId);
-        // 插入缓存
-        redisCache.set(key, user, 10, TimeUnit.MINUTES);
-        return user;
+        return userMapper.findByOpenId(openId);
     }
 
     @Override

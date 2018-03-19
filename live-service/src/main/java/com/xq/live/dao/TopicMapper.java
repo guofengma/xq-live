@@ -27,9 +27,9 @@ public interface TopicMapper{
 
     int updateByPrimaryKey(Topic record);
 
-    List<Topic> list(TopicInVo inVo);
+    List<TopicForZanOut> list(TopicInVo inVo);
 
-    List<Topic> myList(TopicInVo inVo);
+    List<TopicForZanOut> myList(TopicInVo inVo);
 
     int listTotal(TopicInVo inVo);
 

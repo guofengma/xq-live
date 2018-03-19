@@ -8,6 +8,7 @@ import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
 import com.xq.live.vo.out.TopicForZanOut;
 import com.xq.live.vo.out.TopicOut;
+import com.xq.live.web.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -39,17 +41,17 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public BaseResp<Topic> getTopicById(@PathVariable(value = "id") Long id) {
-        Topic topic = topicService.selectOne(id);
-        return new BaseResp<Topic>(ResultStatus.SUCCESS, topic);
+    public BaseResp<TopicForZanOut> getTopicById(@PathVariable(value = "id") Long id) {
+        TopicForZanOut topic = topicService.selectOne(id);
+        return new BaseResp<TopicForZanOut>(ResultStatus.SUCCESS, topic);
     }
 
     @RequestMapping(value = "/getTopicByZan", method = RequestMethod.GET)
-    public BaseResp<TopicForZanOut> getTopicById(TopicInVo inVo) {
+    public BaseResp<TopicForZanOut> getTopicById(TopicInVo inVo, HttpServletRequest request) {
         if(inVo.getZanUserId()==null){
             return  new BaseResp<TopicForZanOut>(-1,"zanUserId必填",null);
         }
-
+        inVo.setZanUserIp(IpUtils.getIpAddr(request));
         TopicForZanOut topic = topicService.selectByZan(inVo);
 
         return new BaseResp<TopicForZanOut>(ResultStatus.SUCCESS, topic);

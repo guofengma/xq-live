@@ -20,7 +20,9 @@
   <resultMap id="ZanSelect" extends="BaseResultMap" type="com.xq.live.vo.out.TopicForZanOut">
     <result column="zan" jdbcType="INTEGER" property="zan"/>
     <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
+    <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
   </resultMap>
+
 
   <sql id="Base_Column_List">
     id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
@@ -159,9 +161,10 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="list" resultMap="BaseResultMap">
+  <select id="list" resultMap="ZanSelect">
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,
+    (select count(1) from access_log al where topic.id = al.ref_id and al.biz_type = 3) as view_num
     from topic
     <where>
       <if test="id != null">
@@ -181,9 +184,10 @@
     limit #{start}, #{rows}
   </select>
 
-  <select id="myList" resultMap="BaseResultMap">
+  <select id="myList" resultMap="ZanSelect">
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,
+    (select count(1) from access_log al where topic.id = al.ref_id and al.biz_type = 3) as view_num
     from topic
     <where>
       <if test="id != null">

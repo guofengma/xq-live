@@ -49,7 +49,11 @@ public class TopicOut {
 
     private int commentNum;//文章列表的评论数
 
-    private int zan;//点赞数
+    private Integer zan;//点赞数
+
+    private Integer isZan;//是否点赞
+
+    private Integer viewNum;//浏览数目
 
     public Long getId() {
         return id;
@@ -179,11 +183,27 @@ public class TopicOut {
         this.commentNum = commentNum;
     }
 
-    public int getZan() {
+    public Integer getZan() {
         return zan;
     }
 
-    public void setZan(int zan) {
+    public void setZan(Integer zan) {
         this.zan = zan;
+    }
+
+    public Integer getIsZan() {
+        return isZan;
+    }
+
+    public void setIsZan(Integer isZan) {
+        this.isZan = isZan;
+    }
+
+    public Integer getViewNum() {
+        return viewNum;
+    }
+
+    public void setViewNum(Integer viewNum) {
+        this.viewNum = viewNum;
     }
 }

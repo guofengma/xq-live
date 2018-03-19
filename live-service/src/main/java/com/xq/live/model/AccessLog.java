@@ -19,6 +19,8 @@ public class AccessLog {
 
     public final static int BIZ_TYPE_ACT_VIEW = 2; //活动浏览日志
 
+    public final static int BIZ_TYPE_TOPIC_VIEW = 3;//文章浏览日志
+
     private Long id;
 
     private Long refId;

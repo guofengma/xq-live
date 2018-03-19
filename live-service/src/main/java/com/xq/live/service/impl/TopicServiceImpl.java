@@ -2,6 +2,7 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.*;
+import com.xq.live.model.AccessLog;
 import com.xq.live.model.Attachment;
 import com.xq.live.model.Topic;
 import com.xq.live.model.User;
@@ -42,19 +43,61 @@ public class TopicServiceImpl implements TopicService {
     @Autowired
     private ZanMapper zanMapper;
 
+    @Autowired
+    private AccessLogMapper accessLogMapper;
+
 
     @Override
-    public Topic selectOne(Long id) {
+    public TopicForZanOut selectOne(Long id) {
         Topic topic = topicMapper.selectByPrimaryKey(id);
+        TopicForZanOut topicForZanOut = new TopicForZanOut();
         if(topic != null){
-            topic = getPicUrls(topic);
+            BeanUtils.copyProperties(topic,topicForZanOut);
+            topicForZanOut = getPicUrls(topicForZanOut);
         }
-        return topic;
+        return topicForZanOut;
     }
 
     @Override
-    public TopicForZanOut selectByZan(TopicInVo inVo) {
+    public TopicForZanOut selectByZan(final TopicInVo inVo) {
         TopicForZanOut result = topicMapper.selectByZan(inVo);
+        if(inVo==null||inVo.getZanSourceType()==null||inVo.getZanUserName()==null){
+            return null;
+        }
+        try {
+            //新开一个线程记录访问日志
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    /**
+                     * 1、查询用户是否存在访问记录
+                     * 2、记录用户访问日志
+                     */
+                    AccessLog accessLog = new AccessLog();
+                    accessLog.setUserId(Long.parseLong(inVo.getZanUserId()));
+                    accessLog.setUserName(inVo.getZanUserName());
+                    accessLog.setUserIp(inVo.getZanUserIp());
+                    accessLog.setSource(inVo.getZanSourceType());
+                    accessLog.setRefId(inVo.getId());
+                    accessLog.setBizType(AccessLog.BIZ_TYPE_TOPIC_VIEW);
+                    int cnt = accessLogMapper.checkRecordExist(accessLog);
+                    if (cnt == 0) {
+                        int logCnt = accessLogMapper.insert(accessLog);
+                    }
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /**
+         * 查询文章的浏览量
+         */
+        Map<String, Object> logMap = new HashMap<String, Object>();
+        logMap.put("bizType", AccessLog.BIZ_TYPE_TOPIC_VIEW);
+        logMap.put("refId", inVo.getId());
+        int viewNum = accessLogMapper.countViewNum(logMap);
+
+        result.setViewNum(viewNum);
         return result;
     }
 
@@ -84,19 +127,22 @@ public class TopicServiceImpl implements TopicService {
         int total = topicMapper.listTotal(inVo);
 
         if(total > 0){
-            List<Topic> list = topicMapper.list(inVo);
+            List<TopicForZanOut> list = topicMapper.list(inVo);
             List<TopicOut> listForOut = new ArrayList<TopicOut>();
-            for(Topic t : list){
+            for(TopicForZanOut t : list){
                 t = getPicUrls(t);
+                /**
+                 * 通过用户id查询用户详情
+                 */
                 User user = userMapper.selectByPrimaryKey(t.getUserId());
                 CommentInVo commentInVo = new CommentInVo();
                 commentInVo.setRefId(t.getId());
                 commentInVo.setCmtType(2);
-                int listTotal = commentMapper.listTotal(commentInVo);
+                int listTotal = commentMapper.listTotal(commentInVo);//查询评论总数
                 ZanInVo zanInVo = new ZanInVo();
                 zanInVo.setRefId(t.getId());
                 zanInVo.setType(2);
-                int zan = zanMapper.total(zanInVo);
+                int zan = zanMapper.total(zanInVo);//查询点赞总数
                 TopicOut topicOut = new TopicOut();
                 BeanUtils.copyProperties(t,topicOut);
                 topicOut.setIconUrl(user.getIconUrl());
@@ -117,9 +163,9 @@ public class TopicServiceImpl implements TopicService {
         int total = topicMapper.myListTotal(inVo);
 
         if(total > 0){
-            List<Topic> list = topicMapper.myList(inVo);
+            List<TopicForZanOut> list = topicMapper.myList(inVo);
             List<TopicOut> listForOut = new ArrayList<TopicOut>();
-            for(Topic t : list){
+            for(TopicForZanOut t : list){
                 t = getPicUrls(t);
                 User user = userMapper.selectByPrimaryKey(t.getUserId());
                 CommentInVo commentInVo = new CommentInVo();
@@ -146,9 +192,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicOut> top(TopicInVo inVo) {
-        List<Topic> list = topicMapper.list(inVo);
+        List<TopicForZanOut> list = topicMapper.list(inVo);
         List<TopicOut> listForOut = new ArrayList<TopicOut>();
-        for(Topic t : list){
+        for(TopicForZanOut t : list){
             t = getPicUrls(t);
             User user = userMapper.selectByPrimaryKey(t.getUserId());
             CommentInVo commentInVo = new CommentInVo();
@@ -168,7 +214,7 @@ public class TopicServiceImpl implements TopicService {
      *
      * @return
      */
-    public Topic getPicUrls(Topic topic){
+    public TopicForZanOut getPicUrls(TopicForZanOut topic){
         if(StringUtils.isNotEmpty(topic.getPicIds())){
             String picIds = topic.getPicIds();
             String[] temPicIds = picIds.split(",");

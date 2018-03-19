@@ -21,7 +21,7 @@ public interface TopicService {
      * @param id
      * @return
      */
-    public Topic selectOne(Long id);
+    public TopicForZanOut selectOne(Long id);
 
     public TopicForZanOut selectByZan(TopicInVo inVo);
 

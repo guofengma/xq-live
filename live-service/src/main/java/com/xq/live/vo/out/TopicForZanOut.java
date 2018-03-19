@@ -50,6 +50,8 @@ public class TopicForZanOut {
 
     private Integer isZan;
 
+    private Integer viewNum;//浏览量
+
     public Long getId() {
         return id;
     }
@@ -176,5 +178,13 @@ public class TopicForZanOut {
 
     public void setZan(Integer zan) {
         this.zan = zan;
+    }
+
+    public Integer getViewNum() {
+        return viewNum;
+    }
+
+    public void setViewNum(Integer viewNum) {
+        this.viewNum = viewNum;
     }
 }

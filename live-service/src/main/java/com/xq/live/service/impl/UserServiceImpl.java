@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long add(User user) {
         String key = "USER_OPEN_ID_" + user.getOpenId();
+        user.setIconUrl("https://xq-1256079679.file.myqcloud.com/test_图层 24_0.8.jpg");
         redisCache.set(key, user, 10, TimeUnit.MINUTES);
         int ret = userMapper.insert(user);
         if(ret > 0){

@@ -80,7 +80,8 @@ public class ActInfoController {
      * @return
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public BaseResp<Pager<ActInfoOut>> userList(ActInfoInVo inVo){
+    public BaseResp<Pager<ActInfoOut>> userList(ActInfoInVo inVo,HttpServletRequest request){
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         Pager<ActInfoOut> result = actInfoService.list(inVo);
         return new BaseResp<Pager<ActInfoOut>>(ResultStatus.SUCCESS, result);
     }

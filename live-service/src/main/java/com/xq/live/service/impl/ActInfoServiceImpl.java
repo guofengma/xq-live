@@ -66,12 +66,39 @@ public class ActInfoServiceImpl implements ActInfoService {
     }
 
     @Override
-    public Pager<ActInfoOut> list(ActInfoInVo inVo) {
+    public Pager<ActInfoOut> list(final ActInfoInVo inVo) {
         Pager<ActInfoOut> result = new Pager<ActInfoOut>();
         int listTotal = actInfoMapper.listTotal(inVo);
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActInfoOut> list = actInfoMapper.list(inVo);
+            if(inVo.getId()!=null) {
+                try {
+                    //新开一个线程记录访问日志
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            /**
+                             * 1、查询用户是否存在访问记录
+                             * 2、记录用户访问日志
+                             */
+                            AccessLog accessLog = new AccessLog();
+                            accessLog.setUserId(inVo.getUserId());
+                            accessLog.setUserName(inVo.getUserName());
+                            accessLog.setUserIp(inVo.getUserIp());
+                            accessLog.setSource(inVo.getSourceType());
+                            accessLog.setRefId(inVo.getId());
+                            accessLog.setBizType(AccessLog.BIZ_TYPE_ACT_VIEW);
+                            int cnt = accessLogMapper.checkRecordExist(accessLog);
+                            if (cnt == 0) {
+                                int logCnt = accessLogMapper.insert(accessLog);
+                            }
+                        }
+                    }).start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             result.setList(list);
         }
         result.setPage(inVo.getPage());

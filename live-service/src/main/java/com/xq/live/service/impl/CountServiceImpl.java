@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class CountServiceImpl implements CountService {
 
     @Autowired
-    RedisCache<String, Integer> redisCache;
+    RedisCache redisCache;
 
     @Autowired
     TopicMapper topicMapper;
@@ -29,20 +29,22 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public Integer topicHits(Long topicId) {
-        Topic topic = topicMapper.selectByPrimaryKey(topicId);
         String key = "topicHits_" + topicId.toString();
-        Integer hits = redisCache.get(key);
+        Integer hits = redisCache.get(key, Integer.class);
         if (hits == null) {
+            Topic topic = topicMapper.selectByPrimaryKey(topicId);
             hits = topic.getHitNum() == null ? 0 : topic.getHitNum();
         }
         hits++;
         redisCache.set(key, hits, 1l, TimeUnit.DAYS);
         Long time = System.currentTimeMillis();
-        if (time > (viewArticleTime + 300000)) {
+        if (time > (viewArticleTime + 300000)) {    //5分钟更新一次数据到数据库,viewArticleTime:写数据库的周期
             viewArticleTime = time;
+            Topic topic = new Topic();
+            topic.setId(topicId);
             topic.setHitNum(hits);
             topicMapper.updateByPrimaryKeySelective(topic);
-            redisCache.set(key, null);
+            redisCache.del(key);
         }
         return hits;
     }

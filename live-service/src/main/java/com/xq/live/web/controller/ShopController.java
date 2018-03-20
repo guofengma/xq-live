@@ -5,6 +5,7 @@ import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
+import com.xq.live.service.CountService;
 import com.xq.live.service.ShopService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.ShopInVo;
@@ -38,6 +39,9 @@ public class ShopController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CountService countService;
+
     /**
      * 根据商家id查询商家信息
      *
@@ -46,6 +50,7 @@ public class ShopController {
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     public BaseResp<ShopOut> getShopById(@PathVariable(value = "id") Long id) {
+        countService.topicHits(id);
         ShopOut result = shopService.findShopOutById(id);
         return new BaseResp<ShopOut>(ResultStatus.SUCCESS, result);
     }

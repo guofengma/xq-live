@@ -1,10 +1,8 @@
 package com.xq.live.dao;
 
-import com.xq.live.model.Shop;
 import com.xq.live.model.ShopEnter;
-import org.springframework.stereotype.Repository;
+import com.xq.live.vo.out.ShopEnterOut;
 
-@Repository
 public interface ShopEnterMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,9 +12,7 @@ public interface ShopEnterMapper {
 
     ShopEnter selectByPrimaryKey(Long id);
 
-    ShopEnter selectByUserNameAndShopNameAndMobileAndAddress(ShopEnter record);
-
-    ShopEnter selectByToken(ShopEnter record);
+    ShopEnterOut selectByUserId(Long id);
 
     int updateByPrimaryKeySelective(ShopEnter record);
 

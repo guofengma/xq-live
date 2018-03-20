@@ -28,6 +28,8 @@ public class ShopInVo extends BaseInVo {
      */
     private String searcheKey;
 
+    private Integer browSort;//综合排序-----0 口味 1服务 2 人气
+
 
     private BigDecimal locationX;
 
@@ -80,6 +82,22 @@ public class ShopInVo extends BaseInVo {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getSearcheKey() {
+        return searcheKey;
+    }
+
+    public void setSearcheKey(String searcheKey) {
+        this.searcheKey = searcheKey;
+    }
+
+    public Integer getBrowSort() {
+        return browSort;
+    }
+
+    public void setBrowSort(Integer browSort) {
+        this.browSort = browSort;
     }
 
     public BigDecimal getLocationX() {

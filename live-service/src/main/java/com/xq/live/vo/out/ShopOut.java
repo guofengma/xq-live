@@ -33,7 +33,7 @@ public class ShopOut {
 
     private Integer isDeleted;
 
-    private Integer popNum;
+    private Integer popNum;//人气
 
     private String remark;
 
@@ -185,6 +185,16 @@ public class ShopOut {
 
     public void setSkuName(String skuName) {
         this.skuName = skuName;
+    }
+
+    @Override
+    public int compareTo(ShopOut o) {
+        int a = this.getPopNum();
+        int b = o.getPopNum();
+        if(a>b){
+            return 1;
+        }
+        return -1;
     }
 
     public Integer getDistance() {

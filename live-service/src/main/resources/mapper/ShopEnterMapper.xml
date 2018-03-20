@@ -7,12 +7,25 @@
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="per_capita" jdbcType="DECIMAL" property="perCapita" />
+    <result column="business_cate" jdbcType="VARCHAR" property="businessCate" />
+    <result column="license_pic" jdbcType="VARCHAR" property="licensePic" />
+    <result column="health_pic" jdbcType="VARCHAR" property="healthPic" />
+    <result column="door_pic" jdbcType="VARCHAR" property="doorPic" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="status" jdbcType="INTEGER" property="status"/>
+    <result column="location_x" jdbcType="DECIMAL" property="locationX"/>
+    <result column="location_y" jdbcType="DECIMAL" property="locationY"/>
   </resultMap>
+
+  <resultMap id="ShopEnterOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.ShopEnterOut">
+
+  </resultMap>
+
   <sql id="Base_Column_List">
-    id, user_name, mobile, shop_name, address, per_capita, create_time,token
+    id, user_name, mobile, shop_name, address, business_cate, license_pic, health_pic, 
+    door_pic, create_time, update_time, user_id,status,location_x,location_y
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -20,32 +33,29 @@
     from shop_enter
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByUserNameAndShopNameAndMobileAndAddress" parameterType="com.xq.live.model.ShopEnter" resultMap="BaseResultMap">
+
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="ShopEnterOutMap">
     select
     <include refid="Base_Column_List" />
     from shop_enter
-    where user_name = #{userName,jdbcType=VARCHAR} AND
-    mobile = #{mobile,jdbcType=VARCHAR} AND
-    shop_name = #{shopName,jdbcType=VARCHAR} AND
-    address = #{address,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=BIGINT}
   </select>
-  <select id="selectByToken" parameterType="com.xq.live.model.ShopEnter" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from shop_enter
-    where token = #{token,jdbcType=VARCHAR}
-  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from shop_enter
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.ShopEnter">
     insert into shop_enter (id, user_name, mobile, 
-      shop_name, address, per_capita,
-      create_time,token)
-    values (#{id,jdbcType=BIGINT},#{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
-      #{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{perCapita,jdbcType=DECIMAL},
-      now(),#{token,jdbcType=VARCHAR})
+      shop_name, address, business_cate, 
+      license_pic, health_pic, door_pic, 
+      create_time, update_time, user_id,status,location_x,location_y
+      )
+    values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{businessCate,jdbcType=VARCHAR}, 
+      #{licensePic,jdbcType=VARCHAR}, #{healthPic,jdbcType=VARCHAR}, #{doorPic,jdbcType=VARCHAR}, 
+      now(), now(), #{userId,jdbcType=BIGINT},#{status,jdbcType=INTEGER},#{locationX,jdbcType=DECIMAL},#{locationY,jdbcType=DECIMAL}
+      )
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -68,14 +78,35 @@
       <if test="address != null">
         address,
       </if>
-      <if test="perCapita != null">
-        per_capita,
+      <if test="businessCate != null">
+        business_cate,
+      </if>
+      <if test="licensePic != null">
+        license_pic,
+      </if>
+      <if test="healthPic != null">
+        health_pic,
+      </if>
+      <if test="doorPic != null">
+        door_pic,
       </if>
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="token != null">
-        token,
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="locationX != null">
+        location_x,
+      </if>
+      <if test="locationY != null">
+        location_y,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -94,14 +125,35 @@
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
       </if>
-      <if test="perCapita != null">
-        #{perCapita,jdbcType=DECIMAL},
+      <if test="businessCate != null">
+        #{businessCate,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePic != null">
+        #{licensePic,jdbcType=VARCHAR},
+      </if>
+      <if test="healthPic != null">
+        #{healthPic,jdbcType=VARCHAR},
+      </if>
+      <if test="doorPic != null">
+        #{doorPic,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="token != null">
-        #{token,jdbcType=VARCHAR},
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="locationX != null">
+        #{locationX,jdbcType=DECIMAL},
+      </if>
+      <if test="locationY != null">
+        #{locationY,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -120,14 +172,35 @@
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
-      <if test="perCapita != null">
-        per_capita = #{perCapita,jdbcType=DECIMAL},
+      <if test="businessCate != null">
+        business_cate = #{businessCate,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePic != null">
+        license_pic = #{licensePic,jdbcType=VARCHAR},
+      </if>
+      <if test="healthPic != null">
+        health_pic = #{healthPic,jdbcType=VARCHAR},
+      </if>
+      <if test="doorPic != null">
+        door_pic = #{doorPic,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="token != null">
-        token = #{token,jdbcType=VARCHAR},
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="locationX != null">
+        location_x = #{locationX,jdbcType=DECIMAL},
+      </if>
+      <if test="locationY != null">
+        location_y = #{locationY,jdbcType=DECIMAL},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -138,9 +211,16 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       shop_name = #{shopName,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      per_capita = #{perCapita,jdbcType=DECIMAL},
+      business_cate = #{businessCate,jdbcType=VARCHAR},
+      license_pic = #{licensePic,jdbcType=VARCHAR},
+      health_pic = #{healthPic,jdbcType=VARCHAR},
+      door_pic = #{doorPic,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      token = #{token,jdbcType=VARCHAR}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      location_x = #{locationX,jdbcType=DECIMAL},
+      location_y = #{locationY,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

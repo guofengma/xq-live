@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -98,6 +99,30 @@ public class ShopServiceImpl implements ShopService {
         Pager<ShopOut> result = new Pager<ShopOut>();
         int listTotal = shopMapper.listTotal(inVo);
         result.setTotal(listTotal);
+        if(listTotal > 0){
+            List<Shop> list = shopMapper.list(inVo);
+            List<ShopOut> listForOut = new ArrayList<ShopOut>();
+            for (Shop shop : list) {
+                SkuInVo skuInVo = new SkuInVo();
+                skuInVo.setShopId(shop.getId());
+                skuInVo.setSkuType(Sku.SKU_TYPE_TSC);
+                List<Sku> skus = skuMapper.queryTscList(skuInVo);
+                ShopOut shopOut = new ShopOut();
+                BeanUtils.copyProperties(shop,shopOut);
+                if(skus.size()>0&&skus!=null){
+                    shopOut.setSkuName(skus.get(0).getSkuName());
+                }
+                listForOut.add(shopOut);
+
+            }
+            /**
+             * 根据综合排序 0 口味 1服务 2 人气
+             */
+            if(inVo!=null&&inVo.getBrowSort()==2){
+                Collections.sort(listForOut);
+            }
+            result.setList(listForOut);
+
         if (listTotal > 0) {
             List<ShopOut> list = shopMapper.list(inVo);
             result.setList(list);
@@ -107,7 +132,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<ShopOut> top(ShopInVo inVo) {
+    public List<Shop> top(ShopInVo inVo){
         return shopMapper.list(inVo);
     }
 
@@ -125,10 +150,10 @@ public class ShopServiceImpl implements ShopService {
         accessLog.setRefId(inVo.getId());
         accessLog.setBizType(AccessLog.BIZ_TYPE_SHOP_VIEW);
         int cnt = accessLogMapper.checkRecordExist(accessLog);
-        if (cnt == 0) {
+        if(cnt == 0){
             try {
                 int logCnt = accessLogMapper.insert(accessLog);
-                if (logCnt > 0) {
+                if(logCnt > 0){
                     shopMapper.updatePopNum(inVo.getId());  //增加人气数值
                 }
             } catch (Exception e) {

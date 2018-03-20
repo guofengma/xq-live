@@ -33,9 +33,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AccessLogMapper accessLogMapper;
 
-    @Autowired
-    private RedisCache<String, User> redisCache;
-
     @Override
     public User getUserById(@Param("id") Long id) {
         return userMapper.selectByPrimaryKey(id);

@@ -52,6 +52,8 @@ public class TopicForZanOut {
 
     private Integer viewNum;//浏览量
 
+    private Integer hitNum;
+
     public Long getId() {
         return id;
     }
@@ -186,5 +188,13 @@ public class TopicForZanOut {
 
     public void setViewNum(Integer viewNum) {
         this.viewNum = viewNum;
+    }
+
+    public Integer getHitNum() {
+        return hitNum;
+    }
+
+    public void setHitNum(Integer hitNum) {
+        this.hitNum = hitNum;
     }
 }

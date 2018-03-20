@@ -15,6 +15,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="hit_num" jdbcType="INTEGER" property="hitNum" />
   </resultMap>
 
   <resultMap id="ZanSelect" extends="BaseResultMap" type="com.xq.live.vo.out.TopicForZanOut">
@@ -25,7 +26,7 @@
 
 
   <sql id="Base_Column_List">
-    id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids
+    id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids, hit_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -146,6 +147,9 @@
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hitNum != null">
+        hit_num = #{hitNum,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

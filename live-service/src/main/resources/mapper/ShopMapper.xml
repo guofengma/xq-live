@@ -18,6 +18,12 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="ShopOutResultMap" type="com.xq.live.vo.out.ShopOut" extends="BaseResultMap">
+    <result column="distance" jdbcType="INTEGER" property="distance" />
+    <result column="sku_name" jdbcType="VARCHAR" property="skuName" />    <!--特色菜名称-->
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
     is_deleted, pop_num, remark, create_time, update_time
@@ -214,16 +220,53 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="list" parameterType="com.xq.live.model.Shop" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from shop
+  <select id="list" resultMap="ShopOutResultMap">
+    SELECT
+      s.id,
+      s.shop_name,
+      s.address,
+      s.mobile,
+      s.phone,
+      s.index_url,
+      s.logo_url,
+      s.shop_info,
+      s.location_x,
+      s.location_y,
+      s.is_deleted,
+      s.pop_num,
+      s.remark,
+      s.create_time,
+      s.update_time,
+      ROUND(
+      6378.138 * 2 * ASIN(
+      SQRT(
+      POW(
+      SIN(
+      (
+      30.49984 * PI() / 180 - s.location_y * PI() / 180
+      ) / 2
+      ),
+      2
+      ) + COS(30.49984 * PI() / 180) * COS(s.location_y * PI() / 180) * POW(
+      SIN(
+      (
+      114.34253 * PI() / 180 - s.location_x * PI() / 180
+      ) / 2
+      ),
+      2
+      )
+      )
+      ) * 1000
+      ) AS distance,
+      (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name
+    FROM
+    shop s
     <where>
       <if test="searchKey !=null">
-        id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
+        s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
       </if>
     </where>
-    order by id desc
+    order by distance asc
     limit #{start}, #{rows}
   </select>
 

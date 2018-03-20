@@ -48,6 +48,8 @@ public class ShopOut {
 
     private String skuName;//推荐菜
 
+    private Integer distance;    //距离
+
     public Long getId() {
         return id;
     }
@@ -183,5 +185,13 @@ public class ShopOut {
 
     public void setSkuName(String skuName) {
         this.skuName = skuName;
+    }
+
+    public Integer getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 }

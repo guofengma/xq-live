@@ -58,7 +58,7 @@ public interface ShopService {
      * @param inVo
      * @return
      */
-    List<Shop> top(ShopInVo inVo);
+    List<ShopOut> top(ShopInVo inVo);
 
     /**
      * 根据id查询商家详细

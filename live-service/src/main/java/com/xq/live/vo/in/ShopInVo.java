@@ -1,6 +1,7 @@
 package com.xq.live.vo.in;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * 餐厅入参
@@ -26,6 +27,11 @@ public class ShopInVo extends BaseInVo {
      * 搜索关键字
      */
     private String searcheKey;
+
+
+    private BigDecimal locationX;
+
+    private BigDecimal locationY;
 
 
     public String getShopName() {
@@ -74,5 +80,21 @@ public class ShopInVo extends BaseInVo {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public BigDecimal getLocationX() {
+        return locationX;
+    }
+
+    public void setLocationX(BigDecimal locationX) {
+        this.locationX = locationX;
+    }
+
+    public BigDecimal getLocationY() {
+        return locationY;
+    }
+
+    public void setLocationY(BigDecimal locationY) {
+        this.locationY = locationY;
     }
 }

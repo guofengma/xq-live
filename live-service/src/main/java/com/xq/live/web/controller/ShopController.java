@@ -136,9 +136,9 @@ public class ShopController {
      * @return
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResp<List<Shop>> top(ShopInVo inVo){
-        List<Shop> result = shopService.top(inVo);
-        return new BaseResp<List<Shop>>(ResultStatus.SUCCESS, result);
+    public BaseResp<List<ShopOut>> top(ShopInVo inVo){
+        List<ShopOut> result = shopService.top(inVo);
+        return new BaseResp<List<ShopOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**

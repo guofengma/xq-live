@@ -56,7 +56,7 @@ public class ShopServiceImpl implements ShopService {
     public Long addShop(Shop shop) {
         //保存记录到shop表
         int r = shopMapper.insert(shop);
-        if(r < 1){
+        if (r < 1) {
             return null;
         }
 
@@ -94,34 +94,20 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Pager<ShopOut> list(ShopInVo inVo){
+    public Pager<ShopOut> list(ShopInVo inVo) {
         Pager<ShopOut> result = new Pager<ShopOut>();
         int listTotal = shopMapper.listTotal(inVo);
         result.setTotal(listTotal);
-        if(listTotal > 0){
-            List<Shop> list = shopMapper.list(inVo);
-            List<ShopOut> listForOut = new ArrayList<ShopOut>();
-            for (Shop shop : list) {
-                SkuInVo skuInVo = new SkuInVo();
-                skuInVo.setShopId(shop.getId());
-                skuInVo.setSkuType(Sku.SKU_TYPE_TSC);
-                List<Sku> skus = skuMapper.queryTscList(skuInVo);
-                ShopOut shopOut = new ShopOut();
-                BeanUtils.copyProperties(shop,shopOut);
-                if(skus.size()>0&&skus!=null){
-                    shopOut.setSkuName(skus.get(0).getSkuName());
-                }
-                listForOut.add(shopOut);
-
-            }
-            result.setList(listForOut);
+        if (listTotal > 0) {
+            List<ShopOut> list = shopMapper.list(inVo);
+            result.setList(list);
         }
         result.setPage(inVo.getPage());
         return result;
     }
 
     @Override
-    public List<Shop> top(ShopInVo inVo){
+    public List<ShopOut> top(ShopInVo inVo) {
         return shopMapper.list(inVo);
     }
 
@@ -139,10 +125,10 @@ public class ShopServiceImpl implements ShopService {
         accessLog.setRefId(inVo.getId());
         accessLog.setBizType(AccessLog.BIZ_TYPE_SHOP_VIEW);
         int cnt = accessLogMapper.checkRecordExist(accessLog);
-        if(cnt == 0){
+        if (cnt == 0) {
             try {
                 int logCnt = accessLogMapper.insert(accessLog);
-                if(logCnt > 0){
+                if (logCnt > 0) {
                     shopMapper.updatePopNum(inVo.getId());  //增加人气数值
                 }
             } catch (Exception e) {

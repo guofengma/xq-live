@@ -44,6 +44,8 @@ public class Topic {
 
     private String nickName;
 
+    private Integer hitNum;
+
     public Long getId() {
         return id;
     }
@@ -154,5 +156,13 @@ public class Topic {
 
     public void setHomePic(String homePic) {
         this.homePic = homePic;
+    }
+
+    public Integer getHitNum() {
+        return hitNum;
+    }
+
+    public void setHitNum(Integer hitNum) {
+        this.hitNum = hitNum;
     }
 }

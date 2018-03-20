@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ShopOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface ShopMapper {
      * @param inVo
      * @return
      */
-    List<Shop> list(ShopInVo inVo);
+    List<ShopOut> list(ShopInVo inVo);
 
     /**
      * 查询记录总数

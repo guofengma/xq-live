@@ -9,7 +9,7 @@ import java.util.Date;
 /**商家返回列表包含推荐菜实体类
  * Created by lipeng on 2018/3/14.
  */
-public class ShopOut {
+public class ShopOut implements Comparable<ShopOut>{
 
     private Long id;
     @NotNull(message = "shopName必填")
@@ -33,7 +33,7 @@ public class ShopOut {
 
     private Integer isDeleted;
 
-    private Integer popNum;
+    private Integer popNum;//人气
 
     private String remark;
 
@@ -183,5 +183,15 @@ public class ShopOut {
 
     public void setSkuName(String skuName) {
         this.skuName = skuName;
+    }
+
+    @Override
+    public int compareTo(ShopOut o) {
+        int a = this.getPopNum();
+        int b = o.getPopNum();
+        if(a>b){
+            return 1;
+        }
+        return -1;
     }
 }

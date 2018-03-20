@@ -15,7 +15,7 @@ public interface UserMapper{
 
     int deleteByPrimaryKey(Long id);
 
-    @CachePut(value = "1h")
+    //@CachePut(value = "1h")
     int insert(User record);
 
     int insertSelective(User record);

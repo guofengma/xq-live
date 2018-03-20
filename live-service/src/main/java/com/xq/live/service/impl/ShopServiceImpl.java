@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -114,7 +115,14 @@ public class ShopServiceImpl implements ShopService {
                 listForOut.add(shopOut);
 
             }
+            /**
+             * 根据综合排序 0 口味 1服务 2 人气
+             */
+            if(inVo!=null&&inVo.getBrowSort()==2){
+                Collections.sort(listForOut);
+            }
             result.setList(listForOut);
+
         }
         result.setPage(inVo.getPage());
         return result;

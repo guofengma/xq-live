@@ -1,15 +1,17 @@
 package com.xq.live.vo.out;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.javatuples.Pair;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**商家返回列表包含推荐菜实体类
  * Created by lipeng on 2018/3/14.
  */
-public class ShopOut {
+public class ShopOut implements Comparable<ShopOut>{
 
     private Long id;
     @NotNull(message = "shopName必填")
@@ -49,6 +51,8 @@ public class ShopOut {
     private String skuName;//推荐菜
 
     private Integer distance;    //距离
+
+    private List<Pair<String, String>> shopTopPics;
 
     public Long getId() {
         return id;
@@ -203,5 +207,13 @@ public class ShopOut {
 
     public void setDistance(Integer distance) {
         this.distance = distance;
+    }
+
+    public List<Pair<String, String>> getShopTopPics() {
+        return shopTopPics;
+    }
+
+    public void setShopTopPics(List<Pair<String, String>> shopTopPics) {
+        this.shopTopPics = shopTopPics;
     }
 }

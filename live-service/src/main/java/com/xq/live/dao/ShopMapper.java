@@ -49,4 +49,6 @@ public interface ShopMapper {
      */
     Shop getShopByUserId(Long userId);
 
+    ShopOut findShopOutById(Long id);
+
 }

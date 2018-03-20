@@ -1,25 +1,20 @@
-package com.xq.live.service.impl;/**
- * 商家sevice实现类
- *
- * @author zhangpeng32
- * @create 2018-01-17 17:57
- */
+package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.ShopMapper;
-import com.xq.live.dao.SkuMapper;
+import com.xq.live.dao.ShopTopPicMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
-import com.xq.live.model.Sku;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.ShopInVo;
-import com.xq.live.vo.in.SkuInVo;
 import com.xq.live.vo.out.ShopOut;
-import org.springframework.beans.BeanUtils;
+import com.xq.live.vo.out.ShopTopPicOut;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,11 +41,27 @@ public class ShopServiceImpl implements ShopService {
     private UserMapper userMapper;
 
     @Autowired
-    private SkuMapper skuMapper;
+    private ShopTopPicMapper shopTopPicMapper;
 
     @Override
     public Shop getShopById(Long id) {
         return shopMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public ShopOut findShopOutById(Long id){
+         ShopOut out = shopMapper.findShopOutById(id);
+         if(out != null){
+             List<ShopTopPicOut> picOutList = shopTopPicMapper.selectByShopId(out.getId());
+             List<Pair<String, String>> picList = new ArrayList<>();
+             if(picOutList != null && picOutList.size() > 0){
+                 for(ShopTopPicOut picOut : picOutList){
+                     picList.add(new Pair<String, String>(picOut.getAttachment().getSmallPicUrl(), picOut.getAttachment().getPicUrl()));    //小图和大图url
+                 }
+             }
+             out.setShopTopPics(picList);
+         }
+         return out;
     }
 
     @Override
@@ -99,32 +110,14 @@ public class ShopServiceImpl implements ShopService {
         Pager<ShopOut> result = new Pager<ShopOut>();
         int listTotal = shopMapper.listTotal(inVo);
         result.setTotal(listTotal);
-        if(listTotal > 0){
-            List<Shop> list = shopMapper.list(inVo);
-            List<ShopOut> listForOut = new ArrayList<ShopOut>();
-            for (Shop shop : list) {
-                SkuInVo skuInVo = new SkuInVo();
-                skuInVo.setShopId(shop.getId());
-                skuInVo.setSkuType(Sku.SKU_TYPE_TSC);
-                List<Sku> skus = skuMapper.queryTscList(skuInVo);
-                ShopOut shopOut = new ShopOut();
-                BeanUtils.copyProperties(shop,shopOut);
-                if(skus.size()>0&&skus!=null){
-                    shopOut.setSkuName(skus.get(0).getSkuName());
-                }
-                listForOut.add(shopOut);
-
-            }
+        if (listTotal > 0) {
+            List<ShopOut> list = shopMapper.list(inVo);
             /**
              * 根据综合排序 0 口味 1服务 2 人气
              */
             if(inVo!=null&&inVo.getBrowSort()==2){
-                Collections.sort(listForOut);
+                Collections.sort(list);
             }
-            result.setList(listForOut);
-
-        if (listTotal > 0) {
-            List<ShopOut> list = shopMapper.list(inVo);
             result.setList(list);
         }
         result.setPage(inVo.getPage());
@@ -132,7 +125,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<Shop> top(ShopInVo inVo){
+    public List<ShopOut> top(ShopInVo inVo) {
         return shopMapper.list(inVo);
     }
 
@@ -153,14 +146,13 @@ public class ShopServiceImpl implements ShopService {
         if(cnt == 0){
             try {
                 int logCnt = accessLogMapper.insert(accessLog);
-                if(logCnt > 0){
-                    shopMapper.updatePopNum(inVo.getId());  //增加人气数值
+                if (logCnt > 0) {
+                    shopMapper.updatePopNum(inVo.getId());  //增加人气数值l
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         //3、根据id查询商家信息
         Shop shop = shopMapper.selectByPrimaryKey(inVo.getId());
         return shop;

@@ -285,4 +285,11 @@
   <update id="updatePopNum" parameterType="java.lang.Long">
     update shop set pop_num = pop_num + 1 where id = #{id}
   </update>
+
+  <select id="findShopOutById" resultMap="ShopOutResultMap">
+    select
+    <include refid="Base_Column_List" />, 0 as distance, '' as sku_name
+    from shop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

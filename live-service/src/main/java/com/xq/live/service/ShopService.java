@@ -23,6 +23,13 @@ public interface ShopService {
      * @param id
      * @return
      */
+    public ShopOut findShopOutById(Long id);
+
+    /**
+     * 根据id查询商家信息
+     * @param id
+     * @return
+     */
     public Shop getShopById(Long id);
 
     /**

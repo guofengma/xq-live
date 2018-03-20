@@ -45,9 +45,9 @@ public class ShopController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public BaseResp<Shop> getShopById(@PathVariable(value = "id") Long id) {
-        Shop result = shopService.getShopById(id);
-        return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
+    public BaseResp<ShopOut> getShopById(@PathVariable(value = "id") Long id) {
+        ShopOut result = shopService.findShopOutById(id);
+        return new BaseResp<ShopOut>(ResultStatus.SUCCESS, result);
     }
 
     /**

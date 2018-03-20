@@ -74,7 +74,6 @@ public class WeixinPayController {
         System.out.println(PaymentConfig.GET_OPEN_ID_URL + param);
         //创建请求对象
         String httpRet = PayUtils.httpRequest(PaymentConfig.GET_OPEN_ID_URL, "GET", param);
-        System.out.println(httpRet);
         Map<String, String> result = new HashMap<String, String>();
         JSONObject jsonObject = JSONObject.parseObject(httpRet);
         if (jsonObject != null) {

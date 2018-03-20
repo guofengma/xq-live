@@ -49,19 +49,19 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public ShopOut findShopOutById(Long id){
-         ShopOut out = shopMapper.findShopOutById(id);
-         if(out != null){
-             List<ShopTopPicOut> picOutList = shopTopPicMapper.selectByShopId(out.getId());
-             List<Pair<String, String>> picList = new ArrayList<>();
-             if(picOutList != null && picOutList.size() > 0){
-                 for(ShopTopPicOut picOut : picOutList){
-                     picList.add(new Pair<String, String>(picOut.getAttachment().getSmallPicUrl(), picOut.getAttachment().getPicUrl()));    //小图和大图url
-                 }
-             }
-             out.setShopTopPics(picList);
-         }
-         return out;
+    public ShopOut findShopOutById(Long id) {
+        ShopOut out = shopMapper.findShopOutById(id);
+        if (out != null) {
+            List<ShopTopPicOut> picOutList = shopTopPicMapper.selectByShopId(out.getId());
+            List<Pair<String, String>> picList = new ArrayList<>();
+            if (picOutList != null && picOutList.size() > 0) {
+                for (ShopTopPicOut picOut : picOutList) {
+                    picList.add(new Pair<String, String>(picOut.getAttachment().getSmallPicUrl(), picOut.getAttachment().getPicUrl()));    //小图和大图url
+                }
+            }
+            out.setShopTopPics(picList);
+        }
+        return out;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ShopServiceImpl implements ShopService {
             /**
              * 根据综合排序 0 口味 1服务 2 人气
              */
-            if(inVo!=null&&inVo.getBrowSort()==2){
+            if (inVo != null && inVo.getBrowSort()!= null &&  inVo.getBrowSort() == 2) {
                 Collections.sort(list);
             }
             result.setList(list);
@@ -143,7 +143,7 @@ public class ShopServiceImpl implements ShopService {
         accessLog.setRefId(inVo.getId());
         accessLog.setBizType(AccessLog.BIZ_TYPE_SHOP_VIEW);
         int cnt = accessLogMapper.checkRecordExist(accessLog);
-        if(cnt == 0){
+        if (cnt == 0) {
             try {
                 int logCnt = accessLogMapper.insert(accessLog);
                 if (logCnt > 0) {

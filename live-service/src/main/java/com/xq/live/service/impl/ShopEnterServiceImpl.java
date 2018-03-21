@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by lipeng on 2018/3/8.
@@ -60,7 +62,12 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             shop.setAddress(address);
             shop.setLocationX(locationX);
             shop.setLocationY(locationY);
-            shop.setMobile(mobile);
+            boolean flag = isMobile(mobile);
+            if(flag==true){
+                shop.setMobile(mobile);
+            }else{
+                shop.setPhone(mobile);
+            }
             shop.setShopName(shopName);
             shop.setUserId(userId);
             shop.setBusinessCate(businessCate);
@@ -112,5 +119,19 @@ public class ShopEnterServiceImpl implements ShopEnterService{
 
         }*/
         return null;
+    }
+
+    /**
+     * 判断是否是手机号
+     * @param str
+     * @return
+     */
+    public boolean isMobile(String str){
+        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
+
+        Pattern p = Pattern.compile(regExp);
+
+        Matcher m = p.matcher(str);
+        return m.find();
     }
 }

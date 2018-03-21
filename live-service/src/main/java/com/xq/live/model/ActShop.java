@@ -13,6 +13,13 @@ public class ActShop {
 
     public final static int ACT_SHOP_APPLY_STATUS_REFUSED = 2;
 
+    /**
+     * 判断商家是否已经参加该活动 0 未报名 1已报名
+     */
+    public final static int ACT_SHOP_IS_SIGN = 1;
+
+    public final static int ACT_SHOP_NO_SIGN = 1;
+
     private Long id;
     @NotNull(message = "actId必填")
     private Long actId;

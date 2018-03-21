@@ -10,6 +10,7 @@ import com.xq.live.service.ActInfoService;
 import com.xq.live.vo.in.ActInfoInVo;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.out.ActInfoOut;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,8 @@ public class ActInfoServiceImpl implements ActInfoService {
 
     @Autowired
     private UserMapper userMapper;
+
+    private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
     @Override
     public Long add(ActInfo actInfo) {
@@ -75,51 +78,6 @@ public class ActInfoServiceImpl implements ActInfoService {
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActInfoOut> list = actInfoMapper.list(inVo);
-            if(inVo.getId()!=null) {
-                User user = userMapper.selectByPrimaryKey(inVo.getUserId());
-                //判断商家是否已经报名了活动
-                if(user!=null&&user.getShopId()!=null) {
-                    ActShopInVo actShopInVo = new ActShopInVo();
-                    actShopInVo.setActId(inVo.getId());
-                    actShopInVo.setShopId(user.getShopId());
-                    try {
-                        ActShop byInVo = actShopMapper.findByInVo(actShopInVo);
-                        if (byInVo != null) {
-                            list.get(0).setIsSign(1);//已报名
-                        } else {
-                            list.get(0).setIsSign(0);//未报名
-                        }
-                    } catch (Exception e) {
-
-                    }
-                }
-
-                try {
-                    //新开一个线程记录访问日志
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            /**
-                             * 1、查询用户是否存在访问记录
-                             * 2、记录用户访问日志
-                             */
-                            AccessLog accessLog = new AccessLog();
-                            accessLog.setUserId(inVo.getUserId());
-                            accessLog.setUserName(inVo.getUserName());
-                            accessLog.setUserIp(inVo.getUserIp());
-                            accessLog.setSource(inVo.getSourceType());
-                            accessLog.setRefId(inVo.getId());
-                            accessLog.setBizType(AccessLog.BIZ_TYPE_ACT_VIEW);
-                            int cnt = accessLogMapper.checkRecordExist(accessLog);
-                            if (cnt == 0) {
-                                int logCnt = accessLogMapper.insert(accessLog);
-                            }
-                        }
-                    }).start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
             result.setList(list);
         }
         result.setPage(inVo.getPage());
@@ -136,6 +94,23 @@ public class ActInfoServiceImpl implements ActInfoService {
         ActInfoOut actInfoOut = actInfoMapper.findActInfoById(inVo.getId());
         if (actInfoOut == null) {
             return null;
+        }
+        User user = userMapper.selectByPrimaryKey(inVo.getUserId());
+        //判断商家是否已经报名了活动
+        if(user!=null&&user.getShopId()!=null) {
+            ActShopInVo actShopInVo = new ActShopInVo();
+            actShopInVo.setActId(inVo.getId());
+            actShopInVo.setShopId(user.getShopId());
+            try {
+                ActShop byInVo = actShopMapper.findByInVo(actShopInVo);
+                if (byInVo != null) {
+                    actInfoOut.setIsSign(ActShop.ACT_SHOP_IS_SIGN);//已报名
+                } else {
+                    actInfoOut.setIsSign(ActShop.ACT_SHOP_NO_SIGN);//未报名
+                }
+            } catch (Exception e) {
+                logger.error("查询活动商家异常TooManyResultException ：" + e.getMessage());
+            }
         }
         try {
             //新开一个线程记录访问日志

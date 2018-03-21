@@ -62,7 +62,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             shop.setAddress(address);
             shop.setLocationX(locationX);
             shop.setLocationY(locationY);
-            boolean flag = isMobile(mobile);
+            boolean flag = isMobile(mobile);//判断是否是手机号
             if(flag==true){
                 shop.setMobile(mobile);
             }else{
@@ -127,7 +127,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
      * @return
      */
     public boolean isMobile(String str){
-        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
+        String regExp = "^[1][3,4,5,7,8][0-9]{9}$";
 
         Pattern p = Pattern.compile(regExp);
 

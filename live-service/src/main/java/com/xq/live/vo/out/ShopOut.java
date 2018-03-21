@@ -54,6 +54,12 @@ public class ShopOut implements Comparable<ShopOut>{
 
     private List<Pair<String, String>> shopTopPics;
 
+    private Integer shopStatus;//店铺状态
+
+    private Integer applyStatus;//审批状态
+
+    private String businessCate;//经营品类
+
     public Long getId() {
         return id;
     }
@@ -215,5 +221,29 @@ public class ShopOut implements Comparable<ShopOut>{
 
     public void setShopTopPics(List<Pair<String, String>> shopTopPics) {
         this.shopTopPics = shopTopPics;
+    }
+
+    public Integer getShopStatus() {
+        return shopStatus;
+    }
+
+    public void setShopStatus(Integer shopStatus) {
+        this.shopStatus = shopStatus;
+    }
+
+    public Integer getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(Integer applyStatus) {
+        this.applyStatus = applyStatus;
+    }
+
+    public String getBusinessCate() {
+        return businessCate;
+    }
+
+    public void setBusinessCate(String businessCate) {
+        this.businessCate = businessCate;
     }
 }

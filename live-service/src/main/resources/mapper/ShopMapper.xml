@@ -17,6 +17,9 @@
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="shop_status" jdbcType="INTEGER" property="shopStatus"/>
+    <result column="apply_status" jdbcType="INTEGER" property="applyStatus"/>
+    <result column="business_cate" jdbcType="VARCHAR" property="businessCate"/>
   </resultMap>
 
   <resultMap id="ShopOutResultMap" type="com.xq.live.vo.out.ShopOut" extends="BaseResultMap">
@@ -26,7 +29,7 @@
 
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
-    is_deleted, pop_num, remark, create_time, update_time
+    is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -51,7 +54,10 @@
         s.pop_num,
         s.remark,
         s.create_time,
-        s.update_time
+        s.update_time,
+        s.shop_status,
+        s.apply_status,
+        s.business_cate
     FROM
         shop s inner join user u on s.id = u.shop_id
     where u.id = #{id,jdbcType=BIGINT}
@@ -66,11 +72,11 @@
       mobile, phone, index_url,logo_url,
       shop_info, location_x, location_y, 
       remark, create_time,
-      update_time)
+      update_time,business_cate)
     values (#{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR},
       #{shopInfo,jdbcType=VARCHAR}, #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL},
-      #{remark,jdbcType=VARCHAR}, now(), now())
+      #{remark,jdbcType=VARCHAR}, now(), now(), #{businessCate,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -117,6 +123,15 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="shopStatus != null">
+        shop_status,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="businessCate != null">
+        business_cate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopName != null">
@@ -157,6 +172,15 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopStatus != null">
+        #{shopStatus,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="businessCate != null">
+        #{businessCate,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -200,6 +224,15 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="shopStatus != null">
+        shop_status = #{shopStatus,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="businessCate != null">
+        business_cate = #{businessCate,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -216,7 +249,8 @@
       location_y = #{locationY,jdbcType=DECIMAL},
       is_deleted = #{isDeleted,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
-      update_time = now()
+      update_time = now(),
+      business_cate = #{businessCate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -237,6 +271,9 @@
       s.remark,
       s.create_time,
       s.update_time,
+      s.shop_status,
+      s.apply_status,
+      s.business_cate,
       ROUND(
       6378.138 * 2 * ASIN(
       SQRT(

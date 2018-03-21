@@ -42,6 +42,12 @@ public class Shop {
     @NotNull(message = "userId必填")
     private Long userId;       //店铺关联的账号id
 
+    private Integer shopStatus;//店铺状态
+
+    private Integer applyStatus;//审批状态
+
+    private String businessCate;//经营品类
+
     public Long getId() {
         return id;
     }
@@ -169,5 +175,29 @@ public class Shop {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Integer getShopStatus() {
+        return shopStatus;
+    }
+
+    public void setShopStatus(Integer shopStatus) {
+        this.shopStatus = shopStatus;
+    }
+
+    public Integer getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(Integer applyStatus) {
+        this.applyStatus = applyStatus;
+    }
+
+    public String getBusinessCate() {
+        return businessCate;
+    }
+
+    public void setBusinessCate(String businessCate) {
+        this.businessCate = businessCate;
     }
 }

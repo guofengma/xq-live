@@ -37,6 +37,8 @@ public class ShopEnter {
 
     private BigDecimal locationY;//维度
 
+    private String city;//城市
+
     public Long getId() {
         return id;
     }
@@ -155,5 +157,13 @@ public class ShopEnter {
 
     public void setLocationY(BigDecimal locationY) {
         this.locationY = locationY;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

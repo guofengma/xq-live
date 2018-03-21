@@ -44,7 +44,8 @@ public class ShopEnterController {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
-        ShopEnterOut shopEnterOut = shopEnterService.searchByUserId(shopEnter.getUserId());
+
+        ShopEnterOut shopEnterOut = shopEnterService.selectByUserIdAndShopName(shopEnter);
         if(shopEnterOut!=null){
             return new BaseResp<Long>(ResultStatus.FAIL,shopEnter.getUserId());
         }
@@ -53,11 +54,11 @@ public class ShopEnterController {
     }
 
     /**
-     * 通过userId查询一条商家入驻信息
+     * 通过userId查询商家入驻信息
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/searchByUserId111",method = RequestMethod.GET)
+    @RequestMapping(value = "/searchByUserId",method = RequestMethod.GET)
     public BaseResp<ShopEnterOut> searchByUserId(Long userId){
         if(userId==null){
             return new BaseResp<ShopEnterOut>(ResultStatus.error_param_empty);
@@ -67,29 +68,29 @@ public class ShopEnterController {
     }
 
     /**
-     * 判断用户商家入驻是否成功
-     * @param userId
+     * 审批通过后，插入shop表,更改user状态
+     * @param shopEnter
      * @return
      */
-    @RequestMapping(value = "isShopUser",method = RequestMethod.GET)
-    public BaseResp<Long> isShopUser(Long userId){
-        if(userId==null){
-            return new BaseResp<Long>(ResultStatus.error_param_empty);
+    @RequestMapping(value = "/addShop",method = RequestMethod.GET)
+    public BaseResp<Integer> addShop(ShopEnter shopEnter){
+        if(shopEnter==null||shopEnter.getUserId()==null||shopEnter.getShopName()==null){
+                 return new BaseResp<Integer>(ResultStatus.error_param_empty);
         }
-        ShopEnterOut shopEnterOut = shopEnterService.searchByUserId(userId);
-        if(shopEnterOut==null){
-            return new BaseResp<Long>(-1,"该用户未申请商家入驻",null);
+        Integer integer = shopEnterService.addShop(shopEnter);
+        if(integer==-3){
+            return new BaseResp<Integer>(-3,"用户尚未入驻或审批未通过",null);
         }
-        if(shopEnterOut.getStatus()==0){
-            return new BaseResp<Long>(-1,"该用户申请待审批",null);
+        if(integer==-2){
+            return new BaseResp<Integer>(-2,"插入shop表失败",null);
         }
-        if(shopEnterOut.getStatus()==2){
-            return new BaseResp<Long>(-1,"该用户申请不通过",null);
+        if(integer==-1){
+            return new BaseResp<Integer>(-1,"更改用户状态失败",null);
         }
-
-
-        return new BaseResp<Long>(0,"申请通过",userId);
+        return new BaseResp<Integer>(0,"成功",null);
     }
+
+
 
 
 

@@ -35,6 +35,12 @@ public class ShopInVo extends BaseInVo {
 
     private BigDecimal locationY;
 
+    private Integer shopStatus;//店铺状态
+
+    private Integer applyStatus;//审批状态
+
+    private String businessCate;//经营品类
+
 
     public String getShopName() {
         return shopName;
@@ -114,5 +120,29 @@ public class ShopInVo extends BaseInVo {
 
     public void setLocationY(BigDecimal locationY) {
         this.locationY = locationY;
+    }
+
+    public Integer getShopStatus() {
+        return shopStatus;
+    }
+
+    public void setShopStatus(Integer shopStatus) {
+        this.shopStatus = shopStatus;
+    }
+
+    public Integer getApplyStatus() {
+        return applyStatus;
+    }
+
+    public void setApplyStatus(Integer applyStatus) {
+        this.applyStatus = applyStatus;
+    }
+
+    public String getBusinessCate() {
+        return businessCate;
+    }
+
+    public void setBusinessCate(String businessCate) {
+        this.businessCate = businessCate;
     }
 }

@@ -302,6 +302,9 @@
       <if test="searchKey !=null">
         s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
       </if>
+      <if test="businessCate !=null">
+        business_cate like concat('%', #{businessCate}, '%')
+      </if>
     </where>
     order by distance asc
     limit #{start}, #{rows}

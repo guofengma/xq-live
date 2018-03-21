@@ -45,6 +45,8 @@ public class ActInfoOut {
 
     private int viewNum;    //浏览人数
 
+    private Integer isSign;//是否报名
+
     public Long getId() {
         return id;
     }
@@ -147,5 +149,13 @@ public class ActInfoOut {
 
     public void setViewNum(int viewNum) {
         this.viewNum = viewNum;
+    }
+
+    public Integer getIsSign() {
+        return isSign;
+    }
+
+    public void setIsSign(Integer isSign) {
+        this.isSign = isSign;
     }
 }

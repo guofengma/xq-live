@@ -1,14 +1,14 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.AccessLogMapper;
-import com.xq.live.dao.ActInfoMapper;
-import com.xq.live.dao.ActShopMapper;
-import com.xq.live.dao.VoteMapper;
+import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.ActInfo;
+import com.xq.live.model.ActShop;
+import com.xq.live.model.User;
 import com.xq.live.service.ActInfoService;
 import com.xq.live.vo.in.ActInfoInVo;
+import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,9 @@ public class ActInfoServiceImpl implements ActInfoService {
 
     @Autowired
     private AccessLogMapper accessLogMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Long add(ActInfo actInfo) {
@@ -73,6 +76,24 @@ public class ActInfoServiceImpl implements ActInfoService {
         if (listTotal > 0) {
             List<ActInfoOut> list = actInfoMapper.list(inVo);
             if(inVo.getId()!=null) {
+                User user = userMapper.selectByPrimaryKey(inVo.getUserId());
+                //判断商家是否已经报名了活动
+                if(user!=null&&user.getShopId()!=null) {
+                    ActShopInVo actShopInVo = new ActShopInVo();
+                    actShopInVo.setActId(inVo.getId());
+                    actShopInVo.setShopId(user.getShopId());
+                    try {
+                        ActShop byInVo = actShopMapper.findByInVo(actShopInVo);
+                        if (byInVo != null) {
+                            list.get(0).setIsSign(1);//已报名
+                        } else {
+                            list.get(0).setIsSign(0);//未报名
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+
                 try {
                     //新开一个线程记录访问日志
                     new Thread(new Runnable() {

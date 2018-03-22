@@ -19,7 +19,7 @@ public interface UserMapper{
 
     int insertSelective(User record);
 
-    @Cacheable(value = "1h")     //缓存时间1小时，key为自动生成
+    //@Cacheable(value = "1h")     //缓存时间1小时，key为自动生成
     User selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(User record);
@@ -41,7 +41,7 @@ public interface UserMapper{
      */
     int updateUserType(User record);
 
-    @Cacheable(value = "1h")
+    //@Cacheable(value = "1h")
     User findByOpenId(String openId);
 
     Integer updateByOpenId(User user);

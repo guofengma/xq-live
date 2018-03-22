@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Sku;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuForTscOut;
 import com.xq.live.vo.out.SkuOut;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +28,7 @@ public interface SkuMapper {
 
     SkuOut selectById(Long id);
 
-    List<Sku> queryTscList(SkuInVo inVo);
+    List<SkuForTscOut> queryTscList(SkuInVo inVo);
 
     int tscListTotal(SkuInVo inVo);
 }

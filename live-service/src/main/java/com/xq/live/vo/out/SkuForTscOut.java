@@ -1,13 +1,14 @@
-package com.xq.live.model;
+package com.xq.live.vo.out;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 商品SKU 实体entity
+ * Created by lipeng on 2018/3/22.
  */
-public class Sku {
+public class SkuForTscOut {
+
     /**
      * sku_type 1 平台券  2 特色菜
      */
@@ -41,7 +42,11 @@ public class Sku {
 
     private String picUrl;
 
-    private String skuInfo;
+    private String skuInfo;//推荐菜信息
+
+    private Integer zan;//点赞数
+
+    private Integer isZan;//是否点赞
 
     public Long getId() {
         return id;
@@ -153,5 +158,21 @@ public class Sku {
 
     public void setSkuInfo(String skuInfo) {
         this.skuInfo = skuInfo;
+    }
+
+    public Integer getZan() {
+        return zan;
+    }
+
+    public void setZan(Integer zan) {
+        this.zan = zan;
+    }
+
+    public Integer getIsZan() {
+        return isZan;
+    }
+
+    public void setIsZan(Integer isZan) {
+        this.isZan = isZan;
     }
 }

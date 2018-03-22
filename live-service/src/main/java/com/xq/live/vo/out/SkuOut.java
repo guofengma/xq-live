@@ -36,6 +36,8 @@ public class SkuOut {
 
     private List<PromotionRules> promotionRules;
 
+    private String skuInfo;//推荐菜详情
+
     public Long getId() {
         return id;
     }
@@ -162,5 +164,13 @@ public class SkuOut {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getSkuInfo() {
+        return skuInfo;
+    }
+
+    public void setSkuInfo(String skuInfo) {
+        this.skuInfo = skuInfo;
     }
 }

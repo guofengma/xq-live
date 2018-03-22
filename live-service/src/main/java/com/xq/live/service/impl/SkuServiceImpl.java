@@ -6,6 +6,7 @@ import com.xq.live.dao.SkuMapper;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuForTscOut;
 import com.xq.live.vo.out.SkuOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,11 +45,11 @@ public class SkuServiceImpl implements SkuService {
     }
 
     @Override
-    public Pager<Sku> queryTscList(SkuInVo inVo){
-        Pager<Sku> result =  new Pager<Sku>();
+    public Pager<SkuForTscOut> queryTscList(SkuInVo inVo){
+        Pager<SkuForTscOut> result =  new Pager<SkuForTscOut>();
         int total = skuMapper.tscListTotal(inVo);
         if(total > 0){
-            List<Sku> list = skuMapper.queryTscList(inVo);
+            List<SkuForTscOut> list = skuMapper.queryTscList(inVo);
             result.setList(list);
         }
         result.setTotal(total);

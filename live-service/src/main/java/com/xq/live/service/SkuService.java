@@ -3,6 +3,7 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.Sku;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuForTscOut;
 import com.xq.live.vo.out.SkuOut;
 
 import java.util.List;
@@ -56,5 +57,5 @@ public interface SkuService {
      * @param inVo
      * @return
      */
-    Pager<Sku> queryTscList(SkuInVo inVo);
+    Pager<SkuForTscOut> queryTscList(SkuInVo inVo);
 }

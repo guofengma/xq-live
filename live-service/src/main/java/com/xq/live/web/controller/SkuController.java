@@ -6,6 +6,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
+import com.xq.live.vo.out.SkuForTscOut;
 import com.xq.live.vo.out.SkuOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -87,16 +88,16 @@ public class SkuController {
      * @return
      */
     @RequestMapping(value = "/tsc", method = RequestMethod.GET)
-    public BaseResp<Pager<Sku>> tscList(SkuInVo inVo){
+    public BaseResp<Pager<SkuForTscOut>> tscList(SkuInVo inVo){
         if(inVo == null){
-            return new BaseResp<Pager<Sku>>(ResultStatus.error_param_empty);
+            return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_empty);
         }
 
         if(inVo.getShopId() == null){
-            return new BaseResp<Pager<Sku>>(ResultStatus.error_param_shop_id_empty);
+            return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_shop_id_empty);
         }
         inVo.setSkuType(Sku.SKU_TYPE_TSC);
-        Pager<Sku> result = skuService.queryTscList(inVo);
-        return new BaseResp<Pager<Sku>>(ResultStatus.SUCCESS, result);
+        Pager<SkuForTscOut> result = skuService.queryTscList(inVo);
+        return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.SUCCESS, result);
     }
 }

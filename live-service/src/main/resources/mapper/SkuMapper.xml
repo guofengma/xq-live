@@ -15,6 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="opreator_id" jdbcType="BIGINT" property="opreatorId" />
     <result column="opreator_name" jdbcType="VARCHAR" property="opreatorName" />
+    <result column="sku_info" jdbcType="VARCHAR" property="skuInfo"/>
   </resultMap>
   
   <resultMap id="SkuOutResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.SkuOut">
@@ -34,9 +35,14 @@
 
   </resultMap>
 
+  <resultMap id="TscZanResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.SkuForTscOut">
+    <result column="zan" jdbcType="INTEGER" property="zan"/>
+    <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, sku_code, sku_name, sku_type, sell_price, in_price, is_deleted, pic_url, stock_num, create_time, update_time,
-    opreator_id, opreator_name
+    opreator_id, opreator_name,sku_info
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -60,6 +66,7 @@
       sku.update_time,
       sku.opreator_id,
       sku.opreator_name,
+      sku.sku_info,
       pr.id rule_id,
       pr.rule_type,
       pr.rule_desc,
@@ -104,6 +111,7 @@
       sku.update_time,
       sku.opreator_id,
       sku.opreator_name,
+      sku.sku_info,
       pr.id rule_id,
       pr.rule_type,
       pr.rule_desc,
@@ -139,7 +147,7 @@
 
 
   <!--分页查询 start-->
-  <select id="queryTscList" resultMap="BaseResultMap">
+  <select id="queryTscList" resultMap="TscZanResultMap">
     select
       sku.id,
       sku.sku_code,
@@ -152,7 +160,14 @@
       sku.create_time,
       sku.update_time,
       sku.opreator_id,
-      sku.opreator_name
+      sku.opreator_name,
+      sku.sku_info,
+    (select count(1) from zan z where ref_id = sku.id and z.type = 6) as zan,
+    (select count(1) from zan z where ref_id = sku.id and z.type = 6
+    <if test="zanUserId != null">
+      AND  user_id = #{zanUserId}
+    </if>
+    ) as is_zan
     from sku sku
       inner join sku_shop ss on sku.id = ss.sku_id
     <where>
@@ -209,11 +224,11 @@
     insert into sku (sku_code, sku_name,
       sku_type, sell_price, in_price, 
       stock_num, create_time, update_time, 
-      opreator_id, opreator_name)
+      opreator_id, opreator_name,sku_info)
     values (#{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR},
       #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},
       #{stockNum,jdbcType=INTEGER}, now(), now(),
-      #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR})
+      #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR},#{skuInfo,jdbcType=VARCHAR})
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id
       </selectKey>
@@ -251,6 +266,9 @@
       <if test="opreatorName != null">
         opreator_name,
       </if>
+      <if test="skuInfo != null">
+        sku_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="skuCode != null">
@@ -282,6 +300,9 @@
       </if>
       <if test="opreatorName != null">
         #{opreatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="skuInfo != null">
+        #{skuInfo,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -321,6 +342,9 @@
       <if test="opreatorName != null">
         opreator_name = #{opreatorName,jdbcType=VARCHAR},
       </if>
+      <if test="skuInfo != null">
+        sku_info = #{skuInfo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -335,7 +359,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       opreator_id = #{opreatorId,jdbcType=BIGINT},
-      opreator_name = #{opreatorName,jdbcType=VARCHAR}
+      opreator_name = #{opreatorName,jdbcType=VARCHAR},
+      sku_info = #{skuInfo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

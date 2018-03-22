@@ -56,7 +56,7 @@ public class User {
 
     private Integer sourceType;
 
-    private Integer sex;    //性别
+    private Integer sex;    //性别 0 未知 1 男 2 女
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday;

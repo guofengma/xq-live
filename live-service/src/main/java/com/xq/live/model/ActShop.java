@@ -18,7 +18,7 @@ public class ActShop {
      */
     public final static int ACT_SHOP_IS_SIGN = 1;
 
-    public final static int ACT_SHOP_NO_SIGN = 1;
+    public final static int ACT_SHOP_NO_SIGN = 0;
 
     private Long id;
     @NotNull(message = "actId必填")

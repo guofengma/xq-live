@@ -17,6 +17,7 @@ public class TopicInVo extends BaseInVo {
     private Integer zanSourceType;//用户浏览来源
     private String zanUserIp;
     private String zanUserName;
+    private Integer topicType;//文章类型
 
     public Long getId() {
         return id;
@@ -88,5 +89,13 @@ public class TopicInVo extends BaseInVo {
 
     public void setZanUserName(String zanUserName) {
         this.zanUserName = zanUserName;
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 }

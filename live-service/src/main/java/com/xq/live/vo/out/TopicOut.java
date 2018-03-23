@@ -55,6 +55,8 @@ public class TopicOut {
 
     private Integer viewNum;//浏览数目
 
+    private Integer topicType;//文章类型
+
     public Long getId() {
         return id;
     }
@@ -205,5 +207,13 @@ public class TopicOut {
 
     public void setViewNum(Integer viewNum) {
         this.viewNum = viewNum;
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 }

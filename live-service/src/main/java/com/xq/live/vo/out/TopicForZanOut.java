@@ -54,6 +54,8 @@ public class TopicForZanOut {
 
     private Integer hitNum;
 
+    private Integer topicType;//文章类型
+
     public Long getId() {
         return id;
     }
@@ -196,5 +198,13 @@ public class TopicForZanOut {
 
     public void setHitNum(Integer hitNum) {
         this.hitNum = hitNum;
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 }

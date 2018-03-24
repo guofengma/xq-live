@@ -64,15 +64,15 @@ public class TopicServiceImpl implements TopicService {
         if(inVo==null||inVo.getZanSourceType()==null||inVo.getZanUserName()==null){
             return null;
         }
-        try {
+        /*try {
             //新开一个线程记录访问日志
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    /**
+                    *//**
                      * 1、查询用户是否存在访问记录
                      * 2、记录用户访问日志
-                     */
+                     *//*
                     AccessLog accessLog = new AccessLog();
                     accessLog.setUserId(Long.parseLong(inVo.getZanUserId()));
                     accessLog.setUserName(inVo.getZanUserName());
@@ -89,15 +89,15 @@ public class TopicServiceImpl implements TopicService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /**
+        *//**
          * 查询文章的浏览量
-         */
+         *//*
         Map<String, Object> logMap = new HashMap<String, Object>();
         logMap.put("bizType", AccessLog.BIZ_TYPE_TOPIC_VIEW);
         logMap.put("refId", inVo.getId());
         int viewNum = accessLogMapper.countViewNum(logMap);
 
-        result.setViewNum(viewNum);
+        result.setViewNum(viewNum);*/
         return result;
     }
 

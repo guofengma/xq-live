@@ -114,10 +114,10 @@ public class ShopServiceImpl implements ShopService {
             List<ShopOut> list = shopMapper.list(inVo);
             /**
              * 根据综合排序 0 口味 1服务 2 人气
-             */
-            if (inVo != null && inVo.getBrowSort()!= null &&  inVo.getBrowSort() == 2) {
+             *//*
+            if (inVo != null && inVo.getBrowSort()!= null &&  inVo.getBrowSort() == Shop.BROW_SORT_POP) {
                 Collections.sort(list);
-            }
+            }*/
             result.setList(list);
         }
         result.setPage(inVo.getPage());
@@ -146,9 +146,9 @@ public class ShopServiceImpl implements ShopService {
         if (cnt == 0) {
             try {
                 int logCnt = accessLogMapper.insert(accessLog);
-                if (logCnt > 0) {
+                /*if (logCnt > 0) {
                     shopMapper.updatePopNum(inVo.getId());  //增加人气数值l
-                }
+                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }

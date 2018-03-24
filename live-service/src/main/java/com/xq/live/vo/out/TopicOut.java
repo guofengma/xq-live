@@ -37,13 +37,13 @@ public class TopicOut {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private Integer isDeleted;
+    private Integer isDeleted;//是否删除 0 否 1 是
 
-    private Integer tpStatus;
+    private Integer tpStatus;//状态 0 待审 1 审核通过 2审核不通过
 
-    private List<Attachment> picUrls;
+    private List<Attachment> picUrls;//上传图片组
 
-    private String nickName;
+    private String nickName;//昵称
 
     private String iconUrl;//文章用户的头像
 
@@ -56,6 +56,8 @@ public class TopicOut {
     private Integer viewNum;//浏览数目
 
     private Integer topicType;//文章类型
+
+    private Integer hitNum;//浏览量(根据相同用户--可刷访问次数)
 
     public Long getId() {
         return id;
@@ -215,5 +217,13 @@ public class TopicOut {
 
     public void setTopicType(Integer topicType) {
         this.topicType = topicType;
+    }
+
+    public Integer getHitNum() {
+        return hitNum;
+    }
+
+    public void setHitNum(Integer hitNum) {
+        this.hitNum = hitNum;
     }
 }

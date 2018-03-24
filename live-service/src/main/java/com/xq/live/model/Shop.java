@@ -7,6 +7,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Shop {
+
+    public final static int BROW_SORT_TASTE = 0; //综合排序---口味
+
+    public final static int BROW_SORT_SERVE = 1; //综合排序---服务
+
+    public final static int BROW_SORT_POP = 2; //综合排序---人气
+
     private Long id;
     @NotNull(message = "shopName必填")
     private String shopName;

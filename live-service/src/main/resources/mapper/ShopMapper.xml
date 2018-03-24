@@ -280,14 +280,20 @@
       POW(
       SIN(
       (
-      30.49984 * PI() / 180 - s.location_y * PI() / 180
+      <if test="locationY != null">
+        #{locationY}
+      </if> * PI() / 180 - s.location_y * PI() / 180
       ) / 2
       ),
       2
-      ) + COS(30.49984 * PI() / 180) * COS(s.location_y * PI() / 180) * POW(
+      ) + COS(<if test="locationY != null">
+       #{locationY}
+           </if> * PI() / 180) * COS(s.location_y * PI() / 180) * POW(
       SIN(
       (
-      114.34253 * PI() / 180 - s.location_x * PI() / 180
+    <if test="locationX != null">
+      #{locationX}
+    </if> * PI() / 180 - s.location_x * PI() / 180
       ) / 2
       ),
       2
@@ -306,7 +312,11 @@
         business_cate like concat('%', #{businessCate}, '%')
       </if>
     </where>
-    order by distance asc
+    order by
+    <if test="browSort != null and browSort == 2 ">
+     pop_num desc,
+    </if>
+     distance
     limit #{start}, #{rows}
   </select>
 

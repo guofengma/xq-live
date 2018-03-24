@@ -50,9 +50,9 @@ public class TopicForZanOut {
 
     private Integer isZan;
 
-    private Integer viewNum;//浏览量
+    private Integer viewNum;//浏览量(根据不同用户访问--不可刷访问次数)
 
-    private Integer hitNum;
+    private Integer hitNum;//浏览量(根据相同用户--可刷访问次数)
 
     private Integer topicType;//文章类型
 

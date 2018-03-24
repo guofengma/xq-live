@@ -1,7 +1,9 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.RedisCache;
+import com.xq.live.dao.ShopMapper;
 import com.xq.live.dao.TopicMapper;
+import com.xq.live.model.Shop;
 import com.xq.live.model.Topic;
 import com.xq.live.service.CountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CountServiceImpl implements CountService {
     @Autowired
     TopicMapper topicMapper;
 
+    @Autowired
+    ShopMapper shopMapper;
+
     private static Long viewArticleTime = System.currentTimeMillis();
 
     @Override
@@ -47,5 +52,27 @@ public class CountServiceImpl implements CountService {
             redisCache.del(key);
         }
         return hits;
+    }
+
+    @Override
+    public Integer shopPops(Long shopId) {
+        String key = "shopPops_" + shopId.toString();
+        Integer pops = redisCache.get(key, Integer.class);
+        if (pops == null) {
+            Shop shop = shopMapper.selectByPrimaryKey(shopId);
+            pops = shop.getPopNum() == null ? 0 : shop.getPopNum();
+        }
+        pops++;
+        redisCache.set(key, pops, 1l, TimeUnit.DAYS);
+        Long time = System.currentTimeMillis();
+        if (time > (viewArticleTime + 300000)) {    //5分钟更新一次数据到数据库,viewArticleTime:写数据库的周期
+            viewArticleTime = time;
+            Shop shop = new Shop();
+            shop.setId(shopId);
+            shop.setPopNum(pops);
+            shopMapper.updateByPrimaryKeySelective(shop);
+            redisCache.del(key);
+        }
+        return pops;
     }
 }

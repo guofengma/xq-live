@@ -4,6 +4,7 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Topic;
+import com.xq.live.service.CountService;
 import com.xq.live.service.TopicService;
 import com.xq.live.vo.in.TopicInVo;
 import com.xq.live.vo.out.TopicForZanOut;
@@ -34,6 +35,9 @@ public class TopicController {
     @Autowired
     private TopicService topicService;
 
+    @Autowired
+    private CountService countService;
+
     /**
      * 根据ID查询主题信息
      *
@@ -53,7 +57,8 @@ public class TopicController {
         }
         inVo.setZanUserIp(IpUtils.getIpAddr(request));
         TopicForZanOut topic = topicService.selectByZan(inVo);
-
+        Integer hits = countService.topicHits(inVo.getId());
+        topic.setHitNum(hits);
         return new BaseResp<TopicForZanOut>(ResultStatus.SUCCESS, topic);
     }
 

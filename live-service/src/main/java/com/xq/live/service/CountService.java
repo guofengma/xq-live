@@ -14,4 +14,11 @@ public interface CountService {
      * @return
      */
     Integer topicHits(Long topicId);
+
+    /**
+     * 餐厅的人气
+     * @param shopId
+     * @return
+     */
+    Integer shopPops(Long shopId);
 }

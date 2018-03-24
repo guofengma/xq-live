@@ -50,8 +50,9 @@ public class ShopController {
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     public BaseResp<ShopOut> getShopById(@PathVariable(value = "id") Long id) {
-        countService.topicHits(id);
+        Integer pops = countService.shopPops(id);
         ShopOut result = shopService.findShopOutById(id);
+        result.setPopNum(pops);
         return new BaseResp<ShopOut>(ResultStatus.SUCCESS, result);
     }
 

@@ -158,6 +158,10 @@ public class UserController {
         if(user == null || user.getOpenId() == null){
             return new BaseResp<Integer>(ResultStatus.error_param_open_id_empty);
         }
+        if(user.getId() == null){
+            return new BaseResp<Integer>(ResultStatus.error_input_user_id);
+        }
+
         User u = userService.findByOpenId(user.getOpenId());
         if(u == null){
             return new BaseResp<Integer>(ResultStatus.error_param_open_id);

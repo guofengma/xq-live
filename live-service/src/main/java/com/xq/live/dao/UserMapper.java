@@ -3,7 +3,7 @@ package com.xq.live.dao;
 import com.xq.live.model.User;
 import com.xq.live.vo.in.UserInVo;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +19,7 @@ public interface UserMapper{
 
     int insertSelective(User record);
 
-    //@Cacheable(value = "1h")     //缓存时间1小时，key为自动生成
+    @Cacheable(value = "1h",key = "#p0.toString()")     //缓存时间1小时，key为自动生成
     User selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(User record);
@@ -41,8 +41,9 @@ public interface UserMapper{
      */
     int updateUserType(User record);
 
-    //@Cacheable(value = "1h")
+    @Cacheable(value = "1h")
     User findByOpenId(String openId);
 
+    @CacheEvict(key = "#p0.id.toString()")
     Integer updateByOpenId(User user);
 }

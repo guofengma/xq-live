@@ -18,6 +18,8 @@ public class TopicInVo extends BaseInVo {
     private String zanUserIp;
     private String zanUserName;
     private Integer topicType;//文章类型
+    private Integer sortType;//排序类型 0时间 1浏览量  默认是时间
+    private Integer choiceType;//筛选类型 1商家 2美食写手
 
     public Long getId() {
         return id;
@@ -97,5 +99,21 @@ public class TopicInVo extends BaseInVo {
 
     public void setTopicType(Integer topicType) {
         this.topicType = topicType;
+    }
+
+    public Integer getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(Integer sortType) {
+        this.sortType = sortType;
+    }
+
+    public Integer getChoiceType() {
+        return choiceType;
+    }
+
+    public void setChoiceType(Integer choiceType) {
+        this.choiceType = choiceType;
     }
 }

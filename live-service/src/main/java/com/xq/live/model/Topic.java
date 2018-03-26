@@ -48,6 +48,8 @@ public class Topic {
 
     private Integer topicType;//文章类型
 
+    private Integer transNum;//转发量
+
     public Long getId() {
         return id;
     }
@@ -174,5 +176,13 @@ public class Topic {
 
     public void setTopicType(Integer topicType) {
         this.topicType = topicType;
+    }
+
+    public Integer getTransNum() {
+        return transNum;
+    }
+
+    public void setTransNum(Integer transNum) {
+        this.transNum = transNum;
     }
 }

@@ -17,17 +17,20 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="hit_num" jdbcType="INTEGER" property="hitNum" />
     <result column="topic_type" jdbcType="INTEGER" property="topicType"/>
+    <result column="trans_num" jdbcType="INTEGER" property="transNum" />
   </resultMap>
 
   <resultMap id="ZanSelect" extends="BaseResultMap" type="com.xq.live.vo.out.TopicForZanOut">
     <result column="zan" jdbcType="INTEGER" property="zan"/>
     <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
     <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
+    <result column="user_type" jdbcType="INTEGER" property="userType"/>
   </resultMap>
 
 
   <sql id="Base_Column_List">
-    id, title, summary, home_pic, content, create_time, user_id, user_name, update_time, is_deleted, tp_status, nick_name, pic_ids, hit_num,topic_type
+    id, title, summary, home_pic, content, create_time, user_id, user_name, update_time,
+    is_deleted, tp_status, nick_name, pic_ids, hit_num,topic_type,trans_num
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -161,6 +164,9 @@
       <if test="topicType != null">
         topic_type = #{topicType,jdbcType=INTEGER},
       </if>
+      <if test="transNum != null">
+        trans_num = #{transNum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -178,27 +184,51 @@
 
   <select id="list" resultMap="ZanSelect">
     select
-    <include refid="Base_Column_List" />,
-    (select count(1) from access_log al where topic.id = al.ref_id and al.biz_type = 3) as view_num
-    from topic
+    t.id,
+    t.title,
+    t.summary,
+    t.home_pic,
+    t.content,
+    t.create_time,
+    t.user_id,
+    t.user_name,
+    t.update_time,
+    t.is_deleted,
+    t.tp_status,
+    t.nick_name,
+    t.pic_ids,
+    t.hit_num,
+    t.topic_type,
+    t.trans_num,
+    (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
+    u.user_type
+    from topic t
+    inner join user u on t.user_id = u.id
     <where>
       <if test="id != null">
-        id =#{id}
+        t.id =#{id}
       </if>
       <if test="title != null">
-        and title like concat('%', #{title}, '%')
+        and t.title like concat('%', #{title}, '%')
       </if>
       <if test="content != null">
-        and content like concat('%', #{content}, '%')
+        and t.content like concat('%', #{content}, '%')
       </if>
       <if test="summary != null">
-        and summary like concat('%', #{summary}, '%')
+        and t.summary like concat('%', #{summary}, '%')
       </if>
       <if test="topicType != null">
-        and topic_type = #{topicType}
+        and t.topic_type = #{topicType}
+      </if>
+      <if test="choiceType != null">
+        and u.user_type = #{choiceType}
       </if>
     </where>
-    order by id desc
+    order by
+    <if test="sortType !=null and sortType == 1">
+      t.hit_num desc,
+    </if>
+    t.update_time desc
     limit #{start}, #{rows}
   </select>
 
@@ -215,7 +245,7 @@
         and user_id = #{userId,jdbcType=BIGINT}
       </if>
     </where>
-    order by id desc
+    order by update_time desc
     limit #{start}, #{rows}
   </select>
 
@@ -235,22 +265,26 @@
 
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
-    from topic
+    from topic t
+    inner join user u on t.user_id = u.id
     <where>
       <if test="id != null">
-        id =#{id}
+        t.id =#{id}
       </if>
       <if test="title != null">
-        and title like concat('%', #{title}, '%')
+        and t.title like concat('%', #{title}, '%')
       </if>
       <if test="content != null">
-        and content like concat('%', #{content}, '%')
+        and t.content like concat('%', #{content}, '%')
       </if>
       <if test="summary != null">
-        and summary like concat('%', #{summary}, '%')
+        and t.summary like concat('%', #{summary}, '%')
       </if>
       <if test="topicType != null">
-        and topic_type = #{topicType}
+        and t.topic_type = #{topicType}
+      </if>
+      <if test="choiceType != null">
+        and u.user_type = #{choiceType}
       </if>
     </where>
   </select>

@@ -59,6 +59,10 @@ public class TopicOut {
 
     private Integer hitNum;//浏览量(根据相同用户--可刷访问次数)
 
+    private Integer userType;//发表文章用户的类型  1普通用户 2 商家用户
+
+    private Integer transNum;//转发量
+
     public Long getId() {
         return id;
     }
@@ -225,5 +229,21 @@ public class TopicOut {
 
     public void setHitNum(Integer hitNum) {
         this.hitNum = hitNum;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public Integer getTransNum() {
+        return transNum;
+    }
+
+    public void setTransNum(Integer transNum) {
+        this.transNum = transNum;
     }
 }

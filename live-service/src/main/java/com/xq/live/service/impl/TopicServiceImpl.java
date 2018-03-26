@@ -61,9 +61,9 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public TopicForZanOut selectByZan(final TopicInVo inVo) {
         TopicForZanOut result = topicMapper.selectByZan(inVo);
-        if(inVo==null||inVo.getZanSourceType()==null||inVo.getZanUserName()==null){
+        /*if(inVo==null||inVo.getZanSourceType()==null||inVo.getZanUserName()==null){
             return null;
-        }
+        }*/
         /*try {
             //新开一个线程记录访问日志
             new Thread(new Runnable() {

@@ -16,6 +16,13 @@ public interface CountService {
     Integer topicHits(Long topicId);
 
     /**
+     * 主题转发量统计
+     * @param topicId
+     * @return
+     */
+    Integer topicTrans(Long topicId);
+
+    /**
      * 餐厅的人气
      * @param shopId
      * @return

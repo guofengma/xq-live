@@ -55,6 +55,33 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
+    public Integer topicTrans(Long topicId) {
+        String key = "topicTrans_" + topicId.toString();
+        Integer trans = redisCache.get(key, Integer.class);
+        if (trans == null) {
+            Topic topic = topicMapper.selectByPrimaryKey(topicId);
+            trans = topic.getTransNum() == null ? 0 : topic.getTransNum();
+        }
+        trans++;
+        redisCache.set(key, trans, 1l, TimeUnit.DAYS);
+        /*Long time = System.currentTimeMillis();
+        if (time > (viewArticleTime + 300000)) {    //5分钟更新一次数据到数据库,viewArticleTime:写数据库的周期
+            viewArticleTime = time;
+            Topic topic = new Topic();
+            topic.setId(topicId);
+            topic.setTransNum(trans);
+            topicMapper.updateByPrimaryKeySelective(topic);
+            redisCache.del(key);
+        }*/
+        Topic topic = new Topic();
+        topic.setId(topicId);
+        topic.setTransNum(trans);
+        topicMapper.updateByPrimaryKeySelective(topic);
+        redisCache.del(key);
+        return trans;
+    }
+
+    @Override
     public Integer shopPops(Long shopId) {
         String key = "shopPops_" + shopId.toString();
         Integer pops = redisCache.get(key, Integer.class);

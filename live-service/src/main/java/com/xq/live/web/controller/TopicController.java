@@ -123,4 +123,10 @@ public class TopicController {
         List<TopicOut> result = topicService.top(inVo);
         return new BaseResp<List<TopicOut>>(ResultStatus.SUCCESS, result);
     }
+
+    @RequestMapping(value = "/transpond",method = RequestMethod.GET)
+    public BaseResp<Integer> transpond(Long topicId){
+        Integer integer = countService.topicTrans(topicId);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
 }

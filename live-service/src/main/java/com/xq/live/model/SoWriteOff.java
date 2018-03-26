@@ -31,13 +31,13 @@ public class SoWriteOff {
     private BigDecimal couponAmount;
 
     @NotNull(message = "userId必填")
-    private Long userId;
+    private Long userId;//卷所属订单的userId
 
     @NotNull(message = "userName必填")
-    private String userName;
+    private String userName;//卷所属订单的userId
 
     @NotNull(message = "cashierId必填")
-    private Long cashierId;
+    private Long cashierId;//收银员的id---当前操作的用户id
 
     @NotNull(message = "cashierName必填")
     private String cashierName;

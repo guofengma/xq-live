@@ -274,33 +274,37 @@
       s.shop_status,
       s.apply_status,
       s.business_cate,
-      ROUND(
-      6378.138 * 2 * ASIN(
-      SQRT(
-      POW(
-      SIN(
-      (
-      <if test="locationY != null">
-        #{locationY}
-      </if> * PI() / 180 - s.location_y * PI() / 180
-      ) / 2
-      ),
-      2
-      ) + COS(<if test="locationY != null">
-       #{locationY}
-           </if> * PI() / 180) * COS(s.location_y * PI() / 180) * POW(
-      SIN(
-      (
-    <if test="locationX != null">
-      #{locationX}
-    </if> * PI() / 180 - s.location_x * PI() / 180
-      ) / 2
-      ),
-      2
-      )
-      )
-      ) * 1000
-      ) AS distance,
+      <choose>
+        <when test="locationX != null and locationY != null"> ROUND(
+          6378.138 * 2 * ASIN(
+          SQRT(
+          POW(
+          SIN(
+          (
+          <if test="locationY != null">
+            #{locationY}
+          </if> * PI() / 180 - s.location_y * PI() / 180
+          ) / 2
+          ),
+          2
+          ) + COS(<if test="locationY != null">
+            #{locationY}
+          </if> * PI() / 180) * COS(s.location_y * PI() / 180) * POW(
+          SIN(
+          (
+          <if test="locationX != null">
+            #{locationX}
+          </if> * PI() / 180 - s.location_x * PI() / 180
+          ) / 2
+          ),
+          2
+          )
+          )
+          ) * 1000
+          )</when>
+        <when test="locationX == null or locationY == null">0</when>
+      </choose>
+      AS distance,
       (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name
     FROM
     shop s

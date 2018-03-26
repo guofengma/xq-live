@@ -17,6 +17,8 @@ public interface SoMapper {
 
     So selectByPrimaryKey(Long id);
 
+    int selectByUserIdTotal(Long userId);
+
     int updateByPrimaryKeySelective(So record);
 
     int updateByPrimaryKey(So record);

@@ -62,6 +62,14 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByUserIdTotal" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select
+        count(1)
+        from so
+        where user_id = #{userId,jdbcType=BIGINT}
+        and (so_status = 2 OR so_status = 3)
+    </select>
+
     <select id="selectByPk" parameterType="java.lang.Long" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
         s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price

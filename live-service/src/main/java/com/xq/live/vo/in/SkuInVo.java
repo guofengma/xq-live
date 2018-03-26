@@ -23,6 +23,8 @@ public class SkuInVo extends BaseInVo {
 
     private Long zanUserId;//推荐菜点赞人的userId
 
+    private Long userId;//买券人的userId
+
     public Long getId() {
         return id;
     }
@@ -77,5 +79,13 @@ public class SkuInVo extends BaseInVo {
 
     public void setZanUserId(Long zanUserId) {
         this.zanUserId = zanUserId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

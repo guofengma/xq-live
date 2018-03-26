@@ -3,6 +3,7 @@ package com.xq.live.service.impl;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RandomStringUtil;
 import com.xq.live.dao.SkuMapper;
+import com.xq.live.dao.SoMapper;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
@@ -11,6 +12,7 @@ import com.xq.live.vo.out.SkuOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,6 +28,9 @@ public class SkuServiceImpl implements SkuService {
     @Autowired
     private SkuMapper skuMapper;
 
+    @Autowired
+    private SoMapper soMapper;
+
     @Override
     public Sku get(Long id) {
         return skuMapper.selectByPrimaryKey(id);
@@ -37,6 +42,14 @@ public class SkuServiceImpl implements SkuService {
         int total = skuMapper.listTotal(inVo);
         if(total > 0){
             List<SkuOut> list = skuMapper.list(inVo);
+            if(inVo!=null&&inVo.getUserId()!=null){
+                int i = soMapper.selectByUserIdTotal(inVo.getUserId());//判断是否是新下单用户 0为首次下单
+                if(i==0){
+                    for (SkuOut skuOut : list) {
+                        skuOut.setSellPrice(BigDecimal.ZERO);
+                    }
+                }
+            }
             result.setList(list);
         }
         result.setTotal(total);

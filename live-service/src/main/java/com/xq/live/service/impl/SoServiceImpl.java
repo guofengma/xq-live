@@ -102,9 +102,17 @@ public class SoServiceImpl implements SoService {
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
         //2、查询券信息
         CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
-
         //3、计算订单金额
         BigDecimal soAmount = BigDecimal.valueOf(inVo.getSkuNum()).multiply(sku.getSellPrice());
+
+        //如果是新用户下单，那么就给他免单
+        if(inVo!=null&&inVo.getUserId()!=null){
+            int i = soMapper.selectByUserIdTotal(inVo.getUserId());//判断是否是新下单用户 0为首次下单
+            if(i==0){
+                soAmount = new BigDecimal(0);
+            }
+        }
+
 
         //4、保存订单信息
         inVo.setSoAmount(soAmount);

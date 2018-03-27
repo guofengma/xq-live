@@ -90,4 +90,10 @@ public class SkuServiceImpl implements SkuService {
     public SkuOut selectById(Long id) {
         return skuMapper.selectById(id);
     }
+
+    @Override
+    public Integer isNewUser(Long userId) {
+        int i = soMapper.selectByUserIdTotal(userId);
+        return i;
+    }
 }

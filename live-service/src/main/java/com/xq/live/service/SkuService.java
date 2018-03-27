@@ -58,4 +58,11 @@ public interface SkuService {
      * @return
      */
     Pager<SkuForTscOut> queryTscList(SkuInVo inVo);
+
+    /**
+     * 判断是否是新用户首次下单
+     * @param userId
+     * @return
+     */
+    Integer isNewUser(Long userId);
 }

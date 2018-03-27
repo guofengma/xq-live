@@ -100,4 +100,21 @@ public class SkuController {
         Pager<SkuForTscOut> result = skuService.queryTscList(inVo);
         return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.SUCCESS, result);
     }
+
+    /**
+     * 判断是否是首次下单用户 0新用户 其他 老用户
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/isNewUser",method = RequestMethod.GET)
+    public BaseResp<Integer> isNewUser(Long userId){
+        if(userId==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        Integer newUser = skuService.isNewUser(userId);
+        if(newUser==0){
+            return new BaseResp<Integer>(ResultStatus.SUCCESS,0);
+        }
+        return new BaseResp<Integer>(ResultStatus.FAIL,newUser);
+    }
 }

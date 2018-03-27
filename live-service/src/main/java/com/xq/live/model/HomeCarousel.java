@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 public class HomeCarousel {
+    public final static int HOME_CAROUSEL_SIZE = 4; //轮播图的图片数目
+
     private Long id;
 
     private String imgUrl;

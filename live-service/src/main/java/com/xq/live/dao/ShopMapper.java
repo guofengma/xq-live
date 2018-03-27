@@ -29,6 +29,13 @@ public interface ShopMapper {
     List<ShopOut> list(ShopInVo inVo);
 
     /**
+     * 查询首页的川湘菜
+     * @param inVo
+     * @return
+     */
+    List<ShopOut> listForChuanXiang(ShopInVo inVo);
+
+    /**
      * 查询记录总数
      * @param inVo
      * @return

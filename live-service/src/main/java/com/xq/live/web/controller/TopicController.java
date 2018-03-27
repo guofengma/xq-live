@@ -101,15 +101,15 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResp<Pager<TopicOut>> list(TopicInVo inVo) {
-        Pager<TopicOut> result = topicService.list(inVo);
-        return new BaseResp<Pager<TopicOut>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<TopicForZanOut>> list(TopicInVo inVo) {
+        Pager<TopicForZanOut> result = topicService.list(inVo);
+        return new BaseResp<Pager<TopicForZanOut>>(ResultStatus.SUCCESS, result);
     }
 
     @RequestMapping(value = "/myList", method = RequestMethod.GET)
-    public BaseResp<Pager<TopicOut>> myList(TopicInVo inVo) {
-        Pager<TopicOut> result = topicService.myList(inVo);
-        return new BaseResp<Pager<TopicOut>>(ResultStatus.SUCCESS, result);
+    public BaseResp<Pager<TopicForZanOut>> myList(TopicInVo inVo) {
+        Pager<TopicForZanOut> result = topicService.myList(inVo);
+        return new BaseResp<Pager<TopicForZanOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**
@@ -119,9 +119,9 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResp<List<TopicOut>> top(TopicInVo inVo) {
-        List<TopicOut> result = topicService.top(inVo);
-        return new BaseResp<List<TopicOut>>(ResultStatus.SUCCESS, result);
+    public BaseResp<List<TopicForZanOut>> top(TopicInVo inVo) {
+        List<TopicForZanOut> result = topicService.top(inVo);
+        return new BaseResp<List<TopicForZanOut>>(ResultStatus.SUCCESS, result);
     }
 
     @RequestMapping(value = "/transpond",method = RequestMethod.GET)

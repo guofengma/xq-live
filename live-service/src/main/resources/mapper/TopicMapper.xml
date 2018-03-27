@@ -25,6 +25,8 @@
     <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
     <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
     <result column="user_type" jdbcType="INTEGER" property="userType"/>
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum"/>
+    <result column="icon_url" jdbcType="VARCHAR" property="iconUrl"/>
   </resultMap>
 
 
@@ -201,7 +203,15 @@
     t.topic_type,
     t.trans_num,
     (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
-    u.user_type
+    u.user_type,
+    (select count(1) from zan where ref_id = t.id) as zan,
+    (select count(1) from zan where ref_id = t.id
+    <if test="zanUserId != null">
+      AND  user_id = #{zanUserId}
+    </if>
+    ) as is_zan,
+    u.icon_url,
+    (select count(1) from comment c where c.ref_id = t.id and c.cmt_type = 2) as comment_num
     from topic t
     inner join user u on t.user_id = u.id
     <where>
@@ -234,15 +244,43 @@
 
   <select id="myList" resultMap="ZanSelect">
     select
-    <include refid="Base_Column_List" />,
-    (select count(1) from access_log al where topic.id = al.ref_id and al.biz_type = 3) as view_num
-    from topic
+    t.id,
+    t.title,
+    t.summary,
+    t.home_pic,
+    t.content,
+    t.create_time,
+    t.user_id,
+    t.user_name,
+    t.update_time,
+    t.is_deleted,
+    t.tp_status,
+    t.nick_name,
+    t.pic_ids,
+    t.hit_num,
+    t.topic_type,
+    t.trans_num,
+    (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
+    u.user_type,
+    (select count(1) from zan where ref_id = t.id) as zan,
+    (select count(1) from zan where ref_id = t.id
+    <if test="zanUserId != null">
+      AND  user_id = #{zanUserId}
+    </if>
+    ) as is_zan,
+    u.icon_url,
+    (select count(1) from comment c where c.ref_id = t.id and c.cmt_type = 2) as comment_num
+    from topic t
+    inner join user u on t.user_id = u.id
     <where>
       <if test="id != null">
-        id =#{id}
+        t.id =#{id}
       </if>
       <if test="userId !=null">
-        and user_id = #{userId,jdbcType=BIGINT}
+        and t.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="shopId !=null">
+        and u.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
     </where>
     order by update_time desc
@@ -251,16 +289,20 @@
 
   <select id="myListTotal" resultType="java.lang.Integer">
     select count(1)
-    from topic
+    from topic t
+    inner join user u on t.user_id = u.id
     <where>
       <if test="id != null">
-        id =#{id}
+        t.id =#{id}
       </if>
       <if test="userId !=null">
-        and user_id = #{userId,jdbcType=BIGINT}
+        and t.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="shopId !=null">
+        and u.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
     </where>
-    order by id desc
+    order by t.id desc
   </select>
 
   <select id="listTotal" resultType="java.lang.Integer">

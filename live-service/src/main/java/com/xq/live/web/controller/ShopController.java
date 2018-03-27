@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商家controller
@@ -133,6 +134,28 @@ public class ShopController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResp<Pager<ShopOut>> list(ShopInVo inVo, HttpServletRequest request){
         Pager<ShopOut> result = shopService.list(inVo);
+        return new BaseResp<Pager<ShopOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 根据条件查询首页各类热门餐厅
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listForHomePage", method = RequestMethod.GET)
+    public BaseResp<Map<String, List<ShopOut>>> listForHomePage(ShopInVo inVo, HttpServletRequest request){
+        Map<String, List<ShopOut>> result = shopService.listForHomePage(inVo);
+        return new BaseResp<Map<String, List<ShopOut>>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 根据条件查询商家列表信息
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listForChuangXiang", method = RequestMethod.GET)
+    public BaseResp<Pager<ShopOut>> listForChuangXiang(ShopInVo inVo, HttpServletRequest request){
+        Pager<ShopOut> result = shopService.listForChuangXiang(inVo);
         return new BaseResp<Pager<ShopOut>>(ResultStatus.SUCCESS, result);
     }
 

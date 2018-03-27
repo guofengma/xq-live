@@ -11,6 +11,7 @@ import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.vo.out.ShopOut;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商家/餐厅service
@@ -61,11 +62,25 @@ public interface ShopService {
     Pager<ShopOut> list(ShopInVo inVo);
 
     /**
+     * 根据查询条件查询商家列表
+     * @param inVo
+     * @return
+     */
+    Pager<ShopOut> listForChuangXiang(ShopInVo inVo);
+
+    /**
      * 热门商家
      * @param inVo
      * @return
      */
     List<ShopOut> top(ShopInVo inVo);
+
+    /**
+     * 查询首页不同分类热门商家
+     * @param inVo
+     * @return
+     */
+    Map<String,List<ShopOut>> listForHomePage(ShopInVo inVo);
 
     /**
      * 根据id查询商家详细

@@ -38,17 +38,21 @@ public class TopicForZanOut {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private Integer isDeleted;
+    private Integer isDeleted;//是否删除 0 否 1 是
 
-    private Integer tpStatus;
+    private Integer tpStatus;//状态 0 待审 1 审核通过 2审核不通过
 
-    private List<Attachment> picUrls;
+    private List<Attachment> picUrls;//上传图片组
 
-    private String nickName;
+    private String nickName;//昵称
 
-    private Integer zan;
+    private String iconUrl;//文章用户的头像
 
-    private Integer isZan;
+    private int commentNum;//文章列表的评论数
+
+    private Integer zan;//点赞总数
+
+    private Integer isZan;//是否点赞
 
     private Integer viewNum;//浏览量(根据不同用户访问--不可刷访问次数)
 
@@ -226,5 +230,21 @@ public class TopicForZanOut {
 
     public void setTransNum(Integer transNum) {
         this.transNum = transNum;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public int getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(int commentNum) {
+        this.commentNum = commentNum;
     }
 }

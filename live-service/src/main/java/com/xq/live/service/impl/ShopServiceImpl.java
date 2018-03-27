@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 商家sevice实现类
@@ -122,6 +120,49 @@ public class ShopServiceImpl implements ShopService {
         }
         result.setPage(inVo.getPage());
         return result;
+    }
+
+    @Override
+    public Pager<ShopOut> listForChuangXiang(ShopInVo inVo) {
+        Pager<ShopOut> result = new Pager<ShopOut>();
+        List<ShopOut> list = shopMapper.listForChuanXiang(inVo);
+        result.setTotal(list.size());
+        result.setList(list);
+        result.setPage(inVo.getPage());
+        return result;
+
+    }
+
+    @Override
+    public Map<String, List<ShopOut>> listForHomePage(ShopInVo inVo) {
+        Map<String, List<ShopOut>> map = new HashMap<String,List<ShopOut>>();
+        List<ShopOut> shopOuts = shopMapper.listForChuanXiang(inVo);
+        map.put("CX",shopOuts);
+        inVo.setBusinessCate("海鲜");
+        shopOuts = shopMapper.list(inVo);
+        map.put("HX",shopOuts);
+        inVo.setBusinessCate("火锅");
+        shopOuts = shopMapper.list(inVo);
+        map.put("HG",shopOuts);
+        inVo.setBusinessCate("烧烤");
+        shopOuts = shopMapper.list(inVo);
+        map.put("SK",shopOuts);
+        inVo.setBusinessCate("西餐");
+        shopOuts = shopMapper.list(inVo);
+        map.put("XC",shopOuts);
+        inVo.setBusinessCate("自助餐");
+        shopOuts = shopMapper.list(inVo);
+        map.put("ZZ",shopOuts);
+        inVo.setBusinessCate("商务");
+        shopOuts = shopMapper.list(inVo);
+        map.put("SW",shopOuts);
+        inVo.setBusinessCate("聚会");
+        shopOuts = shopMapper.list(inVo);
+        map.put("JH",shopOuts);
+        inVo.setBusinessCate("约会");
+        shopOuts = shopMapper.list(inVo);
+        map.put("YH",shopOuts);
+        return map;
     }
 
     @Override

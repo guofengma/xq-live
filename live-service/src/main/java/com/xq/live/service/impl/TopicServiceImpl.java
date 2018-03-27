@@ -59,7 +59,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public TopicForZanOut selectByZan(final TopicInVo inVo) {
+    public TopicForZanOut selectByZan( TopicInVo inVo) {
         TopicForZanOut result = topicMapper.selectByZan(inVo);
         /*if(inVo==null||inVo.getZanSourceType()==null||inVo.getZanUserName()==null){
             return null;
@@ -122,18 +122,18 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Pager<TopicOut> list(TopicInVo inVo) {
-        Pager<TopicOut> pager = new Pager<TopicOut>();
+    public Pager<TopicForZanOut> list(TopicInVo inVo) {
+        Pager<TopicForZanOut> pager = new Pager<TopicForZanOut>();
         int total = topicMapper.listTotal(inVo);
 
         if(total > 0){
             List<TopicForZanOut> list = topicMapper.list(inVo);
-            List<TopicOut> listForOut = new ArrayList<TopicOut>();
+            /*List<TopicOut> listForOut = new ArrayList<TopicOut>();*/
             for(TopicForZanOut t : list){
                 t = getPicUrls(t);
                 /**
                  * 通过用户id查询用户详情
-                 */
+                 *//*
                 User user = userMapper.selectByPrimaryKey(t.getUserId());
                 CommentInVo commentInVo = new CommentInVo();
                 commentInVo.setRefId(t.getId());
@@ -148,9 +148,9 @@ public class TopicServiceImpl implements TopicService {
                 topicOut.setIconUrl(user.getIconUrl());
                 topicOut.setCommentNum(listTotal);
                 topicOut.setZan(zan);
-                listForOut.add(topicOut);
+                listForOut.add(topicOut);*/
             }
-            pager.setList(listForOut);
+            pager.setList(list);
         }
         pager.setTotal(total);  //总记录数
         pager.setPage(inVo.getPage());     //当前页
@@ -158,13 +158,13 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Pager<TopicOut> myList(TopicInVo inVo) {
-        Pager<TopicOut> pager = new Pager<TopicOut>();
+    public Pager<TopicForZanOut> myList(TopicInVo inVo) {
+        Pager<TopicForZanOut> pager = new Pager<TopicForZanOut>();
         int total = topicMapper.myListTotal(inVo);
 
         if(total > 0){
             List<TopicForZanOut> list = topicMapper.myList(inVo);
-            List<TopicOut> listForOut = new ArrayList<TopicOut>();
+            /*List<TopicOut> listForOut = new ArrayList<TopicOut>();
             for(TopicForZanOut t : list){
                 t = getPicUrls(t);
                 User user = userMapper.selectByPrimaryKey(t.getUserId());
@@ -181,22 +181,25 @@ public class TopicServiceImpl implements TopicService {
                 topicOut.setIconUrl(user.getIconUrl());
                 topicOut.setCommentNum(listTotal);
                 topicOut.setZan(zan);
-                listForOut.add(topicOut);
+                listForOut.add(topicOut);*/
+            for(TopicForZanOut t : list){
+                t = getPicUrls(t);
             }
-            pager.setList(listForOut);
-        }
+            pager.setList(list);
+            }
+
         pager.setTotal(total);  //总记录数
         pager.setPage(inVo.getPage());     //当前页
         return pager;
     }
 
     @Override
-    public List<TopicOut> top(TopicInVo inVo) {
+    public List<TopicForZanOut> top(TopicInVo inVo) {
         List<TopicForZanOut> list = topicMapper.list(inVo);
-        List<TopicOut> listForOut = new ArrayList<TopicOut>();
+        /*List<TopicOut> listForOut = new ArrayList<TopicOut>();*/
         for(TopicForZanOut t : list){
             t = getPicUrls(t);
-            User user = userMapper.selectByPrimaryKey(t.getUserId());
+            /*User user = userMapper.selectByPrimaryKey(t.getUserId());
             CommentInVo commentInVo = new CommentInVo();
             commentInVo.setRefId(t.getId());
             commentInVo.setCmtType(2);
@@ -205,9 +208,9 @@ public class TopicServiceImpl implements TopicService {
             BeanUtils.copyProperties(t,topicOut);
             topicOut.setIconUrl(user.getIconUrl());
             topicOut.setCommentNum(listTotal);
-            listForOut.add(topicOut);
+            listForOut.add(topicOut);*/
         }
-        return listForOut;
+        return list;
     }
 
     /**

@@ -20,6 +20,7 @@ public class TopicInVo extends BaseInVo {
     private Integer topicType;//文章类型
     private Integer sortType;//排序类型 0时间 1浏览量  默认是时间
     private Integer choiceType;//筛选类型 1商家 2美食写手
+    private Integer shopId;//商家id
 
     public Long getId() {
         return id;
@@ -115,5 +116,13 @@ public class TopicInVo extends BaseInVo {
 
     public void setChoiceType(Integer choiceType) {
         this.choiceType = choiceType;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 }

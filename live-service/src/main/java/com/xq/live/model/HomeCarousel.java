@@ -21,6 +21,8 @@ public class HomeCarousel {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    private String type;//首页菜馆分类
+
     public Long getId() {
         return id;
     }
@@ -67,5 +69,13 @@ public class HomeCarousel {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -51,14 +51,14 @@ public interface TopicService {
      * @param inVo
      * @return
      */
-    Pager<TopicOut> list(TopicInVo inVo);
+    Pager<TopicForZanOut> list(TopicInVo inVo);
 
-    Pager<TopicOut> myList(TopicInVo inVo);
+    Pager<TopicForZanOut> myList(TopicInVo inVo);
 
     /**
      * 查询最热
      * @param inVo
      * @return
      */
-    List<TopicOut> top(TopicInVo inVo);
+    List<TopicForZanOut> top(TopicInVo inVo);
 }

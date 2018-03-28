@@ -100,23 +100,39 @@ public class SoServiceImpl implements SoService {
     public Long create(SoInVo inVo) {
         //1、查询SKU信息
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
-        //2、查询券信息
-        CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
-        //3、计算订单金额
+        //2、计算订单金额
         BigDecimal soAmount = BigDecimal.valueOf(inVo.getSkuNum()).multiply(sku.getSellPrice());
 
-        //如果是新用户下单，那么就给他免单
-        if(inVo!=null&&inVo.getUserId()!=null){
-            int i = soMapper.selectByUserIdTotal(inVo.getUserId());//判断是否是新下单用户 0为首次下单
-            if(i==0){
-                soAmount = new BigDecimal(0);
-            }
-        }
-
-
-        //4、保存订单信息
+        //3、保存订单信息
         inVo.setSoAmount(soAmount);
         inVo.setSoStatus(So.SO_STATUS_WAIT_PAID);
+        inVo.setSoType(So.SO_TYPE_PT);
+        int ret = soMapper.insert(inVo);
+        if (ret < 1) {
+            logger.error("保存订单失败,userId : "+inVo.getUserId()+" skuId : "+inVo.getSkuId());
+            return null;
+        }
+        Long id = inVo.getId();
+
+        //4、保存订单明细信息
+        inVo.setId(id);
+        this.saveSoDetail(inVo, sku);
+
+        //5、保存订单日志
+        this.saveSoLog(inVo, SoLog.SO_STATUS_WAIT_PAID);
+        return id;
+    }
+
+    @Override
+    public Long freeOrder(SoInVo inVo){
+        //1、查询SKU信息
+        Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+        //2、计算订单金额
+        BigDecimal soAmount = BigDecimal.ZERO;
+
+        //3、保存订单信息,免费订单的状态直接写为“已支付”
+        inVo.setSoAmount(soAmount);
+        inVo.setSoStatus(So.SO_STATUS_PAID);
         inVo.setSoType(So.SO_TYPE_PT);
         int ret = soMapper.insert(inVo);
         if (ret < 1) {
@@ -124,32 +140,17 @@ public class SoServiceImpl implements SoService {
         }
         Long id = inVo.getId();
 
-        //5、保存订单明细信息
-        SoDetail sd = new SoDetail();
-        sd.setSoId(id);
-        sd.setSkuId(inVo.getSkuId());
-        sd.setSkuCode(sku.getSkuCode());
-        sd.setSkuName(sku.getSkuName());
-        sd.setSkuNum(inVo.getSkuNum());
-        sd.setUnitPrice(sku.getSellPrice());
-        soDetailMapper.insert(sd);
+        //4、保存订单明细信息
+        inVo.setId(id);
+        this.saveSoDetail(inVo, sku);
 
-        //7、保存订单日志
-        SoLog soLog = new SoLog();
-        soLog.setSoId(id);
-        soLog.setUserId(inVo.getUserId());
-        soLog.setUserName(inVo.getUserName());
-        soLog.setOperateType(SoLog.SO_STATUS_WAIT_PAID);
-        try {
-            soLogMapper.insert(soLog);
-        } catch (Exception e) {
-            logger.error("下单保存订单日志失败");
-        }
+        //5.生成代金券
+        this.createCoupon(inVo);
 
+        //6、保存订单日志，订单状态:已支付
+        this.saveSoLog(inVo, SoLog.SO_STATUS_PAID);
         return id;
     }
-
-
 
     @Override
     public SoOut get(Long id) {
@@ -178,59 +179,11 @@ public class SoServiceImpl implements SoService {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, 3);     //有效时间为3个月
             //2、支付成功生成抵用券
-            for (int i = 0; i < inVo.getSkuNum(); i++) {
-                //3、查询券信息
-                Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
-                CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
-                SoOut soOut = this.get(inVo.getId());
-                Coupon coupon = new Coupon();
-                coupon.setSoId(inVo.getId());
-                coupon.setCouponCode(RandomStringUtil.getRandomCode(10, 0));
-                coupon.setSkuId(sku.getId());
-                coupon.setSkuCode(sku.getSkuCode());
-                coupon.setSkuName(sku.getSkuName());
-                coupon.setCouponAmount(couponSku.getAmount());
-                coupon.setType(Coupon.COUPON_TYPE_PLAT);
-                coupon.setUserId(soOut.getUserId());
-                coupon.setUserName(soOut.getUserName());
-                //上传二维码图片到腾讯COS服务器
-                String qrcodeUrl = uploadQRCodeToCos(coupon.getCouponCode());
-                coupon.setQrcodeUrl(qrcodeUrl);
-                coupon.setExpiryDate(cal.getTime());
-                couponMapper.insert(coupon);
-                //            //新开一个线程上传二维码并生成抵用券
-                //            new Thread(new Runnable() {
-                //                @Override
-                //                public void run() {
-                //                    logger.error("1、上传二维码");
-                //                    logger.error("2、生成抵用券");
-                //                    //                exceptionAnalysisService.runAnalysisStrategyJob(planId, taskBeginTime); //参数必须是final类型的
-                //                    String qrcodeUrl = uploadQRCodeToCos(coupon.getCouponCode());
-                //                    coupon.setQrcodeUrl(qrcodeUrl);
-                //                    couponMapper.insert(coupon);
-                //                }
-                //            }).start();
-            }
-
-            try {
-                //4、支付日志
-                PaidLog paidLog = new PaidLog();
-                paidLog.setSoId(inVo.getId());
-                paidLog.setPaidType(So.SO_PAY_TYPE_WX);
-                paidLog.setUserId(inVo.getUserId());
-                paidLog.setUserName(inVo.getUserName());
-                paidLogMapper.insert(paidLog);
-
-                //5、订单日志
-                SoLog soLog = new SoLog();
-                soLog.setSoId(inVo.getId());
-                soLog.setUserId(inVo.getUserId());
-                soLog.setUserName(inVo.getUserName());
-                soLog.setOperateType(SoLog.SO_STATUS_PAID);
-                soLogMapper.insert(soLog);
-            } catch (Exception e) {
-                logger.error("支付保存订单日志失败,soId : " + inVo.getId());
-            }
+            this.createCoupon(inVo);
+            //3、支付日志
+            this.savePayLog(inVo);
+            //4、订单日志
+            this.saveSoLog(inVo, SoLog.SO_STATUS_PAID);
         }
         return ret;
     }
@@ -247,22 +200,21 @@ public class SoServiceImpl implements SoService {
         int ret = soMapper.cancel(inVo);
 
         if (ret > 0) {
-            try {
-                //2、订单日志
-                SoLog soLog = new SoLog();
-                soLog.setSoId(inVo.getId());
-                soLog.setUserId(inVo.getUserId());
-                soLog.setUserName(inVo.getUserName());
-                soLog.setOperateType(SoLog.SO_STATUS_CANCEL);
-                soLogMapper.insert(soLog);
-            } catch (Exception e) {
-                logger.error("取消订单保存日志失败,soId : " + inVo.getId());
-            }
+            this.saveSoLog(inVo, SoLog.SO_STATUS_CANCEL);
         }
         return ret;
     }
 
+    @Override
+    public Integer selectByUserIdTotal(Long userId){
+        return soMapper.selectByUserIdTotal(userId);
+    }
 
+    /**
+     * 生成券二维码图片并上传到腾讯云服务器
+     * @param code
+     * @return
+     */
     private String uploadQRCodeToCos(String code) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + code + ".jpg";
@@ -284,5 +236,95 @@ public class SoServiceImpl implements SoService {
         //删除服务器上临时文件
         uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
         return imgUrl;
+    }
+
+    /**
+     * 保存订单明细信息
+     * @param inVo
+     * @return
+     */
+    private Integer saveSoDetail(SoInVo inVo, Sku sku){
+        SoDetail sd = new SoDetail();
+        sd.setSoId(inVo.getId());
+        sd.setSkuId(inVo.getSkuId());
+        sd.setSkuCode(sku.getSkuCode());
+        sd.setSkuName(sku.getSkuName());
+        sd.setSkuNum(inVo.getSkuNum());
+        sd.setUnitPrice(sku.getSellPrice());
+        return soDetailMapper.insert(sd);
+    }
+
+    /**
+     * 保存订单日志
+     * @return
+     */
+    private Integer saveSoLog(SoInVo inVo, int operateType){
+        int result = 0;
+        SoLog soLog = new SoLog();
+        soLog.setSoId(inVo.getId());
+        soLog.setUserId(inVo.getUserId());
+        soLog.setUserName(inVo.getUserName());
+        soLog.setOperateType(operateType);
+        try {
+            result = soLogMapper.insert(soLog);
+        } catch (Exception e) {
+            logger.error("保存订单操作日志失败，订单soId :"+ inVo.getId()+" 操作类型，operateType: "+operateType);
+        }
+        return result;
+    }
+
+    /**
+     * 根据订单信息生成代金券
+     * @param inVo
+     * @return
+     */
+    private int createCoupon(SoInVo inVo){
+        int res = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 3);     //有效时间为3个月
+        //2、支付成功生成抵用券
+        for (int i = 0; i < inVo.getSkuNum(); i++) {
+            //3、查询券信息
+            Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+            CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
+            SoOut soOut = this.get(inVo.getId());
+            Coupon coupon = new Coupon();
+            coupon.setSoId(inVo.getId());
+            coupon.setCouponCode(RandomStringUtil.getRandomCode(10, 0));
+            coupon.setSkuId(sku.getId());
+            coupon.setSkuCode(sku.getSkuCode());
+            coupon.setSkuName(sku.getSkuName());
+            coupon.setCouponAmount(couponSku.getAmount());
+            coupon.setType(Coupon.COUPON_TYPE_PLAT);
+            coupon.setUserId(soOut.getUserId());
+            coupon.setUserName(soOut.getUserName());
+            //上传二维码图片到腾讯COS服务器
+            String qrcodeUrl = uploadQRCodeToCos(coupon.getCouponCode());
+            coupon.setQrcodeUrl(qrcodeUrl);
+            coupon.setExpiryDate(cal.getTime());
+            couponMapper.insert(coupon);
+            res++;
+        }
+        return res;
+    }
+
+    /**
+     * 保存支付日志
+     * @param inVo
+     * @return
+     */
+    private int savePayLog(SoInVo inVo){
+        int res = 0;
+        PaidLog paidLog = new PaidLog();
+        paidLog.setSoId(inVo.getId());
+        paidLog.setPaidType(So.SO_PAY_TYPE_WX);
+        paidLog.setUserId(inVo.getUserId());
+        paidLog.setUserName(inVo.getUserName());
+        try {
+            res = paidLogMapper.insert(paidLog);
+        } catch (Exception e) {
+            logger.error("支付保存订单日志失败,soId : " + inVo.getId());
+        }
+        return res;
     }
 }

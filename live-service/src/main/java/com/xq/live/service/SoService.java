@@ -68,4 +68,17 @@ public interface SoService {
      */
     Integer cancel(SoInVo inVo);
 
+    /**
+     * 新用户首单免费
+     * @param inVo
+     * @return
+     */
+    Long freeOrder(SoInVo inVo);
+
+    /**
+     * 查询用户订单数量(已支付或者已核销)
+     * @param userId
+     * @return
+     */
+    Integer selectByUserIdTotal(Long userId);
 }

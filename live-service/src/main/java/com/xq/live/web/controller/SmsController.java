@@ -4,10 +4,12 @@ import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Constants;
+import com.xq.live.common.RandomStringUtil;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.SmsSend;
 import com.xq.live.service.SmsSendService;
 import com.xq.live.vo.in.SmsSendInVo;
+import com.xq.live.vo.out.SmsOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -66,6 +68,67 @@ public class SmsController {
     }
 
     /**
+     * 用户注册发送验证码
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/sendForRegister", method = RequestMethod.POST)
+    public BaseResp<SmsOut> sendForRegister(SmsSendInVo inVo) {
+        if(inVo==null||inVo.getShopMobile()==null||inVo.getUserId()==null||inVo.getUserName()==null){
+            return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
+        }
+
+        inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
+        SmsOut smsOut = smsSendService.redisVerify(inVo);
+        //判断缓存是否存在，并且在10分钟以内
+        if(smsOut!=null){
+           return new BaseResp<SmsOut>(ResultStatus.SUCCESS,smsOut);
+        }
+
+        try {
+            SmsSingleSender sender = new SmsSingleSender(Constants.SMS_APP_ID, Constants.SMS_APP_KEY);
+            ArrayList<String> params = new ArrayList<String>();
+            String randomCode = RandomStringUtil.getRandomCode(4, 0);
+            inVo.setCreateTime(new Date());
+            params.add(randomCode);
+            SmsSingleSenderResult ret = sender.sendWithParam(Constants.SMS_NATION_CODE, inVo.getShopMobile(), Constants.TEMP_ID_VERIFY_SUCCESS, params, "", "", "");
+            if (ret.result == 0) {//短信发送成功
+                inVo.setSendStatus(SmsSend.SMS_SEND_STATUS_SUCCESS);
+            } else {
+                inVo.setSendStatus(SmsSend.SMS_SEND_STATUS_FAIL);
+            }
+            inVo.setRemark(ret.errMsg);
+            inVo.setSmsContent(randomCode);
+            Long id = smsSendService.create(inVo);
+            SmsOut smsOutForNew = smsSendService.redisVerify(inVo);//再把数据缓存
+            return new BaseResp<SmsOut>(ResultStatus.SUCCESS, smsOutForNew);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BaseResp<SmsOut>(ResultStatus.FAIL);
+        }
+    }
+
+    /**
+     *判断验证码是否正确,并且更新user表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/isVerify",method = RequestMethod.GET)
+    public BaseResp<Integer> isVerify(SmsSendInVo inVo){
+        if(inVo==null||inVo.getShopMobile()==null||inVo.getSmsContent()==null||inVo.getUserId()==null||inVo.getUserName()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
+        Integer verify = smsSendService.isVerify(inVo);
+        if(verify==-1){
+            return new BaseResp<Integer>(ResultStatus.FAIL,verify);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
+
+
+    }
+
+    /**
      * 组装支付成功短信通知内容
      * @param inVo
      * @param params
@@ -81,4 +144,5 @@ public class SmsController {
         msgSb.append("￥").append(params.get(3)).append("元，您可以通过享7平台进行提现操作，谢谢。");
         return msgSb.toString();
     }
+
 }

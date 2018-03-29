@@ -30,7 +30,9 @@ public class Constants {
 
     public final static String SMS_NATION_CODE = "86";
 
-    public final static int TEMP_ID_PAID_SUCCESS = 88505;
+    public final static int TEMP_ID_PAID_SUCCESS = 88505;//支付通知模板
+
+    public final static int TEMP_ID_VERIFY_SUCCESS = 100937;//注册验证码通知模板
 
     /**
      * 全局域名常量

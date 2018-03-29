@@ -2,8 +2,11 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.vo.in.WeixinPhoneInvo;
 import com.xq.live.vo.in.WeixinSignInVo;
+import com.xq.live.web.utils.AESDecodeUtils;
 import com.xq.live.web.utils.SignUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,5 +45,32 @@ public class WeixinSignController {
         }
         return new BaseResp<String>(ResultStatus.FAIL,"token验证错误");
 
+    }
+
+    /**
+     *获取微信用户的手机号
+     * @param inVo
+     * @param result
+     * @return
+     */
+    @RequestMapping(value = "/phoneAES",method = RequestMethod.POST)
+    public BaseResp<String> phoneAES(@Valid WeixinPhoneInvo inVo,BindingResult result){
+        if(result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<String>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+
+        byte[] encrypData = Base64.decodeBase64(inVo.getEncrypData());
+        byte[] ivData = Base64.decodeBase64(inVo.getIvData());
+        byte[] sessionKey = Base64.decodeBase64(inVo.getSessionKey());
+
+        String decrypt = null;
+        try {
+             decrypt = AESDecodeUtils.decrypt(sessionKey, ivData, encrypData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new BaseResp<String>(ResultStatus.SUCCESS,decrypt);
     }
 }

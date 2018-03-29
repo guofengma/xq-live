@@ -22,6 +22,17 @@
     from sms_send
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByMobile" parameterType="com.xq.live.vo.in.SmsSendInVo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sms_send
+    where shop_mobile = #{shopMobile,jdbcType=VARCHAR}
+    <if test="smsType != null">
+      and sms_type = #{smsType,jdbcType=TINYINT}
+    </if>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from sms_send
     where id = #{id,jdbcType=BIGINT}

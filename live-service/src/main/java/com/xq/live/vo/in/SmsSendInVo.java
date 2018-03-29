@@ -46,6 +46,8 @@ public class SmsSendInVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    private Long userId;//注册用户的userId
+
     public Long getId() {
         return id;
     }
@@ -132,5 +134,14 @@ public class SmsSendInVo {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

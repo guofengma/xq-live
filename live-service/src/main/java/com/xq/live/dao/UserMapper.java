@@ -22,6 +22,7 @@ public interface UserMapper{
     @Cacheable(value = "1h",key = "#p0.toString()")     //缓存时间1小时，key为自动生成
     User selectByPrimaryKey(Long id);
 
+    @CacheEvict(key = "#p0.id.toString()")
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);

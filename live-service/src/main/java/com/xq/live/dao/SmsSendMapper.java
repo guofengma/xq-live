@@ -12,6 +12,8 @@ public interface SmsSendMapper {
 
     SmsSend selectByPrimaryKey(Long id);
 
+    SmsSend selectByMobile(SmsSendInVo inVo);
+
     int updateByPrimaryKeySelective(SmsSend record);
 
     int updateByPrimaryKey(SmsSend record);

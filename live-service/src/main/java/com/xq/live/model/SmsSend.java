@@ -9,13 +9,16 @@ public class SmsSend {
 
     public final static int SMS_SEND_STATUS_FAIL = 2;
 
+
+    public final static int SMS_TYPE_VERTIFY = 1;//注册验证码
+
     private Long id;
 
     private Integer smsType;
 
     private String smsContent;
 
-    private String mobile;
+    private String shopMobile;
 
     private Long shopId;
 
@@ -25,6 +28,7 @@ public class SmsSend {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
 
     public Long getId() {
         return id;
@@ -42,12 +46,12 @@ public class SmsSend {
         this.smsContent = smsContent == null ? null : smsContent.trim();
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getShopMobile() {
+        return shopMobile;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile == null ? null : mobile.trim();
+    public void setShopMobile(String shopMobile) {
+        this.shopMobile = shopMobile;
     }
 
     public Long getShopId() {
@@ -90,4 +94,5 @@ public class SmsSend {
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
     }
+
 }

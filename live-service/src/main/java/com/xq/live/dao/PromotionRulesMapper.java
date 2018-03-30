@@ -2,7 +2,10 @@ package com.xq.live.dao;
 
 import com.xq.live.model.PromotionRules;
 import com.xq.live.vo.in.ProRuInVo;
+import com.xq.live.vo.out.PromotionRulesOut;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PromotionRulesMapper {
@@ -15,6 +18,8 @@ public interface PromotionRulesMapper {
     PromotionRules selectByPrimaryKey(Long id);
 
     PromotionRules selectBySkuIdAndSkuCode(ProRuInVo inVo);
+
+    List<PromotionRulesOut> selectByShopId(Integer shopId);
 
     int updateByPrimaryKeySelective(PromotionRules record);
 

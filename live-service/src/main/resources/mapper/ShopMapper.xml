@@ -25,6 +25,9 @@
   <resultMap id="ShopOutResultMap" type="com.xq.live.vo.out.ShopOut" extends="BaseResultMap">
     <result column="distance" jdbcType="INTEGER" property="distance" />
     <result column="sku_name" jdbcType="VARCHAR" property="skuName" />    <!--特色菜名称-->
+    <collection property="ruleDescs" ofType="java.lang.String">
+      <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc"/>
+    </collection>
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -305,9 +308,10 @@
         <when test="locationX == null or locationY == null">0</when>
       </choose>
       AS distance,
-      (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name
-    FROM
-    shop s
+      (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name,
+      pr.rule_desc
+      FROM
+      shop s left join promotion_rules pr on s.id = pr.shop_id
     <where>
       <if test="searchKey !=null">
         s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
@@ -375,9 +379,10 @@
       <when test="locationX == null or locationY == null">0</when>
     </choose>
     AS distance,
-    (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name
+    (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name,
+    pr.rule_desc
     FROM
-    shop s
+    shop s left join promotion_rules pr on s.id = pr.shop_id
     where business_cate like '%川菜%' or business_cate LIKE '%湘菜%'
     order by
     <if test="browSort != null and browSort == 2 ">
@@ -405,7 +410,7 @@
 
   <select id="findShopOutById" resultMap="ShopOutResultMap">
     select
-    <include refid="Base_Column_List" />, 0 as distance, '' as sku_name
+    <include refid="Base_Column_List" />, 0 as distance, '' as sku_name,'' as rule_desc
     from shop
     where id = #{id,jdbcType=BIGINT}
   </select>

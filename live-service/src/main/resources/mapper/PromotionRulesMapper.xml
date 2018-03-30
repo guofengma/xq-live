@@ -13,6 +13,12 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="PromotionRulesMap" type="com.xq.live.vo.out.PromotionRulesOut" extends="BaseResultMap">
+    <result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
+    <result column="in_price" jdbcType="DECIMAL" property="inPrice" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, sku_id, sku_code, sku_name, rule_type, rule_desc, end_time, shop_id, create_time, 
     update_time
@@ -35,6 +41,24 @@
         AND sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
     </where>
+  </select>
+  <select id="selectByShopId" parameterType="java.lang.Integer" resultMap="PromotionRulesMap">
+    select
+    p.id,
+    p.sku_id,
+    p.sku_code,
+    p.sku_name,
+    p.rule_type,
+    p.rule_desc,
+    p.end_time,
+    p.shop_id,
+    p.create_time,
+    p.update_time,
+    s.sell_price,
+    s.in_price
+    from promotion_rules p
+    INNER JOIN sku s on p.sku_id = s.id
+    where p.shop_id =  #{shopId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from promotion_rules

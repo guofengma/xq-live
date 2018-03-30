@@ -60,6 +60,8 @@ public class ShopOut implements Comparable<ShopOut>{
 
     private String businessCate;//经营品类
 
+    private List<String> ruleDescs;//商家规则列
+
     public Long getId() {
         return id;
     }
@@ -245,5 +247,13 @@ public class ShopOut implements Comparable<ShopOut>{
 
     public void setBusinessCate(String businessCate) {
         this.businessCate = businessCate;
+    }
+
+    public List<String> getRuleDescs() {
+        return ruleDescs;
+    }
+
+    public void setRuleDescs(List<String> ruleDescs) {
+        this.ruleDescs = ruleDescs;
     }
 }

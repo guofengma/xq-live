@@ -85,13 +85,7 @@ public class SoServiceImpl implements SoService {
     public List<SoOut> findSoList(SoInVo inVo) {
         List<SoOut> list = soMapper.list(inVo);
         for (SoOut soOut : list) {
-            ProRuInVo proRuInVo = new ProRuInVo();
-            proRuInVo.setSkuId(soOut.getSkuId());
-            proRuInVo.setSkuCode(soOut.getSkuCode());
-            PromotionRules rules = promotionRulesMapper.selectBySkuIdAndSkuCode(proRuInVo);
-            if(rules!=null){
-                soOut.setRuleDesc(rules.getRuleDesc());
-            }
+           soOut.setRuleDesc(" ");
         }
         return list;
     }

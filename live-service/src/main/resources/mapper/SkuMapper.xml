@@ -67,16 +67,10 @@
       sku.opreator_id,
       sku.opreator_name,
       sku.sku_info,
-      pr.id rule_id,
-      pr.rule_type,
-      pr.rule_desc,
-      pr.end_time,
-      pr.shop_id,
-      pr.sku_id,
+      ' ' as rule_desc,
       cs.amount,
     (select count(1) from coupon where sku_id = sku.id) sell_num
     FROM sku sku
-    LEFT JOIN promotion_rules pr ON sku.id = pr.sku_id
     LEFT JOIN coupon_sku cs on sku.id = cs.sku_id
     <where>
       <if test="id != null">

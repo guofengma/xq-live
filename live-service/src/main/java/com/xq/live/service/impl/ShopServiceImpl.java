@@ -1,15 +1,13 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.AccessLogMapper;
-import com.xq.live.dao.ShopMapper;
-import com.xq.live.dao.ShopTopPicMapper;
-import com.xq.live.dao.UserMapper;
+import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.PromotionRulesOut;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.vo.out.ShopTopPicOut;
 import org.javatuples.Pair;
@@ -40,6 +38,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopTopPicMapper shopTopPicMapper;
+
+    @Autowired
+    private PromotionRulesMapper promotionRulesMapper;
 
     @Override
     public Shop getShopById(Long id) {
@@ -111,6 +112,17 @@ public class ShopServiceImpl implements ShopService {
         if (listTotal > 0) {
             List<ShopOut> list = shopMapper.list(inVo);
             /**
+             * 将用户减免规则加入
+             */
+            for (ShopOut shopOut : list) {
+                List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(shopOut.getId().intValue());
+                List<String> stringList = new ArrayList<String>();
+                for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
+                    stringList.add(promotionRulesOut.getRuleDesc());
+                }
+                shopOut.setRuleDescs(stringList);
+            }
+            /**
              * 根据综合排序 0 口味 1服务 2 人气
              *//*
             if (inVo != null && inVo.getBrowSort()!= null &&  inVo.getBrowSort() == Shop.BROW_SORT_POP) {
@@ -126,6 +138,14 @@ public class ShopServiceImpl implements ShopService {
     public Pager<ShopOut> listForChuangXiang(ShopInVo inVo) {
         Pager<ShopOut> result = new Pager<ShopOut>();
         List<ShopOut> list = shopMapper.listForChuanXiang(inVo);
+        for (ShopOut shopOut : list) {
+            List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(shopOut.getId().intValue());
+            List<String> stringList = new ArrayList<String>();
+            for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
+                stringList.add(promotionRulesOut.getRuleDesc());
+            }
+            shopOut.setRuleDescs(stringList);
+        }
         result.setTotal(list.size());
         result.setList(list);
         result.setPage(inVo.getPage());

@@ -82,11 +82,10 @@
         select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
         s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
         c.id as coupon_id,c.coupon_code,c.coupon_amount,c.type,c.qrcode_url,c.is_used,c.is_deleted,c.expiry_date,
-        c.used_time,pr.id rule_id,pr.rule_type,pr.rule_desc,pr.end_time,pr.shop_id coupon_shop_id,pr.sku_id coupon_sku_id
+        c.used_time,' ' as rule_desc
         from so s
         inner join so_detail sd on s.id = sd.so_id
         INNER JOIN coupon c on s.id = c.so_id
-        INNER JOIN promotion_rules pr ON sd.sku_id = pr.sku_id
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 

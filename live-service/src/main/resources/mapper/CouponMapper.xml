@@ -68,15 +68,9 @@
       c.shop_id,
       c.shop_cashier_id,
       c.update_time,
-      pr.id rule_id,
-      pr.rule_type,
-      pr.rule_desc,
-      pr.end_time,
-      pr.shop_id coupon_shop_id,
-      pr.sku_id coupon_sku_id
+      ' ' as rule_desc
     FROM
       coupon c
-    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
     where c.coupon_code = #{couponCode,jdbcType=VARCHAR}
   </select>
 
@@ -101,15 +95,9 @@
       c.shop_id,
       c.shop_cashier_id,
       c.update_time,
-      pr.id rule_id,
-      pr.rule_type,
-      pr.rule_desc,
-      pr.end_time,
-      pr.shop_id coupon_shop_id,
-      pr.sku_id coupon_sku_id
+      ' ' as rule_desc
     FROM
     coupon c
-    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
     where c.id = #{id,jdbcType=BIGINT}
   </select>
 
@@ -135,15 +123,9 @@
       c.shop_id,
       c.shop_cashier_id,
       c.update_time,
-      pr.id rule_id,
-      pr.rule_type,
-      pr.rule_desc,
-      pr.end_time,
-      pr.shop_id coupon_shop_id,
-      pr.sku_id coupon_sku_id
+      ' ' as rule_desc
     FROM
       coupon c
-    LEFT JOIN promotion_rules pr ON c.sku_id = pr.sku_id
     <where>
       <if test="id != null">
         c.id = #{id,jdbcType=BIGINT}

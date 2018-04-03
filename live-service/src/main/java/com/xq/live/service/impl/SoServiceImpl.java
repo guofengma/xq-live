@@ -88,7 +88,8 @@ public class SoServiceImpl implements SoService {
             ProRuInVo proRuInVo = new ProRuInVo();
             proRuInVo.setSkuId(soOut.getSkuId());
             proRuInVo.setSkuCode(soOut.getSkuCode());
-            PromotionRules rules = promotionRulesMapper.selectBySkuIdAndSkuCode(proRuInVo);
+            PromotionRules rules = new PromotionRules();
+            rules.setRuleDesc("");
             if(rules!=null){
                 soOut.setRuleDesc(rules.getRuleDesc());
             }

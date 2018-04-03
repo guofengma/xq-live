@@ -309,9 +309,9 @@
       </choose>
       AS distance,
       (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name,
-      pr.rule_desc
+      ' ' as rule_desc
       FROM
-      shop s left join promotion_rules pr on s.id = pr.shop_id
+      shop s
     <where>
       <if test="searchKey !=null">
         s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
@@ -380,10 +380,10 @@
     </choose>
     AS distance,
     (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name,
-    pr.rule_desc
+    ' ' as rule_desc
     FROM
-    shop s left join promotion_rules pr on s.id = pr.shop_id
-    where business_cate like '%川菜%' or business_cate LIKE '%湘菜%'
+    shop s
+    where business_cate like '%川菜%' or business_cate LIKE '%湘菜%' or business_cate LIKE '%川湘菜%'
     order by
     <if test="browSort != null and browSort == 2 ">
       pop_num desc,

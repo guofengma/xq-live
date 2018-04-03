@@ -68,7 +68,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         Map<String, Long> expires = new HashMap<String, Long>();
         expires.put("12h",3600 * 12L);
         expires.put("1h",3600 * 1L);
-        expires.put("10m",60 * 5L);
+        expires.put("5m",60 * 5L);
         cacheManager.setExpires(expires);
         return cacheManager;
     }

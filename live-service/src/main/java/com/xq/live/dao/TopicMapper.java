@@ -4,11 +4,15 @@ import com.xq.live.model.Favorites;
 import com.xq.live.model.Topic;
 import com.xq.live.vo.in.TopicInVo;
 import com.xq.live.vo.out.TopicForZanOut;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@CacheConfig(cacheNames = "topic")
 public interface TopicMapper{
 
     int deleteByPrimaryKey(Long id);

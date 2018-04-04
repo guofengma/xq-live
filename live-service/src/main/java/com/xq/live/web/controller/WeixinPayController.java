@@ -2,6 +2,7 @@ package com.xq.live.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
+import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
@@ -53,7 +54,7 @@ public class WeixinPayController {
 
     public WeixinPayController() throws Exception {
         config = PaymentConfig.getInstance();
-        wxpay = new WXPay(config);
+        wxpay = new WXPay(config, WXPayConstants.SignType.MD5);
     }
 
     /**
@@ -69,7 +70,7 @@ public class WeixinPayController {
             return new BaseResp<Map<String, String>>(ResultStatus.error_weixin_user_code_empty);
         }
         //获取openId
-        String param = "?grant_type=" + PaymentConfig.GRANT_TYPE + "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.API_KEY + "&js_code=" + code;
+        String param = "?grant_type=" + PaymentConfig.GRANT_TYPE + "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.APP_SECRET + "&js_code=" + code;
         System.out.println(PaymentConfig.GET_OPEN_ID_URL + param);
         //创建请求对象
         String httpRet = PayUtils.httpRequest(PaymentConfig.GET_OPEN_ID_URL, "GET", param);
@@ -217,8 +218,8 @@ public class WeixinPayController {
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);
             System.out.println("统一下单接口返回: " + rMap);
-            String return_code = (String) rMap.get("return_code");//返回状态码
-            String result_code = (String) rMap.get("result_code");//
+            String return_code = rMap.get("return_code");//返回状态码
+            String result_code = rMap.get("result_code");//
             String nonceStr = WXPayUtil.generateNonceStr();
             response.put("nonceStr", nonceStr);
             Long timeStamp = System.currentTimeMillis() / 1000;

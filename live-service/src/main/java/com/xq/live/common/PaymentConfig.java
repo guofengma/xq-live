@@ -19,7 +19,7 @@ public class PaymentConfig extends WXPayConfig {
     //微信支付的商户id
     public static final String MCH_ID = "1499658152";
     //微信支付的商户密钥
-    public static final String API_KEY = "f8fa91ff595a529f2b208b5cd859e693";
+    public static final String API_KEY = "26fe9bdfa1f9f9607f8ba337a97a6111";
     //支付成功后的服务器回调url
     public static final String WX_NOTIFY_URL = "https://hbxq001.cn/wxpay/wxNotify";
 

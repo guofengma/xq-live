@@ -49,6 +49,7 @@
     <include refid="Base_Column_List" />
     from sku
     where id = #{id,jdbcType=BIGINT}
+    and is_deleted = 0
   </select>
 
   <!--分页查询 start-->
@@ -73,8 +74,9 @@
     FROM sku sku
     LEFT JOIN coupon_sku cs on sku.id = cs.sku_id
     <where>
+      1=1
       <if test="id != null">
-        sku.id = #{id,jdbcType=BIGINT}
+        and sku.id = #{id,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
         and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
@@ -85,7 +87,9 @@
       <if test="skuType != null">
         and sku.sku_type = #{skuType,jdbcType=INTEGER}
       </if>
+      and sku.is_deleted = 0
     </where>
+
     order by sku.id desc
     limit #{start}, #{rows}
   </select>
@@ -118,14 +122,16 @@
     LEFT JOIN promotion_rules pr ON sku.id = pr.sku_id
     LEFT JOIN coupon_sku cs on sku.id = cs.sku_id
     where sku.id = #{id,jdbcType=BIGINT}
+    and sku.is_deleted = 0
   </select>
 
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
     from sku
     <where>
+      1=1
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT}
+       and id = #{id,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
         and sku_code = #{skuCode,jdbcType=VARCHAR}
@@ -136,6 +142,7 @@
       <if test="skuType != null">
         and sku_type = #{skuType,jdbcType=INTEGER}
       </if>
+      and sku.is_deleted = 0
     </where>
   </select>
 
@@ -165,8 +172,9 @@
     from sku sku
       inner join sku_shop ss on sku.id = ss.sku_id
     <where>
+      1=1
       <if test="id != null">
-        sku.id = #{id,jdbcType=BIGINT}
+       and sku.id = #{id,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
         and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
@@ -180,6 +188,7 @@
       <if test="shopId != null">
         and ss.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      and sku.is_deleted = 0
     </where>
     order by id desc
     limit #{start}, #{rows}
@@ -190,6 +199,7 @@
     from sku sku
     inner join sku_shop ss on sku.id = ss.sku_id
     <where>
+      1=1
       <if test="id != null">
         sku.id = #{id,jdbcType=BIGINT}
       </if>
@@ -205,6 +215,7 @@
       <if test="shopId != null">
         and ss.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      and sku.is_deleted = 0
     </where>
   </select>
   <!--分页查询 end-->

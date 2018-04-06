@@ -34,6 +34,15 @@ public class PaymentConfig implements WXPayConfig {
 
     public static final String GET_OPEN_ID_URL = "https://api.weixin.qq.com/sns/jscode2session";
 
+    //微信获取access_token地址
+    public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
+
+    //微信发送模板消息地址
+    public static final String SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send";
+
+    //微信获取帐号下已存在的模板列表
+    public static final String TEMPLATE_LIST_URL = "https://api.weixin.qq.com/cgi-bin/wxopen/template/list";
+
     private byte[] certData;
 
     private static PaymentConfig INSTANCE;

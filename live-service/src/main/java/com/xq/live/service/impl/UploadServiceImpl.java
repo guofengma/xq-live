@@ -46,6 +46,8 @@ public class UploadServiceImpl implements UploadService {
 
     private final String bucketName = Constants.BUCKET_NAME;
 
+    private final String bucketMp4Name = Constants.BUCKET_MP4_NAME;
+
     @Override
     public Attachment uploadPicToCos(String localPath,  String name){
         Attachment attachment = new Attachment();
@@ -70,6 +72,21 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
+    public Attachment uploadPicToCosForMp4(String localPath,  String name){
+        Attachment attachment = new Attachment();
+        String sourceImgRet = this.uploadFileToCosForMp4(localPath, name);
+        if(StringUtils.isNotEmpty(sourceImgRet)){
+            attachment.setPicUrl(sourceImgRet);
+            this.insertAttachment(attachment);
+        }
+        /**
+         * 删除服务器上的临时图片文件
+         */
+        this.deleteTempImage(new Triplet<String, String, String>(localPath, localPath, localPath));
+        return attachment;
+    }
+
+    @Override
     public String uploadFileToCos(String localPath,  String userName) {
         String cosPath = null;
         // 获取文件名
@@ -86,6 +103,27 @@ public class UploadServiceImpl implements UploadService {
             logger.error("上传图片到cos异常CosServiceException ：" + e.getErrorMessage());
         } catch (CosClientException e1) {
             logger.error("上传图片到cos异常CosClientException ：" + e1.getStackTrace());
+        }
+        return null;
+    }
+
+    @Override
+    public String uploadFileToCosForMp4(String localPath,  String userName) {
+        String cosPath = null;
+        // 获取文件名
+        File file = new File(localPath);
+        String key = "/" + userName + "_" + file.getName();
+        try {
+            PutObjectResult putObjectResult = cosClient.putObject(bucketMp4Name, key, file);
+            String etag = putObjectResult.getETag();
+            if (StringUtils.isNotEmpty(etag)) {
+                cosPath = Constants.COS_MP4_BASE_PATH + key;
+                return cosPath;
+            }
+        } catch (CosServiceException e) {
+            logger.error("上传视频到cos异常CosServiceException ：" + e.getErrorMessage());
+        } catch (CosClientException e1) {
+            logger.error("上传视频到cos异常CosClientException ：" + e1.getStackTrace());
         }
         return null;
     }

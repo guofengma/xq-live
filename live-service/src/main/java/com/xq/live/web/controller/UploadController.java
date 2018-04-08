@@ -66,6 +66,32 @@ public class UploadController {
         }
     }
 
+    /**
+     * 单个视频上传
+     *
+     * @param uploadFile
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadMp4")
+    public BaseResp<Attachment> uploadMp4(@RequestParam("file") MultipartFile uploadFile, User user, HttpServletRequest request) {
+        if (user == null || StringUtils.isEmpty(user.getUserName())) {
+            return new BaseResp<Attachment>(ResultStatus.error_para_user_empty);
+        }
+
+        if (uploadFile.isEmpty()) {
+            return new BaseResp<Attachment>(ResultStatus.error_file_upload_empty);
+        }
+
+        try {
+            Attachment result = this.uploadToCosForMp4(uploadFile, this.getUploadPath(request), user.getUserName());
+            return new BaseResp<Attachment>(ResultStatus.SUCCESS, result);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new BaseResp<Attachment>(ResultStatus.error_file_upload_error);
+        }
+    }
+
 
     /**
      * 上传多个图片
@@ -148,6 +174,35 @@ public class UploadController {
         logger.error("图片上传到服务器成功：" + localPath);
 
         Attachment result = uploadService.uploadPicToCos(localPath, userName);
+        if (result != null && result.getId() != null) {
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * 上传文件到临时目录，并上传到云COS(针对视频)
+     *
+     * @param file
+     * @param uploadPath
+     * @param userName
+     * @return
+     * @throws IOException
+     */
+    private Attachment uploadToCosForMp4(MultipartFile file, String uploadPath, String userName) throws IOException {
+        if (file.isEmpty()) {
+            return null;
+        }
+        String localPath = uploadPath + file.getOriginalFilename();
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(localPath);
+        if (!path.toFile().getParentFile().exists()) {
+            path.toFile().getParentFile().mkdirs();
+        }
+        Files.write(path, bytes);
+        logger.error("视频上传到服务器成功：" + localPath);
+
+        Attachment result = uploadService.uploadPicToCosForMp4(localPath, userName);
         if (result != null && result.getId() != null) {
             return result;
         }

@@ -21,6 +21,10 @@ public class Constants {
 
     public final static String COS_IMAGE_BASE_PATH = "https://xq-1256079679.file.myqcloud.com";
 
+    public final static String BUCKET_MP4_NAME = "xqmp4-1256079679";
+
+    public final static String COS_MP4_BASE_PATH = "https://xqmp4-1256079679.file.myqcloud.com";
+
     /**
      * 腾讯短信服务常量
      */

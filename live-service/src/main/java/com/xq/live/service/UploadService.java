@@ -20,6 +20,14 @@ public interface UploadService {
     public String uploadFileToCos(String localPath, String userName);
 
     /**
+     * 上传文件到COS服务器，返回视频url
+     * @param localPath
+     * @param userName
+     * @return
+     */
+    public String uploadFileToCosForMp4(String localPath, String userName);
+
+    /**
      * 删除服务器图片
      * @param triplet
      * @return
@@ -41,4 +49,12 @@ public interface UploadService {
      * @return
      */
     public Attachment uploadPicToCos(String localPath,  String name);
+
+    /**
+     * 上传文件到COS服务器，返回附件表对象(针对视频无需压缩)
+     * @param localPath
+     * @param name
+     * @return
+     */
+    public Attachment uploadPicToCosForMp4(String localPath,  String name);
 }

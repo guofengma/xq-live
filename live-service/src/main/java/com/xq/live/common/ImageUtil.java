@@ -43,6 +43,9 @@ public class ImageUtil {
     /** 为了减少图片空间，所有图片统一转换为JPG格式 */
     private static final String IMG_FORMAT = "jpg";
 
+    /** 视频格式上传 */
+    private static final String MP4_FORAMT = "mp4";
+
     /**
      * 尺寸不变压缩图片
      *

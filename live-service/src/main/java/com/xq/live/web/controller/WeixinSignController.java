@@ -9,6 +9,7 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.vo.in.WeixinPhoneInvo;
 import com.xq.live.vo.in.WeixinSendInvo;
 import com.xq.live.vo.in.WeixinSignInVo;
+import com.xq.live.vo.out.AccessTokenOut;
 import com.xq.live.web.utils.AESDecodeUtils;
 import com.xq.live.web.utils.PayUtils;
 import com.xq.live.web.utils.SignUtil;
@@ -95,11 +96,11 @@ public class WeixinSignController {
      * @throws Exception
      */
     @RequestMapping(value = "/getAccessToken", method = RequestMethod.GET)
-    public BaseResp<String> getAccessToken() throws Exception{
+    public BaseResp<AccessTokenOut> getAccessToken() throws Exception{
         String key = "access_token" + PaymentConfig.APPID;
-        String accessToken = redisCache.get(key, String.class);
-        if(accessToken!=null){
-           return new BaseResp<String>(ResultStatus.SUCCESS,accessToken);
+        AccessTokenOut accessTokenOut = redisCache.get(key, AccessTokenOut.class);
+        if(accessTokenOut!=null){
+           return new BaseResp<AccessTokenOut>(ResultStatus.SUCCESS,accessTokenOut);
         }
         //获取access_token
         String param =  "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.APP_SECRET ;
@@ -107,17 +108,17 @@ public class WeixinSignController {
         //创建请求对象
         String httpRet = PayUtils.httpRequest(PaymentConfig.ACCESS_TOKEN_URL, "GET", param);
         JSONObject jsonObject = JSONObject.parseObject(httpRet);
-        StringBuilder access = new StringBuilder();
+        accessTokenOut = new AccessTokenOut();
         if (jsonObject != null) {
             Integer errcode = jsonObject.getInteger("errcode");
             if (errcode != null) {
                 //返回异常信息
-                return new BaseResp<String>(errcode, jsonObject.getString("errmsg"), null);
+                return new BaseResp<AccessTokenOut>(errcode, jsonObject.getString("errmsg"), null);
             }
-            access.append(jsonObject.getString("access_token"));
-            redisCache.set(key, access.toString(), 2l, TimeUnit.HOURS);
+            accessTokenOut.setAccessToken(jsonObject.getString("access_token"));
+            redisCache.set(key, accessTokenOut, 2l, TimeUnit.HOURS);
         }
-        return new BaseResp<String>(ResultStatus.SUCCESS, access.toString());
+        return new BaseResp<AccessTokenOut>(ResultStatus.SUCCESS, accessTokenOut);
     }
 
     /**

@@ -101,6 +101,10 @@ public class UserServiceImpl implements UserService {
         //1、更新用户表登录ip，登录次数等
         user.setUpdateTime(now);
         user.setLastLoginTime(now);
+        if(user==null||user.getMobile()==null){
+            return null;
+        }
+        user.setUserName(user.getMobile());
         return userMapper.updateByOpenId(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.common.RedisCache;
 import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Attachment;
@@ -45,6 +46,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private AccessLogMapper accessLogMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
 
     @Override
@@ -130,6 +134,20 @@ public class TopicServiceImpl implements TopicService {
             List<TopicForZanOut> list = topicMapper.list(inVo);
             /*List<TopicOut> listForOut = new ArrayList<TopicOut>();*/
             for(TopicForZanOut t : list){
+                /**
+                 * 及时读取浏览量和转发量
+                 */
+                String key = "topicHits_" + t.getId().toString();
+                Integer hits = redisCache.get(key, Integer.class);
+                String keyForTrans = "topicTrans_" + t.getId().toString();
+                Integer trans = redisCache.get(keyForTrans, Integer.class);
+
+                if (hits != null) {
+                    t.setHitNum(hits);
+                }
+                if (trans != null) {
+                    t.setTransNum(trans);
+                }
                 t = getPicUrls(t);
                 /**
                  * 通过用户id查询用户详情
@@ -183,6 +201,20 @@ public class TopicServiceImpl implements TopicService {
                 topicOut.setZan(zan);
                 listForOut.add(topicOut);*/
             for(TopicForZanOut t : list){
+                /**
+                 * 及时读取浏览量和转发量
+                 */
+                String key = "topicHits_" + t.getId().toString();
+                Integer hits = redisCache.get(key, Integer.class);
+                String keyForTrans = "topicTrans_" + t.getId().toString();
+                Integer trans = redisCache.get(keyForTrans, Integer.class);
+
+                if (hits != null) {
+                    t.setHitNum(hits);
+                }
+                if (trans != null) {
+                    t.setTransNum(trans);
+                }
                 t = getPicUrls(t);
             }
             pager.setList(list);

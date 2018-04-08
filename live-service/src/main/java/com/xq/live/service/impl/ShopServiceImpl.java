@@ -1,6 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.common.RedisCache;
 import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
@@ -41,6 +42,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private PromotionRulesMapper promotionRulesMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public Shop getShopById(Long id) {
@@ -115,6 +119,14 @@ public class ShopServiceImpl implements ShopService {
              * 将用户减免规则加入
              */
             for (ShopOut shopOut : list) {
+                /**
+                 * 及时读取人气数目
+                 */
+                String key = "shopPops_" + shopOut.getId().toString();
+                Integer pops = redisCache.get(key, Integer.class);
+                if(pops!=null){
+                    shopOut.setPopNum(pops);
+                }
                 List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(shopOut.getId().intValue());
                 List<String> stringList = new ArrayList<String>();
                 for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
@@ -139,6 +151,14 @@ public class ShopServiceImpl implements ShopService {
         Pager<ShopOut> result = new Pager<ShopOut>();
         List<ShopOut> list = shopMapper.listForChuanXiang(inVo);
         for (ShopOut shopOut : list) {
+            /**
+             * 及时读取人气数目
+             */
+            String key = "shopPops_" + shopOut.getId().toString();
+            Integer pops = redisCache.get(key, Integer.class);
+            if(pops!=null){
+                shopOut.setPopNum(pops);
+            }
             List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(shopOut.getId().intValue());
             List<String> stringList = new ArrayList<String>();
             for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {

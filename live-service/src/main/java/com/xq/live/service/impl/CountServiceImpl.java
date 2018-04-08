@@ -64,7 +64,7 @@ public class CountServiceImpl implements CountService {
         }
         trans++;
         redisCache.set(key, trans, 1l, TimeUnit.DAYS);
-        /*Long time = System.currentTimeMillis();
+        Long time = System.currentTimeMillis();
         if (time > (viewArticleTime + 300000)) {    //5分钟更新一次数据到数据库,viewArticleTime:写数据库的周期
             viewArticleTime = time;
             Topic topic = new Topic();
@@ -72,12 +72,12 @@ public class CountServiceImpl implements CountService {
             topic.setTransNum(trans);
             topicMapper.updateByPrimaryKeySelective(topic);
             redisCache.del(key);
-        }*/
-        Topic topic = new Topic();
+        }
+        /*Topic topic = new Topic();
         topic.setId(topicId);
         topic.setTransNum(trans);
         topicMapper.updateByPrimaryKeySelective(topic);
-        redisCache.del(key);
+        redisCache.del(key);*/
         return trans;
     }
 

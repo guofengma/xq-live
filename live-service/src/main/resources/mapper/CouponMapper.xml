@@ -127,8 +127,9 @@
     FROM
       coupon c
     <where>
+      1=1
       <if test="id != null">
-        c.id = #{id,jdbcType=BIGINT}
+        and c.id = #{id,jdbcType=BIGINT}
       </if>
       <if test="couponCode != null">
         and c.coupon_code = #{couponCode,jdbcType=VARCHAR}
@@ -151,6 +152,7 @@
       <if test="isUsed != null and isUsed == 1"><!--查询已使用和已过期的-->
         <![CDATA[ and (c.is_used = 1 or (c.is_used = 0 and c.expiry_date < now())) ]]>
       </if>
+       and c.is_deleted = 0
     </where>
     order by c.id desc
     limit #{start}, #{rows}
@@ -160,8 +162,9 @@
     select count(1)
     from coupon
     <where>
+      1=1
       <if test="id != null">
-        id = #{id,jdbcType=BIGINT}
+       and id = #{id,jdbcType=BIGINT}
       </if>
       <if test="couponCode != null">
         and coupon_code = #{couponCode,jdbcType=VARCHAR}
@@ -184,6 +187,7 @@
       <if test="isUsed != null and isUsed == 1"><!--查询已使用和已过期的-->
         <![CDATA[ and (is_used = 1 or (is_used = 0 and expiry_date < now())) ]]>
       </if>
+      and is_deleted = 0
     </where>
   </select>
   <!-- 分页查询 end-->

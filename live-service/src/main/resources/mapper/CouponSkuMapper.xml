@@ -33,8 +33,9 @@
         <include refid="Base_Column_List"/>
         from coupon_sku
         <where>
+            1=1
             <if test="id != null">
-                id = #{id}
+               and id = #{id}
             </if>
             <if test="skuCode != null">
                 and sku_code = #{skuCode}
@@ -45,6 +46,7 @@
             <if test="type != null">
                 and type = #{type}
             </if>
+            and is_deleted = 0
         </where>
         order by id desc
         limit #{start}, #{rows}

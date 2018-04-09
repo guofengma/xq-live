@@ -83,7 +83,7 @@ public class TopicController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/delete/{id}",  method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}",  method = RequestMethod.GET)
     public BaseResp<Integer>  delete(@PathVariable(value="id") Long id){
         int res = topicService.delete(id);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,res);

@@ -40,7 +40,7 @@ public interface TopicService {
     public int update(Topic zhibo);
 
     /**
-     * 删除一条记录
+     * 逻辑删除一条记录
      * @param id
      * @return
      */

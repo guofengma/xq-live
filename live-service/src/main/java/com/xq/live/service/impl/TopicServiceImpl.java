@@ -122,7 +122,15 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public int delete(Long id) {
-        return topicMapper.deleteByPrimaryKey(id);
+        Topic topic = new Topic();
+        /*Topic topic = topicMapper.selectByPrimaryKey(id);
+        if(topic==null){
+            return 0;
+        }*/
+        topic.setId(id);
+        topic.setIsDeleted(1);//1是删除状态
+        int i = topicMapper.updateByPrimaryKeySelective(topic);
+        return i;
     }
 
     @Override

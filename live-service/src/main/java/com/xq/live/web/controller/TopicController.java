@@ -79,14 +79,15 @@ public class TopicController {
     }
 
     /**
-     * 删除一条商家记录
+     * 逻辑删除一条商家记录
      * @param id
      * @return
      */
-/*    @RequestMapping(value = "/delete/{id}",  method = RequestMethod.DELETE)
-    public int  delete(@PathVariable(value="id") Long id){
-        return 0;
-    }*/
+    @RequestMapping(value = "/delete/{id}",  method = RequestMethod.DELETE)
+    public BaseResp<Integer>  delete(@PathVariable(value="id") Long id){
+        int res = topicService.delete(id);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,res);
+    }
 
     /**
      * 更新

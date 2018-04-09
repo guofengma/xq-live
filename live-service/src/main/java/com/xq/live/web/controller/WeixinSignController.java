@@ -11,6 +11,7 @@ import com.xq.live.vo.in.WeixinSendInvo;
 import com.xq.live.vo.in.WeixinSignInVo;
 import com.xq.live.vo.out.AccessTokenOut;
 import com.xq.live.web.utils.AESDecodeUtils;
+import com.xq.live.web.utils.HttpRequestUtil;
 import com.xq.live.web.utils.PayUtils;
 import com.xq.live.web.utils.SignUtil;
 import org.apache.commons.codec.binary.Base64;
@@ -136,7 +137,7 @@ public class WeixinSignController {
 
         //拼接请求
         StringBuilder param = new StringBuilder();
-        param.append("?access_token=" + invo.getAccessToken() + "&touser=" + invo.getTouser() + "&template_id=" + invo.getTemplateId() + "&form_id=" + invo.getFormId() + "&data=" + invo.getData());
+        param.append("access_token=" + invo.getAccessToken() + "&touser=" + invo.getTouser() + "&template_id=" + invo.getTemplateId() + "&form_id=" + invo.getFormId() + "&data=" + invo.getData());
         if(invo.getPage()!=null){
             param.append("&page=" + invo.getPage());
         }
@@ -146,7 +147,6 @@ public class WeixinSignController {
         if(invo.getEmphasisKeyword()!=null){
             param.append("&emphasis_keyword=" + invo.getEmphasisKeyword());
         }
-        System.out.println(PaymentConfig.SEND_URL + param);
         //创建请求对象
         String httpRet = PayUtils.httpRequest(PaymentConfig.SEND_URL, "POST", param.toString());
         JSONObject jsonObject = JSONObject.parseObject(httpRet);
@@ -154,7 +154,7 @@ public class WeixinSignController {
         Map<String, String> res = new HashMap<String, String>();
         if (jsonObject != null) {
             Integer errcode = jsonObject.getInteger("errcode");
-            if (errcode != null||errcode !=0) {
+            if (errcode != null&&errcode !=0) {
                 //返回异常信息
                 return new BaseResp<Map<String,String>>(errcode, jsonObject.getString("errmsg"), null);
             }
@@ -175,16 +175,20 @@ public class WeixinSignController {
             return new BaseResp<Map<String, Object>>(ResultStatus.error_param_empty);
         }
 
+        /*String url = PaymentConfig.TEMPLATE_LIST_URL;
+        String para = "access_token=" + invo.getAccessToken() + "&offset=" + invo.getOffset() + "&count=" + invo.getCount();
+
+        String sr= HttpRequestUtil.sendPost(url, para, false);*/
+
         //拼接请求
-        String param ="?access_token=" + invo.getAccessToken() + "&offset=" + invo.getOffset() + "&count=" + invo.getCount();
-        System.out.println(PaymentConfig.TEMPLATE_LIST_URL + param);
+        String param ="access_token=" + invo.getAccessToken() + "&offset=" + invo.getOffset() + "&count=" + invo.getCount();
         //创建请求对象
         String httpRet = PayUtils.httpRequest(PaymentConfig.TEMPLATE_LIST_URL, "POST", param);
         JSONObject jsonObject = JSONObject.parseObject(httpRet);
         Map<String, Object> res = new HashMap<String, Object>();
         if (jsonObject != null) {
             Integer errcode = jsonObject.getInteger("errcode");
-            if (errcode != null||errcode !=0) {
+            if (errcode != null&&errcode !=0) {
                 //返回异常信息
                 return new BaseResp<Map<String,Object>>(errcode, jsonObject.getString("errmsg"), null);
             }

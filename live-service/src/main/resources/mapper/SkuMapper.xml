@@ -90,7 +90,7 @@
       and sku.is_deleted = 0
     </where>
 
-    order by sku.id desc
+    order by sku.sell_price ASC
     limit #{start}, #{rows}
   </select>
 

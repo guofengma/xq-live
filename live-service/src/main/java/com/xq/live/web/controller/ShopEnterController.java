@@ -47,7 +47,7 @@ public class ShopEnterController {
 
         ShopEnterOut shopEnterOut = shopEnterService.selectByUserIdAndShopName(shopEnter);
         if(shopEnterOut!=null){
-            return new BaseResp<Long>(ResultStatus.FAIL,shopEnter.getUserId());
+            return new BaseResp<Long>(ResultStatus.error_user_shop_exist,shopEnter.getUserId());
         }
         Long skuId = shopEnterService.add(shopEnter);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);

@@ -7,6 +7,7 @@ import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
+import com.xq.live.web.utils.SignUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -102,6 +104,10 @@ public class UserServiceImpl implements UserService {
         user.setUpdateTime(now);
         user.setLastLoginTime(now);
         if(user!=null&&user.getMobile()!=null){
+            if(user.getNickName()==null){
+                Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getUserName(), user.getMobile());
+                user.setMobile(rmp.get("mobile"));
+            }
             user.setUserName(user.getMobile());
         }
         return userMapper.updateByOpenId(user);

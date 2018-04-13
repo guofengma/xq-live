@@ -5,6 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * tocken验证工具类
@@ -128,4 +130,46 @@ public class SignUtil {
         return s;
 
     }
+
+    /**
+     * 将名字和手机号码中间用*隐藏
+     * @param name
+     * @param mobile
+     * @return
+     */
+    public static Map<String,String> encryNameAndMobile(String name,String mobile){
+        String realname1 =null;
+        String mobile1 = null;
+        char[] r;
+        char[] m;
+        if(name != null && !"".equals(name) ){
+            r =  name.toCharArray();
+            if(r.length ==1){
+                realname1 =  name;
+            }
+            if(r.length == 2){
+                realname1 =  name.replaceFirst(name.substring(1),"*");
+            }
+            if (r.length > 2) {
+                realname1 =  name.replaceFirst(name.substring(1,r.length-1) ,"*");
+            }
+        }
+
+        if(mobile != null && !"".equals(mobile) ){
+            m =  mobile.toCharArray();
+            for(int i=0; i<m.length;i++){
+                if(i>2 && i<8){
+                    m[i] = '*';
+                }
+            }
+            mobile1 =  String.valueOf(m);
+        }
+
+        Map<String,String> res = new HashMap<String,String>();
+        res.put("name",realname1);
+        res.put("mobile",mobile1);
+        return res;
+    }
+
+
 }

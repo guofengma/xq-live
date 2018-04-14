@@ -3,6 +3,7 @@ package com.xq.live.web.controllerForApp;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
 import com.xq.live.service.SoService;
 import com.xq.live.vo.in.SoInVo;
@@ -33,6 +34,9 @@ public class SoForAppController {
 
     @Autowired
     private SoService soService;
+
+    @Autowired
+    private FreeSkuConfig freeSkuConfig;
 
     /**
      * 查一条记录
@@ -116,6 +120,8 @@ public class SoForAppController {
         if(soOutNum > 0){
             return new BaseResp<Long>(ResultStatus.error_user_not_new);
         }
+        inVo.setSkuId(freeSkuConfig.getSkuId());
+        inVo.setSkuNum(freeSkuConfig.getSkuNum());
 
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);

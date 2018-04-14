@@ -42,14 +42,14 @@ public class SkuServiceImpl implements SkuService {
         int total = skuMapper.listTotal(inVo);
         if(total > 0){
             List<SkuOut> list = skuMapper.list(inVo);
-            if(inVo!=null&&inVo.getUserId()!=null){
+            /*if(inVo!=null&&inVo.getUserId()!=null){
                 int i = soMapper.selectByUserIdTotal(inVo.getUserId());//判断是否是新下单用户 0为首次下单
                 if(i==0){
                     for (SkuOut skuOut : list) {
                         skuOut.setSellPrice(BigDecimal.ZERO);
                     }
                 }
-            }
+            }*/
             result.setList(list);
         }
         result.setTotal(total);

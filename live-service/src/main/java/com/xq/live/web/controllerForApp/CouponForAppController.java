@@ -23,7 +23,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/cpForApp")
+@RequestMapping(value = "/app/cp")
 public class CouponForAppController {
     @Autowired
     private CouponService couponService;

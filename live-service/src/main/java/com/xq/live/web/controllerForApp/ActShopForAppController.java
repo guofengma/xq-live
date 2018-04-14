@@ -26,7 +26,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping("/actshopForApp")
+@RequestMapping("/app/actshop")
 public class ActShopForAppController {
 
     @Autowired

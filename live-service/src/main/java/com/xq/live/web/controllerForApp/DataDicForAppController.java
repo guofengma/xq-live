@@ -20,7 +20,7 @@ import java.util.List;
  * Created by lipeng on 2018/4/4.
  */
 @RestController
-@RequestMapping(value = "/dataDicForApp")
+@RequestMapping(value = "/app/dataDic")
 public class DataDicForAppController {
 
     @Autowired

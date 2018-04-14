@@ -29,7 +29,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/hxForApp")
+@RequestMapping(value = "/app/hx")
 public class SoWriteOffForAppController {
 
     @Autowired

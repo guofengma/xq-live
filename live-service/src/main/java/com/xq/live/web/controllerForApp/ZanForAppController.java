@@ -28,7 +28,7 @@ import java.util.List;
  * @create 2018-01-17 19:10
  **/
 @RestController
-@RequestMapping(value = "/zanForApp")
+@RequestMapping(value = "/app/zan")
 public class ZanForAppController {
 
     @Autowired

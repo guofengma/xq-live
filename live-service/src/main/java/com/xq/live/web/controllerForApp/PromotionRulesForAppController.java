@@ -16,7 +16,7 @@ import java.util.List;
  * Created by lipeng on 2018/3/30.
  */
 @RestController
-@RequestMapping("/pnrForApp")
+@RequestMapping("/app/pnr")
 public class PromotionRulesForAppController {
 
     @Autowired

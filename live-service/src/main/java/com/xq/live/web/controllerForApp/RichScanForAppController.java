@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @copyright:hbxq
  **/
 @Controller
-@RequestMapping("/mForApp")
+@RequestMapping("/app/m")
 public class RichScanForAppController {
     @RequestMapping(value="/hx",method= RequestMethod.GET)
     public String getScan(Model model){

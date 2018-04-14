@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RestController
-@RequestMapping(value = "/wxsignForApp")
+@RequestMapping(value = "/app/wxsign")
 public class WeixinSignForAppController {
 
     @Autowired

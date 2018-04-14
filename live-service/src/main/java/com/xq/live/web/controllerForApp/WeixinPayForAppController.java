@@ -42,7 +42,7 @@ import java.util.Map;
  * @copyright:hbxq
  */
 @RestController
-@RequestMapping("/wxpayForApp")
+@RequestMapping("/app/wxpay")
 public class WeixinPayForAppController {
     private Logger logger = Logger.getLogger(WeixinPayForAppController.class);
 

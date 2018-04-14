@@ -29,7 +29,7 @@ import java.util.List;
  * @create 2018-01-17 19:08
  **/
 @RestController
-@RequestMapping(value = "/cmtForApp")
+@RequestMapping(value = "/app/cmt")
 public class CommentForAppController {
 
     @Autowired

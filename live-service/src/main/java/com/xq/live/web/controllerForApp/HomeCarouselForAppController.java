@@ -15,7 +15,7 @@ import java.util.List;
  * Created by lipeng on 2018/3/6.
  */
 @RestController
-@RequestMapping(value = "hclForApp")
+@RequestMapping(value = "/app/hcl")
 public class HomeCarouselForAppController {
      @Autowired
      private HomeCarouselService homeCarouselService;

@@ -31,7 +31,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/smsForApp")
+@RequestMapping(value = "/app/sms")
 public class SmsForAppController {
 
     @Autowired

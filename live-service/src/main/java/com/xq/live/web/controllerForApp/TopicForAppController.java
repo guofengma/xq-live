@@ -28,7 +28,7 @@ import java.util.List;
  * @create 2018-01-17 18:56
  **/
 @RestController
-@RequestMapping(value = "/topicForApp")
+@RequestMapping(value = "/app/topic")
 public class TopicForAppController {
 
     @Autowired

@@ -29,7 +29,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/soForApp")
+@RequestMapping(value = "/app/so")
 public class SoForAppController {
 
     @Autowired

@@ -20,7 +20,7 @@ import java.util.List;
  * Created by lipeng on 2018/3/8.
  */
 @RestController
-@RequestMapping(value = "/shopEnterForApp")
+@RequestMapping(value = "/app/shopEnter")
 public class ShopEnterForAppController {
 
     @Autowired

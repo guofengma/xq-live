@@ -35,7 +35,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping("/imgForApp")
+@RequestMapping("/app/img")
 public class UploadForAppController {
     private static Logger logger = Logger.getLogger(UploadForAppController.class);
 

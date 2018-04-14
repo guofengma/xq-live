@@ -27,7 +27,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/skuForApp")
+@RequestMapping(value = "/app/sku")
 public class SkuForAppController {
 
     @Autowired

@@ -25,7 +25,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @RestController
-@RequestMapping("/msgForApp")
+@RequestMapping("/app/msg")
 public class MessageForAppController {
     @Autowired
     private MessageService messageService;

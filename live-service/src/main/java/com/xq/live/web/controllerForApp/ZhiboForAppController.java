@@ -23,7 +23,7 @@ import java.util.List;
  *@create 2018-02-07 18:04
  **/
 @RestController
-@RequestMapping("/zbForAppForApp")
+@RequestMapping("/app/zb")
 public class ZhiboForAppController {
 
     @Autowired

@@ -23,7 +23,7 @@ import java.util.List;
  * @copyright:hbxq
  **/
 @RestController
-@RequestMapping(value = "/csForApp")
+@RequestMapping(value = "/app/cs")
 public class CouponSkuForAppController {
 
     @Autowired

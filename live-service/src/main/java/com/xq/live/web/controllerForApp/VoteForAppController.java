@@ -28,7 +28,7 @@ import java.util.List;
  * @create 2018-01-17 19:17
  **/
 @RestController
-@RequestMapping(value = "/voteForApp")
+@RequestMapping(value = "/app/vote")
 public class VoteForAppController {
     @Autowired
     private VoteService voteService;

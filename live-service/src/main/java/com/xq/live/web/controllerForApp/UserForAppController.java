@@ -26,7 +26,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "/userForAppForApp")
+@RequestMapping(value = "/app/user")
 public class UserForAppController {
 
     @Autowired

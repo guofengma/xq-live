@@ -27,7 +27,7 @@ import java.util.List;
  * @create 2018-02-07 17:14
  **/
 @RestController
-@RequestMapping(value = "/actForApp")
+@RequestMapping(value = "/app/act")
 public class ActInfoForAppController {
 
     @Autowired

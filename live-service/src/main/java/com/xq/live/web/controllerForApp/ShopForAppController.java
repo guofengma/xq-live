@@ -31,7 +31,7 @@ import java.util.Map;
  * @create 2018-01-17 18:01
  **/
 @RestController
-@RequestMapping(value = "/shopForApp")
+@RequestMapping(value = "/app/shop")
 public class ShopForAppController {
 
     @Autowired

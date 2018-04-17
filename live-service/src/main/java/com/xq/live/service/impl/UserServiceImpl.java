@@ -61,6 +61,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByMobile(String mobile) {
+        User byMobile = userMapper.findByMobile(mobile);
+        return byMobile;
+    }
+
+    @Override
     public Pager<User> list(UserInVo inVo) {
         Pager<User> result= new Pager<User>();
         int total = userMapper.listTotal(inVo);
@@ -106,7 +112,7 @@ public class UserServiceImpl implements UserService {
         if(user!=null&&user.getMobile()!=null){
             if(user.getNickName()==null){
                 Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getUserName(), user.getMobile());
-                user.setMobile(rmp.get("mobile"));
+                user.setUserName(rmp.get("mobile"));
             }
             user.setUserName(user.getMobile());
         }

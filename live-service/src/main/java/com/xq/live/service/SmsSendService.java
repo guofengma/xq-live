@@ -28,9 +28,30 @@ public interface SmsSendService {
     SmsOut redisVerify(SmsSendInVo inVo);
 
     /**
+     * app验证码缓存
+     * @param inVo
+     * @return
+     */
+    SmsOut redisVerifyForApp(SmsSendInVo inVo);
+
+    /**
+     * 商家端app验证码缓存
+     * @param inVo
+     * @return
+     */
+    SmsOut redisVerifyForShopApp(SmsSendInVo inVo);
+
+    /**
      * 注册验证码是否通过
      * @param inVo
      * @return
      */
     Integer isVerify(SmsSendInVo inVo);
+
+    /**
+     * 商家端app注册验证码是否通过
+     * @param inVo
+     * @return
+     */
+    Integer isVerifyForShopApp(SmsSendInVo inVo);
 }

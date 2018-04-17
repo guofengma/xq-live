@@ -45,6 +45,13 @@
     where open_id = #{openId,jdbcType=VARCHAR}
   </select>
 
+  <select id="findByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+
   <select id="list" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

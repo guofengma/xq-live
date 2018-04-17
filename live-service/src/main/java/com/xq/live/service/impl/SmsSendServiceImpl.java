@@ -78,6 +78,74 @@ public class SmsSendServiceImpl implements SmsSendService {
     }
 
     @Override
+    public SmsOut redisVerifyForApp(SmsSendInVo inVo) {
+        String key = "redisVerifyForApp_" + inVo.getShopMobile();
+        SmsOut smsOut = redisCache.get(key, SmsOut.class);
+        SmsSend smsSend = new SmsSend();
+        Long time = System.currentTimeMillis();
+        if (smsOut == null) {
+            smsSend = smsSendMapper.selectByMobile(inVo);
+            if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
+                return null;
+            }
+            if(time > (smsSend.getCreateTime().getTime() + 3600000)){
+                smsSendMapper.deleteByPrimaryKey(smsSend.getId());
+                redisCache.del(key);
+                return null;
+            }
+            smsOut = new SmsOut();
+            smsOut.setVerifyId(smsSend.getSmsContent());
+            smsOut.setVeridyTime(smsSend.getCreateTime());
+            redisCache.set(key, smsOut, 1l, TimeUnit.HOURS);
+            return smsOut;
+        }
+
+        if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
+            smsSend = smsSendMapper.selectByMobile(inVo);
+            smsSendMapper.deleteByPrimaryKey(smsSend.getId());
+            redisCache.del(key);
+            return null;
+        }
+
+        return smsOut;
+
+    }
+
+    @Override
+    public SmsOut redisVerifyForShopApp(SmsSendInVo inVo) {
+        String key = "redisVerifyForShopApp_" + inVo.getShopMobile();
+        SmsOut smsOut = redisCache.get(key, SmsOut.class);
+        SmsSend smsSend = new SmsSend();
+        Long time = System.currentTimeMillis();
+        if (smsOut == null) {
+            smsSend = smsSendMapper.selectByMobile(inVo);
+            if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
+                return null;
+            }
+            if(time > (smsSend.getCreateTime().getTime() + 3600000)){
+                smsSendMapper.deleteByPrimaryKey(smsSend.getId());
+                redisCache.del(key);
+                return null;
+            }
+            smsOut = new SmsOut();
+            smsOut.setVerifyId(smsSend.getSmsContent());
+            smsOut.setVeridyTime(smsSend.getCreateTime());
+            redisCache.set(key, smsOut, 1l, TimeUnit.HOURS);
+            return smsOut;
+        }
+
+        if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
+            smsSend = smsSendMapper.selectByMobile(inVo);
+            smsSendMapper.deleteByPrimaryKey(smsSend.getId());
+            redisCache.del(key);
+            return null;
+        }
+
+        return smsOut;
+
+    }
+
+    @Override
     public Integer isVerify(SmsSendInVo inVo) {
         SmsSend smsSend = smsSendMapper.selectByMobile(inVo);
         if(smsSend==null||smsSend.getSmsContent()==null){
@@ -94,5 +162,18 @@ public class SmsSendServiceImpl implements SmsSendService {
         return i;
 
 
+    }
+
+    @Override
+    public Integer isVerifyForShopApp(SmsSendInVo inVo) {
+        SmsSend smsSend = smsSendMapper.selectByMobile(inVo);
+        if(smsSend==null||smsSend.getSmsContent()==null){
+            return null;
+        }
+        if(!StringUtils.equals(inVo.getSmsContent(),smsSend.getSmsContent())){
+            return -1;
+        }
+
+        return null;
     }
 }

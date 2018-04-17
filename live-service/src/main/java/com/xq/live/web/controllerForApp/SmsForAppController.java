@@ -7,7 +7,9 @@ import com.xq.live.common.Constants;
 import com.xq.live.common.RandomStringUtil;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.SmsSend;
+import com.xq.live.model.User;
 import com.xq.live.service.SmsSendService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SmsSendInVo;
 import com.xq.live.vo.out.SmsOut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class SmsForAppController {
 
     @Autowired
     private SmsSendService smsSendService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public BaseResp<Long> send(@Valid SmsSendInVo inVo, BindingResult result) {
@@ -68,18 +73,18 @@ public class SmsForAppController {
     }
 
     /**
-     * 用户注册发送验证码
+     * app用户注册发送验证码
      * @param inVo
      * @return
      */
     @RequestMapping(value = "/sendForRegister", method = RequestMethod.POST)
     public BaseResp<SmsOut> sendForRegister(SmsSendInVo inVo) {
-        if(inVo==null||inVo.getShopMobile()==null||inVo.getUserId()==null||inVo.getUserName()==null){
+        if(inVo==null||inVo.getShopMobile()==null){
             return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
         }
 
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
-        SmsOut smsOut = smsSendService.redisVerify(inVo);
+        SmsOut smsOut = smsSendService.redisVerifyForApp(inVo);
         //判断缓存是否存在，并且在10分钟以内
         if(smsOut!=null){
            return new BaseResp<SmsOut>(ResultStatus.SUCCESS,smsOut);
@@ -100,7 +105,7 @@ public class SmsForAppController {
             inVo.setRemark(ret.errMsg);
             inVo.setSmsContent(randomCode);
             Long id = smsSendService.create(inVo);
-            SmsOut smsOutForNew = smsSendService.redisVerify(inVo);//再把数据缓存
+            SmsOut smsOutForNew = smsSendService.redisVerifyForApp(inVo);//再把数据缓存
             return new BaseResp<SmsOut>(ResultStatus.SUCCESS, smsOutForNew);
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +114,75 @@ public class SmsForAppController {
     }
 
     /**
-     *判断验证码是否正确,并且更新user表
+     * 商家端app用户登录发送验证码
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/sendForShopAppRegister", method = RequestMethod.POST)
+    public BaseResp<SmsOut> sendForShopAppRegister(SmsSendInVo inVo) {
+        if(inVo==null||inVo.getShopMobile()==null){
+            return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
+        }
+        /**
+         * 发送验证码的手机如果不在user表中，且用户的状态不为商家，则不让登录
+         */
+        User byMobile = userService.findByMobile(inVo.getShopMobile());
+        if(byMobile==null||byMobile.getUserType()==1){
+            return new BaseResp<SmsOut>(ResultStatus.error_para_cashier_user_type);
+        }
+
+        inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
+        SmsOut smsOut = smsSendService.redisVerifyForShopApp(inVo);
+        //判断缓存是否存在，并且在10分钟以内
+        if(smsOut!=null){
+            return new BaseResp<SmsOut>(ResultStatus.SUCCESS,smsOut);
+        }
+
+        try {
+            SmsSingleSender sender = new SmsSingleSender(Constants.SMS_APP_ID, Constants.SMS_APP_KEY);
+            ArrayList<String> params = new ArrayList<String>();
+            String randomCode = RandomStringUtil.getRandomCode(4, 0);
+            inVo.setCreateTime(new Date());
+            params.add(randomCode);
+            SmsSingleSenderResult ret = sender.sendWithParam(Constants.SMS_NATION_CODE, inVo.getShopMobile(), Constants.TEMP_ID_VERIFY_SUCCESS, params, "", "", "");
+            if (ret.result == 0) {//短信发送成功
+                inVo.setSendStatus(SmsSend.SMS_SEND_STATUS_SUCCESS);
+            } else {
+                inVo.setSendStatus(SmsSend.SMS_SEND_STATUS_FAIL);
+            }
+            inVo.setRemark(ret.errMsg);
+            inVo.setSmsContent(randomCode);
+            Long id = smsSendService.create(inVo);
+            SmsOut smsOutForNew = smsSendService.redisVerifyForShopApp(inVo);//再把数据缓存
+            return new BaseResp<SmsOut>(ResultStatus.SUCCESS, smsOutForNew);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BaseResp<SmsOut>(ResultStatus.FAIL);
+        }
+    }
+
+    /**
+     *判断商家验证码是否正确,并且更新user表,如果user表中含有手机号,先比较手机号是否相同，如果不同则算新加入用户
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/isVerifyForShopApp",method = RequestMethod.GET)
+    public BaseResp<Integer> isVerifyForShopApp(SmsSendInVo inVo,String iconUrl,String nickName){
+        if(inVo==null||inVo.getShopMobile()==null||inVo.getSmsContent()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
+        Integer verify = smsSendService.isVerifyForShopApp(inVo);
+        if(verify==-1){
+            return new BaseResp<Integer>(ResultStatus.FAIL,verify);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
+
+
+    }
+
+    /**
+     *判断app验证码是否正确,并且更新user表
      * @param inVo
      * @return
      */

@@ -45,6 +45,8 @@ public interface UserMapper{
     @Cacheable(value = "1h")
     User findByOpenId(String openId);
 
+    User findByMobile(String mobile);
+
     @CacheEvict(key = "#p0.id.toString()")
     Integer updateByOpenId(User user);
 }

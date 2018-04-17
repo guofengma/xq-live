@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="live-service:war">
+    <output-path>$PROJECT_DIR$/live-service/target</output-path>
+    <root id="archive" name="live-service-1.0.0.war">
+      <element id="artifact" artifact-name="live-service:war exploded" />
+    </root>
+  </artifact>
+</component>

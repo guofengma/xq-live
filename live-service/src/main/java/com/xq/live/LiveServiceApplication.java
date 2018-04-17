@@ -27,9 +27,4 @@ public class LiveServiceApplication extends SpringBootServletInitializer {
         SpringApplication.run(LiveServiceApplication.class, args);
     }
 
-    @RequestMapping(value="/",method= RequestMethod.GET)
-    public String getScan(Model model){
-        return "index";
-    }
-
 }

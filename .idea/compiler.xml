@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="live-admin" />
         <module name="live-service" />
+        <module name="WXPay-SDK-Java" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.7">
-      <module name="live-admin" target="1.5" />
+    <bytecodeTargetLevel target="8">
       <module name="live-service" target="1.7" />
+      <module name="WXPay-SDK-Java" target="1.5" />
       <module name="xq-live" target="1.5" />
     </bytecodeTargetLevel>
   </component>

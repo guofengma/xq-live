@@ -75,7 +75,7 @@ public class CouponForAppController {
         return new BaseResp<List<CouponOut>>(ResultStatus.SUCCESS, result);
     }
 
-/*    *//**
+    /**
      * 新增券
      * @param coupon
      * @param result

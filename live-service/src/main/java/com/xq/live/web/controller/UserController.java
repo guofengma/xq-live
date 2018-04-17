@@ -8,6 +8,7 @@ import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.IpUtils;
 import com.xq.live.web.utils.PayUtils;
+import com.xq.live.web.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -52,7 +53,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public BaseResp<Long> addUser(String code, HttpServletRequest request){
+    public BaseResp<Long> addUser(String code,String mobile, HttpServletRequest request){
         //获取openId
         if (StringUtils.isEmpty(code)) {
             return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);
@@ -79,7 +80,7 @@ public class UserController {
             user.setUserIp(IpUtils.getIpAddr(request));
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
-            user.setUserName("xq_"+sdf.format(date));
+            user.setUserName("xq_" + sdf.format(date));
             user.setPassword(RandomStringUtil.getRandomCode(6,3));
             user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
             user.setSourceType(1);  //来源小程序
@@ -88,6 +89,96 @@ public class UserController {
         }
         return new BaseResp<Long>(ResultStatus.FAIL);
     }
+
+
+    /**
+     * 最新版本的新增用户
+     * @param openId
+     * @param mobile
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addUserForVersion", method = RequestMethod.POST)
+    public BaseResp<Long> addUserForVersion(String openId,String mobile, HttpServletRequest request){
+        //获取openId
+        if (StringUtils.isEmpty(openId)) {
+            return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);
+        }
+
+        if(StringUtils.isEmpty(mobile)){
+            return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);
+        }
+
+
+            User user = userService.findByOpenId(openId);
+            User byMobileUser = userService.findByMobile(mobile);
+            if(user==null){
+                if(byMobileUser!=null){
+                    byMobileUser.setOpenId(openId);
+                    //将openId更新到user表中
+                    Integer integer = userService.updateByMobile(byMobileUser);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,byMobileUser.getId());
+                }
+            }else{
+                if(byMobileUser==null){
+                    user.setMobile(mobile);
+                    //将mobile更新到user表中
+                    Integer integer = userService.updateByOpenId(user);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+                }
+                return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+            }
+            user = new User();
+            user.setOpenId(openId);
+            user.setUserIp(IpUtils.getIpAddr(request));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
+
+            //如果有手机号，则把手机号对应的userName隐藏
+            Map<String, String> rmp = SignUtil.encryNameAndMobile(mobile);
+            user.setUserName(rmp.get("mobile"));
+
+            user.setMobile(mobile);
+            user.setPassword(RandomStringUtil.getRandomCode(6,3));
+            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            user.setSourceType(1);  //来源小程序
+            Long id  = userService.add(user);
+            return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
+     * 通过code获取用户信息
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/findByCode",method = RequestMethod.GET)
+    public BaseResp<User> findByCode(String code){
+        //获取openId
+        if (StringUtils.isEmpty(code)) {
+            return new BaseResp<User>(ResultStatus.error_weixin_user_code_empty);
+        }
+        //获取openId
+        String param = "?grant_type=" + PaymentConfig.GRANT_TYPE + "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.API_KEY + "&js_code=" + code;
+        //创建请求对象
+        String httpRet = PayUtils.httpRequest(PaymentConfig.GET_OPEN_ID_URL, "GET", param);
+        Map<String, String> result = new HashMap<String, String>();
+        JSONObject jsonObject = JSONObject.parseObject(httpRet);
+        if (jsonObject != null) {
+            Integer errcode = jsonObject.getInteger("errcode");
+            if (errcode != null) {
+                //返回异常信息
+                return new BaseResp<User>(errcode, jsonObject.getString("errmsg"), null);
+            }
+            String openId = jsonObject.getString("openid");
+            User user = userService.findByOpenId(openId);
+            if(user != null){
+                return new BaseResp<User>(ResultStatus.SUCCESS,user);
+            }
+
+        }
+        return new BaseResp<User>(ResultStatus.FAIL);
+    }
+
 
     /**
      * 查询用户列表信息

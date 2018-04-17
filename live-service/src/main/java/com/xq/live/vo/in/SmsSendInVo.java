@@ -48,6 +48,12 @@ public class SmsSendInVo {
 
     private Long userId;//注册用户的userId
 
+    private String iconUrl;//用户的头像
+
+    private String nickName;//用户的昵称
+
+    private String openId;//用户的openId
+
     public Long getId() {
         return id;
     }
@@ -143,5 +149,29 @@ public class SmsSendInVo {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }

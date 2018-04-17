@@ -137,12 +137,12 @@ public class SignUtil {
      * @param mobile
      * @return
      */
-    public static Map<String,String> encryNameAndMobile(String name,String mobile){
-        String realname1 =null;
+    public static Map<String,String> encryNameAndMobile(String mobile){
+       /* String realname1 =null;*/
         String mobile1 = null;
         char[] r;
         char[] m;
-        if(name != null && !"".equals(name) ){
+        /*if(name != null && !"".equals(name) ){
             r =  name.toCharArray();
             if(r.length ==1){
                 realname1 =  name;
@@ -153,7 +153,7 @@ public class SignUtil {
             if (r.length > 2) {
                 realname1 =  name.replaceFirst(name.substring(1,r.length-1) ,"*");
             }
-        }
+        }*/
 
         if(mobile != null && !"".equals(mobile) ){
             m =  mobile.toCharArray();
@@ -166,7 +166,7 @@ public class SignUtil {
         }
 
         Map<String,String> res = new HashMap<String,String>();
-        res.put("name",realname1);
+       /* res.put("name",realname1);*/
         res.put("mobile",mobile1);
         return res;
     }

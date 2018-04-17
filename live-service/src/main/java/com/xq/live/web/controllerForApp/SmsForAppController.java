@@ -167,7 +167,7 @@ public class SmsForAppController {
      * @return
      */
     @RequestMapping(value = "/isVerifyForShopApp",method = RequestMethod.GET)
-    public BaseResp<Integer> isVerifyForShopApp(SmsSendInVo inVo,String iconUrl,String nickName){
+    public BaseResp<Integer> isVerifyForShopApp(SmsSendInVo inVo){
         if(inVo==null||inVo.getShopMobile()==null||inVo.getSmsContent()==null){
             return new BaseResp<Integer>(ResultStatus.error_param_empty);
         }
@@ -177,8 +177,6 @@ public class SmsForAppController {
             return new BaseResp<Integer>(ResultStatus.FAIL,verify);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
-
-
     }
 
     /**

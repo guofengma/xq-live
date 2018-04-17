@@ -52,4 +52,11 @@ public interface UserService {
      * @return
      */
     public Integer updateByOpenId(User user);
+
+    /**
+     * 使用mobile更新用户信息
+     * @param user
+     * @return
+     */
+    public Integer updateByMobile(User user);
 }

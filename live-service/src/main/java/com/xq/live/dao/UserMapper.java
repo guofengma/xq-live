@@ -40,13 +40,18 @@ public interface UserMapper{
      * @param record
      * @return
      */
+    @CacheEvict(key = "#p0.id.toString()")
     int updateUserType(User record);
 
     @Cacheable(value = "1h")
     User findByOpenId(String openId);
 
+    //@Cacheable(value = "1h")
     User findByMobile(String mobile);
 
     @CacheEvict(key = "#p0.id.toString()")
     Integer updateByOpenId(User user);
+
+    @CacheEvict(key = "#p0.id.toString()")
+    Integer updateByMobile(User user);
 }

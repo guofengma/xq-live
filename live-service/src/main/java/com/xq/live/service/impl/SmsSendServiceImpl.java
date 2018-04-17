@@ -173,6 +173,11 @@ public class SmsSendServiceImpl implements SmsSendService {
         if(!StringUtils.equals(inVo.getSmsContent(),smsSend.getSmsContent())){
             return -1;
         }
+        User user = new User();
+        user.setOpenId(inVo.getOpenId());
+        if(inVo.getIconUrl()!=null&&!StringUtils.equals("",inVo.getIconUrl())){
+
+        }
 
         return null;
     }

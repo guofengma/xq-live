@@ -110,8 +110,9 @@ public class UserServiceImpl implements UserService {
         user.setUpdateTime(now);
         user.setLastLoginTime(now);
         if(user!=null&&user.getMobile()!=null){
-            Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getMobile());
-            user.setUserName(rmp.get("mobile"));
+            /*Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getMobile());
+            user.setUserName(rmp.get("mobile"));*/
+            user.setUserName(user.getMobile());
         }
         return userMapper.updateByOpenId(user);
     }

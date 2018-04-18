@@ -134,10 +134,10 @@ public class UserController {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
 
-            //如果有手机号，则把手机号对应的userName隐藏
+            /*//如果有手机号，则把手机号对应的userName隐藏
             Map<String, String> rmp = SignUtil.encryNameAndMobile(mobile);
-            user.setUserName(rmp.get("mobile"));
-
+            user.setUserName(rmp.get("mobile"));*/
+            user.setUserName(mobile);
             user.setMobile(mobile);
             user.setPassword(RandomStringUtil.getRandomCode(6,3));
             user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));

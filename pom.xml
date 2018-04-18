@@ -11,6 +11,9 @@
 	<description>Shared delicacies platform</description>
 
 	<modules>
+		<module>live-dubbo-common</module>
+		<module>live-dubbo-client</module>
+		<module>live-dubbo-server</module>
 	</modules>
 
 </project>

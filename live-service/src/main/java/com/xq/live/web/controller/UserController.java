@@ -174,6 +174,8 @@ public class UserController {
             if(user != null){
                 return new BaseResp<User>(ResultStatus.SUCCESS,user);
             }
+            user.setOpenId(openId);
+            return new BaseResp<User>(ResultStatus.SUCCESS,user);
 
         }
         return new BaseResp<User>(ResultStatus.FAIL);

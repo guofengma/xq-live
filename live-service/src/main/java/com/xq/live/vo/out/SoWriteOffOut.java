@@ -1,51 +1,62 @@
-package com.xq.live.vo.in;
+package com.xq.live.vo.out;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * ${DESCRIPTION}
- *
- * @author zhangpeng32
- * @date 2018-02-21 18:33
- * @copyright:hbxq
- **/
-public class SoWriteOffInVo extends BaseInVo {
+ * Created by lipeng on 2018/4/19.
+ */
+public class SoWriteOffOut {
+
     private Long id;
 
+    @NotNull(message = "soId必填")
     private Long soId;
 
     private Long shopId;
 
     private String shopName;
 
+    @NotNull(message = "shopAmount必填")
     private BigDecimal shopAmount;
 
+    @NotNull(message = "couponId必填")
     private Long couponId;
 
+    @NotNull(message = "couponCode必填")
     private String couponCode;
 
+    @NotNull(message = "skuId必填")
     private Long skuId;
 
-    private BigDecimal couponAmount;
+    @NotNull(message = "couponAmount必填")
+    private BigDecimal couponAmount;//卷面值
 
-    private Long userId;
+    @NotNull(message = "userId必填")
+    private Long userId;//卷所属订单的userId
 
-    private String userName;
+    @NotNull(message = "userName必填")
+    private String userName;//卷所属订单的userId
 
-    private Long cashierId;
+    @NotNull(message = "cashierId必填")
+    private Long cashierId;//收银员的id---当前操作的用户id
 
+    @NotNull(message = "cashierName必填")
     private String cashierName;
 
-    private BigDecimal paidAmount;
+    private BigDecimal paidAmount;//支付金额(已经减去了卷面值的)
 
-    private Date createTime;//在这个地方相当于核销时间
-
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;//等同于核销时间
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private Date begainTime;//开始时间
+    private BigDecimal totalPrice;//总营业额
 
-    private Date endTime;//截止时间
+    private BigDecimal totalService;//总服务费
 
     public Long getId() {
         return id;
@@ -76,7 +87,7 @@ public class SoWriteOffInVo extends BaseInVo {
     }
 
     public void setShopName(String shopName) {
-        this.shopName = shopName;
+        this.shopName = shopName == null ? null : shopName.trim();
     }
 
     public BigDecimal getShopAmount() {
@@ -100,7 +111,7 @@ public class SoWriteOffInVo extends BaseInVo {
     }
 
     public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode;
+        this.couponCode = couponCode == null ? null : couponCode.trim();
     }
 
     public Long getSkuId() {
@@ -132,7 +143,7 @@ public class SoWriteOffInVo extends BaseInVo {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = userName == null ? null : userName.trim();
     }
 
     public Long getCashierId() {
@@ -148,7 +159,7 @@ public class SoWriteOffInVo extends BaseInVo {
     }
 
     public void setCashierName(String cashierName) {
-        this.cashierName = cashierName;
+        this.cashierName = cashierName == null ? null : cashierName.trim();
     }
 
     public BigDecimal getPaidAmount() {
@@ -173,5 +184,21 @@ public class SoWriteOffInVo extends BaseInVo {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public BigDecimal getTotalService() {
+        return totalService;
+    }
+
+    public void setTotalService(BigDecimal totalService) {
+        this.totalService = totalService;
     }
 }

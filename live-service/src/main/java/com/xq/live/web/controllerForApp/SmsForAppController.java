@@ -15,10 +15,12 @@ import com.xq.live.vo.out.SmsOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class SmsForAppController {
      */
     @RequestMapping(value = "/sendForRegister", method = RequestMethod.POST)
     public BaseResp<SmsOut> sendForRegister(SmsSendInVo inVo) {
+
         if(inVo==null||inVo.getShopMobile()==null){
             return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
         }
@@ -119,7 +122,13 @@ public class SmsForAppController {
      * @return
      */
     @RequestMapping(value = "/sendForShopAppRegister", method = RequestMethod.POST)
-    public BaseResp<SmsOut> sendForShopAppRegister(SmsSendInVo inVo) {
+    @CrossOrigin
+    public BaseResp<SmsOut> sendForShopAppRegister(SmsSendInVo inVo,HttpServletResponse response) {
+        /*response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.addHeader("Access-Control-Max-Age", "1800");*/
+
         if(inVo==null||inVo.getShopMobile()==null){
             return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
         }

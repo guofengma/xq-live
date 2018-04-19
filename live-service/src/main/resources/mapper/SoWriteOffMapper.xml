@@ -19,6 +19,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="SoWriteOffOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.SoWriteOffOut">
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+    <result column="total_service" jdbcType="DECIMAL" property="totalService" />
+
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, so_id, shop_id, shop_name, shop_amount, coupon_id, coupon_code, sku_id, coupon_amount,
     user_id, user_name, cashier_id, cashier_name, paid_amount, create_time, update_time
@@ -224,9 +231,11 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="list" resultMap="BaseResultMap">
+  <select id="list" resultMap="SoWriteOffOutMap">
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,
+    SUM(paid_amount) as total_price,
+    SUM(coupon_amount) as total_service
     from so_write_off
     <where>
       <if test="id != null">

@@ -166,6 +166,7 @@ public class ShopController {
      */
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResp<List<ShopOut>> top(ShopInVo inVo){
+        inVo.setBrowSort(Shop.BROW_SORT_POP);//前期先通过人气排序
         List<ShopOut> result = shopService.top(inVo);
         return new BaseResp<List<ShopOut>>(ResultStatus.SUCCESS, result);
     }

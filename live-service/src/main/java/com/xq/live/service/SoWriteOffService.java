@@ -5,6 +5,7 @@ import com.xq.live.model.SoWriteOff;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.out.SoOut;
+import com.xq.live.vo.out.SoWriteOffOut;
 
 import java.util.List;
 
@@ -21,14 +22,14 @@ public interface SoWriteOffService {
      * @param inVo
      * @return
      */
-    Pager<SoWriteOff> list(SoWriteOffInVo inVo);
+    Pager<SoWriteOffOut> list(SoWriteOffInVo inVo);
 
     /**
      * 排序查询记录列表
      * @param inVo
      * @return
      */
-    List<SoWriteOff> top(SoWriteOffInVo inVo);
+    List<SoWriteOffOut> top(SoWriteOffInVo inVo);
 
     /**
      * 核销

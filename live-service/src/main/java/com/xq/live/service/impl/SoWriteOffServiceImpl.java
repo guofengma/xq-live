@@ -8,6 +8,7 @@ import com.xq.live.vo.in.CouponInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.out.SoOut;
+import com.xq.live.vo.out.SoWriteOffOut;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,13 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     private CouponMapper couponMapper;
 
     @Override
-    public Pager<SoWriteOff> list(SoWriteOffInVo inVo) {
-        Pager<SoWriteOff> ret = new Pager<SoWriteOff>();
+    public Pager<SoWriteOffOut> list(SoWriteOffInVo inVo) {
+        Pager<SoWriteOffOut> ret = new Pager<SoWriteOffOut>();
         int total = soWriteOffMapper.listTotal(inVo);
+        List<SoWriteOffOut> totalOut = soWriteOffMapper.total(inVo);
         if(total > 0){
-            List<SoWriteOff> list = soWriteOffMapper.list(inVo);
+            List<SoWriteOffOut> list = soWriteOffMapper.list(inVo);
+            list.addAll(0,totalOut);//把总销售额和总服务费放到list的第一个数据里面
             ret.setList(list);
         }
         ret.setTotal(total);
@@ -53,7 +56,7 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     }
 
     @Override
-    public List<SoWriteOff> top(SoWriteOffInVo inVo) {
+    public List<SoWriteOffOut> top(SoWriteOffInVo inVo) {
         return soWriteOffMapper.list(inVo);
     }
 

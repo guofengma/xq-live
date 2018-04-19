@@ -1,6 +1,7 @@
 package com.xq.live.web.controllerForApp;
 
 import com.xq.live.common.BaseResp;
+import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Coupon;
 import com.xq.live.model.Shop;
@@ -10,6 +11,8 @@ import com.xq.live.service.CouponService;
 import com.xq.live.service.ShopService;
 import com.xq.live.service.SoWriteOffService;
 import com.xq.live.service.UserService;
+import com.xq.live.vo.in.SoWriteOffInVo;
+import com.xq.live.vo.out.SoWriteOffOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -96,5 +99,19 @@ public class SoWriteOffForAppController {
         //2、核销抵用券
         Long id = soWriteOffService.add(soWriteOff);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
+     * 查询每个商家核销的票卷的信息
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public BaseResp<Pager<SoWriteOffOut>> list(SoWriteOffInVo inVo){
+        if(inVo==null||inVo.getShopId()==null||inVo.getBegainTime()==null||inVo.getEndTime()==null){
+            return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.error_param_empty);
+        }
+        Pager<SoWriteOffOut> list = soWriteOffService.list(inVo);
+        return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.SUCCESS,list);
     }
 }

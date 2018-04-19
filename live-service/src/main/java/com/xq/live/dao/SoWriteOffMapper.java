@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.SoWriteOff;
 import com.xq.live.vo.in.SoWriteOffInVo;
+import com.xq.live.vo.out.SoWriteOffOut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,9 @@ public interface SoWriteOffMapper {
 
     int updateByPrimaryKey(SoWriteOff record);
 
-    List<SoWriteOff> list(SoWriteOffInVo inVo);
+    List<SoWriteOffOut> list(SoWriteOffInVo inVo);
 
     int listTotal(SoWriteOffInVo inVo);
+
+    List<SoWriteOffOut> total(SoWriteOffInVo inVo);
 }

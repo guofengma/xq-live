@@ -36,6 +36,8 @@
     from so_write_off
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from so_write_off
     where id = #{id,jdbcType=BIGINT}
@@ -233,9 +235,7 @@
 
   <select id="list" resultMap="SoWriteOffOutMap">
     select
-    <include refid="Base_Column_List" />,
-    SUM(paid_amount) as total_price,
-    SUM(coupon_amount) as total_service
+    <include refid="Base_Column_List" />
     from so_write_off
     <where>
       <if test="id != null">
@@ -262,9 +262,48 @@
       <if test="couponCode != null and couponCode !=''">
         and coupon_code = #{couponCode}
       </if>
+      <if test="begainTime !=null and endTime != null">
+        and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
     </where>
-    order by id desc
+    order by create_time ASC
     limit #{start}, #{rows}
+  </select>
+
+  <select id="total" resultMap="SoWriteOffOutMap">
+    select
+    SUM(paid_amount) as total_price,
+    SUM(coupon_amount)/10 as total_service
+    from so_write_off
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="soId != null">
+        and so_id = #{soId}
+      </if>
+      <if test="shopId != null">
+        and shop_id = #{shopId}
+      </if>
+      <if test="shopName != null and shopName !=''">
+        and shop_name = #{shopName}
+      </if>
+      <if test="userId != null and userId !=''">
+        and user_id = #{userId}
+      </if>
+      <if test="skuId != null">
+        and sku_id = #{skuId}
+      </if>
+      <if test="couponId != null">
+        and coupon_id = #{couponId}
+      </if>
+      <if test="couponCode != null and couponCode !=''">
+        and coupon_code = #{couponCode}
+      </if>
+      <if test="begainTime !=null and endTime != null">
+        and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
+    </where>
   </select>
 
   <select id="listTotal" resultType="java.lang.Integer">
@@ -294,6 +333,9 @@
       </if>
       <if test="couponCode != null and couponCode !=''">
         and coupon_code = #{couponCode}
+      </if>
+      <if test="begainTime !=null and endTime != null">
+        and (create_time BETWEEN #{begainTime} and #{endTime})
       </if>
     </where>
   </select>

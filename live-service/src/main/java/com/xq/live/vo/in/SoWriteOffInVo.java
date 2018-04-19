@@ -174,4 +174,20 @@ public class SoWriteOffInVo extends BaseInVo {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    public Date getBegainTime() {
+        return begainTime;
+    }
+
+    public void setBegainTime(Date begainTime) {
+        this.begainTime = begainTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 }

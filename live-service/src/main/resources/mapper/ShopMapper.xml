@@ -320,6 +320,9 @@
       <if test="businessCate !=null">
         and business_cate like concat('%', #{businessCate}, '%')
       </if>
+      <if test="city !=null">
+        and city = #{city}
+      </if>
       and is_deleted = 0
     </where>
     order by
@@ -387,6 +390,9 @@
     shop s
     where ( business_cate like '%川菜%' or business_cate LIKE '%湘菜%' or business_cate LIKE '%川湘菜%')
     and is_deleted = 0
+    <if test="city !=null">
+      and city = #{city}
+    </if>
     order by
     <if test="browSort != null and browSort == 2 ">
       pop_num desc,
@@ -404,6 +410,9 @@
       </if>
       <if test="shopName != null">
         and shop_name = #{shopName}
+      </if>
+      <if test="city !=null">
+        and city = #{city}
       </if>
     </where>
   </select>

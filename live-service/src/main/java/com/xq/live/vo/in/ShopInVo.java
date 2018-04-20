@@ -41,6 +41,8 @@ public class ShopInVo extends BaseInVo {
 
     private String businessCate;//经营品类
 
+    private String city;//选择的城市
+
 
     public String getShopName() {
         return shopName;
@@ -144,5 +146,13 @@ public class ShopInVo extends BaseInVo {
 
     public void setBusinessCate(String businessCate) {
         this.businessCate = businessCate;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

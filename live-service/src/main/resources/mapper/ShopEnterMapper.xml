@@ -46,8 +46,8 @@
     select
     <include refid="Base_Column_List" />
     from shop_enter
-    where user_id = #{userId,jdbcType=BIGINT}
-    or shop_name = #{shopName,jdbcType=VARCHAR}
+    where (user_id = #{userId,jdbcType=BIGINT}
+    or shop_name = #{shopName,jdbcType=VARCHAR}) and status !=2
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

@@ -80,6 +80,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> listForShopId(UserInVo inVo) {
+        return userMapper.listForShopId(inVo);
+    }
+
+    @Override
     public Integer update(User user) {
         return userMapper.updateByPrimaryKeySelective(user);
     }
@@ -124,9 +129,9 @@ public class UserServiceImpl implements UserService {
         user.setUpdateTime(now);
         user.setLastLoginTime(now);
         if(user!=null&&user.getMobile()!=null){
-            Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getMobile());
-            user.setUserName(rmp.get("mobile"));
+            user.setUserName(user.getMobile());
         }
-        return userMapper.updateByMobile(user);
+        Integer integer = userMapper.updateByMobile(user);
+        return integer;
     }
 }

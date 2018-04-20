@@ -31,6 +31,8 @@ public interface UserMapper{
 
     List<User> list(UserInVo inVo);
 
+    List<User> listForShopId(UserInVo inVo);
+
     int listTotal(UserInVo inVo);
 
     User findByUserNameAndPwd(UserInVo inVo);

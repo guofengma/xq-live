@@ -122,6 +122,10 @@ public class ShopForAppController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public BaseResp<Integer> update(Shop shop) {
+        if(shop==null||shop.getId()==null||(shop.getMobile()==null&&shop.getPhone()==null)||shop.getBusinessCate()==null
+                || shop.getAddress()==null||shop.getLocationX()==null||shop.getLocationY()==null){
+             return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
         int result = shopService.updateShop(shop);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
     }

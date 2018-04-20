@@ -73,6 +73,31 @@
       limit #{start}, #{rows}
   </select>
 
+  <select id="listForShopId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    <where>
+      1=1
+      <if test="id != null ">
+        and id=#{id}
+      </if>
+      <if test="userName != null">
+        and user_name = #{userName}
+      </if>
+      <if test="shopId != null">
+        and shop_id = #{shopId}
+      </if>
+      <if test="sourceType != null">
+        and source_type = #{sourceType}
+      </if>
+      <if test="nickName != null">
+        and nick_name like concat('%',#{nickName},'%')
+      </if>
+      and user_type = 2
+    </where>
+  </select>
+
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1) from user
     <where>
@@ -331,6 +356,12 @@
       </if>
       <if test="lastLoginTime != null">
         last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=BIGINT},
       </if>
     </set>
     where mobile = #{mobile, jdbcType=VARCHAR}

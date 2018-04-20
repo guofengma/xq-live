@@ -23,6 +23,8 @@ public interface UserService {
 
     public Pager<User> list(UserInVo inVo);
 
+    public List<User> listForShopId(UserInVo inVo);
+
     /**
      * 更新用户信息
      * @param user

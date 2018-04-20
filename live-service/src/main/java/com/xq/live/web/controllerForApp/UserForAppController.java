@@ -47,6 +47,20 @@ public class UserForAppController {
     }
 
     /**
+     * 通过mobile查询用户信息
+     * @param mobile
+     * @return
+     */
+    @RequestMapping(value = "/findUserByMobile",method = RequestMethod.GET)
+    public BaseResp<User> findUserByMobile(String mobile){
+        if(mobile==null||"".equals(mobile)){
+            return new BaseResp<User>(ResultStatus.error_param_empty);
+        }
+        User byMobile = userService.findByMobile(mobile);
+        return new BaseResp<User>(ResultStatus.SUCCESS,byMobile);
+    }
+
+    /**
      * 新增用户
      * @param code
      * @return
@@ -90,6 +104,46 @@ public class UserForAppController {
     }
 
     /**
+     * 通过shopId和mobile添加核销员
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/addHxUser",method = RequestMethod.POST)
+    public BaseResp<Integer> addHxUser(User user){
+         if(user==null||user.getShopId()==null||user.getMobile()==null){
+             return new BaseResp<Integer>(ResultStatus.error_param_empty);
+         }
+        User byMobile = userService.findByMobile(user.getMobile());
+        if(byMobile==null){
+            return new BaseResp<Integer>(ResultStatus.error_para_user_empty);
+        }
+        byMobile.setShopId(user.getShopId());
+        byMobile.setUserType(User.USER_TYPE_SJ);//更改状态为商家状态
+        Integer res = userService.updateByMobile(byMobile);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,res);
+    }
+
+    /**
+     * 通过shopId和mobile删除核销员
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/deleteHxUser",method = RequestMethod.POST)
+    public BaseResp<Integer> deleteHxUser(User user){
+        if(user==null||user.getShopId()==null||user.getMobile()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        User byMobile = userService.findByMobile(user.getMobile());
+        if(byMobile==null){
+            return new BaseResp<Integer>(ResultStatus.error_para_user_empty);
+        }
+        byMobile.setUserType(User.USER_TYPE_PT);//更改状态为普通用户
+        byMobile.setShopId(null);
+        Integer res = userService.updateByMobile(byMobile);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,res);
+    }
+
+    /**
      * 查询用户列表信息
      * @return
      */
@@ -98,6 +152,19 @@ public class UserForAppController {
     public BaseResp<Pager<User>> userList(UserInVo inVo){
         Pager<User> result = userService.list(inVo);
         return new BaseResp<Pager<User>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 根据shopId查询核销员列表
+     * @return
+     */
+    @RequestMapping("/listForShopId")
+    public BaseResp<List<User>> listForShopId(UserInVo inVo){
+        if(inVo==null||inVo.getShopId()==null){
+            return new BaseResp<List<User>>(ResultStatus.error_param_empty);
+        }
+        List<User> result = userService.listForShopId(inVo);
+        return new BaseResp<List<User>>(ResultStatus.SUCCESS, result);
     }
 
     /**

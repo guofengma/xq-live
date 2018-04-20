@@ -13,6 +13,7 @@ public class UserInVo extends BaseInVo {
     private String nickName;
     private Integer sourceType;
     private String userIp;
+    private Long shopId;//商家id
 
     public Long getId() {
         return id;
@@ -60,5 +61,13 @@ public class UserInVo extends BaseInVo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

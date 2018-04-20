@@ -71,8 +71,11 @@
       update_time)
     values (#{id,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, #{skuCode,jdbcType=VARCHAR}, 
       #{skuName,jdbcType=VARCHAR}, #{ruleType,jdbcType=INTEGER}, #{ruleDesc,jdbcType=VARCHAR}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{shopId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      now(), #{shopId,jdbcType=INTEGER}, now(),
+      now())
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      select last_insert_id() as id
+    </selectKey>
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.PromotionRules">
     insert into promotion_rules

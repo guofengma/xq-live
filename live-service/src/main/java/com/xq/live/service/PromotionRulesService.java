@@ -1,5 +1,6 @@
 package com.xq.live.service;
 
+import com.xq.live.model.PromotionRules;
 import com.xq.live.vo.out.PromotionRulesOut;
 
 import java.util.List;
@@ -15,4 +16,25 @@ public interface PromotionRulesService {
      * @return
      */
     List<PromotionRulesOut> selectByShopId(Integer shopId);
+
+    /**
+     * 更新修改促销规则
+     * @param rules
+     * @return
+     */
+    int update(PromotionRules rules);
+
+    /**
+     * 新增促销规则
+     * @param rules
+     * @return
+     */
+    Long add(PromotionRules rules);
+
+    /**
+     * 通过id去删除一个促销规则
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
 }

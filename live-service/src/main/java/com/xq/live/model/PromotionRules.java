@@ -2,24 +2,40 @@ package com.xq.live.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class PromotionRules {
+    /**
+     * 促销类型 0 免费 1 满减 2 满赠
+     */
+    public static final int RULE_TYPE_FREE = 0;
+
+    public static final int RULE_TYPE_DELETE = 1;
+
+    public static final int RULE_TYPE_ADD = 2;
+
     private Long id;
 
+    @NotNull(message = "skuId必填")
     private Long skuId;
 
+    @NotNull(message = "skuCode必填")
     private String skuCode;
 
+    @NotNull(message = "skuName必填")
     private String skuName;
 
+    @NotNull(message = "ruleType必填")
     private Integer ruleType;
 
+    @NotNull(message = "ruleDesc必填")
     private String ruleDesc;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
+    @NotNull(message = "shopId必填")
     private Integer shopId;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

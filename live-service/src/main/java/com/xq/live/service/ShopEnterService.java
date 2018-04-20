@@ -1,5 +1,6 @@
 package com.xq.live.service;
 
+import com.xq.live.model.Shop;
 import com.xq.live.model.ShopEnter;
 import com.xq.live.vo.out.ShopEnterOut;
 
@@ -39,4 +40,11 @@ public interface ShopEnterService {
      * @return
      */
     Integer deleteShopEnterForStatus(ShopEnter shopEnter);
+
+    /**
+     * 根据店名查询是否有相同店子
+     * @param shopName
+     * @return
+     */
+    Shop searchByShopName(String shopName);
 }

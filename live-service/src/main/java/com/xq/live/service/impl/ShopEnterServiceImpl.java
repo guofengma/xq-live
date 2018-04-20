@@ -121,6 +121,12 @@ public class ShopEnterServiceImpl implements ShopEnterService{
         return null;
     }
 
+    @Override
+    public Shop searchByShopName(String shopName) {
+        Shop shop = shopMapper.selectByShopName(shopName);
+        return shop;
+    }
+
     /**
      * 判断是否是手机号
      * @param str

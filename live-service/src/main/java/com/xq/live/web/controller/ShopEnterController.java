@@ -2,6 +2,7 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.Shop;
 import com.xq.live.model.ShopEnter;
 import com.xq.live.service.ShopEnterService;
 import com.xq.live.service.UserService;
@@ -51,6 +52,20 @@ public class ShopEnterController {
         }
         Long skuId = shopEnterService.add(shopEnter);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
+    }
+
+    /**
+     * 通过shopName查询是否有相同店家
+     * @param shopName
+     * @return
+     */
+    @RequestMapping(value = "/searchByShopName",method = RequestMethod.GET)
+    public BaseResp<Shop> searchByShopName(String shopName){
+        if(shopName==null){
+            return new BaseResp<Shop>(ResultStatus.error_param_empty);
+        }
+        Shop shop = shopEnterService.searchByShopName(shopName);
+        return new BaseResp<Shop>(ResultStatus.SUCCESS,shop);
     }
 
     /**

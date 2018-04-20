@@ -41,6 +41,13 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
+  <select id="selectByShopName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from shop
+    where shop_name = #{shopName,jdbcType=VARCHAR}
+  </select>
+
   <select id="getShopByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     SELECT
         s.id,

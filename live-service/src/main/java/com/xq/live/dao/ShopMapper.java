@@ -17,6 +17,8 @@ public interface ShopMapper {
 
     Shop selectByPrimaryKey(Long id);
 
+    Shop selectByShopName(String shopName);
+
     int updateByPrimaryKeySelective(Shop record);
 
     int updateByPrimaryKey(Shop record);

@@ -61,7 +61,7 @@ public class UserForAppController {
     }
 
     /**
-     * 新增用户
+     * 新增用户(小程序和客户端app)
      * @param code
      * @return
      */
@@ -101,6 +101,22 @@ public class UserForAppController {
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);
         }
         return new BaseResp<Long>(ResultStatus.FAIL);
+    }
+
+    /**
+     * 通过商家端注册用户
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/addShopAppUser",method =RequestMethod.POST )
+    public BaseResp<Long> addShopAppUser(User user, HttpServletRequest request){
+         if(user==null||user.getMobile()==null){
+             return new BaseResp<Long>(ResultStatus.error_param_empty);
+         }
+        user.setUserIp(IpUtils.getIpAddr(request));
+        user.setUserName(user.getMobile());
+        Long add = userService.add(user);
+        return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }
 
     /**

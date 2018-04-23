@@ -18,7 +18,7 @@ public interface ShopEnterMapper {
 
     ShopEnterOut selectByUserIdAndShopName(ShopEnter record);
 
-    ShopEnterOut selectByUserId(Long id);
+    List<ShopEnterOut> selectByUserId(Long id);
 
     int updateByPrimaryKeySelective(ShopEnter record);
 

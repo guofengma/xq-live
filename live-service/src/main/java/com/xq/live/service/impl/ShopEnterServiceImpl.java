@@ -41,13 +41,15 @@ public class ShopEnterServiceImpl implements ShopEnterService{
 
     @Override
     public ShopEnterOut searchByUserId(Long userId) {
-        ShopEnterOut shopEnterOut = shopEnterMapper.selectByUserId(userId);
-        return shopEnterOut;
+        List<ShopEnterOut> list = shopEnterMapper.selectByUserId(userId);
+
+        return list.get(list.size()-1);//返回最后一条数据,前面的数据无需做判断
     }
 
     @Override
     public Integer addShop(ShopEnter shopEnter) {
-        ShopEnterOut shopEnterOut = shopEnterMapper.selectByUserId(shopEnter.getUserId());
+        List<ShopEnterOut> list = shopEnterMapper.selectByUserId(shopEnter.getUserId());
+        ShopEnterOut shopEnterOut = list.get(list.size()-1);//返回最后一条数据,前面的数据无需做判断
         if(shopEnterOut!=null&&shopEnterOut.getStatus()!=null&&shopEnterOut.getStatus()==1){
             Shop shop = new Shop();
             Long userId = shopEnterOut.getUserId();

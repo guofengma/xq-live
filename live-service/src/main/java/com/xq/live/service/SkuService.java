@@ -60,6 +60,13 @@ public interface SkuService {
     Pager<SkuForTscOut> queryTscList(SkuInVo inVo);
 
     /**
+     * 查询单个推荐菜详情
+     * @param inVo
+     * @return
+     */
+    SkuForTscOut getTscForZan(SkuInVo inVo);
+
+    /**
      * 判断是否是新用户首次下单
      * @param userId
      * @return

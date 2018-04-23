@@ -70,6 +70,12 @@ public class SkuServiceImpl implements SkuService {
         return result;
     }
 
+    @Override
+    public SkuForTscOut getTscForZan(SkuInVo inVo) {
+        SkuForTscOut tscForZan = skuMapper.getTscForZan(inVo);
+        return tscForZan;
+    }
+
 
     @Override
     public List<SkuOut> top(SkuInVo inVo) {

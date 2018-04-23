@@ -83,6 +83,24 @@ public class SkuController {
     }
 
     /**
+     * 查询单个推荐菜
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/getTscForZan",method = RequestMethod.GET)
+    public BaseResp<SkuForTscOut> getTscForZan(SkuInVo inVo){
+        if(inVo==null||inVo.getId()==null||inVo.getZanUserId()==null){
+            return new BaseResp<SkuForTscOut>(ResultStatus.error_param_empty);
+        }
+        if(inVo.getShopId() == null){
+            return new BaseResp<SkuForTscOut>(ResultStatus.error_param_shop_id_empty);
+        }
+        inVo.setSkuType(Sku.SKU_TYPE_TSC);
+        SkuForTscOut tscForZan = skuService.getTscForZan(inVo);
+        return  new BaseResp<SkuForTscOut>(ResultStatus.SUCCESS,tscForZan);
+    }
+
+    /**
      * 分页特色菜列表
      * @param inVo
      * @return

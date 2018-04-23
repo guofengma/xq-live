@@ -30,5 +30,7 @@ public interface SkuMapper {
 
     List<SkuForTscOut> queryTscList(SkuInVo inVo);
 
+    SkuForTscOut getTscForZan(SkuInVo inVo);
+
     int tscListTotal(SkuInVo inVo);
 }

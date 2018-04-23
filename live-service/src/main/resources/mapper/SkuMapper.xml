@@ -147,6 +147,51 @@
   </select>
 
 
+  <select id="getTscForZan" resultMap="TscZanResultMap">
+    select
+    sku.id,
+    sku.sku_code,
+    sku.sku_name,
+    sku.sku_type,
+    sku.sell_price,
+    sku.in_price,
+    sku.stock_num,
+    sku.pic_url,
+    sku.create_time,
+    sku.update_time,
+    sku.opreator_id,
+    sku.opreator_name,
+    sku.sku_info,
+    (select count(1) from zan z where ref_id = sku.id and z.type = 6) as zan,
+    (select count(1) from zan z where ref_id = sku.id and z.type = 6
+    <if test="zanUserId != null">
+      AND  user_id = #{zanUserId}
+    </if>
+    ) as is_zan
+    from sku sku
+    inner join sku_shop ss on sku.id = ss.sku_id
+    <where>
+      1=1
+      <if test="id != null">
+        and sku.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="skuCode != null">
+        and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="skuName != null">
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="skuType != null">
+        and sku.sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
+      <if test="shopId != null">
+        and ss.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+      and sku.is_deleted = 0
+    </where>
+    order by id desc
+  </select>
+
   <!--分页查询 start-->
   <select id="queryTscList" resultMap="TscZanResultMap">
     select

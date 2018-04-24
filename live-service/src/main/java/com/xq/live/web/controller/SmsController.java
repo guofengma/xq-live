@@ -109,21 +109,21 @@ public class SmsController {
     }
 
     /**
-     *判断验证码是否正确,并且更新user表
+     *判断验证码是否正确,并且更新user表,返回一个通行的userId
      * @param inVo
      * @return
      */
     @RequestMapping(value = "/isVerify",method = RequestMethod.GET)
-    public BaseResp<Integer> isVerify(SmsSendInVo inVo){
+    public BaseResp<Long> isVerify(SmsSendInVo inVo){
         if(inVo==null||inVo.getShopMobile()==null||inVo.getSmsContent()==null||inVo.getUserId()==null||inVo.getUserName()==null){
-            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
         }
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
-        Integer verify = smsSendService.isVerify(inVo);
-        if(verify==-1){
-            return new BaseResp<Integer>(ResultStatus.FAIL,verify);
+        Long verify = smsSendService.isVerify(inVo);
+        if(verify==-1||verify==null){
+            return new BaseResp<Long>(ResultStatus.FAIL,verify);
         }
-        return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
+        return new BaseResp<Long>(ResultStatus.SUCCESS,verify);
 
 
     }

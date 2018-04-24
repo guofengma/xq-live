@@ -11,6 +11,7 @@ import com.xq.live.vo.out.SmsOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @copyright:hbxq
  **/
 @Service
+@Transactional
 public class SmsSendServiceImpl implements SmsSendService {
 
     @Autowired
@@ -146,22 +148,32 @@ public class SmsSendServiceImpl implements SmsSendService {
     }
 
     @Override
-    public Integer isVerify(SmsSendInVo inVo) {
+    public Long isVerify(SmsSendInVo inVo) {
         SmsSend smsSend = smsSendMapper.selectByMobile(inVo);
         if(smsSend==null||smsSend.getSmsContent()==null){
             return null;
         }
         if(!StringUtils.equals(inVo.getSmsContent(),smsSend.getSmsContent())){
-            return -1;
+            return -1L;
         }
 
+        /**
+         * 通过手机号来判断是否user表中是否有数据,如果没有则直接更新user表,
+         * 如果有就把用户合并，返回有手机号的userId
+         */
+        User byMobile = userMapper.findByMobile(inVo.getShopMobile());
         User user = userMapper.selectByPrimaryKey(inVo.getUserId());
-        user.setUserName(smsSend.getShopMobile());
-        user.setMobile(smsSend.getShopMobile());
-        int i = userMapper.updateByPrimaryKeySelective(user);
-        return i;
+        if(byMobile==null){
+            user.setUserName(smsSend.getShopMobile());
+            user.setMobile(smsSend.getShopMobile());
+            userMapper.updateByPrimaryKeySelective(user);
+            return user.getId();
+        }
 
-
+        byMobile.setOpenId(user.getOpenId());
+        userMapper.updateByMobile(byMobile);
+        userMapper.deleteByPrimaryKey(user.getId());
+        return byMobile.getId();
     }
 
     @Override

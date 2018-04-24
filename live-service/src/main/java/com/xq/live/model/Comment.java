@@ -14,7 +14,7 @@ public class Comment {
     @NotNull(message = "refId必填")
     private Long refId; //关联的id
     @NotNull(message = "cmtType必填")
-    private Integer cmtType;  //评论类型 1 活动 2 主题 3 直播 4 评论 5 商家
+    private Integer cmtType;  //评论类型 1 活动 2 主题 3 直播 4 评论 5 商家 6推荐菜
     @NotNull(message = "content必填")
     private String content;
     @NotNull(message = "userId必填")

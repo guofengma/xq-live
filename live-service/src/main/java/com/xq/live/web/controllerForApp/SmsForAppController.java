@@ -132,13 +132,13 @@ public class SmsForAppController {
         if(inVo==null||inVo.getShopMobile()==null){
             return new BaseResp<SmsOut>(ResultStatus.error_param_empty);
         }
-        /**
+       /* *//**
          * 发送验证码的手机如果不在user表中，且用户的状态不为商家，则不让登录
-         */
+         *//*
         User byMobile = userService.findByMobile(inVo.getShopMobile());
         if(byMobile==null||byMobile.getUserType()==1){
             return new BaseResp<SmsOut>(ResultStatus.error_para_cashier_user_type);
-        }
+        }*/
 
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
         SmsOut smsOut = smsSendService.redisVerifyForShopApp(inVo);
@@ -182,7 +182,7 @@ public class SmsForAppController {
         }
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
         Integer verify = smsSendService.isVerifyForShopApp(inVo);
-        if(verify==-1){
+        if(verify==-1||verify==null){
             return new BaseResp<Integer>(ResultStatus.FAIL,verify);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
@@ -194,16 +194,16 @@ public class SmsForAppController {
      * @return
      */
     @RequestMapping(value = "/isVerify",method = RequestMethod.GET)
-    public BaseResp<Integer> isVerify(SmsSendInVo inVo){
+    public BaseResp<Long> isVerify(SmsSendInVo inVo){
         if(inVo==null||inVo.getShopMobile()==null||inVo.getSmsContent()==null||inVo.getUserId()==null||inVo.getUserName()==null){
-            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
         }
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
-        Integer verify = smsSendService.isVerify(inVo);
-        if(verify==-1){
-            return new BaseResp<Integer>(ResultStatus.FAIL,verify);
+        Long verify = smsSendService.isVerify(inVo);
+        if(verify==-1||verify==null){
+            return new BaseResp<Long>(ResultStatus.FAIL,verify);
         }
-        return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
+        return new BaseResp<Long>(ResultStatus.SUCCESS,verify);
 
 
     }

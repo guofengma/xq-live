@@ -104,7 +104,7 @@ public class UserForAppController {
     }
 
     /**
-     * 通过商家端注册用户
+     * 通过商家端注册用户（仅仅是通过手机号注册用户）
      * @param user
      * @return
      */
@@ -118,6 +118,34 @@ public class UserForAppController {
         Long add = userService.add(user);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }
+
+    /**
+     * 通过商家端app注册用户（用微信登陆）,适合客户端app登陆，但是通过openId和mobile
+     *
+     * 适用于用openId和mobile来增加用户,
+     * 如果通过openId查出数据,这里面的openId查出来的手机号是为空的，让用户输入手机号发送验证码,
+     * 如果输入的手机号在user表中存在记录,则更新该记录放入openId，返回该记录id,并删除原来含有openId记录的数据
+     * 如果输入的手机号不存在记录，则直接在查出来的openId的记录中放入手机号,返回该记录id,
+     * 如果openId查出来的数据含有手机号，则不走此接口，直接通过findByOpenId接口返回，方便以后扩展。
+     *
+     * 如果openId查不出数据，则用户没有登录过小程序，
+     * 如果输入的手机号在user表中存在记录,则更新该记录放入openId，返回该记录id,
+     * 如果输入的手机号不存在记录，则直接插入一条数据
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/addAppUser",method =RequestMethod.POST )
+    public BaseResp<Long> addAppUser(User user, HttpServletRequest request){
+        if(user==null||user.getMobile()==null||user.getOpenId()==null){
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
+        }
+        user.setUserIp(IpUtils.getIpAddr(request));
+        user.setUserName(user.getMobile());
+        Long add = userService.addAppUser(user);
+        return new BaseResp<Long>(ResultStatus.SUCCESS,add);
+    }
+
 
     /**
      * 通过shopId和mobile添加核销员

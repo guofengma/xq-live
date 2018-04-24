@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Created by zhangpeng32 on 2017/12/14.
  */
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class);
@@ -133,5 +135,42 @@ public class UserServiceImpl implements UserService {
         }
         Integer integer = userMapper.updateByMobile(user);
         return integer;
+    }
+
+    @Override
+    public Long addAppUser(User user) {
+        User byOpenId = userMapper.findByOpenId(user.getOpenId());
+        User byMobile = userMapper.findByMobile(user.getMobile());
+        if(byOpenId==null) {
+            if (byMobile == null) {
+                int i = userMapper.insert(user);
+                if (i < 1) {
+                    return null;
+                }
+                return user.getId();
+            }
+            byMobile.setOpenId(user.getOpenId());
+            Integer k = userMapper.updateByMobile(byMobile);
+            if(k<1){
+                return null;
+            }
+            return byMobile.getId();
+        }else {
+            if(byOpenId.getMobile()!=null){
+                return byOpenId.getId();
+            }
+            if(byMobile==null){
+                byOpenId.setMobile(user.getMobile());
+                Integer j = userMapper.updateByOpenId(byOpenId);
+                if (j < 1) {
+                    return null;
+                }
+                return byOpenId.getId();
+            }
+            byMobile.setOpenId(user.getOpenId());
+            userMapper.updateByMobile(byMobile);
+            userMapper.deleteByPrimaryKey(user.getId());
+            return byMobile.getId();
+        }
     }
 }

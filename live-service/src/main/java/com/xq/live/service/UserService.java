@@ -61,4 +61,21 @@ public interface UserService {
      * @return
      */
     public Integer updateByMobile(User user);
+
+    /**
+     * 通过商家端app注册用户（用微信登陆）,适合客户端app登陆，但是通过openId和mobile
+     *
+     * 适用于用openId和mobile来增加用户,
+     * 如果通过openId查出数据,这里面的openId查出来的手机号是为空的，让用户输入手机号发送验证码,
+     * 如果输入的手机号在user表中存在记录,则更新该记录放入openId，返回该记录id,
+     * 如果输入的手机号不存在记录，则直接在查出来的openId的记录中放入手机号,返回该记录id,
+     * 如果openId查出来的数据含有手机号，则不走此接口，直接通过findByOpenId接口返回，方便以后扩展。
+     *
+     * 如果openId查不出数据，则用户没有登录过小程序，
+     * 如果输入的手机号在user表中存在记录,则更新该记录放入openId，返回该记录id,
+     * 如果输入的手机号不存在记录，则直接插入一条数据
+     * @param user
+     * @return
+     */
+    Long addAppUser(User user);
 }

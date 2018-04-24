@@ -53,7 +53,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public BaseResp<Long> addUser(String code,String mobile, HttpServletRequest request){
+    public BaseResp<Long> addUser(String code,HttpServletRequest request){
         //获取openId
         if (StringUtils.isEmpty(code)) {
             return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);

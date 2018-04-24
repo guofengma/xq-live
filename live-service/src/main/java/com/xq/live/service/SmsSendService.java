@@ -46,7 +46,7 @@ public interface SmsSendService {
      * @param inVo
      * @return
      */
-    Integer isVerify(SmsSendInVo inVo);
+    Long isVerify(SmsSendInVo inVo);
 
     /**
      * 商家端app注册验证码是否通过

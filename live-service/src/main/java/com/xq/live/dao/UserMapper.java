@@ -27,6 +27,7 @@ public interface UserMapper{
 
     int updateByPrimaryKey(User record);
 
+    @Cacheable(value = "1h",key = "#p0")
     User loadUserByUserName(String userName);
 
     List<User> list(UserInVo inVo);

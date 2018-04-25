@@ -1,6 +1,7 @@
 package com.xq.live.web.security;
 
 
+import com.xq.live.service.impl.CustomAuthenticationProvider;
 import com.xq.live.web.exception.JwtAuthenticationEntryPoint;
 import com.xq.live.web.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        //系统默认身份验证组件
         authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder);
+        // 使用自定义身份验证组件，可使用MD5加密方式
+        //        authenticationManagerBuilder.authenticationProvider(new CustomAuthenticationProvider(userDetailsService));
     }
 
     @Override

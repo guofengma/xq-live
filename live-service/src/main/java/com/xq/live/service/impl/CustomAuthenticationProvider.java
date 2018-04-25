@@ -1,3 +1,4 @@
+
 package com.xq.live.service.impl;
 
 import com.xq.live.model.Authority;
@@ -24,11 +25,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public CustomAuthenticationProvider(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public CustomAuthenticationProvider(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override

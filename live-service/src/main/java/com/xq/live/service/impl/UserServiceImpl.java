@@ -1,37 +1,27 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.UserMapper;
-import com.xq.live.model.Authority;
 import com.xq.live.model.User;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.JwtTokenUtil;
-import com.xq.live.web.utils.SignUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zhangpeng32 on 2017/12/14.
@@ -172,6 +162,7 @@ public class UserServiceImpl implements UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String rawPassword = user.getPassword();
         user.setPassword(encoder.encode(rawPassword));
+//        rawPassword = DigestUtils.md5DigestAsHex((rawPassword).getBytes());
         userMapper.insert(user);
         return user.getId();
     }
@@ -182,6 +173,6 @@ public class UserServiceImpl implements UserService {
         if (!jwtTokenUtil.isTokenExpired(token)) {
             return jwtTokenUtil.refreshToken(token);
         }
-        return "error";
+        return null;
     }
 }

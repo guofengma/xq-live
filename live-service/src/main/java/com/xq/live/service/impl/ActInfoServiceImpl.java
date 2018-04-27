@@ -2,14 +2,13 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.*;
-import com.xq.live.model.AccessLog;
-import com.xq.live.model.ActInfo;
-import com.xq.live.model.ActShop;
-import com.xq.live.model.User;
+import com.xq.live.model.*;
 import com.xq.live.service.ActInfoService;
 import com.xq.live.vo.in.ActInfoInVo;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActInfoOut;
+import com.xq.live.vo.out.ActUserOut;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,9 @@ public class ActInfoServiceImpl implements ActInfoService {
 
     @Autowired
     private ActShopMapper actShopMapper;
+
+    @Autowired
+    private ActUserMapper actUserMapper;
 
     @Autowired
     private AccessLogMapper accessLogMapper;
@@ -95,6 +97,16 @@ public class ActInfoServiceImpl implements ActInfoService {
         if (actInfoOut == null) {
             return null;
         }
+        ActUserInVo actUserInVo = new ActUserInVo();
+        actUserInVo.setActId(inVo.getId());
+        actUserInVo.setUserId(inVo.getUserId());
+        List<ActUserOut> list = actUserMapper.findByInVo(actUserInVo);
+        if (list != null&&list.size()>0) {
+            actInfoOut.setIsSignForUser(ActUser.ACT_USER_IS_SIGN);//已报名
+        } else {
+            actInfoOut.setIsSignForUser(ActUser.ACT_USER_NO_SIGN);//未报名
+        }
+
         User user = userMapper.selectByPrimaryKey(inVo.getUserId());
         //判断商家是否已经报名了活动
         if(user!=null&&user.getShopId()!=null) {

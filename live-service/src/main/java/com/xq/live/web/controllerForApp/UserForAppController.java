@@ -52,6 +52,7 @@ public class UserForAppController {
      * @return
      */
     @RequestMapping(value = "/findUserByMobile",method = RequestMethod.GET)
+    @CrossOrigin
     public BaseResp<User> findUserByMobile(String mobile){
         if(mobile==null||"".equals(mobile)){
             return new BaseResp<User>(ResultStatus.error_param_empty);
@@ -274,6 +275,25 @@ public class UserForAppController {
         }
         Integer result = userService.updateByOpenId(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 通过手机号来修改用户信息
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/updateByMobile",method = RequestMethod.POST)
+    public BaseResp<Integer> updateByMobile(User user){
+        if(user==null||user.getMobile()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_mobile_empty);
+        }
+
+        User byMobile = userService.findByMobile(user.getMobile());
+        if(byMobile==null){
+            return new BaseResp<>(ResultStatus.error_para_user_empty);
+        }
+        Integer integer = userService.updateByMobile(user);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
 
     /**

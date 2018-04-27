@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xq.live.dao.ActUserMapper">
+  <resultMap id="BaseResultMap" type="com.xq.live.model.ActUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="act_id" jdbcType="BIGINT" property="actId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="act_user_name" jdbcType="VARCHAR" property="actUserName" />
+    <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
+    <result column="apply_status" jdbcType="TINYINT" property="applyStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="ActUserOutMap" type="com.xq.live.vo.out.ActUserOut" extends="BaseResultMap">
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, act_id, user_id, user_code, act_user_name, pic_ids, apply_status, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from act_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from act_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xq.live.vo.in.ActUserInVo">
+    insert into act_user (id, act_id, user_id, 
+      user_code, act_user_name, pic_ids, 
+      apply_status, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{userCode,jdbcType=VARCHAR}, #{actUserName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR}, 
+      0, now(), now()
+      )
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      select last_insert_id() as id
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.xq.live.vo.in.ActUserInVo">
+    insert into act_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="actId != null">
+        act_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userCode != null">
+        user_code,
+      </if>
+      <if test="actUserName != null">
+        act_user_name,
+      </if>
+      <if test="picIds != null">
+        pic_ids,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="actId != null">
+        #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actUserName != null">
+        #{actUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="picIds != null">
+        #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.vo.in.ActUserInVo">
+    update act_user
+    <set>
+      <if test="actId != null">
+        act_id = #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actUserName != null">
+        act_user_name = #{actUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="picIds != null">
+        pic_ids = #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.vo.in.ActUserInVo">
+    update act_user
+    set act_id = #{actId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      act_user_name = #{actUserName,jdbcType=VARCHAR},
+      pic_ids = #{picIds,jdbcType=VARCHAR},
+      apply_status = #{applyStatus,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(1) from act_user where act_id = #{actId,jdbcType=BIGINT}
+  </select>
+
+  <select id="findByInVo" resultMap="ActUserOutMap">
+    select
+    a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status, a.create_time,
+    a.update_time,
+    u.icon_url,
+    u.age,
+    u.height
+    from act_user a LEFT join user u on a.user_id = u.id
+    <where>
+      1=1
+      <if test="id != null">
+        and a.id = #{id}
+      </if>
+      <if test="actId != null">
+        and a.act_id = #{actId}
+      </if>
+      <if test="userId != null">
+        and a.user_id = #{userId}
+      </if>
+      and a.apply_status != 2
+    </where>
+  </select>
+</mapper>

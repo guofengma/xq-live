@@ -259,6 +259,25 @@ public class UserController {
     }
 
     /**
+     * 通过手机号来修改用户信息
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/updateByMobile",method = RequestMethod.POST)
+    public BaseResp<Integer> updateByMobile(User user){
+        if(user==null||user.getMobile()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_mobile_empty);
+        }
+
+        User byMobile = userService.findByMobile(user.getMobile());
+        if(byMobile==null){
+            return new BaseResp<>(ResultStatus.error_para_user_empty);
+        }
+        Integer integer = userService.updateByMobile(user);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
+
+    /**
      * 查询用户列表
      * @return
      */

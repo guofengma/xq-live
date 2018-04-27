@@ -61,6 +61,10 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
+    private Integer age;//年龄
+
+    private Integer height;//身高
+
 
     public Long getId() {
         return id;
@@ -212,5 +216,21 @@ public class User {
 
     public void setSex(Integer sex) {
         this.sex = sex;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 }

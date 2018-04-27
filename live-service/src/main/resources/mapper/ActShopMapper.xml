@@ -215,8 +215,9 @@
         <include refid="Base_Column_List"/>
         from act_shop
         <where>
+            1=1
             <if test="id != null">
-                id = #{id}
+               and id = #{id}
             </if>
             <if test="actId != null">
                 and act_id = #{actId}
@@ -224,6 +225,7 @@
             <if test="shopId != null">
                 and shop_id = #{shopId}
             </if>
+            and apply_status != 2
         </where>
     </select>
 

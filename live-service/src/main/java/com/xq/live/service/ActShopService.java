@@ -38,7 +38,7 @@ public interface ActShopService {
     Long add(ActShop actShop);
 
     /**
-     * 根据输入查询商家报名信息
+     * 查询商家是否报名
      * @param inVo
      * @return
      */

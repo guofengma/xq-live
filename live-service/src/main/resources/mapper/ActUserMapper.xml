@@ -154,7 +154,7 @@
   </update>
 
   <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
-    select count(1) from act_user where act_id = #{actId,jdbcType=BIGINT} and apply_status = 1
+    select count(1) from act_user where act_id = #{actId,jdbcType=BIGINT}
   </select>
 
   <select id="findByInVo" resultMap="ActUserOutMap">

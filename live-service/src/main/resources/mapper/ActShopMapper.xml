@@ -9,13 +9,13 @@
         <result column="apply_status" jdbcType="INTEGER" property="applyStatus"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="vote_num" jdbcType="INTEGER" property="voteNum"/>
     </resultMap>
 
     <resultMap id="ActShopOutResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.ActShopOut">
         <result column="logo_url" jdbcType="VARCHAR" property="logoUrl"/>
         <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
         <result column="shop_info" jdbcType="VARCHAR" property="shopInfo"/>
-        <result column="vote_num" jdbcType="INTEGER" property="voteNum"/>
         <result column="is_vote" jdbcType="INTEGER" property="isVote"/>
     </resultMap>
 
@@ -32,7 +32,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, act_id, shop_id, shop_code, apply_status, create_time, update_time
+    id, act_id, shop_id, shop_code, apply_status, create_time, update_time,vote_num
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -48,7 +48,7 @@
         insert into act_shop (id, act_id, shop_id, shop_code, apply_status,
         create_time, update_time)
         values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
-        #{shopCode,jdbcType=VARCHAR}, 1, now(), now())
+        #{shopCode,jdbcType=VARCHAR}, 0, now(), now())
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>
@@ -99,6 +99,12 @@
             <if test="shopId != null">
                 shop_id = #{shopId,jdbcType=BIGINT},
             </if>
+            <if test="voteNum != null">
+                vote_num = #{voteNum,jdbcType=INTEGER},
+            </if>
+            <if test="applyStatus != null">
+                apply_status = #{applyStatus,jdbcType=TINYINT},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
@@ -118,7 +124,7 @@
   </update>
 
     <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
-    select count(1) from act_shop where act_id = #{actId,jdbcType=BIGINT}
+    select count(1) from act_shop where act_id = #{actId,jdbcType=BIGINT} and apply_status = 1
   </select>
 
     <select id="list" resultMap="ActShopOutResultMap">
@@ -143,8 +149,9 @@
         act_shop a
         inner join shop s on a.shop_id = s.id
         <where>
+            1=1
             <if test="id != null">
-                a.id = #{id,jdbcType=BIGINT}
+              and  a.id = #{id,jdbcType=BIGINT}
             </if>
             <if test="actId != null">
                 AND  a.act_id = #{actId,jdbcType=BIGINT}
@@ -153,6 +160,7 @@
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
                 or a.shop_code = #{searchKey,jdbcType=VARCHAR})
             </if>
+            and  a.apply_status = 1
         </where>
         limit #{start}, #{rows}
     </select>
@@ -182,12 +190,14 @@
         FROM act_shop a
         INNER JOIN act_info b on a.act_id = b.id
         <where>
+            1=1
             <if test="id != null">
-                a.id = #{id,jdbcType=BIGINT}
+              and  a.id = #{id,jdbcType=BIGINT}
             </if>
             <if test="shopId != null">
                 AND  a.shop_id = #{shopId,jdbcType=BIGINT}
             </if>
+            and a.apply_status = 1
         </where>
     </select>
 
@@ -197,8 +207,9 @@
         act_shop a
         inner join shop s on a.shop_id = s.id
         <where>
+            1=1
             <if test="id != null">
-                a.id = #{id,jdbcType=BIGINT}
+              and  a.id = #{id,jdbcType=BIGINT}
             </if>
             <if test="actId != null">
                 AND  a.act_id = #{actId,jdbcType=BIGINT}
@@ -207,6 +218,7 @@
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
                 or a.shop_code = #{searchKey,jdbcType=VARCHAR})
             </if>
+            and a.apply_status = 1
         </where>
     </select>
 

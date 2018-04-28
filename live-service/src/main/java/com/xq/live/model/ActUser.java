@@ -1,5 +1,7 @@
 package com.xq.live.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -37,8 +39,12 @@ public class ActUser {
 
     private Byte applyStatus;
 
+    private Integer voteNum;
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     public Long getId() {
@@ -111,5 +117,13 @@ public class ActUser {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getVoteNum() {
+        return voteNum;
+    }
+
+    public void setVoteNum(Integer voteNum) {
+        this.voteNum = voteNum;
     }
 }

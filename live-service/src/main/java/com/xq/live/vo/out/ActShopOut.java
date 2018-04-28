@@ -1,5 +1,7 @@
 package com.xq.live.vo.out;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -21,8 +23,10 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     private Integer applyStatus;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private String logoUrl;

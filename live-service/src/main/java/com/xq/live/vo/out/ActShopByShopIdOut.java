@@ -48,6 +48,8 @@ public class ActShopByShopIdOut implements Comparable<ActShopByShopIdOut>{
 
     private Integer isVote;//用户是否投票
 
+    private Integer voteNum;//投票数量
+
     public Long getId() {
         return id;
     }
@@ -166,6 +168,14 @@ public class ActShopByShopIdOut implements Comparable<ActShopByShopIdOut>{
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public Integer getVoteNum() {
+        return voteNum;
+    }
+
+    public void setVoteNum(Integer voteNum) {
+        this.voteNum = voteNum;
     }
 
     @Override

@@ -15,6 +15,13 @@ public class Sku {
 
     public final static int SKU_TYPE_TSC = 2;   //特色菜
 
+    /**
+     * 是否删除
+     */
+    public final static int SKU_NO_DELETED = 0; //未删除
+
+    public final static int SKU_IS_DELETED = 1;//已删除
+
     private Long id;
     private String skuCode;
     @NotNull(message = "skuName必填")

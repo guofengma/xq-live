@@ -52,6 +52,13 @@
     and is_deleted = 0
   </select>
 
+  <select id="selectBySkuCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sku
+    where sku_code = #{skuCode,jdbcType=VARCHAR}
+  </select>
+
   <!--分页查询 start-->
   <select id="list" resultMap="SkuOutResultMap">
     SELECT
@@ -192,6 +199,38 @@
     order by id desc
   </select>
 
+
+  <select id="getTscBySkuNameAndShopId" resultMap="TscZanResultMap">
+    select
+    sku.id,
+    sku.sku_code,
+    sku.sku_name
+    from sku sku
+    inner join sku_shop ss on sku.id = ss.sku_id
+    <where>
+      1=1
+      <if test="id != null">
+        and sku.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="skuCode != null">
+        and sku.sku_code = #{skuCode,jdbcType=VARCHAR}
+      </if>
+      <if test="skuName != null">
+        and sku.sku_name like concat('%', #{skuName,jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="skuType != null">
+        and sku.sku_type = #{skuType,jdbcType=INTEGER}
+      </if>
+      <if test="shopId != null">
+        and ss.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+      and sku.is_deleted = 0
+    </where>
+    order by id desc
+  </select>
+
+
+
   <!--分页查询 start-->
   <select id="queryTscList" resultMap="TscZanResultMap">
     select
@@ -270,14 +309,21 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
 
+  <insert id="insertSkuShop" parameterType="com.xq.live.vo.in.SkuInVo">
+    insert into sku_shop (sku_id, shop_id,
+    create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
+    now(), now())
+  </insert>
+
   <insert id="insert" parameterType="com.xq.live.model.Sku">
     insert into sku (sku_code, sku_name,
       sku_type, sell_price, in_price, 
-      stock_num, create_time, update_time, 
+      stock_num, pic_url,create_time, update_time,
       opreator_id, opreator_name,sku_info)
     values (#{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR},
       #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},
-      #{stockNum,jdbcType=INTEGER}, now(), now(),
+      #{stockNum,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR},now(), now(),
       #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR},#{skuInfo,jdbcType=VARCHAR})
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id
@@ -303,6 +349,9 @@
       </if>
       <if test="stockNum != null">
         stock_num,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
       </if>
       <if test="createTime != null">
         create_time,
@@ -338,6 +387,9 @@
       </if>
       <if test="stockNum != null">
         #{stockNum,jdbcType=INTEGER},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -380,6 +432,9 @@
       <if test="stockNum != null">
         stock_num = #{stockNum,jdbcType=INTEGER},
       </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -406,6 +461,7 @@
       sell_price = #{sellPrice,jdbcType=DECIMAL},
       in_price = #{inPrice,jdbcType=DECIMAL},
       stock_num = #{stockNum,jdbcType=INTEGER},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       opreator_id = #{opreatorId,jdbcType=BIGINT},

@@ -9,6 +9,7 @@
     <result column="act_user_name" jdbcType="VARCHAR" property="actUserName" />
     <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
     <result column="apply_status" jdbcType="TINYINT" property="applyStatus" />
+    <result column="vote_num" jdbcType="INTEGER" property="voteNum"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -19,7 +20,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, act_id, user_id, user_code, act_user_name, pic_ids, apply_status, create_time, 
+    id, act_id, user_id, user_code, act_user_name, pic_ids, apply_status, vote_num,create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -127,6 +128,9 @@
       <if test="applyStatus != null">
         apply_status = #{applyStatus,jdbcType=TINYINT},
       </if>
+      <if test="voteNum != null">
+        vote_num = #{voteNum,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -150,12 +154,12 @@
   </update>
 
   <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
-    select count(1) from act_user where act_id = #{actId,jdbcType=BIGINT}
+    select count(1) from act_user where act_id = #{actId,jdbcType=BIGINT} and apply_status = 1
   </select>
 
   <select id="findByInVo" resultMap="ActUserOutMap">
     select
-    a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status, a.create_time,
+    a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
     a.update_time,
     u.icon_url,
     u.age,

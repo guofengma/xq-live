@@ -18,6 +18,8 @@ public class VoteInVo extends  BaseInVo {
 
     private Long userId;
 
+    private Long playUserId;//参与选手的用户id
+
     private Date createTime;
 
     public Long getId() {
@@ -58,5 +60,13 @@ public class VoteInVo extends  BaseInVo {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getPlayUserId() {
+        return playUserId;
+    }
+
+    public void setPlayUserId(Long playUserId) {
+        this.playUserId = playUserId;
     }
 }

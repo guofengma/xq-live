@@ -9,11 +9,13 @@ public class Vote {
     @NotNull(message = "actId必填")
     private Long actId;
 
-    @NotNull(message = "shopId必填")
+    //@NotNull(message = "shopId必填")
     private Long shopId;
 
     @NotNull(message = "userId必填")
     private Long userId;
+
+    private Long playUserId;//参与选手的用户id
 
     private Date createTime;
 
@@ -55,5 +57,13 @@ public class Vote {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public Long getPlayUserId() {
+        return playUserId;
+    }
+
+    public void setPlayUserId(Long playUserId) {
+        this.playUserId = playUserId;
     }
 }

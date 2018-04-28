@@ -12,11 +12,15 @@ import java.util.List;
 public interface SkuMapper {
     int deleteByPrimaryKey(Long id);
 
+    int insertSkuShop(SkuInVo record);
+
     int insert(Sku record);
 
     int insertSelective(Sku record);
 
     Sku selectByPrimaryKey(Long id);
+
+    Sku selectBySkuCode(String skuCode);
 
     int updateByPrimaryKeySelective(Sku record);
 
@@ -31,6 +35,8 @@ public interface SkuMapper {
     List<SkuForTscOut> queryTscList(SkuInVo inVo);
 
     SkuForTscOut getTscForZan(SkuInVo inVo);
+
+    SkuForTscOut getTscBySkuNameAndShopId(SkuInVo inVo);
 
     int tscListTotal(SkuInVo inVo);
 }

@@ -1,14 +1,18 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.RedisCache;
-import com.xq.live.dao.ShopMapper;
-import com.xq.live.dao.TopicMapper;
-import com.xq.live.model.Shop;
-import com.xq.live.model.Topic;
+import com.xq.live.dao.*;
+import com.xq.live.model.*;
 import com.xq.live.service.CountService;
+import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.in.ActUserInVo;
+import com.xq.live.vo.in.VoteInVo;
+import com.xq.live.vo.out.ActUserOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,6 +33,12 @@ public class CountServiceImpl implements CountService {
 
     @Autowired
     ShopMapper shopMapper;
+
+    @Autowired
+    ActUserMapper actUserMapper;
+
+    @Autowired
+    ActShopMapper actShopMapper;
 
     private static Long viewArticleTime = System.currentTimeMillis();
 
@@ -101,5 +111,101 @@ public class CountServiceImpl implements CountService {
             redisCache.del(key);
         }
         return pops;
+    }
+
+    @Override
+    public Integer voteNums(VoteInVo invo) {
+        String key = null;
+        Integer nums = 0;
+        ActShop actShop = null;
+        List<ActUserOut> actUser = null;
+        if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
+             key = "voteNums_" + invo.getActId() + invo.getShopId() + invo.getPlayerUserId();
+        }else if(invo.getShopId()!=null&&invo.getPlayerUserId()==null){
+            key = "voteNums_" + invo.getActId() + "_shopId_" +invo.getShopId();
+            ActShopInVo actShopInVo = new ActShopInVo();
+            actShopInVo.setShopId(invo.getShopId());
+            actShopInVo.setActId(invo.getActId());
+            //可以后期修改一下
+            actShop = actShopMapper.findByInVo(actShopInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            nums = actShop.getVoteNum() == null ? 0 : actShop.getVoteNum();
+        }else if(invo.getShopId()==null&&invo.getPlayerUserId()!=null){
+            key = "voteNums_" + invo.getActId() + "_player_" +invo.getPlayerUserId();
+            ActUserInVo actUserInVo = new ActUserInVo();
+            actUserInVo.setUserId(invo.getPlayerUserId());
+            actUserInVo.setActId(invo.getActId());
+            //可以后期修改一下
+            actUser = actUserMapper.findByInVo(actUserInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            nums = actUser.get(0).getVoteNum() == null ? 0 : actUser.get(0).getVoteNum();
+        }
+        Integer voteNums = redisCache.get(key, Integer.class);
+        if (voteNums == null) {
+            voteNums = nums;
+        }
+        if(invo.getType()== Vote.VOTE_ADD){
+            voteNums ++;
+        }else{
+            voteNums --;
+        }
+        redisCache.set(key, voteNums, 1l, TimeUnit.DAYS);
+        Long time = System.currentTimeMillis();
+        if (time > (viewArticleTime + 300000)) {    //5分钟更新一次数据到数据库,viewArticleTime:写数据库的周期
+            viewArticleTime = time;
+            if(actShop != null){
+                actShop.setVoteNum(voteNums);
+                actShopMapper.updateByPrimaryKeySelective(actShop);
+            }
+            if(actUser != null){
+                ActUserInVo actUserInVo = new ActUserInVo();
+                actUserInVo.setId(actUser.get(0).getId());
+                actUserInVo.setVoteNum(voteNums);
+                actUserMapper.updateByPrimaryKeySelective(actUserInVo);
+            }
+            redisCache.del(key);
+        }
+        return voteNums;
+    }
+
+    @Override
+    public Integer voteNumsNow(VoteInVo invo) {
+
+        Integer nums = 0;
+        ActShop actShop = null;
+        List<ActUserOut> actUser = null;
+        if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
+
+        }else if(invo.getShopId()!=null&&invo.getPlayerUserId()==null){
+            ActShopInVo actShopInVo = new ActShopInVo();
+            actShopInVo.setShopId(invo.getShopId());
+            actShopInVo.setActId(invo.getActId());
+            //可以后期修改一下
+            actShop = actShopMapper.findByInVo(actShopInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            nums = actShop.getVoteNum() == null ? 0 : actShop.getVoteNum();
+        }else if(invo.getShopId()==null&&invo.getPlayerUserId()!=null){
+            ActUserInVo actUserInVo = new ActUserInVo();
+            actUserInVo.setUserId(invo.getPlayerUserId());
+            actUserInVo.setActId(invo.getActId());
+            //可以后期修改一下
+            actUser = actUserMapper.findByInVo(actUserInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            nums = actUser.get(0).getVoteNum() == null ? 0 : actUser.get(0).getVoteNum();
+        }
+        if(invo.getType()== Vote.VOTE_ADD){
+            nums ++;
+        }else{
+            nums --;
+        }
+
+            if(actShop != null&&actUser == null){
+                actShop.setVoteNum(nums);
+                actShopMapper.updateByPrimaryKeySelective(actShop);
+            }
+            if(actShop == null&&actUser != null){
+                ActUserInVo actUserInVo = new ActUserInVo();
+                actUserInVo.setId(actUser.get(0).getId());
+                actUserInVo.setVoteNum(nums);
+                actUserMapper.updateByPrimaryKeySelective(actUserInVo);
+            }
+
+        return nums;
     }
 }

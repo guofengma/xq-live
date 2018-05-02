@@ -1,5 +1,7 @@
 package com.xq.live.service;
 
+import com.xq.live.vo.in.VoteInVo;
+
 /**
  * @package: com.xq.live.service
  * @description: 各种统计service
@@ -29,5 +31,18 @@ public interface CountService {
      */
     Integer shopPops(Long shopId);
 
+    /**
+     * 投票数据统计(用缓存,每5分钟写一次数据库)
+     * @param invo
+     * @return
+     */
+    Integer voteNums(VoteInVo invo);
+
+    /**
+     * 实时更新投票数目
+     * @param invo
+     * @return
+     */
+    Integer voteNumsNow(VoteInVo invo);
 
 }

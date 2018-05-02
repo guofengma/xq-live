@@ -4,6 +4,13 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class Vote {
+    /**
+     * 投票操作  1投票 2取消投票
+     */
+    public final static int VOTE_ADD = 1;   //投票
+
+    public final static int VOTE_DELETE = 2;   //取消投票
+
     private Long id;
 
     @NotNull(message = "actId必填")

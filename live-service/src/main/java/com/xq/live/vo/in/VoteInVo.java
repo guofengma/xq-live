@@ -22,6 +22,8 @@ public class VoteInVo extends  BaseInVo {
 
     private Date createTime;
 
+    private Integer type;//投票操作  1投票 2取消投票
+
     public Long getId() {
         return id;
     }
@@ -68,5 +70,13 @@ public class VoteInVo extends  BaseInVo {
 
     public void setPlayerUserId(Long playerUserId) {
         this.playerUserId = playerUserId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

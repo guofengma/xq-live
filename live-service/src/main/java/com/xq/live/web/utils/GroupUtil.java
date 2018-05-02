@@ -15,10 +15,6 @@ public class GroupUtil {
          * listShop.add(0,"A");
          listUser.add(0,"A");
          */
-        addList("咖喱","1");
-        System.out.println(grouptwo(listShop,listUser));
-
-
     }
 
     public static void  addList(String shop,String user){

@@ -319,11 +319,19 @@
   <insert id="insert" parameterType="com.xq.live.model.Sku">
     insert into sku (sku_code, sku_name,
       sku_type, sell_price, in_price, 
-      stock_num, pic_url,create_time, update_time,
+      stock_num,
+      <if test="isDeleted != null">
+      is_deleted,
+     </if>
+       pic_url,create_time, update_time,
       opreator_id, opreator_name,sku_info)
     values (#{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR},
       #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},
-      #{stockNum,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR},now(), now(),
+      #{stockNum,jdbcType=INTEGER},
+      <if test="isDeleted != null">
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+     </if>
+    #{picUrl,jdbcType=VARCHAR},now(), now(),
       #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR},#{skuInfo,jdbcType=VARCHAR})
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id

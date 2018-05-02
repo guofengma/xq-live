@@ -53,4 +53,19 @@ public class ActSignController {
         }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
+
+    /**
+     * 判断是否报名
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/isSign",method = RequestMethod.GET)
+    public BaseResp<Long> isSign(ActSignInVo inVo){
+        //判断是否已经报名了活动递交材料
+        ActSign sign = actSignService.isSign(inVo);
+        if(sign != null){
+            return new BaseResp<Long>(ResultStatus.error_act_sign_exist,sign.getId());
+        }
+        return new BaseResp<Long>(ResultStatus.SUCCESS);
+    }
 }

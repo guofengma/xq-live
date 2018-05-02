@@ -6,7 +6,7 @@
     <result column="act_id" jdbcType="BIGINT" property="actId" />
     <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="player_user_id" jdbcType="BIGINT" property="playUserId" />
+    <result column="player_user_id" jdbcType="BIGINT" property="playerUserId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">

@@ -81,4 +81,11 @@ public interface SoService {
      * @return
      */
     Integer selectByUserIdTotal(Long userId);
+
+    /**
+     * 领取活动券
+     * @param inVo
+     * @return
+     */
+    Long freeOrderForAct(SoInVo inVo);
 }

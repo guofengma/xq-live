@@ -11,7 +11,7 @@ public class So {
     public final static int SO_STATUS_APPLIED = 3;
     public final static int SO_STATUS_CANCEL = 10;
 
-    //订单类型 1 普通订单
+    //订单类型 1 普通订单(平台订单)
     public final static int SO_TYPE_PT = 1;
 
     //支付方式 1 微信支付

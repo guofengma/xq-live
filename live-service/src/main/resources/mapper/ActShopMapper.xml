@@ -206,6 +206,14 @@
         limit #{start}, #{rows}
     </select>
 
+    <select id="searchForShopId" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        act_shop
+         where  (act_id = 34 or act_id = 35) and  apply_status = 1 AND  shop_id = #{shopId,jdbcType=BIGINT}
+    </select>
+
     <select id="listForActByShopId" resultMap="ActShopForVoteByShopIdMap">
         SELECT
         a.id,

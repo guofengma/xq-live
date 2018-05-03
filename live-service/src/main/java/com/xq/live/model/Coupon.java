@@ -8,9 +8,11 @@ import java.util.Date;
 public class Coupon {
 
     /**
-     * 券类型 1 平台券
+     * 券类型 1 平台券 2 商家券 3 活动券
      */
     public final static int COUPON_TYPE_PLAT = 1;
+
+    public final static int OUNPON_TYPE_ACT= 3;
 
     /**
      * 抵用券是否使用

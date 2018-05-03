@@ -118,4 +118,18 @@ public class ActShopController {
         List<ActShopByShopIdOut> result = actShopService.listForActByShopId(inVo);
         return new BaseResp<List<ActShopByShopIdOut>>(ResultStatus.SUCCESS,result);
     }
+
+    /**
+     * 查询商家是否参与用活动券的活动
+     * @param shopId
+     * @return
+     */
+    @RequestMapping(value = "/searchForShopId",method =RequestMethod.GET)
+    public BaseResp<Integer> searchForShopId(Long shopId){
+        Integer integer = actShopService.searchForShopId(shopId);
+        if(integer<1){
+            return new BaseResp<Integer>(-1,"商家没有参与该活动",integer);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
 }

@@ -57,6 +57,18 @@ public class SkuController {
     }
 
     /**
+     * 分页查询列表(针对活动券)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listForAct", method = RequestMethod.GET)
+    public BaseResp<Pager<SkuOut>> listForAct(SkuInVo inVo){
+        inVo.setSkuType(Sku.SKU_TYPE_HDQ);
+        Pager<SkuOut> result = skuService.list(inVo);
+        return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
      * 查热门
      * @param inVo
      * @return

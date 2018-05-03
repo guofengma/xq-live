@@ -52,4 +52,10 @@ public interface ActShopService {
     ActShop findByInVo(ActShopInVo inVo);
 
     List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo);
+
+    /**
+     * 查询商家是否参与用活动券的活动
+     * @return
+     */
+    Integer searchForShopId(Long shopId);
 }

@@ -105,4 +105,9 @@ public class ActShopServiceImpl implements ActShopService {
         Collections.sort(res);
         return res;
     }
+
+    @Override
+    public Integer searchForShopId(Long shopId) {
+        return actShopMapper.searchForShopId(shopId);
+    }
 }

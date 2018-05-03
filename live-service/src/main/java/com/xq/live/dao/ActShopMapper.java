@@ -33,4 +33,6 @@ public interface ActShopMapper {
     int listTotal(ActShopInVo inVo);
 
     ActShop findByInVo(ActShopInVo inVo);
+
+    Integer searchForShopId(Long shopId);
 }

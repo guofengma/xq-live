@@ -13,6 +13,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="ActGroupOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.ActGroupOut">
+
+  </resultMap>
+
+
+
   <sql id="Base_Column_List">
     id, act_id, shop_id, user_id, group_code, group_name, group_vote_num, is_deleted, 
     create_time, update_time
@@ -23,10 +30,31 @@
     from act_group
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select0
+    <include refid="Base_Column_List" />
+    from act_group
+  </select>
+
+  <select id="selectByOutID" parameterType="com.xq.live.model.ActGroup" resultMap="ActGroupOutMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_group
+    where act_id = #{actId,jdbcType=BIGINT} AND group_code= #{groupCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectOutAll" parameterType="java.lang.Long" resultMap="ActGroupOutMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_group
+    WHERE act_id = #{actId,jdbcType=BIGINT}
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from act_group
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
   <insert id="insert" parameterType="com.xq.live.model.ActGroup">
     insert into act_group (id, act_id, shop_id, 
       user_id, group_code, group_name, 
@@ -104,6 +132,23 @@
       </if>
     </trim>
   </insert>
+
+  <insert id="insertList" parameterType="java.util.List">
+    insert into act_group (id, act_id, shop_id,
+    user_id, group_code, group_name,
+    group_vote_num, is_deleted, create_time,
+    update_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.id,jdbcType=BIGINT}, #{item.actId,jdbcType=BIGINT}, #{item.shopId,jdbcType=BIGINT},
+      #{item.userId,jdbcType=BIGINT}, #{item.groupCode,jdbcType=VARCHAR}, #{item.groupName,jdbcType=VARCHAR},
+      #{item.groupVoteNum,jdbcType=INTEGER}, #{item.isDeleted,jdbcType=TINYINT}, now(),
+      now()
+      )
+    </foreach>
+  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.ActGroup">
     update act_group
     <set>
@@ -150,4 +195,16 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateByID" parameterType="com.xq.live.model.ActGroup">
+    update act_group
+    set
+    is_deleted = 1
+    <where>
+      <if test="id!=null">id=#{id,jdbcType=BIGINT}</if>
+      <if test="actId!=null">AND act_id=#{actId,jdbcType=BIGINT}</if>
+    </where>
+
+  </update>
+
 </mapper>

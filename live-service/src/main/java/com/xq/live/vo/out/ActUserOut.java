@@ -36,6 +36,16 @@ public class ActUserOut {
 
     private Integer voteNum;
 
+    private String nickName;
+
+    private String userName;
+
+    private String mobile;
+
+    private Integer sex;
+
+    private Integer isVote;
+
     public Long getId() {
         return id;
     }
@@ -130,5 +140,45 @@ public class ActUserOut {
 
     public void setVoteNum(Integer voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Integer getIsVote() {
+        return isVote;
+    }
+
+    public void setIsVote(Integer isVote) {
+        this.isVote = isVote;
     }
 }

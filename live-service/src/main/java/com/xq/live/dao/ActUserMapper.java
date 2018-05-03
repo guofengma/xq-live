@@ -23,5 +23,9 @@ public interface ActUserMapper {
 
     int countByActId(Long actId);
 
-    List<ActUserOut> findByInVo(ActUserInVo inVo);
+    ActUserOut findByInVo(ActUserInVo inVo);
+
+    List<ActUserOut> listForNewAct(ActUserInVo inVo);
+
+    int listTotal(ActUserInVo inVo);
 }

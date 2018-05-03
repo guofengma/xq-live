@@ -50,4 +50,24 @@ public class ActUserController {
         Long id = actUserService.add(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
+
+    /**
+     * 分页查询参与商家列表信息(针对的是新活动，带有开始时间和截止时间，可以多次投票)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listNewAct", method = RequestMethod.GET)
+    public BaseResp<Pager<ActUserOut>> listlistNewAct(ActUserInVo inVo){
+        if(inVo.getVoteUserId()==null){
+            return new BaseResp<Pager<ActUserOut>>(-1,"voteUserId必填", null);
+        }
+        if(inVo.getActId()==null){
+            return new BaseResp<Pager<ActUserOut>>(-1,"actId必填", null);
+        }
+        if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
+            return new BaseResp<Pager<ActUserOut>>(-1,"时间必填",null);
+        }
+        Pager<ActUserOut> result = actUserService.listForNewAct(inVo);
+        return new BaseResp<Pager<ActUserOut>>(ResultStatus.SUCCESS, result);
+    }
 }

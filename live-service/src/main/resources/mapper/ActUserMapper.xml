@@ -17,6 +17,11 @@
   <resultMap id="ActUserOutMap" type="com.xq.live.vo.out.ActUserOut" extends="BaseResultMap">
     <result column="age" jdbcType="INTEGER" property="age" />
     <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="is_vote" jdbcType="INTEGER" property="isVote" />
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -177,6 +182,65 @@
         and a.user_id = #{userId}
       </if>
       and a.apply_status != 2
+    </where>
+  </select>
+
+  <select id="listForNewAct" resultMap="ActUserOutMap">
+    select
+    a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
+    a.update_time,
+    u.icon_url,
+    u.age,
+    u.height,
+    u.nick_name,
+    u.user_name,
+    u.mobile,
+    u.sex,
+    (select count(1) from vote where player_user_id = a.user_id
+    <if test="voteUserId != null and beginTime !=null and endTime !=null">
+      AND  user_id = #{voteUserId}
+      AND  (create_time BETWEEN #{beginTime} and #{endTime})
+    </if>
+    ) as is_vote
+    FROM
+    act_user a
+    inner join user u on a.user_id = u.id
+    <where>
+      1=1
+      <if test="id != null">
+        and  a.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        AND  a.act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="searchKey != null">
+        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.user_code = #{searchKey,jdbcType=VARCHAR})
+      </if>
+      and  a.apply_status = 1
+    </where>
+    ORDER by a.vote_num DESC
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="listTotal" resultType="java.lang.Integer">
+    select count(1)
+    FROM
+    act_user a
+    inner join user u on a.user_id = u.id
+    <where>
+      1=1
+      <if test="id != null">
+        and  a.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        AND  a.act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="searchKey != null">
+        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.user_code = #{searchKey,jdbcType=VARCHAR})
+      </if>
+      and  a.apply_status = 1
     </where>
   </select>
 </mapper>

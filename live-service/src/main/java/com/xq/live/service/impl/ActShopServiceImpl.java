@@ -8,6 +8,8 @@ import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
+import com.xq.live.vo.out.ActUserOut;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class ActShopServiceImpl implements ActShopService {
     @Autowired
     private ActShopMapper actShopMapper;
 
+    private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
+
     @Override
     public Pager<ActShopOut> list(ActShopInVo inVo) {
         Pager<ActShopOut> result = new Pager<ActShopOut>();
@@ -35,6 +39,20 @@ public class ActShopServiceImpl implements ActShopService {
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActShopOut> list = actShopMapper.list(inVo);
+            Collections.sort(list);
+            result.setList(list);
+        }
+        result.setPage(inVo.getPage());
+        return result;
+    }
+
+    @Override
+    public Pager<ActShopOut> listForNewAct(ActShopInVo inVo) {
+        Pager<ActShopOut> result = new Pager<ActShopOut>();
+        int listTotal = actShopMapper.listTotal(inVo);
+        result.setTotal(listTotal);
+        if (listTotal > 0) {
+            List<ActShopOut> list = actShopMapper.listForNewAct(inVo);
             Collections.sort(list);
             result.setList(list);
         }
@@ -68,7 +86,17 @@ public class ActShopServiceImpl implements ActShopService {
 
     @Override
     public ActShop findByInVo(ActShopInVo inVo){
-        return actShopMapper.findByInVo(inVo);
+        ActShop byInVo = null;
+        try {
+            byInVo = actShopMapper.findByInVo(inVo);//主要是为了防止脏数据，其实也可以直接查询单个
+            if (byInVo == null) {
+                return null;
+            }
+            return byInVo;
+        }catch (Exception e){
+            logger.error("查询活动商家异常TooManyResultException ：" + e.getMessage());
+            return new ActShop();
+        }
     }
 
     @Override

@@ -24,6 +24,13 @@ public interface ActShopService {
     Pager<ActShopOut> list(ActShopInVo inVo);
 
     /**
+     * 分页查询参与商家列表信息(针对的是新活动，带有开始时间和截止时间，可以多次投票)
+     * @param inVo
+     * @return
+     */
+    Pager<ActShopOut> listForNewAct(ActShopInVo inVo);
+
+    /**
      * 查询参与商家列表信息
      * @param inVo
      * @return

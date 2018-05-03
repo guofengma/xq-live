@@ -162,6 +162,47 @@
             </if>
             and  a.apply_status = 1
         </where>
+        ORDER by a.vote_num DESC
+        limit #{start}, #{rows}
+    </select>
+
+    <select id="listForNewAct" resultMap="ActShopOutResultMap">
+        SELECT
+        a.id,
+        a.act_id,
+        a.shop_id,
+        a.shop_code,
+        a.apply_status,
+        a.create_time,
+        a.update_time,
+        s.shop_name,
+        s.shop_info,
+        s.logo_url,
+        a.vote_num,
+        (select count(1) from vote where shop_id = s.id
+        <if test="voteUserId != null and beginTime !=null and endTime !=null">
+            AND  user_id = #{voteUserId}
+            AND  (create_time BETWEEN #{beginTime} and #{endTime})
+        </if>
+        ) as is_vote
+        FROM
+        act_shop a
+        inner join shop s on a.shop_id = s.id
+        <where>
+            1=1
+            <if test="id != null">
+                and  a.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="actId != null">
+                AND  a.act_id = #{actId,jdbcType=BIGINT}
+            </if>
+            <if test="searchKey != null">
+                and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+                or a.shop_code = #{searchKey,jdbcType=VARCHAR})
+            </if>
+            and  a.apply_status = 1
+        </where>
+        ORDER by a.vote_num DESC
         limit #{start}, #{rows}
     </select>
 

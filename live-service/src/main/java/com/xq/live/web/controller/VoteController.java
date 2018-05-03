@@ -9,6 +9,7 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Vote;
+import com.xq.live.service.CountService;
 import com.xq.live.service.VoteService;
 import com.xq.live.vo.in.VoteInVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class VoteController {
     @Autowired
     private VoteService voteService;
 
+    @Autowired
+    private CountService countService;
+
     /**
      * 根据ID查询投票信息
      * @param id
@@ -50,12 +54,14 @@ public class VoteController {
      * @return
      */
     @RequestMapping(value = "/add",  method = RequestMethod.POST)
-    public BaseResp<Long>  add(@Valid Vote vote, BindingResult result){
+    public BaseResp<Long>  add(@Valid VoteInVo vote, BindingResult result){
         if(result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Long id  = voteService.add(vote);
+        vote.setType(Vote.VOTE_ADD);
+        Integer integer = countService.voteNumsNow(vote);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
@@ -72,6 +78,8 @@ public class VoteController {
             return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         int ret  = voteService.deleteByInVo(inVo);
+        inVo.setType(Vote.VOTE_DELETE);
+        Integer integer = countService.voteNumsNow(inVo);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }
 

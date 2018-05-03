@@ -1,11 +1,13 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Pager;
 import com.xq.live.dao.ActUserMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.service.ActUserService;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActUserOut;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +25,21 @@ public class ActUserServiceImpl implements ActUserService{
     @Autowired
     private UserMapper userMapper;
 
+    private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
+
     @Override
     public ActUserOut findByInVo(ActUserInVo inVo) {
-        List<ActUserOut> byInVo = actUserMapper.findByInVo(inVo);//主要是为了防止脏数据，其实也可以直接查询单个
-        if(byInVo==null||byInVo.size()==0){
-            return null;
+        ActUserOut byInVo = null;
+        try {
+             byInVo = actUserMapper.findByInVo(inVo);//主要是为了防止脏数据，其实也可以直接查询单个
+            if (byInVo == null) {
+                return null;
+            }
+            return byInVo;
+        }catch (Exception e){
+            logger.error("查询活动选手异常TooManyResultException ：" + e.getMessage());
+            return new ActUserOut();
         }
-        return byInVo.get(0);
     }
 
     @Override
@@ -50,5 +60,19 @@ public class ActUserServiceImpl implements ActUserService{
             return null;
         }
         return inVo.getId();
+    }
+
+    @Override
+    public Pager<ActUserOut> listForNewAct(ActUserInVo inVo) {
+        Pager<ActUserOut> result = new Pager<ActUserOut>();
+        int listTotal = actUserMapper.listTotal(inVo);
+        result.setTotal(listTotal);
+        if (listTotal > 0) {
+            List<ActUserOut> list = actUserMapper.listForNewAct(inVo);
+            //Collections.sort(list);
+            result.setList(list);
+        }
+        result.setPage(inVo.getPage());
+        return result;
     }
 }

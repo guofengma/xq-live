@@ -9,7 +9,7 @@ import java.util.Date;
  * 活动选手入参
  * Created by lipeng on 2018/4/27.
  */
-public class ActUserInVo {
+public class ActUserInVo extends BaseInVo{
 
     private Long id;
 
@@ -42,6 +42,14 @@ public class ActUserInVo {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date beginTime;//开始时间
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;//截止时间
+
+    private Long voteUserId;//投票人的userId
 
     public Long getId() {
         return id;
@@ -137,5 +145,29 @@ public class ActUserInVo {
 
     public void setVoteNum(Integer voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Long getVoteUserId() {
+        return voteUserId;
+    }
+
+    public void setVoteUserId(Long voteUserId) {
+        this.voteUserId = voteUserId;
     }
 }

@@ -118,7 +118,7 @@ public class CountServiceImpl implements CountService {
         String key = null;
         Integer nums = 0;
         ActShop actShop = null;
-        List<ActUserOut> actUser = null;
+        ActUserOut actUser = null;
         if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
              key = "voteNums_" + invo.getActId() + invo.getShopId() + invo.getPlayerUserId();
         }else if(invo.getShopId()!=null&&invo.getPlayerUserId()==null){
@@ -127,7 +127,7 @@ public class CountServiceImpl implements CountService {
             actShopInVo.setShopId(invo.getShopId());
             actShopInVo.setActId(invo.getActId());
             //可以后期修改一下
-            actShop = actShopMapper.findByInVo(actShopInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            actShop = actShopMapper.findByInVo(actShopInVo);
             nums = actShop.getVoteNum() == null ? 0 : actShop.getVoteNum();
         }else if(invo.getShopId()==null&&invo.getPlayerUserId()!=null){
             key = "voteNums_" + invo.getActId() + "_player_" +invo.getPlayerUserId();
@@ -135,8 +135,8 @@ public class CountServiceImpl implements CountService {
             actUserInVo.setUserId(invo.getPlayerUserId());
             actUserInVo.setActId(invo.getActId());
             //可以后期修改一下
-            actUser = actUserMapper.findByInVo(actUserInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
-            nums = actUser.get(0).getVoteNum() == null ? 0 : actUser.get(0).getVoteNum();
+            actUser = actUserMapper.findByInVo(actUserInVo);
+            nums = actUser.getVoteNum() == null ? 0 : actUser.getVoteNum();
         }
         Integer voteNums = redisCache.get(key, Integer.class);
         if (voteNums == null) {
@@ -157,7 +157,7 @@ public class CountServiceImpl implements CountService {
             }
             if(actUser != null){
                 ActUserInVo actUserInVo = new ActUserInVo();
-                actUserInVo.setId(actUser.get(0).getId());
+                actUserInVo.setId(actUser.getId());
                 actUserInVo.setVoteNum(voteNums);
                 actUserMapper.updateByPrimaryKeySelective(actUserInVo);
             }
@@ -171,7 +171,7 @@ public class CountServiceImpl implements CountService {
 
         Integer nums = 0;
         ActShop actShop = null;
-        List<ActUserOut> actUser = null;
+        ActUserOut actUser = null;
         if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
 
         }else if(invo.getShopId()!=null&&invo.getPlayerUserId()==null){
@@ -179,15 +179,15 @@ public class CountServiceImpl implements CountService {
             actShopInVo.setShopId(invo.getShopId());
             actShopInVo.setActId(invo.getActId());
             //可以后期修改一下
-            actShop = actShopMapper.findByInVo(actShopInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
+            actShop = actShopMapper.findByInVo(actShopInVo);
             nums = actShop.getVoteNum() == null ? 0 : actShop.getVoteNum();
         }else if(invo.getShopId()==null&&invo.getPlayerUserId()!=null){
             ActUserInVo actUserInVo = new ActUserInVo();
             actUserInVo.setUserId(invo.getPlayerUserId());
             actUserInVo.setActId(invo.getActId());
             //可以后期修改一下
-            actUser = actUserMapper.findByInVo(actUserInVo);//这里应该是不用list但是为了防止报错，才用list，如果list的长度大于1则是脏数据
-            nums = actUser.get(0).getVoteNum() == null ? 0 : actUser.get(0).getVoteNum();
+            actUser = actUserMapper.findByInVo(actUserInVo);
+            nums = actUser.getVoteNum() == null ? 0 : actUser.getVoteNum();
         }
         if(invo.getType()== Vote.VOTE_ADD){
             nums ++;
@@ -201,7 +201,7 @@ public class CountServiceImpl implements CountService {
             }
             if(actShop == null&&actUser != null){
                 ActUserInVo actUserInVo = new ActUserInVo();
-                actUserInVo.setId(actUser.get(0).getId());
+                actUserInVo.setId(actUser.getId());
                 actUserInVo.setVoteNum(nums);
                 actUserMapper.updateByPrimaryKeySelective(actUserInVo);
             }

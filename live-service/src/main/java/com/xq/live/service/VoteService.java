@@ -26,7 +26,7 @@ public interface VoteService {
      * @param vote
      * @return
      */
-    public Long add(Vote vote);
+    public Long add(VoteInVo vote);
 
     /**
      * 取消投票

@@ -1,5 +1,6 @@
 package com.xq.live.vo.in;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -12,10 +13,13 @@ import java.util.Date;
 public class VoteInVo extends  BaseInVo {
     private Long id;
 
+    @NotNull(message = "actId必填")
     private Long actId;
 
+    //@NotNull(message = "shopId必填")
     private Long shopId;
 
+    @NotNull(message = "userId必填")
     private Long userId;
 
     private Long playerUserId;//参与选手的用户id

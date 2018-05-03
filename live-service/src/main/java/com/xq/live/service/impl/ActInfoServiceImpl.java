@@ -100,11 +100,18 @@ public class ActInfoServiceImpl implements ActInfoService {
         ActUserInVo actUserInVo = new ActUserInVo();
         actUserInVo.setActId(inVo.getId());
         actUserInVo.setUserId(inVo.getUserId());
-        List<ActUserOut> list = actUserMapper.findByInVo(actUserInVo);
-        if (list != null&&list.size()>0) {
+        ActUserOut list =null;
+        try {
+             list = actUserMapper.findByInVo(actUserInVo);
+            if (list != null) {
+                actInfoOut.setIsSignForUser(ActUser.ACT_USER_IS_SIGN);//已报名
+            } else {
+                actInfoOut.setIsSignForUser(ActUser.ACT_USER_NO_SIGN);//未报名
+            }
+        }catch (Exception e){
+            //不做操作，如果抛出了异常则证明有脏数据，则是已经报名
             actInfoOut.setIsSignForUser(ActUser.ACT_USER_IS_SIGN);//已报名
-        } else {
-            actInfoOut.setIsSignForUser(ActUser.ACT_USER_NO_SIGN);//未报名
+            logger.error("查询活动选手异常TooManyResultException ：" + e.getMessage());
         }
 
         User user = userMapper.selectByPrimaryKey(inVo.getUserId());

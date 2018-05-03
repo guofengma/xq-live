@@ -4,6 +4,7 @@ import com.xq.live.dao.VoteMapper;
 import com.xq.live.model.Vote;
 import com.xq.live.service.VoteService;
 import com.xq.live.vo.in.VoteInVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,14 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Long add(Vote vote) {
-        int ret = voteMapper.insert(vote);
+    public Long add(VoteInVo vote) {
+        Vote in = new Vote();
+        BeanUtils.copyProperties(vote,in);
+        int ret = voteMapper.insert(in);
         if(ret < 1){
             return null;
         }
-        return vote.getId();
+        return in.getId();
     }
 
     @Override

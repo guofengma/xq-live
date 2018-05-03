@@ -50,6 +50,26 @@ public class ActShopForAppController {
     }
 
     /**
+     * 分页查询参加活动的商家列表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listNewAct", method = RequestMethod.GET)
+    public BaseResp<Pager<ActShopOut>> listlistNewAct(ActShopInVo inVo){
+        if(inVo.getVoteUserId()==null){
+            return new BaseResp<Pager<ActShopOut>>(-1,"voteUserId必填", null);
+        }
+        if(inVo.getActId()==null){
+            return new BaseResp<Pager<ActShopOut>>(-1,"actId必填", null);
+        }
+        if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
+            return new BaseResp<Pager<ActShopOut>>(-1,"时间必填",null);
+        }
+        Pager<ActShopOut> result = actShopService.listForNewAct(inVo);
+        return new BaseResp<Pager<ActShopOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
      * 查询参加活动的商家列表
      * @param inVo
      * @return

@@ -25,6 +25,12 @@ public class ActUser {
 
     public final static int ACT_USER_NO_SIGN = 0;
 
+
+    /**
+     * 查询类型   2 分组 ，查询分组后的信息
+     */
+    public final static int ACT_USER_GROUP = 2;
+
     private Long id;
 
     private Long actId;
@@ -46,6 +52,8 @@ public class ActUser {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    private Integer isLuoxuan;//是否落选
 
     public Long getId() {
         return id;
@@ -125,5 +133,13 @@ public class ActUser {
 
     public void setVoteNum(Integer voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
     }
 }

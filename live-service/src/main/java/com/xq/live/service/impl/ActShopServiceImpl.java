@@ -2,9 +2,11 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.ActShopMapper;
+import com.xq.live.dao.ActUserMapper;
 import com.xq.live.model.ActShop;
 import com.xq.live.service.ActShopService;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ActShopOut;
@@ -30,6 +32,9 @@ public class ActShopServiceImpl implements ActShopService {
     @Autowired
     private ActShopMapper actShopMapper;
 
+    @Autowired
+    private ActUserMapper actUserMapper;
+
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
     @Override
@@ -53,6 +58,17 @@ public class ActShopServiceImpl implements ActShopService {
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActShopOut> list = actShopMapper.listForNewAct(inVo);
+            //如果是查询分组的，把分组的关联信息加入进去
+            if(inVo.getType()!=null&&inVo.getType()==ActShop.ACT_SHOP_GROUP){
+                for (ActShopOut actShopOut : list) {
+                    ActUserInVo actUserInVo = new ActUserInVo();
+                    actUserInVo.setActId(inVo.getActId());
+                    actUserInVo.setUserId(actShopOut.getUserId());
+                    ActUserOut byInVo = actUserMapper.findByInVo(actUserInVo);
+                    actShopOut.setIconUrl(byInVo.getIconUrl());
+                    actShopOut.setActUserName(byInVo.getActUserName());
+                }
+            }
             Collections.sort(list);
             result.setList(list);
         }

@@ -28,6 +28,8 @@ public class ActShopInVo extends BaseInVo{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;//截止时间
 
+    private Integer type;//查询类型  null 不分组，查询单个list   2 分组 ，查询分组后的信息
+
     public Long getId() {
         return id;
     }
@@ -82,5 +84,13 @@ public class ActShopInVo extends BaseInVo{
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

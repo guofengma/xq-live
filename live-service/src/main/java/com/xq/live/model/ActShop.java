@@ -22,6 +22,12 @@ public class ActShop {
 
     public final static int ACT_SHOP_NO_SIGN = 0;
 
+
+    /**
+     * 查询类型    2 分组 ，查询分组后的信息
+     */
+    public final static int ACT_SHOP_GROUP = 2;
+
     private Long id;
     @NotNull(message = "actId必填")
     private Long actId;
@@ -39,6 +45,8 @@ public class ActShop {
     private Date updateTime;
 
     private Integer voteNum;
+
+    private Integer isLuoxuan;//是否落选
 
     public Long getId() {
         return id;
@@ -102,5 +110,13 @@ public class ActShop {
 
     public void setVoteNum(Integer voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
     }
 }

@@ -1,5 +1,7 @@
 package com.xq.live.vo.in;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -43,8 +45,10 @@ public class SoWriteOffInVo extends BaseInVo {
 
     private Date updateTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date begainTime;//开始时间
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date endTime;//截止时间
 
     public Long getId() {

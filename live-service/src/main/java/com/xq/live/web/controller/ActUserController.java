@@ -67,6 +67,9 @@ public class ActUserController {
         if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
             return new BaseResp<Pager<ActUserOut>>(-1,"时间必填",null);
         }
+        /*if(inVo.getType()==null){
+            return new BaseResp<Pager<ActUserOut>>(-1,"type必填",null);
+        }*/
         Pager<ActUserOut> result = actUserService.listForNewAct(inVo);
         return new BaseResp<Pager<ActUserOut>>(ResultStatus.SUCCESS, result);
     }

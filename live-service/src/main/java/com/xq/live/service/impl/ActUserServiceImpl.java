@@ -2,7 +2,10 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.ActUserMapper;
+import com.xq.live.dao.ShopMapper;
 import com.xq.live.dao.UserMapper;
+import com.xq.live.model.ActUser;
+import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ActUserService;
 import com.xq.live.vo.in.ActUserInVo;
@@ -24,6 +27,9 @@ public class ActUserServiceImpl implements ActUserService{
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ShopMapper shopMapper;
 
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
@@ -69,6 +75,14 @@ public class ActUserServiceImpl implements ActUserService{
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActUserOut> list = actUserMapper.listForNewAct(inVo);
+            //如果是查询分组的，把分组的关联信息加入进去
+            if(inVo.getType()!=null&&inVo.getType()== ActUser.ACT_USER_GROUP){
+                for (ActUserOut actUserOut : list) {
+                    Shop shop = shopMapper.selectByPrimaryKey(actUserOut.getShopId());
+                    actUserOut.setLogoUrl(shop.getLogoUrl());
+                    actUserOut.setShopName(shop.getShopName());
+                }
+            }
             //Collections.sort(list);
             result.setList(list);
         }

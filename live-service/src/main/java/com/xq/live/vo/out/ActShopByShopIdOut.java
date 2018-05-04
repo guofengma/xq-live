@@ -50,6 +50,8 @@ public class ActShopByShopIdOut implements Comparable<ActShopByShopIdOut>{
 
     private Integer voteNum;//投票数量
 
+    private Integer isLuoxuan;//是否落选
+
     public Long getId() {
         return id;
     }
@@ -176,6 +178,14 @@ public class ActShopByShopIdOut implements Comparable<ActShopByShopIdOut>{
 
     public void setVoteNum(Integer voteNum) {
         this.voteNum = voteNum;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
     }
 
     @Override

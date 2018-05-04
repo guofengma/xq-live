@@ -39,6 +39,20 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     private int isVote;//是否已投
 
+    private Integer isLuoxuan;//是否落选
+
+    private Long userId;//分组中与商家绑定的选手用户id
+
+    private String groupCode;//分组编号
+
+    private String groupName;//分组名称
+
+    private Integer groupVoteNum;//分组的投票数
+
+    private String iconUrl;//分组中与商家绑定选手的用户头像
+
+    private String actUserName;//分组中与商家绑定选手的用户填写名称
+
     public Long getId() {
         return id;
     }
@@ -133,6 +147,62 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     public void setApplyStatus(Integer applyStatus) {
         this.applyStatus = applyStatus;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Integer getGroupVoteNum() {
+        return groupVoteNum;
+    }
+
+    public void setGroupVoteNum(Integer groupVoteNum) {
+        this.groupVoteNum = groupVoteNum;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public String getActUserName() {
+        return actUserName;
+    }
+
+    public void setActUserName(String actUserName) {
+        this.actUserName = actUserName;
     }
 
     @Override

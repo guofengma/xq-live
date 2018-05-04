@@ -30,6 +30,8 @@ public class ActUserOut {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    private String iconUrl;//参与选手的用户头像
+
     private Integer age;
 
     private Integer height;
@@ -45,6 +47,20 @@ public class ActUserOut {
     private Integer sex;
 
     private Integer isVote;
+
+    private Integer isLuoxuan;//是否落选
+
+    private Long shopId;//分组中与选手绑定的商家用户id
+
+    private String groupCode;//分组编号
+
+    private String groupName;//分组名称
+
+    private Integer groupVoteNum;//分组的投票数
+
+    private String logoUrl;//分组中与选手绑定的商家logo
+
+    private String shopName;//分组中与选手绑定的商家名称
 
     public Long getId() {
         return id;
@@ -118,6 +134,14 @@ public class ActUserOut {
         this.updateTime = updateTime;
     }
 
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
     public Integer getAge() {
         return age;
     }
@@ -180,5 +204,61 @@ public class ActUserOut {
 
     public void setIsVote(Integer isVote) {
         this.isVote = isVote;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Integer getGroupVoteNum() {
+        return groupVoteNum;
+    }
+
+    public void setGroupVoteNum(Integer groupVoteNum) {
+        this.groupVoteNum = groupVoteNum;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

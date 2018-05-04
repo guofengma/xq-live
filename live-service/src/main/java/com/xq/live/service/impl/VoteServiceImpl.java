@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * ${DESCRIPTION}
  *
@@ -45,5 +47,34 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public int deleteByInVo(VoteInVo inVo) {
         return voteMapper.deleteByInVo(inVo);
+    }
+
+    @Override
+    public Integer canVote(VoteInVo inVo) {
+        List<Vote> votes = voteMapper.canVote(inVo);
+        if(votes!=null&&votes.size()>0){
+            return 1;
+        }
+        return null;
+    }
+
+    @Override
+    public Integer canGetSku(VoteInVo inVo) {
+        List<Vote> votes = voteMapper.canGetSku(inVo);
+        Integer i = 0;
+        if(votes==null){
+            return null;
+        }
+        for (Vote vote : votes) {
+            if(vote.getShopId()!=null&&vote.getPlayerUserId()!=null){
+                return 1;
+            }else if((vote.getShopId()!=null&&vote.getPlayerUserId()==null)||(vote.getShopId()==null&&vote.getPlayerUserId()!=null)){
+                i++;
+            }
+        }
+        if(i>=2){
+            return 1;
+        }
+        return null;
     }
 }

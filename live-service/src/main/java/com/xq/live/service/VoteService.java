@@ -42,4 +42,19 @@ public interface VoteService {
      * @return
      */
     public int deleteByInVo(VoteInVo inVo);
+
+
+    /**
+     * 针对新平台活动，判断是否能够投票
+     * @param inVo
+     * @return
+     */
+    public Integer canVote(VoteInVo inVo);
+
+    /**
+     * 判断用户投票后是否有资格领活动券
+     * @param inVo
+     * @return
+     */
+    Integer canGetSku(VoteInVo inVo);
 }

@@ -4,6 +4,8 @@ import com.xq.live.model.Vote;
 import com.xq.live.vo.in.VoteInVo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface VoteMapper {
     int deleteByPrimaryKey(Long id);
@@ -13,6 +15,10 @@ public interface VoteMapper {
     int insertSelective(Vote record);
 
     Vote selectByPrimaryKey(Long id);
+
+    List<Vote> canVote(VoteInVo inVo);
+
+    List<Vote> canGetSku(VoteInVo inVo);
 
     int updateByPrimaryKeySelective(Vote record);
 

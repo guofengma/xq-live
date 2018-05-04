@@ -28,6 +28,10 @@ public class VoteInVo extends  BaseInVo {
 
     private Integer type;//投票操作  1投票 2取消投票
 
+    private Date beginTime;//开始时间
+
+    private Date endTime;//结束时间
+
     public Long getId() {
         return id;
     }
@@ -82,5 +86,21 @@ public class VoteInVo extends  BaseInVo {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

@@ -18,6 +18,59 @@
     from vote
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="canVote" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vote
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="shopId != null">
+        and shop_id is not null
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        and act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="playerUserId != null">
+        and player_user_id is not null
+      </if>
+      <if test="beginTime !=null and endTime !=null">
+        AND  (create_time BETWEEN #{beginTime} and #{endTime})
+      </if>
+    </where>
+  </select>
+
+  <select id="canGetSku" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vote
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="shopId != null">
+        and shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        and act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="playerUserId != null">
+        and player_user_id = #{playerUserId,jdbcType=BIGINT}
+      </if>
+      <if test="beginTime !=null and endTime !=null">
+        AND  (create_time BETWEEN #{beginTime} and #{endTime})
+      </if>
+    </where>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from vote
     where id = #{id,jdbcType=BIGINT}

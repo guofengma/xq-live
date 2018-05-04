@@ -49,6 +49,45 @@ public class VoteController {
     }
 
     /**
+     * 针对新平台活动，判断是否能够投票(传入shopId的时候，sql语句中shop_id is not null,传入playerUserIdId的时候，sql语句中player_user_id is not null)
+     * actId,beginTime,endTime,userId必填。shopId,playerUserIdId至少填一个
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/canVote", method = RequestMethod.GET)
+    public BaseResp<Integer> canVote(VoteInVo inVo){
+        if(inVo==null||inVo.getBeginTime()==null||inVo.getEndTime()==null||inVo.getActId()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+
+        Integer integer = voteService.canVote(inVo);
+        if(integer!=null){
+            return new BaseResp<Integer>(ResultStatus.error_vote_fail);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS);
+    }
+
+    /**
+     * 针对新平台活动，判断是否能够投票(只需要传入actId,beginTime,endTime,userId)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/canGetSku", method = RequestMethod.GET)
+    public BaseResp<Integer> canGetSku(VoteInVo inVo){
+        if(inVo==null||inVo.getBeginTime()==null||inVo.getEndTime()==null||inVo.getActId()==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+
+        Integer integer = voteService.canGetSku(inVo);
+        if(integer==null){
+            return new BaseResp<Integer>(ResultStatus.error_sku_fail);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, integer);
+    }
+
+
+
+    /**
      * 新增一条记录
      * @param vote
      * @return

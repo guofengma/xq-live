@@ -1,55 +1,158 @@
 package com.xq.live.web.utils;
 
+import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.in.ActUserInVo;
+import com.xq.live.vo.out.ActShopOut;
+import com.xq.live.vo.out.ActUserOut;
+
 import java.util.*;
 
 /**
  * Created by ss on 2018/5/2.
  */
 public class GroupUtil {
-    static int indexList=0;
-    static List<String> listShop=new ArrayList<String>();
-    static List<String> listUser = new ArrayList<String>();
-
     public static void main(String[] args) throws Exception {
         /***循环添加
          * listShop.add(0,"A");
          listUser.add(0,"A");
+         listShop.add(1,"B");
+         listUser.add(1,"B");
+         listShop.add(2,"C");
+         listUser.add(2,"C");
+         listShop.add(3,"D");
+         listUser.add(3,"D");
+         listShop.add(4,"E");
+         listUser.add(4,"E");
          */
     }
 
-    public static void  addList(String shop,String user){
-        System.out.print(indexList);
-        listShop.add(indexList,shop);
-        listUser.add(indexList,user);
-        indexList++;
-    }
-
-    public static Map<String,String> grouptwo(List<String> shop,List<String> user){
-        Map<String,String> maplist = new HashMap<String,String>();
+    //将商家和用户列表进行匹配分组(传递一个商家ID和用户实体集合)
+    public static Map<Long,ActUserOut> groupTwo(List<Long> shop,List<ActUserOut> user){
+        Map<Long,ActUserOut> maplist = new HashMap<Long,ActUserOut>();
         Random random = new Random();
-        List<String> value = new ArrayList<String>();
-        //Integer[] value = new Integer[user.size()];
-        for (int u=0;u<user.size();u++){
-            value.add(u,user.get(u));
+        //根据商家和用户列表长度进行判断后匹配组队
+        if (shop.size()>user.size()){//修改用户顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <user.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < user.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<shop.size();j++){
+                maplist.put(shop.get(j), user.get(ran[j]));
+            }
+            return maplist;
+        }else if (shop.size()==user.size()){//修改用户顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <user.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < user.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<shop.size();j++){
+                maplist.put(shop.get(j), user.get(ran[j]));
+            }
+            return maplist;
+        }else {//修改商家顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <shop.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < shop.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<shop.size();j++){
+                maplist.put(shop.get(ran[j]), user.get(j));
+            }
+            return maplist;
         }
-        //System.out.println(user.length);
-        for (int i=user.size()-1;i>=0;i--){
-            String temp = value.get(random.nextInt(i+1));
-            value.set(random.nextInt(i+1),value.get(i));
-            value.set(i,temp);
-
-        }
-        for (int k=0;k<user.size();k++){
-            user.set(k,value.get(k));
-        }
-        //System.out.println(user.toString());
-        for (int j=0;j<user.size();j++){
-            maplist.put(shop.get(j), user.get(j));
-            // System.out.print(maplist);
-        }
-
-        return maplist;
     }
 
+    //将商家和用户列表进行匹配分组(传递商家实体集合和用户实体集合)
+    public static Map<ActShopOut,ActUserOut> group(List<ActShopOut> shop,List<ActUserOut> user){
+        Map<ActShopOut,ActUserOut> maplist = new HashMap<ActShopOut,ActUserOut>();
+        Random random = new Random();
+        //根据商家和用户列表长度进行判断后匹配组队
+        if (shop.size()>user.size()){//修改用户顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <user.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < user.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<user.size();j++){
+                maplist.put(shop.get(j), user.get(ran[j]));
+            }
+            return maplist;
+        }else if (shop.size()==user.size()){//修改用户顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <user.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < user.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<user.size();j++){
+                maplist.put(shop.get(j), user.get(ran[j]));
+            }
+            return maplist;
+        }else {//修改商家顺序
+            List<Integer> randoms = new ArrayList<Integer>();
+            int[] ran = new int[user.size()];
+            // 将所有的可能出现的数字放进候选list
+            for(int i = 0; i <shop.size(); i++){
+                randoms.add(i);
+            }
+            // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+            for(int i = 0; i < shop.size(); i++){
+                int index = getRandom(0, randoms.size()-1);
+                ran[i] = randoms.get(index);
+                randoms.remove(index);
+            }
+            for (int j=0;j<shop.size();j++){
+                maplist.put(shop.get(ran[j]), user.get(j));
+            }
+            return maplist;
+        }
 
+    }
+
+    /**
+     * 根据min和max随机生成一个范围在[min,max]的随机数，包括min和max
+     * @param min
+     * @param max
+     * @return int
+     */
+    public static int getRandom(int min, int max){
+        Random random = new Random();
+        return random.nextInt( max - min + 1 ) + min;
+    }
 }

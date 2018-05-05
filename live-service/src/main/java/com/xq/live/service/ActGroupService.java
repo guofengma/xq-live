@@ -3,8 +3,11 @@ package com.xq.live.service;
 import com.xq.live.model.ActGroup;
 import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.out.ActGroupOut;
+import com.xq.live.vo.out.ActShopOut;
+import com.xq.live.vo.out.ActUserOut;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ss on 2018/5/2.
@@ -45,4 +48,18 @@ public interface ActGroupService {
      * @return
      */
     Long updateID(ActGroup actGroup);
+
+    /**
+     * 接收商家ID和用户列表
+     * @param shopOuts,userOuts
+     * @return
+     */
+    Map<Long,ActUserOut> mapList(List<Long> shopOuts,List<ActUserOut> userOuts);
+
+    /**
+     * 接收商家列表和用户列表
+     * @param shopOuts,userOuts
+     * @return
+     */
+    Map<ActShopOut,ActUserOut> map(List<ActShopOut> shopOuts,List<ActUserOut> userOuts);
 }

@@ -1,14 +1,19 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.dao.ActGroupMapper;
+import com.xq.live.dao.ActShopMapper;
 import com.xq.live.model.ActGroup;
 import com.xq.live.service.ActGroupService;
 import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.out.ActGroupOut;
+import com.xq.live.vo.out.ActShopOut;
+import com.xq.live.vo.out.ActUserOut;
+import com.xq.live.web.utils.GroupUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ss on 2018/5/2.
@@ -18,7 +23,6 @@ public class ActGroupServiceImpl implements ActGroupService{
 
     @Autowired
     private ActGroupMapper actGroupMapper;
-
 
     //根据活动ID查询全部参加活动小组信息
     @Override
@@ -66,5 +70,19 @@ public class ActGroupServiceImpl implements ActGroupService{
             return actGroup.getId();
         }
         return null;
+    }
+
+    //接收商家ID列表和用户列表
+    @Override
+    public Map<Long, ActUserOut> mapList(List<Long> shopOutID, List<ActUserOut> userOuts) {
+        Map<Long,ActUserOut> mapList= GroupUtil.groupTwo(shopOutID, userOuts);
+        return mapList;
+    }
+
+    //接收商家列表和用户列表
+    @Override
+    public Map<ActShopOut, ActUserOut> map(List<ActShopOut> shopOuts, List<ActUserOut> userOuts) {
+        Map<ActShopOut,ActUserOut> map =GroupUtil.group(shopOuts,userOuts);
+        return map;
     }
 }

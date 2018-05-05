@@ -122,7 +122,7 @@ public class SmsForAppController {
      * @return
      */
     @RequestMapping(value = "/sendForShopAppRegister", method = RequestMethod.POST)
-    @CrossOrigin
+    //@CrossOrigin
     public BaseResp<SmsOut> sendForShopAppRegister(SmsSendInVo inVo,HttpServletResponse response) {
         /*response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");

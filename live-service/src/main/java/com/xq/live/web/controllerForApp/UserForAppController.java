@@ -52,7 +52,7 @@ public class UserForAppController {
      * @return
      */
     @RequestMapping(value = "/findUserByMobile",method = RequestMethod.GET)
-    @CrossOrigin
+    //@CrossOrigin
     public BaseResp<User> findUserByMobile(String mobile){
         if(mobile==null||"".equals(mobile)){
             return new BaseResp<User>(ResultStatus.error_param_empty);

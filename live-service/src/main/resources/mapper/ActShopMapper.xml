@@ -131,6 +131,21 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <!--批量更新落选状态-->
+    <update id="udateByLuo" parameterType="java.util.List">
+    update act_shop
+    set
+       is_luoxuan =1
+        WHERE apply_status =1
+        AND id NOT IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+        AND act_id IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.actId,jdbcType=BIGINT}
+        </foreach>
+    </update>
 
     <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
     select count(1) from act_shop where act_id = #{actId,jdbcType=BIGINT}

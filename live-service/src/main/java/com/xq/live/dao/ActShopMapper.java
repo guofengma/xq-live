@@ -28,6 +28,8 @@ public interface ActShopMapper {
 
     List<ActShopOut> listForNewAct(ActShopInVo inVo);
 
+    List<ActShopOut> listForSoWrite();
+
     List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo);
 
     int listTotal(ActShopInVo inVo);

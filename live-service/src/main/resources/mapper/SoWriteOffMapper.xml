@@ -339,4 +339,11 @@
       </if>
     </where>
   </select>
+
+  <select id="selectActShopCount" resultType="java.lang.Integer">
+    select count(1)
+    from so_write_off
+    where sku_id = 383 and (TO_DAYS(create_time) = TO_DAYS(now()))
+    and shop_id = #{shopId,jdbcType=BIGINT}
+  </select>
 </mapper>

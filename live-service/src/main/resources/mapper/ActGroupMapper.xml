@@ -49,6 +49,15 @@
     WHERE act_id = #{actId,jdbcType=BIGINT}
   </select>
 
+  <select id="listForSoWrite" resultMap="ActGroupOutMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_group
+    WHERE
+    (act_id = 34 or act_id = 35)
+    and  is_deleted = 0
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from act_group

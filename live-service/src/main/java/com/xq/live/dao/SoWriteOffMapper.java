@@ -26,4 +26,6 @@ public interface SoWriteOffMapper {
     int listTotal(SoWriteOffInVo inVo);
 
     List<SoWriteOffOut> total(SoWriteOffInVo inVo);
+
+    Integer selectActShopCount(Long shopId);
 }

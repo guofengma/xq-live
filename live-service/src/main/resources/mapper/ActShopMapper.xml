@@ -234,6 +234,21 @@
         limit #{start}, #{rows}
     </select>
 
+    <select id="listForSoWrite" resultMap="ActShopOutResultMap">
+        SELECT
+        a.id,
+        a.shop_id,
+        a.vote_num
+        FROM
+        act_shop a
+        <where>
+            (a.act_id = 34 or a.act_id = 35)
+            and  a.apply_status = 1
+            and  a.is_luoxuan = 0
+        </where>
+        ORDER by a.vote_num DESC
+    </select>
+
     <select id="searchForShopId" resultType="java.lang.Integer">
         SELECT
         count(1)

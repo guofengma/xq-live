@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @MapperScan("com.xq.live.dao")// mapper 接口类扫描包配置
 @Controller
+/*@EnableScheduling*/
 public class LiveServiceApplication extends SpringBootServletInitializer {
 
     @Override

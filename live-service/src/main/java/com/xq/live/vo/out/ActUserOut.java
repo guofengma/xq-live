@@ -1,8 +1,10 @@
 package com.xq.live.vo.out;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xq.live.model.Attachment;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 活动选手出参
@@ -61,6 +63,8 @@ public class ActUserOut {
     private String logoUrl;//分组中与选手绑定的商家logo
 
     private String shopName;//分组中与选手绑定的商家名称
+
+    private List<Attachment> picUrls;//上传图片组
 
     public Long getId() {
         return id;
@@ -260,5 +264,13 @@ public class ActUserOut {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public List<Attachment> getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(List<Attachment> picUrls) {
+        this.picUrls = picUrls;
     }
 }

@@ -73,4 +73,28 @@ public class ActUserController {
         Pager<ActUserOut> result = actUserService.listForNewAct(inVo);
         return new BaseResp<Pager<ActUserOut>>(ResultStatus.SUCCESS, result);
     }
+
+
+    /**
+     * 查询选手详情
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/findByInVo",method = RequestMethod.GET)
+    public BaseResp<ActUserOut> findByInVo(ActUserInVo inVo){
+        if(inVo.getVoteUserId()==null){
+            return new BaseResp<ActUserOut>(-1,"voteUserId必填", null);
+        }
+        if(inVo.getActId()==null){
+            return new BaseResp<ActUserOut>(-1,"actId必填", null);
+        }
+        if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
+            return new BaseResp<ActUserOut>(-1,"时间必填",null);
+        }
+        if(inVo.getUserId()==null){
+            return new BaseResp<ActUserOut>(-1,"userId必填",null);
+        }
+        ActUserOut byInVo = actUserService.findByInVo(inVo);
+        return new BaseResp<ActUserOut>(ResultStatus.SUCCESS,byInVo);
+    }
 }

@@ -2,20 +2,26 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.ActUserMapper;
+import com.xq.live.dao.AttachmentMapper;
 import com.xq.live.dao.ShopMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.ActUser;
+import com.xq.live.model.Attachment;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ActUserService;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActUserOut;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lipeng on 2018/4/27.
@@ -31,6 +37,9 @@ public class ActUserServiceImpl implements ActUserService{
     @Autowired
     private ShopMapper shopMapper;
 
+    @Autowired
+    private AttachmentMapper attachmentMapper;
+
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
     @Override
@@ -41,11 +50,36 @@ public class ActUserServiceImpl implements ActUserService{
             if (byInVo == null) {
                 return null;
             }
+            byInVo = getPicUrls(byInVo);
             return byInVo;
         }catch (Exception e){
             logger.error("查询活动选手异常TooManyResultException ：" + e.getMessage());
             return new ActUserOut();
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ActUserOut getPicUrls(ActUserOut byInVo){
+        if(StringUtils.isNotEmpty(byInVo.getPicIds())){
+            String picIds = byInVo.getPicIds();
+            String[] temPicIds = picIds.split(",");
+            if(temPicIds != null && temPicIds.length > 0){
+                List<Long> ids = new ArrayList<Long>();
+                for(String picId : temPicIds){
+                    ids.add(Long.valueOf(picId));
+                }
+                if(ids.size() > 0){
+                    Map<String, Object> paramsMap = new HashMap<String, Object>();
+                    paramsMap.put("ids", ids);
+                    List<Attachment> picUrls = attachmentMapper.selectByIds(paramsMap);
+                    byInVo.setPicUrls(picUrls);
+                }
+            }
+        }
+        return byInVo;
     }
 
     @Override

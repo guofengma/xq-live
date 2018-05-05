@@ -178,7 +178,13 @@
     a.update_time,
     u.icon_url,
     u.age,
-    u.height
+    u.height,
+    (select count(1) from vote where player_user_id = a.user_id
+    <if test="voteUserId != null and beginTime !=null and endTime !=null">
+      AND  user_id = #{voteUserId}
+      AND  (create_time BETWEEN #{beginTime} and #{endTime})
+    </if>
+    ) as is_vote
     from act_user a LEFT join user u on a.user_id = u.id
     <where>
       1=1

@@ -1,10 +1,13 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
+import com.xq.live.dao.UserAccountMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
+import com.xq.live.model.UserAccount;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.SignUtil;
@@ -16,6 +19,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AccessLogMapper accessLogMapper;
 
+    @Autowired
+    private UserAccountMapper userAccountMapper;
+
     @Override
     public User getUserById(@Param("id") Long id) {
         return userMapper.selectByPrimaryKey(id);
@@ -44,9 +51,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long add(User user) {
-        user.setIconUrl("https://xq-1256079679.file.myqcloud.com/test_图层 24_0.8.jpg");
+        user.setIconUrl(Constants.DEFAULT_ICON_URL);
         int ret = userMapper.insert(user);
         if(ret > 0){
+            //新增用户成功后，新增一条账户信息
+            this.addUserAccount(user);
+
             return user.getId();
         }
         return null;
@@ -147,6 +157,8 @@ public class UserServiceImpl implements UserService {
                 if (i < 1) {
                     return null;
                 }
+                //新增用户成功后，新增一条账户信息
+                this.addUserAccount(user);
                 return user.getId();
             }
             byMobile.setOpenId(user.getOpenId());
@@ -172,5 +184,21 @@ public class UserServiceImpl implements UserService {
             userMapper.deleteByPrimaryKey(user.getId());
             return byMobile.getId();
         }
+    }
+
+    /**
+     * 新增用户账户记录
+     * @param user
+     * @return
+     */
+    private Integer addUserAccount(User user){
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUserId(user.getId());
+        userAccount.setUserName(user.getUserName());
+        userAccount.setAccountName(user.getMobile());   //暂时把手机号作为用户账号
+        userAccount.setAccountType(UserAccount.ACCOUNT_TYPE_XQ);
+        userAccount.setAccountAmount(BigDecimal.ZERO);
+        userAccount.setAccountStatus(UserAccount.ACCOUNT_STATUS_ACTIVE);
+        return userAccountMapper.insert(userAccount);
     }
 }

@@ -43,4 +43,9 @@ public class Constants {
      */
     public final static String DOMAIN_XQ_URL = "https://www.hbxq001.cn";
 
+    /**
+     * 用户默然头像url
+     */
+    public final static String DEFAULT_ICON_URL = "https://xq-1256079679.file.myqcloud.com/test_图层 24_0.8.jpg";
+
 }

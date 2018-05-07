@@ -164,8 +164,8 @@ public class ActGroupController {
         List<ActGroup> groupList = new ArrayList<ActGroup>();
 
         while (iterator.hasNext()){
-            Object k=iterator.next(); // key
-            Object v=mapList.get(k);  //value
+            Object k=iterator.next(); // key商家
+            Object v=mapList.get(k);  //value用户
             shopList.add((ActShopOut) k);
             userList.add((ActUserOut) v);
         }

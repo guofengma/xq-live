@@ -35,4 +35,11 @@ public interface ActGroupMapper {
     //根据主键ID和活动ID删除指定信息
     int updateByID(ActGroup actGroup);
 
+    /**
+     * 查询活动分组详情
+     * @param inVo
+     * @return
+     */
+    ActGroup findByInVo(ActGroupInVo inVo);
+
 }

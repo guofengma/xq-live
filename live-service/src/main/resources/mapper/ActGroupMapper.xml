@@ -213,4 +213,26 @@
 
   </update>
 
+  <select id="findByInVo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from act_group
+    <where>
+      1=1
+      <if test="id != null">
+        and id = #{id}
+      </if>
+      <if test="actId != null">
+        and act_id = #{actId}
+      </if>
+      <if test="shopId != null">
+        and shop_id = #{shopId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      and is_deleted = 0
+    </where>
+  </select>
+
 </mapper>

@@ -1,15 +1,10 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
-import com.xq.live.dao.ActUserMapper;
-import com.xq.live.dao.AttachmentMapper;
-import com.xq.live.dao.ShopMapper;
-import com.xq.live.dao.UserMapper;
-import com.xq.live.model.ActUser;
-import com.xq.live.model.Attachment;
-import com.xq.live.model.Shop;
-import com.xq.live.model.User;
+import com.xq.live.dao.*;
+import com.xq.live.model.*;
 import com.xq.live.service.ActUserService;
+import com.xq.live.vo.in.ActSignInVo;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActUserOut;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +34,12 @@ public class ActUserServiceImpl implements ActUserService{
 
     @Autowired
     private AttachmentMapper attachmentMapper;
+
+    @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
+    private ActSignMapper actSignMapper;
 
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
@@ -115,6 +116,20 @@ public class ActUserServiceImpl implements ActUserService{
                     Shop shop = shopMapper.selectByPrimaryKey(actUserOut.getShopId());
                     actUserOut.setLogoUrl(shop.getLogoUrl());
                     actUserOut.setShopName(shop.getShopName());
+
+
+                    ActSignInVo actSignInVo = new ActSignInVo();
+                    actSignInVo.setType(ActSign.ACT_SIGN_TYPE_SHOP);
+                    actSignInVo.setRefId(shop.getId());
+                    actSignInVo.setActId(actUserOut.getActId());
+                    ActSign sign = actSignMapper.isSign(actSignInVo);
+
+                    if(sign!=null) {
+                        Sku sku = skuMapper.selectByPrimaryKey(sign.getSkuId());
+                        if (sku != null) {
+                            actUserOut.setSkuName(sku.getSkuName());
+                        }
+                    }
                 }
             }
             //Collections.sort(list);

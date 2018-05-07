@@ -68,13 +68,13 @@ public class VoteController {
     }
 
     /**
-     * 针对新平台活动，判断是否能够投票(只需要传入actId,beginTime,endTime,userId)
+     * 针对新平台活动，判断是否能够领取劵码(只需要传入actId,beginTime,endTime,userId)
      * @param inVo
      * @return
      */
     @RequestMapping(value = "/canGetSku", method = RequestMethod.GET)
     public BaseResp<Integer> canGetSku(VoteInVo inVo){
-        if(inVo==null||inVo.getBeginTime()==null||inVo.getEndTime()==null||inVo.getActId()==null){
+        if(inVo==null||inVo.getBeginTime()==null||inVo.getEndTime()==null||inVo.getActId()==null||inVo.getUserId()==null){
             return new BaseResp<Integer>(ResultStatus.error_param_empty);
         }
 

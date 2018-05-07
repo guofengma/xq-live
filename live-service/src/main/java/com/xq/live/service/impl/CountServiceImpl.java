@@ -4,6 +4,7 @@ import com.xq.live.common.RedisCache;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.CountService;
+import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.in.VoteInVo;
@@ -39,6 +40,9 @@ public class CountServiceImpl implements CountService {
 
     @Autowired
     ActShopMapper actShopMapper;
+
+    @Autowired
+    ActGroupMapper actGroupMapper;
 
     private static Long viewArticleTime = System.currentTimeMillis();
 
@@ -172,7 +176,14 @@ public class CountServiceImpl implements CountService {
         Integer nums = 0;
         ActShop actShop = null;
         ActUserOut actUser = null;
+        ActGroup actGroup = null;
         if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
+            ActGroupInVo actGroupInVo = new ActGroupInVo();
+            actGroupInVo.setActId(invo.getActId());
+            actGroupInVo.setShopId(invo.getShopId());
+            actGroupInVo.setUserId(invo.getPlayerUserId());
+            actGroup = actGroupMapper.findByInVo(actGroupInVo);
+            nums = actGroup.getGroupVoteNum() == null ? 0 : actGroup.getGroupVoteNum();
 
         }else if(invo.getShopId()!=null&&invo.getPlayerUserId()==null){
             ActShopInVo actShopInVo = new ActShopInVo();
@@ -204,6 +215,10 @@ public class CountServiceImpl implements CountService {
                 actUserInVo.setId(actUser.getId());
                 actUserInVo.setVoteNum(nums);
                 actUserMapper.updateByPrimaryKeySelective(actUserInVo);
+            }
+            if(actGroup!=null){
+                actGroup.setGroupVoteNum(nums);
+                actGroupMapper.updateByPrimaryKeySelective(actGroup);
             }
 
         return nums;

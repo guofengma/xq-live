@@ -66,6 +66,8 @@ public class ActUserOut {
 
     private List<Attachment> picUrls;//上传图片组
 
+    private String skuName;//分组中与选手绑定的商家推荐菜
+
     public Long getId() {
         return id;
     }
@@ -272,5 +274,13 @@ public class ActUserOut {
 
     public void setPicUrls(List<Attachment> picUrls) {
         this.picUrls = picUrls;
+    }
+
+    public String getSkuName() {
+        return skuName;
+    }
+
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 }

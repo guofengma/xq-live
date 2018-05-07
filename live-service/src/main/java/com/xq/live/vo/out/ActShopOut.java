@@ -53,6 +53,12 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     private String actUserName;//分组中与商家绑定选手的用户填写名称
 
+    private Long skuId;//推荐菜的id
+
+    private String skuName;//推荐菜的名字
+
+    private String picUrl;//推荐菜的图片
+
     public Long getId() {
         return id;
     }
@@ -203,6 +209,30 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     public void setActUserName(String actUserName) {
         this.actUserName = actUserName;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
+    }
+
+    public String getSkuName() {
+        return skuName;
+    }
+
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 
     @Override

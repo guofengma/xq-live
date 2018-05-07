@@ -2,10 +2,15 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.ActShopMapper;
+import com.xq.live.dao.ActSignMapper;
 import com.xq.live.dao.ActUserMapper;
+import com.xq.live.dao.SkuMapper;
 import com.xq.live.model.ActShop;
+import com.xq.live.model.ActSign;
+import com.xq.live.model.Sku;
 import com.xq.live.service.ActShopService;
 import com.xq.live.vo.in.ActShopInVo;
+import com.xq.live.vo.in.ActSignInVo;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import com.xq.live.vo.out.ActShopByShopIdOut;
@@ -34,6 +39,12 @@ public class ActShopServiceImpl implements ActShopService {
 
     @Autowired
     private ActUserMapper actUserMapper;
+
+    @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
+    private ActSignMapper actSignMapper;
 
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
@@ -67,6 +78,22 @@ public class ActShopServiceImpl implements ActShopService {
                     ActUserOut byInVo = actUserMapper.findByInVo(actUserInVo);
                     actShopOut.setIconUrl(byInVo.getIconUrl());
                     actShopOut.setActUserName(byInVo.getActUserName());
+                }
+            }
+            for (ActShopOut actShopOut : list) {
+                ActSignInVo actSignInVo = new ActSignInVo();
+                actSignInVo.setType(ActSign.ACT_SIGN_TYPE_SHOP);
+                actSignInVo.setRefId(actShopOut.getShopId());
+                actSignInVo.setActId(actShopOut.getActId());
+                ActSign sign = actSignMapper.isSign(actSignInVo);
+
+                if(sign!=null) {
+                    Sku sku = skuMapper.selectByPrimaryKey(sign.getSkuId());
+                    if (sku != null) {
+                        actShopOut.setSkuId(sku.getId());
+                        actShopOut.setSkuName(sku.getSkuName());
+                        actShopOut.setPicUrl(sku.getPicUrl());
+                    }
                 }
             }
             Collections.sort(list);

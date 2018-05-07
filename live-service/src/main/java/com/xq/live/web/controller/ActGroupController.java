@@ -142,7 +142,13 @@ public class ActGroupController {
         int sizeNum;
         if (shopOuts.size()>userOuts.size()){
             sizeNum=0;
+            for (int i=userOuts.size()-1;i<shopOuts.size();i++){
+                shopOuts.remove(i);
+            }
         }else if (shopOuts.size()<userOuts.size()){
+            for (int i=shopOuts.size()-1;i<userOuts.size();i++){
+                userOuts.remove(i);
+            }
             sizeNum=1;
         }else {
             sizeNum=2;

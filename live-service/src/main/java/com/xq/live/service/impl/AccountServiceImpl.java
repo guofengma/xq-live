@@ -1,16 +1,20 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Pager;
 import com.xq.live.dao.AccountLogMapper;
 import com.xq.live.dao.UserAccountMapper;
 import com.xq.live.model.AccountLog;
+import com.xq.live.model.CashApply;
 import com.xq.live.model.UserAccount;
 import com.xq.live.service.AccountService;
+import com.xq.live.vo.in.AccountLogInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * com.xq.live.service.impl
@@ -66,6 +70,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public UserAccount findAccountByUserId(Long userId) {
         return userAccountMapper.findAccountByUserId(userId);
+    }
+
+    @Override
+    public Pager<AccountLog> findAccountLogs(AccountLogInVo inVo) {
+        Pager<AccountLog> result = new Pager<AccountLog>();
+        int listTotal = accountLogMapper.listTotal(inVo);
+        result.setTotal(listTotal);
+        if (listTotal > 0) {
+            List<AccountLog> list = accountLogMapper.list(inVo);
+            result.setList(list);
+        }
+        result.setPage(inVo.getPage());
+        return result;
     }
 
     /**

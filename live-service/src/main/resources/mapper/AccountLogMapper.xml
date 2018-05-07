@@ -37,7 +37,40 @@
       #{accountId,jdbcType=BIGINT}, #{accountName,jdbcType=VARCHAR}, #{preAmount,jdbcType=DECIMAL}, 
       #{afterAmount,jdbcType=DECIMAL}, #{operateAmount,jdbcType=DECIMAL}, #{operateType,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, now())
+      <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+        select last_insert_id() as id
+      </selectKey>
   </insert>
+
+  <select id="listTotal" parameterType="com.xq.live.vo.in.AccountLogInVo" resultType="java.lang.Integer">
+    select count(1)
+    from account_log
+    <where>
+      <if test="id != null">
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </select>
+
+  <select id="list" parameterType="com.xq.live.vo.in.AccountLogInVo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from account_log
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+    order by id desc
+    limit #{start}, #{rows}
+  </select>
+
   <insert id="insertSelective" parameterType="com.xq.live.model.AccountLog">
     insert into account_log
     <trim prefix="(" suffix=")" suffixOverrides=",">

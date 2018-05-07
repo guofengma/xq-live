@@ -1,7 +1,10 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.AccountLog;
+import com.xq.live.vo.in.AccountLogInVo;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface AccountLogMapper {
@@ -16,4 +19,8 @@ public interface AccountLogMapper {
     int updateByPrimaryKeySelective(AccountLog record);
 
     int updateByPrimaryKey(AccountLog record);
+
+    int listTotal(AccountLogInVo inVo);
+
+    List<AccountLog> list(AccountLogInVo inVo);
 }

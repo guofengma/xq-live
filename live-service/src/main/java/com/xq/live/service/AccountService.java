@@ -1,6 +1,9 @@
 package com.xq.live.service;
 
+import com.xq.live.common.Pager;
+import com.xq.live.model.AccountLog;
 import com.xq.live.model.UserAccount;
+import com.xq.live.vo.in.AccountLogInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 
 /**
@@ -39,4 +42,11 @@ public interface AccountService {
      * @return
      */
     UserAccount findAccountByUserId(Long userId);
+
+    /**
+     * 分页查询用户交易流水列表
+     * @param inVo
+     * @return
+     */
+    public Pager<AccountLog> findAccountLogs(AccountLogInVo inVo);
 }

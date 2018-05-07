@@ -25,7 +25,6 @@
         delete from so_detail
         where id = #{id,jdbcType=BIGINT}
     </delete>
-
     <insert id="insert" parameterType="com.xq.live.model.SoDetail">
         insert into so_detail (so_id, sku_id,
         sku_code, sku_name, sku_num,

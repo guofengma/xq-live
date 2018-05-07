@@ -175,6 +175,17 @@ public class SoServiceImpl implements SoService {
         return id;
     }
 
+    //判断用户是否领过卷，0没有，1有过
+    @Override
+    public Integer hadBeenGiven(SoInVo inVo) {
+        Integer i=soMapper.hadBeenGiven(inVo);
+        if (i>0){
+            return 1;
+        }
+        return 0;
+    }
+
+
     @Override
     public SoOut get(Long id) {
         return soMapper.selectByPk(id);

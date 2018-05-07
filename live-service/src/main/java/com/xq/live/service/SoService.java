@@ -2,6 +2,7 @@ package com.xq.live.service;
 
 import com.xq.live.common.Pager;
 import com.xq.live.model.So;
+import com.xq.live.model.SoDetail;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
@@ -88,4 +89,11 @@ public interface SoService {
      * @return
      */
     Long freeOrderForAct(SoInVo inVo);
+    /**
+     * 判断当天用户是否领取过活动卷
+     * @param inVo
+     * @return
+     */
+    Integer hadBeenGiven(SoInVo inVo);
+
 }

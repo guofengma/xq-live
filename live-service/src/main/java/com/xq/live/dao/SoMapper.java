@@ -37,4 +37,10 @@ public interface SoMapper {
 
     int cancel(SoInVo inVo);
 
+    /**
+     * 判断用户是否已经领取过活动卷
+     * @param inVo
+     * @return
+     */
+    Integer hadBeenGiven(SoInVo inVo);
 }

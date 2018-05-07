@@ -8,9 +8,13 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.So;
+import com.xq.live.model.SoDetail;
 import com.xq.live.model.Vote;
 import com.xq.live.service.CountService;
+import com.xq.live.service.SoService;
 import com.xq.live.service.VoteService;
+import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.VoteInVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -33,6 +37,9 @@ import java.util.List;
 public class VoteController {
     @Autowired
     private VoteService voteService;
+
+    @Autowired
+    private SoService soService;
 
     @Autowired
     private CountService countService;
@@ -68,7 +75,7 @@ public class VoteController {
     }
 
     /**
-     * 针对新平台活动，判断是否能够领取劵码(只需要传入actId,beginTime,endTime,userId)
+     * 针对新平台活动，判断是否能够领票(只需要传入actId,beginTime,endTime,userId)
      * @param inVo
      * @return
      */
@@ -80,6 +87,13 @@ public class VoteController {
 
         Integer integer = voteService.canGetSku(inVo);
         if(integer==null){
+            return new BaseResp<Integer>(ResultStatus.error_sku_fail);
+        }
+        SoInVo soInVo=new SoInVo();
+        soInVo.setUserId(inVo.getUserId());
+        //判断用户是否领过卷，0没有，1有过
+        int i=soService.hadBeenGiven(soInVo);
+        if (i==1){
             return new BaseResp<Integer>(ResultStatus.error_sku_fail);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS, integer);

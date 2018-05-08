@@ -65,6 +65,9 @@ public class ActShopForAppController {
         if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
             return new BaseResp<Pager<ActShopOut>>(-1,"时间必填",null);
         }
+        /*if(inVo.getType()==null){
+            return new BaseResp<Pager<ActShopOut>>(-1,"type必填",null);
+        }*/
         Pager<ActShopOut> result = actShopService.listForNewAct(inVo);
         return new BaseResp<Pager<ActShopOut>>(ResultStatus.SUCCESS, result);
     }
@@ -102,6 +105,8 @@ public class ActShopForAppController {
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
+
+
     /**
      * 查询商家参与的活动列表
      * @param inVo
@@ -117,5 +122,19 @@ public class ActShopForAppController {
              }
         List<ActShopByShopIdOut> result = actShopService.listForActByShopId(inVo);
         return new BaseResp<List<ActShopByShopIdOut>>(ResultStatus.SUCCESS,result);
+    }
+
+    /**
+     * 查询商家是否参与用活动券的活动
+     * @param shopId
+     * @return
+     */
+    @RequestMapping(value = "/searchForShopId",method =RequestMethod.GET)
+    public BaseResp<Integer> searchForShopId(Long shopId){
+        Integer integer = actShopService.searchForShopId(shopId);
+        if(integer<1){
+            return new BaseResp<Integer>(-1,"商家没有参与该活动",integer);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
 }

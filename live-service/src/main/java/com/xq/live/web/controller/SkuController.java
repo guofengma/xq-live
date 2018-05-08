@@ -69,7 +69,7 @@ public class SkuController {
     }
 
     /**
-     * 分页查询列表(针对折扣券)
+     *  分页查询列表(针对折扣券)
      * @param inVo
      * @return
      */

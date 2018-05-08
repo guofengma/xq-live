@@ -429,7 +429,7 @@ public class SoServiceImpl implements SoService {
             coupon.setSkuCode(sku.getSkuCode());
             coupon.setSkuName(sku.getSkuName());
             coupon.setCouponAmount(couponSku.getAmount());
-            coupon.setType(Coupon.OUNPON_TYPE_AGIO);//这里套餐折扣券(只能被套餐使用)
+            coupon.setType(Coupon.OUNPON_TYPE_AGIO);// 这里套餐折扣券(只能被套餐使用)
             coupon.setUserId(soOut.getUserId());
             coupon.setUserName(soOut.getUserName());
             //上传二维码图片到腾讯COS服务器

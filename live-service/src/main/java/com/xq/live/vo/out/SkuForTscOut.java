@@ -50,7 +50,7 @@ public class SkuForTscOut {
 
     private Integer isZan;//是否点赞
 
-    private BigDecimal agioLevel;//折扣力度
+    private BigDecimal agioLevel;// 折扣力度
 
     public Long getId() {
         return id;

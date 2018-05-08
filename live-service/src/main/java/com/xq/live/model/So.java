@@ -16,7 +16,7 @@ public class So {
 
     public final static int SO_TYPE_SJ = 2;
 
-    //支付方式 1 享七支付 2微信支付
+    //支付方式 1 享七支付  2微信支付
     public final static int SO_PAY_TYPE_XQ = 1;
 
     public final static int SO_PAY_TYPE_WX = 2;

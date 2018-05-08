@@ -8,7 +8,7 @@ import java.util.Date;
 public class Coupon {
 
     /**
-     * 券类型 1 平台券 2 商家券 3 活动券 4折扣券
+     * 券类型 1 平台券 2 商家券 3 活动券  4折扣券
      */
     public final static int COUPON_TYPE_PLAT = 1;
 

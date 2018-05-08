@@ -33,7 +33,7 @@ public class Sku {
     @NotNull(message = "skuName必填")
     private String skuName;
     @NotNull(message = "skuType必填")
-    private Integer skuType;   //sku类型 1 券 2 其他
+    private Integer skuType;   //sku类型 1 券  2 其他
 
     private BigDecimal sellPrice;
 

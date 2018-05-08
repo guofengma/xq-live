@@ -27,7 +27,7 @@ public class SkuInVo extends BaseInVo {
 
     private Long userId;//买券人的userId
 
-    private BigDecimal agioPrice;//折扣价
+    private BigDecimal agioPrice;// 折扣价
 
     public Long getId() {
         return id;

@@ -33,7 +33,7 @@ public class SkuOut {
     private String opreatorName;
     private Integer isDeleted;
     private Integer amount;  //卡面值
-    private Integer sellNum;    //已售张数
+    private Integer sellNum;    // 已售张数
 
     private List<PromotionRules> promotionRules;
 

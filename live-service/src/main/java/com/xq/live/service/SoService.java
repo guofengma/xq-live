@@ -91,7 +91,7 @@ public interface SoService {
     Long freeOrderForAct(SoInVo inVo);
 
     /**
-     * 领取折扣券
+     *  领取折扣券
      * @param inVo
      * @return
      */

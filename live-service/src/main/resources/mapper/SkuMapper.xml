@@ -61,7 +61,7 @@
     where sku_code = #{skuCode,jdbcType=VARCHAR}
   </select>
 
-  <!--分页查询 start-->
+  <!--分页查询  start-->
   <select id="list" resultMap="SkuOutResultMap">
     SELECT
       sku.id,

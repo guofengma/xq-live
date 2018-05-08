@@ -146,7 +146,7 @@ public class SoController {
     }
 
     /**
-     * 领取折扣券
+     *  领取折扣券
      * @param inVo
      * @param result
      * @return

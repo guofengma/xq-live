@@ -133,7 +133,7 @@
     </select>
 
     <!--根据订单ID获取用户当天是否领取过活动票-->
-    <select id="hadBeenGiven" parameterType="com.xq.live.model.So" resultMap="java.lang.Long">
+    <select id="hadBeenGiven" parameterType="com.xq.live.model.So" resultType="java.lang.Long">
         SELECT
     	count(1)
         FROM so_detail sd

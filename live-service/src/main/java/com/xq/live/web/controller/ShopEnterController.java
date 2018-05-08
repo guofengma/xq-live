@@ -102,6 +102,9 @@ public class ShopEnterController {
         if(integer==-1){
             return new BaseResp<Integer>(-1,"更改用户状态失败",null);
         }
+        if(integer==null){
+            return new BaseResp<Integer>(-1,"查询结果异常",null);
+        }
         return new BaseResp<Integer>(0,"成功",null);
     }
 

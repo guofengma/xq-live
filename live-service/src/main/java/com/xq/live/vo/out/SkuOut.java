@@ -22,6 +22,7 @@ public class SkuOut {
     private Integer skuType;   //sku类型 1 券 2 其他
     private BigDecimal sellPrice;
     private BigDecimal inPrice;
+    private BigDecimal agioPrice;//折扣价格
     private Integer stockNum;
     private String picUrl;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -80,6 +81,14 @@ public class SkuOut {
 
     public BigDecimal getInPrice() {
         return inPrice;
+    }
+
+    public BigDecimal getAgioPrice() {
+        return agioPrice;
+    }
+
+    public void setAgioPrice(BigDecimal agioPrice) {
+        this.agioPrice = agioPrice;
     }
 
     public void setInPrice(BigDecimal inPrice) {

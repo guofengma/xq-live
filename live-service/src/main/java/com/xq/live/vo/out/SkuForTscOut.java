@@ -27,6 +27,8 @@ public class SkuForTscOut {
 
     private BigDecimal inPrice;
 
+    private BigDecimal agioPrice;
+
     @NotNull(message = "stockNum必填")
     private Integer stockNum;
 
@@ -47,6 +49,8 @@ public class SkuForTscOut {
     private Integer zan;//点赞数
 
     private Integer isZan;//是否点赞
+
+    private BigDecimal agioLevel;//折扣力度
 
     public Long getId() {
         return id;
@@ -90,6 +94,14 @@ public class SkuForTscOut {
 
     public BigDecimal getInPrice() {
         return inPrice;
+    }
+
+    public BigDecimal getAgioPrice() {
+        return agioPrice;
+    }
+
+    public void setAgioPrice(BigDecimal agioPrice) {
+        this.agioPrice = agioPrice;
     }
 
     public void setInPrice(BigDecimal inPrice) {
@@ -174,5 +186,13 @@ public class SkuForTscOut {
 
     public void setIsZan(Integer isZan) {
         this.isZan = isZan;
+    }
+
+    public BigDecimal getAgioLevel() {
+        return agioLevel;
+    }
+
+    public void setAgioLevel(BigDecimal agioLevel) {
+        this.agioLevel = agioLevel;
     }
 }

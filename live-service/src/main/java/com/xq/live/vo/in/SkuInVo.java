@@ -1,5 +1,7 @@
 package com.xq.live.vo.in;
 
+import java.math.BigDecimal;
+
 /**
  * sku 入参
  *
@@ -24,6 +26,8 @@ public class SkuInVo extends BaseInVo {
     private Long zanUserId;//推荐菜点赞人的userId
 
     private Long userId;//买券人的userId
+
+    private BigDecimal agioPrice;//折扣价
 
     public Long getId() {
         return id;
@@ -87,5 +91,13 @@ public class SkuInVo extends BaseInVo {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public BigDecimal getAgioPrice() {
+        return agioPrice;
+    }
+
+    public void setAgioPrice(BigDecimal agioPrice) {
+        this.agioPrice = agioPrice;
     }
 }

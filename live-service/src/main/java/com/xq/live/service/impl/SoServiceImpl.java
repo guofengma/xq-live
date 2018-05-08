@@ -175,6 +175,35 @@ public class SoServiceImpl implements SoService {
         return id;
     }
 
+    @Override
+    public Long freeOrderForAgio(SoInVo inVo) {
+        //1、查询SKU信息
+        Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+        //2、计算订单金额
+        BigDecimal soAmount = BigDecimal.ZERO;
+
+        //3、保存订单信息,免费订单的状态直接写为“已支付”
+        inVo.setSoAmount(soAmount);
+        inVo.setSoStatus(So.SO_STATUS_PAID);
+        inVo.setSoType(So.SO_TYPE_PT);
+        int ret = soMapper.insert(inVo);
+        if (ret < 1) {
+            return null;
+        }
+        Long id = inVo.getId();
+
+        //4、保存订单明细信息
+        inVo.setId(id);
+        this.saveSoDetail(inVo, sku);
+
+        //5.生成套餐折扣券(只能被套餐使用)
+        this.createCouponForAgio(inVo);
+
+        //6、保存订单日志，订单状态:已支付
+        this.saveSoLog(inVo, SoLog.SO_STATUS_PAID);
+        return id;
+    }
+
     //判断用户是否领过卷，0没有，1有过
     @Override
     public Integer hadBeenGiven(SoInVo inVo) {
@@ -366,6 +395,41 @@ public class SoServiceImpl implements SoService {
             coupon.setSkuName(sku.getSkuName());
             coupon.setCouponAmount(couponSku.getAmount());
             coupon.setType(Coupon.OUNPON_TYPE_ACT);//这里为活动券，只能参与活动的商家使用
+            coupon.setUserId(soOut.getUserId());
+            coupon.setUserName(soOut.getUserName());
+            //上传二维码图片到腾讯COS服务器
+            String qrcodeUrl = uploadQRCodeToCos(coupon.getCouponCode());
+            coupon.setQrcodeUrl(qrcodeUrl);
+            coupon.setExpiryDate(cal.getTime());
+            couponMapper.insert(coupon);
+            res++;
+        }
+        return res;
+    }
+
+    /**
+     * 根据订单信息生成折扣券
+     * @param inVo
+     * @return
+     */
+    private int createCouponForAgio(SoInVo inVo){
+        int res = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 3);     //有效时间为3个月
+        //2、支付成功生成抵用券
+        for (int i = 0; i < inVo.getSkuNum(); i++) {
+            //3、查询券信息
+            Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+            CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
+            SoOut soOut = this.get(inVo.getId());
+            Coupon coupon = new Coupon();
+            coupon.setSoId(inVo.getId());
+            coupon.setCouponCode(RandomStringUtil.getRandomCode(10, 0));
+            coupon.setSkuId(sku.getId());
+            coupon.setSkuCode(sku.getSkuCode());
+            coupon.setSkuName(sku.getSkuName());
+            coupon.setCouponAmount(couponSku.getAmount());
+            coupon.setType(Coupon.OUNPON_TYPE_AGIO);//这里套餐折扣券(只能被套餐使用)
             coupon.setUserId(soOut.getUserId());
             coupon.setUserName(soOut.getUserName());
             //上传二维码图片到腾讯COS服务器

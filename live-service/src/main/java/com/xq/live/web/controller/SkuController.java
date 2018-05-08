@@ -69,6 +69,18 @@ public class SkuController {
     }
 
     /**
+     * 分页查询列表(针对折扣券)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listForAgio", method = RequestMethod.GET)
+    public BaseResp<Pager<SkuOut>> listForAgio(SkuInVo inVo){
+        inVo.setSkuType(Sku.SKU_TYPE_AGIO);
+        Pager<SkuOut> result = skuService.list(inVo);
+        return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
      * 查热门
      * @param inVo
      * @return
@@ -127,6 +139,43 @@ public class SkuController {
             return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_shop_id_empty);
         }
         inVo.setSkuType(Sku.SKU_TYPE_TSC);
+        Pager<SkuForTscOut> result = skuService.queryTscList(inVo);
+        return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 查询单个套餐
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/getAgio",method = RequestMethod.GET)
+    public BaseResp<SkuForTscOut> getAgio(SkuInVo inVo){
+        if(inVo==null||inVo.getId()==null||inVo.getZanUserId()==null){
+            return new BaseResp<SkuForTscOut>(ResultStatus.error_param_empty);
+        }
+        if(inVo.getShopId() == null){
+            return new BaseResp<SkuForTscOut>(ResultStatus.error_param_shop_id_empty);
+        }
+        inVo.setSkuType(Sku.SKU_TYPE_SJTC);
+        SkuForTscOut tscForZan = skuService.getTscForZan(inVo);
+        return  new BaseResp<SkuForTscOut>(ResultStatus.SUCCESS,tscForZan);
+    }
+
+    /**
+     * 分页套餐列表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/agioList", method = RequestMethod.GET)
+    public BaseResp<Pager<SkuForTscOut>> agioList(SkuInVo inVo){
+        if(inVo == null){
+            return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_empty);
+        }
+
+        if(inVo.getShopId() == null){
+            return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_shop_id_empty);
+        }
+        inVo.setSkuType(Sku.SKU_TYPE_SJTC);
         Pager<SkuForTscOut> result = skuService.queryTscList(inVo);
         return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.SUCCESS, result);
     }

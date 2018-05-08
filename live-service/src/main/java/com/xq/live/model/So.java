@@ -11,11 +11,15 @@ public class So {
     public final static int SO_STATUS_APPLIED = 3;
     public final static int SO_STATUS_CANCEL = 10;
 
-    //订单类型 1 普通订单(平台订单)
+    //订单类型 1 普通订单(平台订单)   2 商家订单
     public final static int SO_TYPE_PT = 1;
 
-    //支付方式 1 微信支付
-    public final static int SO_PAY_TYPE_WX = 1;
+    public final static int SO_TYPE_SJ = 2;
+
+    //支付方式 1 享七支付 2微信支付
+    public final static int SO_PAY_TYPE_XQ = 1;
+
+    public final static int SO_PAY_TYPE_WX = 2;
 
     private Long id;
 

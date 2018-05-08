@@ -89,6 +89,14 @@ public interface SoService {
      * @return
      */
     Long freeOrderForAct(SoInVo inVo);
+
+    /**
+     * 领取折扣券
+     * @param inVo
+     * @return
+     */
+    Long freeOrderForAgio(SoInVo inVo);
+
     /**
      * 判断当天用户是否领取过活动卷
      * @param inVo

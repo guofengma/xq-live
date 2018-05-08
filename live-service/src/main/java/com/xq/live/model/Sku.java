@@ -9,13 +9,17 @@ import java.util.Date;
  */
 public class Sku {
     /**
-     * sku_type 1 平台券  2 特色菜 3 活动券
+     * sku_type 1 平台券  2 特色菜 3 活动券  4 平台折扣券
      */
     public final static int SKU_TYPE_XQQ = 1;   //享七券
 
     public final static int SKU_TYPE_TSC = 2;   //特色菜
 
     public final static int SKU_TYPE_HDQ = 3;   //活动券
+
+    public final static int SKU_TYPE_AGIO = 4;   //平台折扣券
+
+    public final static int SKU_TYPE_SJTC = 5;   //商家套餐
 
     /**
      * 是否删除
@@ -34,6 +38,8 @@ public class Sku {
     private BigDecimal sellPrice;
 
     private BigDecimal inPrice;
+
+    private BigDecimal agioPrice;//折扣价
 
     @NotNull(message = "stockNum必填")
     private Integer stockNum;
@@ -98,6 +104,14 @@ public class Sku {
 
     public void setInPrice(BigDecimal inPrice) {
         this.inPrice = inPrice;
+    }
+
+    public BigDecimal getAgioPrice() {
+        return agioPrice;
+    }
+
+    public void setAgioPrice(BigDecimal agioPrice) {
+        this.agioPrice = agioPrice;
     }
 
     public Integer getStockNum() {

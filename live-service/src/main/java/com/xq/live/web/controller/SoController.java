@@ -146,6 +146,22 @@ public class SoController {
     }
 
     /**
+     * 领取折扣券
+     * @param inVo
+     * @param result
+     * @return
+     */
+    @RequestMapping(value = "/freeOrderForAgio", method = RequestMethod.POST)
+    public BaseResp<Long> freeOrderForAgio(@Valid SoInVo inVo, BindingResult result){
+        if (result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        Long id = soService.freeOrderForAgio(inVo);
+        return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
      * 订单支付
      *
      * @param inVo

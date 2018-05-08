@@ -8,6 +8,7 @@
     <result column="sku_type" jdbcType="INTEGER" property="skuType" />
     <result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
     <result column="in_price" jdbcType="DECIMAL" property="inPrice" />
+    <result column="agio_price" jdbcType="DECIMAL" property="agioPrice" />
     <result column="stock_num" jdbcType="INTEGER" property="stockNum" />
     <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
@@ -38,10 +39,11 @@
   <resultMap id="TscZanResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.SkuForTscOut">
     <result column="zan" jdbcType="INTEGER" property="zan"/>
     <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
+    <result column="agio_level" jdbcType="DECIMAL" property="agioLevel"/>
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, sku_code, sku_name, sku_type, sell_price, in_price, is_deleted, pic_url, stock_num, create_time, update_time,
+    id, sku_code, sku_name, sku_type, sell_price, in_price, agio_price,is_deleted, pic_url, stock_num, create_time, update_time,
     opreator_id, opreator_name,sku_info
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -68,6 +70,7 @@
       sku.sku_type,
       sku.sell_price,
       sku.in_price,
+      sku.agio_price,
       sku.stock_num,
       sku.pic_url,
       sku.create_time,
@@ -110,6 +113,7 @@
       sku.sku_type,
       sku.sell_price,
       sku.in_price,
+      sku.agio_price,
       sku.stock_num,
       sku.pic_url,
       sku.create_time,
@@ -162,6 +166,7 @@
     sku.sku_type,
     sku.sell_price,
     sku.in_price,
+    sku.agio_price,
     sku.stock_num,
     sku.pic_url,
     sku.create_time,
@@ -174,7 +179,8 @@
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
-    ) as is_zan
+    ) as is_zan,
+    round((sku.agio_price * 10)/sku.sell_price,1) as agio_level
     from sku sku
     inner join sku_shop ss on sku.id = ss.sku_id
     <where>
@@ -240,6 +246,7 @@
       sku.sku_type,
       sku.sell_price,
       sku.in_price,
+      sku.agio_price,
       sku.stock_num,
       sku.pic_url,
       sku.create_time,
@@ -252,7 +259,8 @@
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
-    ) as is_zan
+    ) as is_zan,
+    round((sku.agio_price * 10)/sku.sell_price,1) as agio_level
     from sku sku
       inner join sku_shop ss on sku.id = ss.sku_id
     <where>
@@ -318,7 +326,7 @@
 
   <insert id="insert" parameterType="com.xq.live.model.Sku">
     insert into sku (sku_code, sku_name,
-      sku_type, sell_price, in_price, 
+      sku_type, sell_price, in_price, agio_price,
       stock_num,
       <if test="isDeleted != null">
       is_deleted,
@@ -326,7 +334,7 @@
        pic_url,create_time, update_time,
       opreator_id, opreator_name,sku_info)
     values (#{skuCode,jdbcType=VARCHAR}, #{skuName,jdbcType=VARCHAR},
-      #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},
+      #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},#{agioPrice,jdbcType=DECIMAL},
       #{stockNum,jdbcType=INTEGER},
       <if test="isDeleted != null">
       is_deleted = #{isDeleted,jdbcType=TINYINT},
@@ -354,6 +362,9 @@
       </if>
       <if test="inPrice != null">
         in_price,
+      </if>
+      <if test="agioPrice != null">
+        agio_price,
       </if>
       <if test="stockNum != null">
         stock_num,
@@ -392,6 +403,9 @@
       </if>
       <if test="inPrice != null">
         #{inPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="agioPrice != null">
+        #{agioPrice,jdbcType=DECIMAL},
       </if>
       <if test="stockNum != null">
         #{stockNum,jdbcType=INTEGER},
@@ -437,6 +451,9 @@
       <if test="inPrice != null">
         in_price = #{inPrice,jdbcType=DECIMAL},
       </if>
+      <if test="agioPrice != null">
+        agio_price = #{agioPrice,jdbcType=DECIMAL},
+      </if>
       <if test="stockNum != null">
         stock_num = #{stockNum,jdbcType=INTEGER},
       </if>
@@ -468,6 +485,7 @@
       sku_type = #{skuType,jdbcType=INTEGER},
       sell_price = #{sellPrice,jdbcType=DECIMAL},
       in_price = #{inPrice,jdbcType=DECIMAL},
+      agio_price = #{agioPrice,jdbcType=DECIMAL},
       stock_num = #{stockNum,jdbcType=INTEGER},
       pic_url = #{picUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},

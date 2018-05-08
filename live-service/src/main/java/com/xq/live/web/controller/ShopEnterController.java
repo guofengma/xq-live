@@ -83,7 +83,7 @@ public class ShopEnterController {
     }
 
     /**
-     *  审批通过后，插入shop表,更改user状态
+     *   审批通过后，插入shop表,更改user状态
      * @param shopEnter
      * @return
      */

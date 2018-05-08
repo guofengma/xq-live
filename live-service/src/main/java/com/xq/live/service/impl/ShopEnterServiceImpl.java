@@ -46,7 +46,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             return null;
         }
 
-        return list.get(list.size()-1);// 返回最后一条数据,前面的数据无需做判断
+        return list.get(list.size()-1);//  返回最后一条数据,前面的数据无需做判断
     }
 
     @Override

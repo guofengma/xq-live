@@ -18,6 +18,8 @@ public class Sku {
 
     private BigDecimal inPrice;
 
+    private BigDecimal agioPrice;//уш©ш╪ш
+
     private Integer stockNum;
 
     private Integer isDeleted;
@@ -78,6 +80,14 @@ public class Sku {
 
     public void setInPrice(BigDecimal inPrice) {
         this.inPrice = inPrice;
+    }
+
+    public BigDecimal getAgioPrice() {
+        return agioPrice;
+    }
+
+    public void setAgioPrice(BigDecimal agioPrice) {
+        this.agioPrice = agioPrice;
     }
 
     public Integer getStockNum() {

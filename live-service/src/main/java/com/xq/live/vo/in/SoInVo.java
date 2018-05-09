@@ -34,6 +34,8 @@ public class SoInVo extends BaseInVo {
 
     private BigDecimal soAmount;
 
+    private Long actId;//生成的订单对应的活动
+
     public Long getId() {
         return id;
     }
@@ -106,4 +108,11 @@ public class SoInVo extends BaseInVo {
         this.soAmount = soAmount;
     }
 
+    public Long getActId() {
+        return actId;
+    }
+
+    public void setActId(Long actId) {
+        this.actId = actId;
+    }
 }

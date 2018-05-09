@@ -124,4 +124,10 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
         }
         return 0;
     }
+
+    @Override
+    public Integer canGetAgio(SoInVo inVo) {
+        Integer integer = soWriteOffMapper.canGetAgio(inVo);
+        return integer;
+    }
 }

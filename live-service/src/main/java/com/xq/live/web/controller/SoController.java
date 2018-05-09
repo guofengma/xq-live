@@ -4,11 +4,13 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
 import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
 import com.xq.live.service.SoService;
+import com.xq.live.service.SoWriteOffService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserAccountInVo;
@@ -55,6 +57,13 @@ public class SoController {
 
     @Autowired
     private FreeSkuConfig freeSkuConfig;
+
+    @Autowired
+    private AgioSkuConfig agioSkuConfig;
+
+    @Autowired
+    private SoWriteOffService soWriteOffService;
+
 
     /**
      * 查一条记录
@@ -174,6 +183,13 @@ public class SoController {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
+
+
+        Integer integer = soWriteOffService.canGetAgio(inVo);
+        if(integer>=1){
+            return new BaseResp<Long>(ResultStatus.error_agio_fail);
+        }
+
         Long id = soService.freeOrderForAgio(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }

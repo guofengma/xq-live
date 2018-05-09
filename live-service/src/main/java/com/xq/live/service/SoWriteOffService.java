@@ -51,4 +51,12 @@ public interface SoWriteOffService {
      * @return
      */
     int validInput(SoWriteOff soWriteOff);
+
+
+    /**
+     * 判断是否能够领取折扣券
+     * @param inVo
+     * @return
+     */
+    Integer canGetAgio(SoInVo inVo);
 }

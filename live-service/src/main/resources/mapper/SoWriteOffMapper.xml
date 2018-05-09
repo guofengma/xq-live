@@ -346,4 +346,11 @@
     where sku_id = 383 and (TO_DAYS(create_time) = TO_DAYS(now()))
     and shop_id = #{shopId,jdbcType=BIGINT}
   </select>
+
+  <select id="canGetAgio" parameterType="com.xq.live.vo.in.SoInVo" resultType="java.lang.Integer">
+    select
+    COUNT(1)
+    from so s LEFT JOIN so_detail sw on s.id = sw.so_id
+    where sw.sku_id = #{skuId,jdbcType=BIGINT} and s.so_status = 2 and s.user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

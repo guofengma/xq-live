@@ -1,6 +1,7 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.SoWriteOff;
+import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.out.SoWriteOffOut;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,6 @@ public interface SoWriteOffMapper {
     List<SoWriteOffOut> total(SoWriteOffInVo inVo);
 
     Integer selectActShopCount(Long shopId);
+
+    Integer canGetAgio(SoInVo inVo);
 }

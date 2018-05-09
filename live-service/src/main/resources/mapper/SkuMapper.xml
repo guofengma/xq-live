@@ -24,6 +24,10 @@
     <result column="amount" jdbcType="INTEGER" property="amount" />
     <!--已售数量-->
     <result column="sell_num" jdbcType="INTEGER" property="sellNum" />
+    <!--折扣券是否已领-->
+    <result column="is_agio" jdbcType="INTEGER" property="isAgio" />
+    <!--活动券是否已领-->
+    <result column="is_act" jdbcType="INTEGER" property="isAct" />
     <!-- 一个商品sku对应多个促销规则 -->
     <collection property="promotionRules" ofType="com.xq.live.model.PromotionRules">
       <result column="rule_id" jdbcType="BIGINT" property="id" />
@@ -81,6 +85,19 @@
       ' ' as rule_desc,
       cs.amount,
     (select count(1) from coupon where sku_id = sku.id) sell_num
+    <if test="id != null and userId != null">
+     ,(select
+      COUNT(1)
+      from so s LEFT JOIN so_detail sw on s.id = sw.so_id
+      where sw.sku_id = #{id,jdbcType=BIGINT} and s.so_status = 2 and s.user_id = #{userId,jdbcType=BIGINT}) as is_agio
+      ,(SELECT
+      count(1)
+      FROM so_detail sd
+      INNER JOIN so s ON sd.so_id = s.id
+      WHERE s.user_id = #{userId,jdbcType=BIGINT}
+      AND sd.sku_id = #{id,jdbcType=BIGINT}
+      AND (TO_DAYS(sd.create_time) = TO_DAYS(now()))) as is_act
+    </if>
     FROM sku sku
     LEFT JOIN coupon_sku cs on sku.id = cs.sku_id
     <where>

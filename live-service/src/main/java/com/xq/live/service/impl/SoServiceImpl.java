@@ -233,6 +233,9 @@ public class SoServiceImpl implements SoService {
             return null;
         }
         User user = userMapper.selectByPrimaryKey(soForOrderOut.getUserId());
+        if(user==null){
+            return null;
+        }
         soForOrderOut.setMoblie(user.getMobile());
         return soForOrderOut;
     }

@@ -35,6 +35,10 @@ public class SkuOut {
     private Integer amount;  //卡面值
     private Integer sellNum;    // 已售张数
 
+    private Integer isAgio;//折扣券是否已领
+
+    private Integer isAct;//活动券是否已领
+
     private List<PromotionRules> promotionRules;
 
     private String skuInfo;//推荐菜详情
@@ -181,5 +185,21 @@ public class SkuOut {
 
     public void setSkuInfo(String skuInfo) {
         this.skuInfo = skuInfo;
+    }
+
+    public Integer getIsAgio() {
+        return isAgio;
+    }
+
+    public void setIsAgio(Integer isAgio) {
+        this.isAgio = isAgio;
+    }
+
+    public Integer getIsAct() {
+        return isAct;
+    }
+
+    public void setIsAct(Integer isAct) {
+        this.isAct = isAct;
     }
 }

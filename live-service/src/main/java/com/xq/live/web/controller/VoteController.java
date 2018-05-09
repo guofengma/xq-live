@@ -8,6 +8,7 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.model.So;
 import com.xq.live.model.SoDetail;
 import com.xq.live.model.Vote;
@@ -44,6 +45,9 @@ public class VoteController {
     @Autowired
     private CountService countService;
 
+    @Autowired
+    private ActSkuConfig actSkuConfig;
+
     /**
      * 根据ID查询投票信息
      * @param id
@@ -56,7 +60,7 @@ public class VoteController {
     }
 
     /**
-     * 针对新平台活动，判断是否能够投票(传入shopId的时候，sql语句中shop_id is not null,传入playerUserIdId的时候，sql语句中player_user_id is not null)
+     * 针对新平台活动，判断是否能够投票(传入shopId的时候，sql语句中shop_id is not null,传入playerUserId的时候，sql语句中player_user_id is not null)
      * actId,beginTime,endTime,userId必填。shopId,playerUserIdId至少填一个
      * @param inVo
      * @return
@@ -91,9 +95,11 @@ public class VoteController {
         }
         SoInVo soInVo=new SoInVo();
         soInVo.setUserId(inVo.getUserId());
+        soInVo.setActId(inVo.getActId());
+        soInVo.setSkuId(actSkuConfig.getSkuId());
         //判断用户是否领过卷，0没有，1有过
         int i=soService.hadBeenGiven(soInVo);
-        if (i==1){
+        if (i!=0){
             return new BaseResp<Integer>(ResultStatus.error_so_had);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS, integer);

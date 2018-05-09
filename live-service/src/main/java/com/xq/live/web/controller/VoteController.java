@@ -94,7 +94,7 @@ public class VoteController {
         //判断用户是否领过卷，0没有，1有过
         int i=soService.hadBeenGiven(soInVo);
         if (i==1){
-            return new BaseResp<Integer>(ResultStatus.error_sku_fail);
+            return new BaseResp<Integer>(ResultStatus.error_so_had);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS, integer);
     }

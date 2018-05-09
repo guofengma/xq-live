@@ -134,6 +134,7 @@ public class SoController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
 
+        //判断是否是新用户
         Integer soOutNum = soService.selectByUserIdTotal(inVo.getUserId());
         if(soOutNum > 0){
             return new BaseResp<Long>(ResultStatus.error_user_not_new);
@@ -231,6 +232,15 @@ public class SoController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }
 
+    //查询用户余额
+    @RequestMapping(value = "/doFindAmount", method = RequestMethod.POST)
+    public BaseResp<Integer> doFindAmount(UserAccountInVo accountInVo){
+        List<UserAccount> list= userService.fingAccountByID(accountInVo.getUserId());
+        BigDecimal accountAmount=list.get(0).getAccountAmount();
+
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,accountAmount.intValue());
+    }
+
 
     //享7平台支付
     @RequestMapping(value = "/doPaymentPlatform", method = RequestMethod.POST)
@@ -269,20 +279,23 @@ public class SoController {
     }
 
     //支付后平台反红包
+    @RequestMapping(value = "/doAddFeedback", method = RequestMethod.POST)
     public BaseResp<Integer> playFeedback(UserAccountInVo accountInVo){
         //获取一个1到10块的红包
         int feedback= GroupUtil.getRandom(1,10);
         //转换成BigDecimal类型
         BigDecimal amount=new BigDecimal(feedback);
+        List<UserAccount> list= userService.fingAccountByID(accountInVo.getUserId());
+        BigDecimal accountAmount=list.get(0).getAccountAmount();
+
         int i=0;
-        accountInVo.setAccountAmount(amount);
+        accountInVo.setAccountAmount(amount.add(accountAmount));
         i=userService.updateByUserID(accountInVo);
             if (i<1){
-                return new BaseResp<Integer>(ResultStatus.error_user_play);
+                return new BaseResp<Integer>(ResultStatus.error_user_getaccount);
             }else {
-                return new BaseResp<Integer>(ResultStatus.SUCCESS,i);
+                return new BaseResp<Integer>(ResultStatus.SUCCESS,feedback);
             }
         }
-        //return new BaseResp<Integer>(ResultStatus.error_user_account);
 
 }

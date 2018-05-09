@@ -2,13 +2,21 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
+import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
+import com.xq.live.model.User;
+import com.xq.live.model.UserAccount;
 import com.xq.live.service.SoService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.UserAccountInVo;
+import com.xq.live.vo.in.WeixinInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
+import com.xq.live.web.utils.GroupUtil;
+import com.xq.live.web.utils.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -19,9 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单controller
@@ -36,6 +48,10 @@ public class SoController {
 
     @Autowired
     private SoService soService;
+
+    @Autowired
+    private UserService userService;
+
 
     @Autowired
     private FreeSkuConfig freeSkuConfig;
@@ -214,5 +230,59 @@ public class SoController {
         int ret = soService.cancel(inVo);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }
+
+
+    //享7平台支付
+    @RequestMapping(value = "/doPaymentPlatform", method = RequestMethod.POST)
+    public BaseResp<Integer> doPaymentPlatform(@Valid WeixinInVo inVo, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<ObjectError> list = bindingResult.getAllErrors();
+            return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        //根据id获取订单信息
+        SoOut soOut = soService.get(inVo.getSoId());
+        if (soOut == null) {
+            return new BaseResp<Integer>(ResultStatus.error_so_not_exist);
+        }
+        //订单已支付
+        if (soOut.getSoStatus() != So.SO_STATUS_WAIT_PAID) {
+            return new BaseResp<Integer>(ResultStatus.error_so_paid);
+        }
+        //判断用户余额是否可以支付
+        List<UserAccount> list= userService.findAccountByUserId(inVo.getSoId());
+        BigDecimal accountAmount=list.get(0).getAccountAmount();
+        Long userID=list.get(0).getUserId();
+        UserAccountInVo account=new UserAccountInVo();
+        account.setUserId(userID);
+        int i=0;
+        if (soOut.getSoAmount().compareTo(accountAmount)<=0){
+            account.setAccountAmount(accountAmount.subtract(soOut.getSoAmount()));
+            i=userService.updateByUserID(account);
+            if (i<1){
+                return new BaseResp<Integer>(ResultStatus.error_user_play);
+            }else {
+                return new BaseResp<Integer>(ResultStatus.SUCCESS,i);
+            }
+        }else {
+            return new BaseResp<Integer>(ResultStatus.error_user_account);
+        }
+    }
+
+    //支付后平台反红包
+    public BaseResp<Integer> playFeedback(UserAccountInVo accountInVo){
+        //获取一个1到10块的红包
+        int feedback= GroupUtil.getRandom(1,10);
+        //转换成BigDecimal类型
+        BigDecimal amount=new BigDecimal(feedback);
+        int i=0;
+        accountInVo.setAccountAmount(amount);
+        i=userService.updateByUserID(accountInVo);
+            if (i<1){
+                return new BaseResp<Integer>(ResultStatus.error_user_play);
+            }else {
+                return new BaseResp<Integer>(ResultStatus.SUCCESS,i);
+            }
+        }
+        //return new BaseResp<Integer>(ResultStatus.error_user_account);
 
 }

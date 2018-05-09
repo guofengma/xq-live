@@ -37,11 +37,19 @@ public interface UserService {
     public List<User> top(UserInVo inVo);
 
     /**
-     * 根据UserID查询用户信息中的余额
+     * 根据订单ID查询用户信息中的余额
      * @param userID
      * @return
      */
     public List<UserAccount> findAccountByUserId(Long userID);
+
+    /**
+     * 根据活动UserID查询用户信息中的余额
+     * @param userID
+     * @return
+     */
+    public List<UserAccount> fingAccountByID(Long userID);
+
     /**
      * 根据入参查询用户信息
      * @param inVo

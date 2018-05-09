@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.list(inVo);
     }
 
-    //获取用户余额
+    //通过订单ID得到UserID获取用户余额
     @Override
     public List<UserAccount> findAccountByUserId(Long id) {
         List<UserAccount> list = new ArrayList<UserAccount>();
@@ -124,6 +124,16 @@ public class UserServiceImpl implements UserService {
         list.add(0,userAccount);
         return list;
     }
+
+    //通过活动UserID获取用户余额
+    @Override
+    public List<UserAccount> fingAccountByID(Long userID) {
+        List<UserAccount> list = new ArrayList<UserAccount>();
+        UserAccount userAccount=userAccountMapper.findAccountByUserId(userID);
+        list.add(0,userAccount);
+        return list;
+    }
+    //通过UserId获取用户余额
 
     @Override
     public User findByUserNameAndPwd(UserInVo inVo){

@@ -16,12 +16,24 @@ public interface UserAccountMapper {
 
     /**
      * 根据用户id查询账户信息
-     * @param userId
+     * @param userID
      * @return
      */
-    UserAccount findAccountByUserId(Long userId);
+    UserAccount findAccountByUserId(Long userID);
 
-    int updateByPrimaryKeySelective(UserAccount record);
+    /**
+     * 根据参数修改表数据
+     * @param inVo
+     * @return
+     */
+    int updateByPrimaryKeySelective(UserAccountInVo inVo);
+
+    /**
+     * 根据参数修改表数据除去UserID
+     * @param inVo
+     * @return
+     */
+    int updateByUserID(UserAccountInVo inVo);
 
     int updateByPrimaryKey(UserAccount record);
 
@@ -38,4 +50,5 @@ public interface UserAccountMapper {
      * @return
      */
     int payout(UserAccountInVo inVo);
+
 }

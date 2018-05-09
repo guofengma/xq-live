@@ -43,4 +43,11 @@ public interface SoMapper {
      * @return
      */
     Integer hadBeenGiven(SoInVo inVo);
+
+    /**
+     * 根据订单ID获取userId
+     * @param inVo
+     * @return
+     */
+    Long getUserIDBySoId(SoInVo inVo);
 }

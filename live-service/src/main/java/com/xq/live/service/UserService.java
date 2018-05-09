@@ -2,6 +2,8 @@ package com.xq.live.service;
 
 import com.xq.live.common.Pager;
 import com.xq.live.model.User;
+import com.xq.live.model.UserAccount;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,6 +37,12 @@ public interface UserService {
     public List<User> top(UserInVo inVo);
 
     /**
+     * 根据UserID查询用户信息中的余额
+     * @param userID
+     * @return
+     */
+    public List<UserAccount> findAccountByUserId(Long userID);
+    /**
      * 根据入参查询用户信息
      * @param inVo
      * @return
@@ -54,6 +62,13 @@ public interface UserService {
      * @return
      */
     public Integer updateByOpenId(User user);
+
+    /**
+     * 根据userID修改userAccount
+     * @param
+     * @return
+     */
+    public Integer updateByUserID(UserAccountInVo accountInVo);
 
     /**
      * 使用mobile更新用户信息
@@ -78,4 +93,6 @@ public interface UserService {
      * @return
      */
     Long addAppUser(User user);
+
+
 }

@@ -133,7 +133,7 @@
     </select>
 
     <!--根据订单ID获取用户当天是否领取过活动票-->
-    <select id="hadBeenGiven" parameterType="com.xq.live.model.So" resultType="java.lang.Long">
+    <select id="hadBeenGiven" parameterType="com.xq.live.model.So" resultType="java.lang.Integer">
         SELECT
     	count(1)
         FROM so_detail sd
@@ -143,6 +143,11 @@
         AND (TO_DAYS(sd.create_time) = TO_DAYS(now()))
     </select>
 
+    <!--根据订单ID获取用户ID-->
+    <select id="getUserIDBySoId" parameterType="com.xq.live.model.So"  resultType="java.lang.Long">
+      SELECT s.user_id FROM so s
+      WHERE s.id=#{id,jdbcType=BIGINT}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
       delete from so   where id = #{id,jdbcType=BIGINT}
     </delete>

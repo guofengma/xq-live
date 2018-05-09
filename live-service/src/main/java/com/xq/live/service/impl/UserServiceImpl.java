@@ -4,11 +4,14 @@ import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
+import com.xq.live.dao.SoMapper;
 import com.xq.live.dao.UserAccountMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
 import com.xq.live.service.UserService;
+import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
 import com.xq.live.web.utils.SignUtil;
 import org.apache.log4j.Logger;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private SoMapper soMapper;
 
     @Autowired
     private AccessLogMapper accessLogMapper;
@@ -106,6 +113,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.list(inVo);
     }
 
+    //获取用户余额
+    @Override
+    public List<UserAccount> findAccountByUserId(Long id) {
+        List<UserAccount> list = new ArrayList<UserAccount>();
+        SoInVo inVo = new SoInVo();
+        inVo.setId(id);
+        Long userId=soMapper.getUserIDBySoId(inVo);
+        UserAccount userAccount=userAccountMapper.findAccountByUserId(userId);
+        list.add(0,userAccount);
+        return list;
+    }
+
     @Override
     public User findByUserNameAndPwd(UserInVo inVo){
         return userMapper.findByUserNameAndPwd(inVo);
@@ -132,6 +151,17 @@ public class UserServiceImpl implements UserService {
             user.setUserName(user.getMobile());
         }
         return userMapper.updateByOpenId(user);
+    }
+
+    //在用户短信验证通过后修改account_name名称为用户电话号码
+    @Override
+    public Integer updateByUserID(UserAccountInVo accountInVo) {
+        int i=userAccountMapper.updateByUserID(accountInVo);
+        //如果成功返回1，失败返回0
+        if (i>0){
+            return 1;
+        }
+        return 0;
     }
 
     @Override

@@ -8,7 +8,9 @@ import com.xq.live.common.RandomStringUtil;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.SmsSend;
 import com.xq.live.service.SmsSendService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SmsSendInVo;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.out.SmsOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -36,6 +38,8 @@ public class SmsController {
 
     @Autowired
     private SmsSendService smsSendService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public BaseResp<Long> send(@Valid SmsSendInVo inVo, BindingResult result) {
@@ -122,6 +126,15 @@ public class SmsController {
         Long verify = smsSendService.isVerify(inVo);
         if(verify==-1||verify==null){
             return new BaseResp<Long>(ResultStatus.FAIL,verify);
+        }
+        UserAccountInVo accountInVo = new UserAccountInVo();
+        accountInVo.setUserId(inVo.getUserId());
+        accountInVo.setUserName(inVo.getUserName());
+        accountInVo.setAccountName(inVo.getShopMobile());
+        //判断更新account_name是否成功
+        int i= userService.updateByUserID(accountInVo);
+        if (i==0){
+            return new BaseResp<Long>(ResultStatus.error_act_update);
         }
         return new BaseResp<Long>(ResultStatus.SUCCESS,verify);
 

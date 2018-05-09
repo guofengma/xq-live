@@ -24,7 +24,7 @@
         from user_account
         where id = #{id,jdbcType=BIGINT}
     </select>
-
+    <!--根据UserID获取当前用户信息-->
     <select id="findAccountByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -140,7 +140,40 @@
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        <where>
+            <if test="id!=null">id=#{id,jdbcType=BIGINT}</if>
+        </where>
+    </update>
+    <!--根据活动ID或则ID修改信息-->
+    <update id="updateByUserID" parameterType="com.xq.live.model.UserAccount">
+        update user_account
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null">
+                account_name = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountType != null">
+                account_type = #{accountType,jdbcType=TINYINT},
+            </if>
+            <if test="accountAmount != null">
+                account_amount = #{accountAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus,jdbcType=TINYINT},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <where>
+            <if test="id!=null">id=#{id,jdbcType=BIGINT}</if>
+            <if test="userId!=null">AND user_id=#{userId,jdbcType=BIGINT}</if>
+        </where>
     </update>
     <update id="updateByPrimaryKey" parameterType="com.xq.live.model.UserAccount">
         update user_account

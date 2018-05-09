@@ -213,6 +213,12 @@ public class SoServiceImpl implements SoService {
         }
         return 0;
     }
+    //根据订单ID获取userID
+    @Override
+    public Long getUserIDBySoId(SoInVo inVo) {
+        Long i=soMapper.getUserIDBySoId(inVo);
+        return i;
+    }
 
 
     @Override

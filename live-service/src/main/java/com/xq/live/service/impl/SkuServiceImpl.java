@@ -86,6 +86,13 @@ public class SkuServiceImpl implements SkuService {
     public Long add(Sku sku) {
         sku.setSkuCode(RandomStringUtil.getRandomCode(8, 0));
         int res = skuMapper.insert(sku);
+
+       /* //将推荐菜与shop_id关联起来
+        SkuInVo vo = new SkuInVo();
+        vo.setShopId(inVo.getRefId());
+        vo.setId(skuId);
+        int i = skuMapper.insertSkuShop(vo);*/
+
         if(res < 1){
             return null;
         }

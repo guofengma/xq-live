@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="act_name" jdbcType="VARCHAR" property="actName" />
     <result column="act_status" jdbcType="INTEGER" property="actStatus" />
+    <result column="act_desc" jdbcType="VARCHAR" property="actDesc" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="main_pic" jdbcType="VARCHAR" property="mainPic" />
@@ -20,7 +21,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, act_name, act_status, start_time, end_time, main_pic, act_url, is_deleted, create_time
+    id, act_name, act_status,act_desc, start_time, end_time, main_pic, act_url, is_deleted, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -177,6 +178,7 @@
       ai.id,
       ai.act_name,
       ai.act_status,
+      ai.act_desc,
       ai.start_time,
       ai.end_time,
       ai.main_pic,

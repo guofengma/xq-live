@@ -17,6 +17,8 @@ public class ActInfoInVo extends BaseInVo {
 
     private Integer sourceType;
 
+    private String actDesc;
+
     public Long getId() {
         return id;
     }
@@ -63,5 +65,13 @@ public class ActInfoInVo extends BaseInVo {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getActDesc() {
+        return actDesc;
+    }
+
+    public void setActDesc(String actDesc) {
+        this.actDesc = actDesc;
     }
 }

@@ -30,6 +30,8 @@ public class ActInfoOut {
 
     private Integer actStatus;  //活动状态
 
+    private String actDesc;//活动描述
+
     private String mainPic; //主图url
 
     private String actUrl;  //活动链接url
@@ -95,6 +97,14 @@ public class ActInfoOut {
 
     public void setActStatus(Integer actStatus) {
         this.actStatus = actStatus;
+    }
+
+    public String getActDesc() {
+        return actDesc;
+    }
+
+    public void setActDesc(String actDesc) {
+        this.actDesc = actDesc;
     }
 
     public String getMainPic() {

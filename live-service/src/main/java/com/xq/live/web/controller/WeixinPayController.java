@@ -8,8 +8,11 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.So;
+import com.xq.live.model.UserAccount;
 import com.xq.live.service.SoService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.WeixinInVo;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
@@ -48,6 +51,9 @@ public class WeixinPayController {
 
     @Autowired
     private SoService soService;
+
+    @Autowired
+    private UserService userService;
 
     private WXPay wxpay;
     private PaymentConfig config;

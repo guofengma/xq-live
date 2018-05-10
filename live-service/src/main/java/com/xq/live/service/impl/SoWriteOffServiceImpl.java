@@ -55,6 +55,16 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
         return ret;
     }
 
+    //根据shopId查询指定时间内的总金额的应缴金额
+    @Override
+    public List<SoWriteOffOut> listAmount(SoWriteOffInVo inVo) {
+        List<SoWriteOffOut> list=soWriteOffMapper.total(inVo);
+        if (list==null||list.size()<=0){
+            return null;
+        }
+        return list;
+    }
+
     @Override
     public List<SoWriteOffOut> top(SoWriteOffInVo inVo) {
         return soWriteOffMapper.list(inVo);

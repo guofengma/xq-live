@@ -25,6 +25,13 @@ public interface SoWriteOffService {
     Pager<SoWriteOffOut> list(SoWriteOffInVo inVo);
 
     /**
+     * 根据商家ID查询指定年份内的所有账单记录
+     * @param inVo
+     * @return
+     */
+    List<SoWriteOffOut> listAmount(SoWriteOffInVo inVo);
+
+    /**
      * 排序查询记录列表
      * @param inVo
      * @return

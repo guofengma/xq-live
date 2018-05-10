@@ -83,6 +83,33 @@ public class SkuForAppController {
     }
 
     /**
+     * 逻辑删除sku
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseResp<Integer> delete(Long id){
+
+        Integer i = skuService.delete(id);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, i);
+    }
+
+    /**
+     * 更新sku
+     * @param sku
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public BaseResp<Integer> update(@Valid Sku sku, BindingResult result){
+        if (result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        Integer skuId = skuService.update(sku);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, skuId);
+    }
+
+    /**
      * 查询单个推荐菜
      * @param inVo
      * @return

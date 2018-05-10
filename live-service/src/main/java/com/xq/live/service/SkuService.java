@@ -72,4 +72,18 @@ public interface SkuService {
      * @return
      */
     Integer isNewUser(Long userId);
+
+    /**
+     * 逻辑删除一条记录
+     * @param id
+     * @return
+     */
+    Integer delete(Long id);
+
+    /**
+     * 更新一条数据
+     * @param sku
+     * @return
+     */
+    Integer update(Sku sku);
 }

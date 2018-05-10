@@ -87,13 +87,13 @@ public class SkuServiceImpl implements SkuService {
         sku.setSkuCode(RandomStringUtil.getRandomCode(8, 0));
         int res = skuMapper.insert(sku);
 
-       /* //将推荐菜与shop_id关联起来
+        //将推荐菜与shop_id关联起来
         SkuInVo vo = new SkuInVo();
-        vo.setShopId(inVo.getRefId());
-        vo.setId(skuId);
-        int i = skuMapper.insertSkuShop(vo);*/
+        vo.setShopId(sku.getShopId());
+        vo.setId(sku.getId());
+        int i = skuMapper.insertSkuShop(vo);
 
-        if(res < 1){
+        if(res < 1 || i < 1){
             return null;
         }
         return sku.getId();
@@ -107,6 +107,21 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public Integer isNewUser(Long userId) {
         int i = soMapper.selectByUserIdTotal(userId);
+        return i;
+    }
+
+    @Override
+    public Integer delete(Long id) {
+        Sku sku = new Sku();
+        sku.setId(id);
+        sku.setIsDeleted(Sku.SKU_IS_DELETED);
+        int i = skuMapper.updateByPrimaryKeySelective(sku);
+        return i;
+    }
+
+    @Override
+    public Integer update(Sku sku) {
+        int i = skuMapper.updateByPrimaryKeySelective(sku);
         return i;
     }
 }

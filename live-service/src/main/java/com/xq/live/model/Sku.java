@@ -48,15 +48,19 @@ public class Sku {
 
     private Date updateTime;
 
-    private Long opreatorId;
+    @NotNull(message = "opreatorId必填")
+    private Long opreatorId;//操作人的用户id
 
-    private String opreatorName;
+    @NotNull(message = "opreatorName必填")
+    private String opreatorName;//操作人的用户名称
 
     private Integer isDeleted;
 
     private String picUrl;
 
     private String skuInfo;
+
+    private Long shopId;//关联的shopId
 
     public Long getId() {
         return id;
@@ -176,5 +180,13 @@ public class Sku {
 
     public void setSkuInfo(String skuInfo) {
         this.skuInfo = skuInfo;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

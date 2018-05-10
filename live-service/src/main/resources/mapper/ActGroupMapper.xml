@@ -30,12 +30,6 @@
     from act_group
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select0
-    <include refid="Base_Column_List" />
-    from act_group
-  </select>
-
   <select id="selectByOutID" parameterType="com.xq.live.model.ActGroup" resultMap="ActGroupOutMap">
     select
     <include refid="Base_Column_List" />

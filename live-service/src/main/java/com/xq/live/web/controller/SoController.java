@@ -248,18 +248,18 @@ public class SoController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }
 
-    //查询用户余额
-    @RequestMapping(value = "/doFindAmount", method = RequestMethod.POST)
+    //查询用户余额(代码不可用！重写)
+/*    @RequestMapping(value = "/doFindAmount", method = RequestMethod.POST)
     public BaseResp<Integer> doFindAmount(UserAccountInVo accountInVo){
         List<UserAccount> list= userService.fingAccountByID(accountInVo.getUserId());
         BigDecimal accountAmount=list.get(0).getAccountAmount();
 
         return new BaseResp<Integer>(ResultStatus.SUCCESS,accountAmount.intValue());
-    }
+    }*/
 
 
-    //享7平台支付
-    @RequestMapping(value = "/doPaymentPlatform", method = RequestMethod.POST)
+    //享7平台支付(代码不可用！重写)
+   /* @RequestMapping(value = "/doPaymentPlatform", method = RequestMethod.POST)
     public BaseResp<Integer> doPaymentPlatform(@Valid WeixinInVo inVo, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<ObjectError> list = bindingResult.getAllErrors();
@@ -292,15 +292,14 @@ public class SoController {
         }else {
             return new BaseResp<Integer>(ResultStatus.error_user_account);
         }
-    }
+    }*/
 
-    //支付后平台反红包
+    //支付后平台反红包(代码不可用！重写)
+/*
     @RequestMapping(value = "/doAddFeedback", method = RequestMethod.POST)
     public BaseResp<Integer> playFeedback(UserAccountInVo accountInVo){
-        //获取一个1到10块的红包
-        int feedback= GroupUtil.getRandom(1,10);
-        //转换成BigDecimal类型
-        BigDecimal amount=new BigDecimal(feedback);
+        //获取一个0.2到2.0块的红包
+        BigDecimal amount=GroupUtil.getBigDecimalRandom(0.2, 2.0);
         List<UserAccount> list= userService.fingAccountByID(accountInVo.getUserId());
         BigDecimal accountAmount=list.get(0).getAccountAmount();
 
@@ -313,5 +312,6 @@ public class SoController {
                 return new BaseResp<Integer>(ResultStatus.SUCCESS,feedback);
             }
         }
+*/
 
 }

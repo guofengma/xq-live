@@ -5,6 +5,8 @@ import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActShopOut;
 import com.xq.live.vo.out.ActUserOut;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -24,6 +26,7 @@ public class GroupUtil {
          listShop.add(4,"E");
          listUser.add(4,"E");
          */
+        System.out.println(getBigDecimalRandom(0.2,2));
     }
 
     //将商家和用户列表进行匹配分组(传递一个商家ID和用户实体集合)
@@ -154,5 +157,26 @@ public class GroupUtil {
     public static int getRandom(int min, int max){
         Random random = new Random();
         return random.nextInt( max - min + 1 ) + min;
+    }
+
+    /**
+     * 根据min和max随机生成一个范围在[min,max]的随机数，包括min和max
+     * @param min
+     * @param max
+     * @return int
+     */
+    public static BigDecimal getBigDecimalRandom(double min, double max){
+        if (max<=min){
+            return null;
+        }
+        //随机数
+        double doubleNumber=min+ Math.random() * (max - min);
+        BigDecimal amount=new BigDecimal(doubleNumber);
+        double f1=amount.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        BigDecimal amounts=new BigDecimal(f1);
+/*        System.out.println(doubleNumber + "*******" + f1);
+        System.out.println("*******");*/
+
+        return amounts;
     }
 }

@@ -108,6 +108,6 @@ public interface SoService {
      * @param inVo
      * @return
      */
-    Long getUserIDBySoId(SoInVo inVo);
+/*    Long getUserIDBySoId(SoInVo inVo);*///(代码不可用！重写)
 
 }

@@ -190,7 +190,7 @@ public class SoController {
             return new BaseResp<Long>(ResultStatus.error_agio_fail);
         }
 
-        Long id = soService.freeOrderForAgio(inVo);
+        Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 

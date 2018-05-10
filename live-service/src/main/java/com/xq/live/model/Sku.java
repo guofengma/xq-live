@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Sku {
     /**
-     * sku_type 1 平台券  2 特色菜 3 活动券  4 平台折扣券
+     * sku_type 1 平台券  2 特色菜 3 活动券
      */
     public final static int SKU_TYPE_XQQ = 1;   //享七券
 
@@ -17,7 +17,7 @@ public class Sku {
 
     public final static int SKU_TYPE_HDQ = 3;   //活动券
 
-    public final static int SKU_TYPE_AGIO = 4;   //平台折扣券
+    /*public final static int SKU_TYPE_AGIO = 4;   //平台折扣券*/
 
     public final static int SKU_TYPE_SJTC = 5;   //商家套餐
 

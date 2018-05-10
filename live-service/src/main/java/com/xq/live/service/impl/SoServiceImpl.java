@@ -175,7 +175,7 @@ public class SoServiceImpl implements SoService {
         return id;
     }
 
-    @Override
+    /*@Override
     public Long freeOrderForAgio(SoInVo inVo) {
         //1、查询SKU信息
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
@@ -202,7 +202,7 @@ public class SoServiceImpl implements SoService {
         //6、保存订单日志，订单状态:已支付
         this.saveSoLog(inVo, SoLog.SO_STATUS_PAID);
         return id;
-    }
+    }*/
 
     //判断用户是否领过卷，0没有，1有过
     @Override
@@ -421,7 +421,7 @@ public class SoServiceImpl implements SoService {
      * @param inVo
      * @return
      */
-    private int createCouponForAgio(SoInVo inVo){
+    /*private int createCouponForAgio(SoInVo inVo){
         int res = 0;
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 3);     //有效时间为3个月
@@ -449,7 +449,7 @@ public class SoServiceImpl implements SoService {
             res++;
         }
         return res;
-    }
+    }*/
 
     /**
      * 保存支付日志

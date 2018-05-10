@@ -3,6 +3,8 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.ActSkuConfig;
+import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.model.Sku;
 import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
@@ -32,6 +34,13 @@ public class SkuController {
 
     @Autowired
     private SkuService skuService;
+
+    @Autowired
+    private AgioSkuConfig agioSkuConfig;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
+
 
     /**
      * 查一条记录
@@ -64,6 +73,7 @@ public class SkuController {
     @RequestMapping(value = "/listForAct", method = RequestMethod.GET)
     public BaseResp<Pager<SkuOut>> listForAct(SkuInVo inVo){
         inVo.setSkuType(Sku.SKU_TYPE_HDQ);
+        inVo.setId(actSkuConfig.getSkuId());
         Pager<SkuOut> result = skuService.list(inVo);
         return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
     }
@@ -75,7 +85,7 @@ public class SkuController {
      */
     @RequestMapping(value = "/listForAgio", method = RequestMethod.GET)
     public BaseResp<Pager<SkuOut>> listForAgio(SkuInVo inVo){
-        inVo.setSkuType(Sku.SKU_TYPE_AGIO);
+        inVo.setId(agioSkuConfig.getSkuId());
         Pager<SkuOut> result = skuService.list(inVo);
         return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
     }

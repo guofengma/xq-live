@@ -101,6 +101,18 @@ public enum ResultStatus {
 
     error_user_getaccount(200040,"领取红包失败"),
 
+    error_parm_user_id_empty(200050,"用户id为空！"),
+
+    error_parm_coupon_id_empty(200051,"享七券id为空！"),
+
+    error_coupon_null(200052,"享七券不存在！"),
+
+    error_coupon_user_id(200053,"不是本人买的券，无法领取红包！"),
+
+    error_coupon_is_not_used(200054,"未核销享七券，无法领取红包！"),
+
+    error_receive_red_packet_fail(200055,"未核销享七券，无法领取红包！"),
+
     error_sowriteoff_amount(200041,"没有历史记录"),
 
     error_agio_fail(200042,"还有未使用的折扣券，请使用！"),

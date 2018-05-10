@@ -6,6 +6,8 @@ import com.xq.live.model.UserAccount;
 import com.xq.live.vo.in.AccountLogInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 
+import java.math.BigDecimal;
+
 /**
  * com.xq.live.service
  *  用户账户service
@@ -24,9 +26,10 @@ public interface AccountService {
     /**
      * 账户收入
      * @param inVo
+     * @param remark  备注
      * @return
      */
-    Integer income(UserAccountInVo inVo);
+    Integer income(UserAccountInVo inVo, String remark);
 
 
     /**
@@ -49,4 +52,11 @@ public interface AccountService {
      * @return
      */
     public Pager<AccountLog> findAccountLogs(AccountLogInVo inVo);
+
+    /**
+     * 根据用户id查询账户余额
+     * @param userId
+     * @return
+     */
+    public BigDecimal balance(Long userId);
 }

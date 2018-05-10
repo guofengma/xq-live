@@ -3,8 +3,10 @@ package com.xq.live.service.impl;
 import com.xq.live.common.Pager;
 import com.xq.live.dao.AccountLogMapper;
 import com.xq.live.dao.UserAccountMapper;
+import com.xq.live.dao.UserMapper;
 import com.xq.live.model.AccountLog;
 import com.xq.live.model.CashApply;
+import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
 import com.xq.live.service.AccountService;
 import com.xq.live.vo.in.AccountLogInVo;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -32,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountLogMapper accountLogMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public Integer update(UserAccount userAccount) {
         return userAccountMapper.updateByPrimaryKey(userAccount);
@@ -39,15 +45,25 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Integer income(UserAccountInVo inVo) {
+    public Integer income(UserAccountInVo inVo, String remark) {
         //查询用户账户信息
         UserAccount userAccount =  userAccountMapper.findAccountByUserId(inVo.getUserId());
+        //如果账户不存在，则新增一个(主要是历史数据没创建账户信息)
+        if(userAccount == null){
+            User user = userMapper.selectByPrimaryKey(inVo.getUserId());
+            if(user != null){
+                userAccount = this.createAccountByUser(user);
+            }else{
+                return 0;
+            }
+        }
+
         inVo.setVersionNo(userAccount.getVersionNo());  //版本号，作为更新的乐观锁条件
         //更新账户余额
         Integer ret = userAccountMapper.income(inVo);
         if(ret > 0){
             //写入账户变动日志
-            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_INCOME);
+            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_INCOME, remark);
         }
         return ret;
     }
@@ -62,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
         Integer ret = userAccountMapper.payout(inVo);
         if(ret > 0){
             //写入账户变动日志
-            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_PAYOUT);
+            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_PAYOUT, "");
         }
         return ret;
     }
@@ -85,6 +101,27 @@ public class AccountServiceImpl implements AccountService {
         return result;
     }
 
+    @Override
+    public BigDecimal balance(Long userId) {
+        BigDecimal res = BigDecimal.ZERO;
+        //查询用户账户信息
+        UserAccount userAccount =  userAccountMapper.findAccountByUserId(userId);
+        if(userAccount != null && userAccount.getAccountAmount() != null){
+            res = userAccount.getAccountAmount();
+        }
+
+        return res.setScale(2, RoundingMode.HALF_UP);
+    }
+
+
+    public UserAccount create(UserAccount account){
+        int ret = userAccountMapper.insert(account);
+        if(ret > 0){
+            return account;
+        }
+        return null;
+    }
+
     /**
      * 账户操作日志
      * @param userAccount
@@ -92,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
      * @param operateType
      * @return
      */
-    private Integer addAccountLog(UserAccount userAccount, BigDecimal occurAmount, int operateType){
+    private Integer addAccountLog(UserAccount userAccount, BigDecimal occurAmount, int operateType, String remark){
         AccountLog accountLog = new AccountLog();
         accountLog.setUserId(userAccount.getUserId());
         accountLog.setUserName(userAccount.getUserName());
@@ -100,6 +137,7 @@ public class AccountServiceImpl implements AccountService {
         accountLog.setAccountName(userAccount.getAccountName());
         accountLog.setPreAmount(userAccount.getAccountAmount());
         accountLog.setOperateType(operateType);
+        accountLog.setRemark(remark);
         BigDecimal aferAmount = BigDecimal.ZERO;
         if(operateType == AccountLog.OPERATE_TYPE_INCOME){  //收入
             aferAmount = userAccount.getAccountAmount().add(occurAmount);
@@ -111,5 +149,21 @@ public class AccountServiceImpl implements AccountService {
 
         Integer ret = accountLogMapper.insert(accountLog);
         return ret;
+    }
+
+    /**
+     * 根据user信息创建用户账户
+     * @param user
+     * @return
+     */
+    private UserAccount createAccountByUser(User user){
+        UserAccount account = new UserAccount();
+        account.setUserId(user.getId());
+        account.setUserName(user.getUserName());
+        account.setAccountName(user.getUserName());
+        account.setAccountType(UserAccount.ACCOUNT_TYPE_XQ);
+        account.setAccountAmount(BigDecimal.ZERO);
+        account.setVersionNo(0);
+        return this.create(account);
     }
 }

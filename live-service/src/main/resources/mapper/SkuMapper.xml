@@ -354,7 +354,7 @@
       #{skuType,jdbcType=INTEGER}, #{sellPrice,jdbcType=DECIMAL}, #{inPrice,jdbcType=DECIMAL},#{agioPrice,jdbcType=DECIMAL},
       #{stockNum,jdbcType=INTEGER},
       <if test="isDeleted != null">
-      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      #{isDeleted,jdbcType=TINYINT},
      </if>
     #{picUrl,jdbcType=VARCHAR},now(), now(),
       #{opreatorId,jdbcType=BIGINT}, #{opreatorName,jdbcType=VARCHAR},#{skuInfo,jdbcType=VARCHAR})

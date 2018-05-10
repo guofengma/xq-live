@@ -53,6 +53,8 @@ public class ActUserInVo extends BaseInVo{
 
     private Integer type;//查询类型  null 不分组，查询单个list   2 分组 ，查询分组后的信息
 
+    private Integer isLuoxuan;//是否落选
+
     public Long getId() {
         return id;
     }
@@ -179,5 +181,13 @@ public class ActUserInVo extends BaseInVo{
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getIsLuoxuan() {
+        return isLuoxuan;
+    }
+
+    public void setIsLuoxuan(Integer isLuoxuan) {
+        this.isLuoxuan = isLuoxuan;
     }
 }

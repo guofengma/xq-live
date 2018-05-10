@@ -104,7 +104,7 @@ public class ActGroupController {
         return new BaseResp<Long>(ResultStatus.SUCCESS,id);
     }
 
-    //根据活动ID将商家和用户进行匹配分组得到商家ID和用户
+    //根据活动ID将商家和用户进行匹配分组得到商家ID和用户(只是查询)
     @RequestMapping(value = "/groupList",method = RequestMethod.GET)
     public  BaseResp<Map<Long,ActUserOut>> mapList(Long actID){
         if (actID==null){
@@ -125,7 +125,7 @@ public class ActGroupController {
         return new BaseResp<Map<Long,ActUserOut>>(ResultStatus.SUCCESS,mapList);
     }
 
-    //根据活动ID将商家和用户进行匹配分组
+    //根据活动ID将商家和用户进行匹配分组(在查询后自动添加分组信息并且落选其他用户)
     @RequestMapping(value = "/groupListAll",method = RequestMethod.GET)
     public BaseResp<Map<ActShopOut,ActUserOut>> map(Long actID){
         if (actID==null){

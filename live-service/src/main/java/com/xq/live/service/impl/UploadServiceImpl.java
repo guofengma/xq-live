@@ -10,13 +10,11 @@ import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.xq.live.common.Constants;
 import com.xq.live.common.ImageUtil;
-import com.xq.live.common.VideoImage;
 import com.xq.live.dao.AttachmentMapper;
 import com.xq.live.model.Attachment;
 import com.xq.live.service.UploadService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.bytedeco.javacv.FrameGrabber;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,7 +76,7 @@ public class UploadServiceImpl implements UploadService {
         Attachment attachment = new Attachment();
         String sourceImgRet = this.uploadFileToCosForMp4(localPath, name);
         String targerPath = null;
-        try {
+        /*try {
            targerPath = VideoImage.randomGrabberFFmpegImage(localPath, 5);
             String smallPicUrl = this.uploadFileToCos(targerPath, name);
             if(StringUtils.isNotEmpty(smallPicUrl)){
@@ -86,7 +84,7 @@ public class UploadServiceImpl implements UploadService {
             }
         } catch (FrameGrabber.Exception e) {
             logger.error("截取视频帧数异常 ：" + e.getMessage());
-        }
+        }*/
         if(StringUtils.isNotEmpty(sourceImgRet)){
             attachment.setPicUrl(sourceImgRet);
             this.insertAttachment(attachment);
@@ -94,7 +92,7 @@ public class UploadServiceImpl implements UploadService {
         /**
          * 删除服务器上的临时图片文件
          */
-        this.deleteTempImage(new Triplet<String, String, String>(localPath, localPath, targerPath));
+        this.deleteTempImage(new Triplet<String, String, String>(localPath, localPath, localPath));
         return attachment;
     }
 

@@ -2,26 +2,18 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
-import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
-import com.xq.live.model.User;
-import com.xq.live.model.UserAccount;
 import com.xq.live.service.SoService;
 import com.xq.live.service.SoWriteOffService;
 import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
-import com.xq.live.vo.in.UserAccountInVo;
-import com.xq.live.vo.in.WeixinInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
-import com.xq.live.web.utils.GroupUtil;
-import com.xq.live.web.utils.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,13 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 订单controller

@@ -1,7 +1,5 @@
 package com.xq.live.web.controller;
 
-import com.xq.live.aop.annotation.BizType;
-import com.xq.live.aop.annotation.InvokeLog;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;

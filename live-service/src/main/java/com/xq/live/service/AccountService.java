@@ -37,7 +37,7 @@ public interface AccountService {
      * @param inVo
      * @return
      */
-    Integer payout(UserAccountInVo inVo);
+    Integer payout(UserAccountInVo inVo, String remark);
 
     /**
      * 根据用户id查询账户信息

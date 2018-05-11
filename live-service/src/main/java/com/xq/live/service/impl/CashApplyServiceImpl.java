@@ -63,6 +63,6 @@ public class CashApplyServiceImpl implements CashApplyService {
         UserAccountInVo accountInVo = new UserAccountInVo();
         accountInVo.setUserId(cashApply.getUserId());
         accountInVo.setOccurAmount(cashApply.getCashAmount());
-        return accountService.payout(accountInVo);
+        return accountService.payout(accountInVo, "提现操作");
     }
 }

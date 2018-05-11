@@ -133,5 +133,4 @@ public class AccountController {
         return new BaseResp<BigDecimal>(ResultStatus.error_receive_red_packet_fail);
     }
 
-
 }

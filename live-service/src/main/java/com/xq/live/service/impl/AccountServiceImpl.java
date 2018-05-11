@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Integer payout(UserAccountInVo inVo) {
+    public Integer payout(UserAccountInVo inVo, String remark) {
         //查询用户账户信息
         UserAccount userAccount =  userAccountMapper.findAccountByUserId(inVo.getUserId());
         inVo.setVersionNo(userAccount.getVersionNo());  //版本号，作为更新的乐观锁条件
@@ -78,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
         Integer ret = userAccountMapper.payout(inVo);
         if(ret > 0){
             //写入账户变动日志
-            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_PAYOUT, "");
+            this.addAccountLog(userAccount, inVo.getOccurAmount(), AccountLog.OPERATE_TYPE_PAYOUT, remark);
         }
         return ret;
     }

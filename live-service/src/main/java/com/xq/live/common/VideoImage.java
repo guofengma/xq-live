@@ -34,7 +34,7 @@ public class VideoImage {
     public static final int MOD = 2;
 
     public static void main(String[] args) throws Exception {
-        System.out.println(randomGrabberFFmpegImage("/Users/zhangpeng32/Downloads/test.mp4", 5));
+        System.out.println(randomGrabberFFmpegImage("/video/69615226835a06670c63cfc7b1c80a25.mp4", 5));
     }
 
     /**

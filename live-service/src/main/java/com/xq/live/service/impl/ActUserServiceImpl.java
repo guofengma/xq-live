@@ -110,6 +110,9 @@ public class ActUserServiceImpl implements ActUserService{
         result.setTotal(listTotal);
         if (listTotal > 0) {
             List<ActUserOut> list = actUserMapper.listForNewAct(inVo);
+            for (ActUserOut actUserOut : list) {
+                actUserOut = getPicUrls(actUserOut);
+            }
             //如果是查询分组的，把分组的关联信息加入进去
             if(inVo.getType()!=null&&inVo.getType()== ActUser.ACT_USER_GROUP){
                 for (ActUserOut actUserOut : list) {

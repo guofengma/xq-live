@@ -331,6 +331,20 @@ public class SoServiceImpl implements SoService {
 
         //上传文件到腾讯云cos--缩放0.8
         String imgUrl = uploadService.uploadFileToCos(destPath, "coupon");
+        int i=0;
+        do {
+            i++;
+           if (imgUrl==null){
+               imgUrl=uploadService.uploadFileToCos(destPath, "coupon");
+           }
+            if (imgUrl!=null){
+                break;
+            }
+            if (i==4){
+                break;
+            }
+        }while (true);
+
         if (StringUtils.isEmpty(imgUrl)) {
             return null;
         }

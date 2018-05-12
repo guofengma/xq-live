@@ -43,6 +43,20 @@ public interface ActGroupService {
     int addListGroup(List<ActGroup> list);
 
     /**
+     * 批量修改活动小组列表信息
+     * @param list
+     * @return
+     */
+    int updateByGroup(List<ActGroupOut> list);
+
+    /**
+     * 根据票数多小查询活动小组列表信息
+     * @param
+     * @return
+     */
+    List<ActGroupOut> selectGroupOut();
+
+    /**
      * 根据ID删除活动列表信息
      * @param actGroup
      * @return

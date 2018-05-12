@@ -40,4 +40,7 @@ public interface ActShopMapper {
 
     //批量更新活动落选名单
     int udateByLuo(List<ActShopOut> shopOuts);
+
+    //批量更新第二轮活动落选名单
+    int udateByLuoTwo(List<ActShopOut> shopOuts);
 }

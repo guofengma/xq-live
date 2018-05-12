@@ -62,6 +62,28 @@ public class ActGroupServiceImpl implements ActGroupService{
         return 0;
     }
 
+    //获取不需要被淘汰的小组
+    @Override
+    public int updateByGroup(List<ActGroupOut> list) {
+        int i=actGroupMapper.updateByGroup(list);
+        //1更新成功0失败
+        if (i>0){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
+    //根据票数多小查询活动小组列表信息
+    @Override
+    public List<ActGroupOut> selectGroupOut() {
+        List<ActGroupOut> list=actGroupMapper.listGroupOut();
+        if (list==null||list.size()==0){
+            return null;
+        }
+        return list;
+    }
+
     //根据主键ID和活动ID删除参加活动小组信息
     @Override
     public Long updateID(ActGroup actGroup) {

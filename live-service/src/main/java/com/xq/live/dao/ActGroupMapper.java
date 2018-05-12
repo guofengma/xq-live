@@ -27,6 +27,12 @@ public interface ActGroupMapper {
     //根据主键ID或者活动ID查询指定信息
     List<ActGroupOut> selectByOutID(ActGroupInVo InVo);
 
+    //根据传入的集合修改其他的小组落选状态
+    int updateByGroup (List<ActGroupOut> inVo);
+
+    //根据票数多小查询小组信息
+    List<ActGroupOut> listGroupOut();
+
     List<ActGroupOut> listForSoWrite();
 
     //批量插入活动数据

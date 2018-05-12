@@ -183,6 +183,62 @@ public class ActGroupController {
             return new BaseResp<Map<ActShopOut,ActUserOut>>(ResultStatus.SUCCESS,mapList);
     }
 
+    //根据活动ID和入选小组人数落选小组(批量更新小组落选信息)
+    @RequestMapping(value = "/updateLouXuan",method = RequestMethod.GET)
+    public BaseResp<Integer> updateLuoXuan(Long actID,Integer length){
+        if (length==null||actID==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        //查看小组列表
+        List<ActGroupOut> list=actGroupService.selectGroupOut();
+        if (list==null||list.size()==0){
+            return new BaseResp<Integer>(ResultStatus.error_group_list);
+        }
+        //获得入选小组人数列表
+        //List<ActGroupOut> listOut=new ArrayList<ActGroupOut>();
+
+        for (int i=list.size()-1;i>length-1;i--){
+            list.remove(i);
+        }
+        //获得入选商家ID
+        List<ActShopOut> shopList=new ArrayList<ActShopOut>();
+        //获得入选选手ID
+        List<ActUserOut> userList=new ArrayList<ActUserOut>();
+        for (int i=0;i<list.size();i++){
+            ActShopOut shopOut=new ActShopOut();
+            ActUserOut userOut=new ActUserOut();
+            shopOut.setShopId(list.get(i).getShopId());
+            shopOut.setActId(list.get(i).getActId());
+            userOut.setUserId(list.get(i).getUserId());
+            userOut.setActId(list.get(i).getActId());
+            shopList.add(i,shopOut);
+            userList.add(i,userOut);
+        }
+        int s=actShopMapper.udateByLuoTwo(shopList);
+        if (s==0){
+            return new BaseResp<Integer>(ResultStatus.error_act_update);
+        }
+        int u=actUserMapper.udateByLuoXuanTwo(userList);
+        if (u==0){
+            return new BaseResp<Integer>(ResultStatus.error_act_update);
+        }
+        int i =actGroupService.updateByGroup(list);
+        //1是成功0是失败
+        if (i==1){
+            return new BaseResp<Integer>(ResultStatus.SUCCESS,i);
+        }
+        return new BaseResp<Integer>(ResultStatus.error_act_update);
+    }
+
+    //查询小组信息，按票数排序
+    @RequestMapping(value = "/selectGroupList",method = RequestMethod.GET)
+    public BaseResp<List<ActGroupOut>> selectGroupList(){
+        List<ActGroupOut> list = actGroupService.selectGroupOut();
+        if (list==null||list.size()==0){
+            return new BaseResp<List<ActGroupOut>>(ResultStatus.error_group_list);
+        }
+        return new BaseResp<List<ActGroupOut>>(ResultStatus.SUCCESS,list);
+    }
     //批量更新商家和用户落选信息
     @Transactional
     public int updateState(List<ActUserOut> userOuts,List<ActShopOut> shopOuts,int i){
@@ -202,9 +258,9 @@ public class ActGroupController {
             }
         }
         //成功返回1失败返回0
-
         return 0;
     }
+
 
 
 

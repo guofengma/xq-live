@@ -208,6 +208,37 @@
 
   </update>
 
+  <!--根据传入的集合修改其他的小组落选状态-->
+  <update id="updateByGroup" parameterType="java.util.List">
+    update act_group
+    set
+    is_deleted =1
+    WHERE 1=1
+    AND id NOT IN
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+    AND act_id IN
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+      #{item.actId,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <!--按票数的多少排序查询小组信息-->
+  <select id="listGroupOut" resultMap="ActGroupOutMap">
+    select
+    <include refid="Base_Column_List"/>
+    from act_group
+    <where>
+      1=1
+      <if test="actId != null">
+        AND  act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      and  is_deleted = 0
+    </where>
+    ORDER by group_vote_num DESC
+  </select>
+
   <select id="findByInVo" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>

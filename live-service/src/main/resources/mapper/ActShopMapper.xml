@@ -146,6 +146,21 @@
             #{item.actId,jdbcType=BIGINT}
         </foreach>
     </update>
+    <!--批量更新第二轮落选状态-->
+    <update id="udateByLuoTwo" parameterType="java.util.List">
+        update act_shop
+        set
+        is_luoxuan =1
+        WHERE apply_status =1
+        AND shop_id NOT IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.shopId,jdbcType=BIGINT}
+        </foreach>
+        AND act_id IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.actId,jdbcType=BIGINT}
+        </foreach>
+    </update>
 
     <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
     select count(1) from act_shop where act_id = #{actId,jdbcType=BIGINT}

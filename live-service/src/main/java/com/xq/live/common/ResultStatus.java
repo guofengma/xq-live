@@ -37,7 +37,7 @@ public enum ResultStatus {
 
     error_para_user_login(200006, "用户名或密码错误"),
 
-    error_para_coupon_code_empty(200007, "券码为空"),
+    error_para_coupon_code_empty(200007, "您的券码有误，请核查!"),
 
     error_so_not_wait_pay(200008, "订单不是待支付状态"),
 

@@ -129,12 +129,12 @@ public class SoController {
         }
 
         //判断是否是新用户
-        /*Integer soOutNum = soService.selectByUserIdTotal(inVo.getUserId());
+        Integer soOutNum = soService.selectByUserIdTotal(inVo.getUserId());
         if(soOutNum > 0){
             return new BaseResp<Long>(ResultStatus.error_user_not_new);
         }
         inVo.setSkuId(freeSkuConfig.getSkuId());
-        inVo.setSkuNum(freeSkuConfig.getSkuNum());*/
+        inVo.setSkuNum(freeSkuConfig.getSkuNum());
 
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);

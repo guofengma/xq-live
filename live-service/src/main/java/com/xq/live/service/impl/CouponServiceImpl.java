@@ -65,4 +65,9 @@ public class CouponServiceImpl implements CouponService {
     public CouponOut selectById(Long id){
         return couponMapper.selectById(id);
     }
+
+    @Override
+    public Integer useLimit(Long userId) {
+        return couponMapper.useLimit(userId);
+    }
 }

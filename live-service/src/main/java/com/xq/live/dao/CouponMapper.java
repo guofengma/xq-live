@@ -37,4 +37,11 @@ public interface CouponMapper {
 
     public CouponOut selectById(Long id);
 
+    /**
+     * 单个使用人每天被核销的次数
+     * @param userId
+     * @return
+     */
+    Integer useLimit(Long userId);
+
 }

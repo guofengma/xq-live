@@ -1,6 +1,5 @@
 package com.xq.live.common;
 
-/*
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -27,7 +26,7 @@ import org.bytedeco.javacv.FrameGrabber.Exception;
 
 import org.bytedeco.javacv.Java2DFrameConverter;
 
-import org.bytedeco.javacv.OpenCVFrameConverter;*/
+import org.bytedeco.javacv.OpenCVFrameConverter;
 
 /**
  * 随机生成多张缩略图，不返回缩略图实际存放地址
@@ -36,13 +35,11 @@ import org.bytedeco.javacv.OpenCVFrameConverter;*/
  *
  */
 public abstract class VideoImageFrame {
-/*
 
     public static void main(String[] args) throws Exception {
         randomGrabberFFmpegImage("/Users/zhangpeng32/Downloads/test.mp4", "./target", "screenshot", 5);
     }
 
-    */
 /**
      * 生成图片缩略图
      * @param filePath：视频完整路径
@@ -50,7 +47,7 @@ public abstract class VideoImageFrame {
      * @param targetFileName：缩略图文件名称
      * @param randomSize：生成随机数的数量
      * @throws Exception
-     *//*
+     */
 
     public static void randomGrabberFFmpegImage(String filePath, String targerFilePath, String targetFileName, int randomSize) throws Exception {
         FFmpegFrameGrabber ff = FFmpegFrameGrabber.createDefault(filePath);
@@ -79,13 +76,12 @@ public abstract class VideoImageFrame {
         ff.stop();
     }
 
-    */
 /**
      * 旋转图片
      * @param src：图片
      * @param angle:旋转角度
      * @return
-     *//*
+     */
 
     public static IplImage rotate(IplImage src, int angle) {
         IplImage img = IplImage.create(src.height(), src.width(), src.depth(), src.nChannels());
@@ -94,14 +90,13 @@ public abstract class VideoImageFrame {
         return img;
     }
 
-    */
 /**
      * 生成缩略图
      * @param f Frame对象
      * @param targerFilePath
      * @param targetFileName
      * @param index
-     *//*
+     */
 
     public static void doExecuteFrame(Frame f, String targerFilePath, String targetFileName, int index) {
         if (null == f || null == f.image) {
@@ -119,13 +114,12 @@ public abstract class VideoImageFrame {
         }
     }
 
-    */
 /**
      * 随机生成随机数集合
      * @param baseNum：随机种子
      * @param length：随机数集合长度
      * @return：随机数集合
-     *//*
+     */
 
     public static List<Integer> random(int baseNum, int length) {
         List<Integer> list = new ArrayList<>(length);
@@ -139,6 +133,5 @@ public abstract class VideoImageFrame {
         Collections.sort(list);
         return list;
     }
-*/
 
 }

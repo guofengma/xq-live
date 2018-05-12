@@ -1,5 +1,7 @@
 package com.xq.live.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,6 +33,7 @@ public class AccountLog {
 
     private String remark;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     public Long getId() {

@@ -6,10 +6,12 @@ import com.xq.live.common.QRCodeUtil;
 import com.xq.live.common.RandomStringUtil;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
+import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
 import com.xq.live.service.UploadService;
 import com.xq.live.vo.in.ProRuInVo;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.apache.commons.lang3.StringUtils;
@@ -68,6 +70,9 @@ public class SoServiceImpl implements SoService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AccountService accountService;
+
     @Override
     public Pager<SoOut> list(SoInVo inVo) {
         Pager<SoOut> ret = new Pager<SoOut>();
@@ -91,9 +96,13 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    @Transactional
     public Long create(SoInVo inVo) {
         //1、查询SKU信息
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+        if(sku == null){
+            return null;
+        }
         //2、计算订单金额
         BigDecimal soAmount = BigDecimal.valueOf(inVo.getSkuNum()).multiply(sku.getSellPrice());
 
@@ -107,13 +116,34 @@ public class SoServiceImpl implements SoService {
             return null;
         }
         Long id = inVo.getId();
-
         //4、保存订单明细信息
         inVo.setId(id);
         this.saveSoDetail(inVo, sku);
 
         //5、保存订单日志
         this.saveSoLog(inVo, SoLog.SO_STATUS_WAIT_PAID);
+
+        //6、判断支付方式，如果是享七支付，则直接扣减账户余额，并修改订单状态，如果是微信支付，则只生成待支付的订单
+        inVo.setId(id);
+        if(inVo.getPayType() == So.SO_PAY_TYPE_XQ){
+            UserAccount account = accountService.findAccountByUserId(inVo.getUserId());
+            if(account == null){    //账户信息不存在，请检查账户
+                logger.error("用户id："+ inVo.getUserId() + " 的账户信息不存在，请检查！");
+                throw new RuntimeException("用户id："+ inVo.getUserId() + " 的账户信息不存在，请检查！");
+            }
+            if(account.getAccountAmount().compareTo(soAmount) == -1){   //账户余额小于订单金额
+                logger.error("用户id："+ inVo.getUserId() + " 的账户余额不足，无法使用余额支付");
+                throw new RuntimeException("用户id："+ inVo.getUserId() + " 的账户余额不足，无法使用余额支付");
+            }
+            UserAccountInVo accountInVo = new UserAccountInVo();
+            accountInVo.setUserId(inVo.getUserId());
+            accountInVo.setOccurAmount(soAmount);
+            accountService.payout(accountInVo, "订单支付，订单号："+ id);
+
+            //更新订单支付状态，写入订单日志
+            this.paid(inVo);
+        }
+
         return id;
     }
 
@@ -243,7 +273,6 @@ public class SoServiceImpl implements SoService {
 
     @Override
     public Integer paid(SoInVo inVo) {
-        inVo.setId(inVo.getId());
         //1、更新订单状态
         inVo.setSoStatus(So.SO_STATUS_PAID);
         int ret = soMapper.paid(inVo);

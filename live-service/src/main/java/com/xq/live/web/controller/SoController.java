@@ -6,6 +6,8 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
+import com.xq.live.model.UserAccount;
+import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
 import com.xq.live.service.SoWriteOffService;
 import com.xq.live.service.UserService;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -39,18 +42,13 @@ public class SoController {
     private SoService soService;
 
     @Autowired
-    private UserService userService;
-
-
-    @Autowired
     private FreeSkuConfig freeSkuConfig;
-
-    @Autowired
-    private AgioSkuConfig agioSkuConfig;
 
     @Autowired
     private SoWriteOffService soWriteOffService;
 
+    @Autowired
+    private AccountService accountService;
 
     /**
      * 查一条记录

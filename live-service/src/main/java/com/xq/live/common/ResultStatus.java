@@ -113,6 +113,8 @@ public enum ResultStatus {
 
     error_receive_red_packet_fail(200055,"未核销享七券，无法领取红包！"),
 
+    error_user_account_not_enough(200056,"账户余额不足，请选择其他支付方式！"),
+
     error_sowriteoff_amount(200041,"没有历史记录"),
 
     error_agio_fail(200042,"还有未使用的折扣券，请使用！"),

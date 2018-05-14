@@ -41,7 +41,7 @@ public class CouponController {
     }
 
     /**
-     * 根据id查一条记录
+     * 根据券码查一条记录
      * @param couponCode
      * @return
      */

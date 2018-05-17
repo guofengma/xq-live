@@ -27,7 +27,7 @@ public class RandomNumberUtil {
 
     public static void main(String[] args) {
         for(int i=0; i<10000; i++){
-            BigDecimal b = RandomNumberUtil.randomNumber(1, 10);
+            BigDecimal b = RandomNumberUtil.randomNumber(3, 10);
             System.out.println(b);
         }
     }

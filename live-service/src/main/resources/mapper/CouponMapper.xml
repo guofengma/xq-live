@@ -136,6 +136,7 @@
       ' ' as rule_desc
     FROM
       coupon c
+    INNER join sku s on c.sku_id = s.id
     <where>
       1=1
       <if test="id != null">
@@ -163,6 +164,7 @@
         <![CDATA[ and (c.is_used = 1 or (c.is_used = 0 and c.expiry_date < now())) ]]>
       </if>
        and c.is_deleted = 0
+       and s.is_deleted = 0
     </where>
     order by c.id desc
     limit #{start}, #{rows}
@@ -170,34 +172,36 @@
 
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
-    from coupon
+    from coupon c
+    INNER join sku s on c.sku_id = s.id
     <where>
       1=1
       <if test="id != null">
-       and id = #{id,jdbcType=BIGINT}
+       and c.id = #{id,jdbcType=BIGINT}
       </if>
       <if test="couponCode != null">
-        and coupon_code = #{couponCode,jdbcType=VARCHAR}
+        and c.coupon_code = #{couponCode,jdbcType=VARCHAR}
       </if>
       <if test="skuId != null">
-        and sku_id = #{skuId,jdbcType=BIGINT}
+        and c.sku_id = #{skuId,jdbcType=BIGINT}
       </if>
       <if test="skuCode != null">
-        and sku_code = #{skuCode,jdbcType=VARCHAR}
+        and c.sku_code = #{skuCode,jdbcType=VARCHAR}
       </if>
       <if test="userId != null">
-        and user_id = #{userId,jdbcType=BIGINT}
+        and c.user_id = #{userId,jdbcType=BIGINT}
       </if>
       <if test="userName != null">
-        and user_name = #{userName,jdbcType=VARCHAR}
+        and c.user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="isUsed != null and isUsed == 0">
-        and is_used = 0
+        and c.is_used = 0
       </if>
       <if test="isUsed != null and isUsed == 1"><!--查询已使用和已过期的-->
-        <![CDATA[ and (is_used = 1 or (is_used = 0 and expiry_date < now())) ]]>
+        <![CDATA[ and (c.is_used = 1 or (c.is_used = 0 and expiry_date < now())) ]]>
       </if>
-      and is_deleted = 0
+      and c.is_deleted = 0
+      and s.is_deleted = 0
     </where>
   </select>
   <!-- 分页查询 end-->

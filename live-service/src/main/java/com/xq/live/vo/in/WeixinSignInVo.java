@@ -16,6 +16,10 @@ public class WeixinSignInVo {
     @NotNull(message = "echostr必填")
     private String echostr;//随机字符串
 
+    private String redirectUri;//网页授权uri
+
+    private String state;//重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
+
     public String getSignature() {
         return signature;
     }
@@ -46,5 +50,21 @@ public class WeixinSignInVo {
 
     public void setEchostr(String echostr) {
         this.echostr = echostr;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

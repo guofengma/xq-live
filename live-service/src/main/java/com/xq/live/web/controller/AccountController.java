@@ -120,7 +120,7 @@ public class AccountController {
         if(BigDecimal.ONE.compareTo(BigDecimal.valueOf(couponAmount).multiply(BigDecimal.valueOf(0.1))) == 1){
             max = 1;
         }else{
-            max = couponAmount;
+            max = couponAmount/10;
         }
         BigDecimal redPacketAmount = RandomNumberUtil.randomNumber(max, 10);
         UserAccountInVo accountInVo = new UserAccountInVo();

@@ -62,7 +62,7 @@ public class UserForAppController {
     }
 
     /**
-     * 新增用户(小程序和客户端app)
+     * 新增用户(小程序)
      * @param code
      * @return
      */

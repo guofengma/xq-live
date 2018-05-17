@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  * @copyright:hbxq
  **/
 public class IpUtils {
+    //查询用户IP地址
     public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {

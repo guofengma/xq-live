@@ -1,11 +1,8 @@
 package com.xq.live.service.impl;
 
-import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
-import com.xq.live.dao.SoMapper;
-import com.xq.live.dao.UserAccountMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
@@ -13,12 +10,18 @@ import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
-import com.xq.live.web.utils.SignUtil;
+import com.xq.live.web.utils.JwtTokenUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,16 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AccessLogMapper accessLogMapper;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     @Autowired
     private UserAccountMapper userAccountMapper;
@@ -185,6 +198,34 @@ public class UserServiceImpl implements UserService {
         }
         Integer integer = userMapper.updateByMobile(user);
         return integer;
+    }
+
+    @Override
+    public String login(String username, String password){
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authentication = authenticationManager.authenticate(upToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return jwtTokenUtil.generateToken(userDetails);
+    }
+
+    @Override
+    public Long register(User user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String rawPassword = user.getPassword();
+        user.setPassword(encoder.encode(rawPassword));
+//        rawPassword = DigestUtils.md5DigestAsHex((rawPassword).getBytes());
+        userMapper.insert(user);
+        return user.getId();
+    }
+
+    @Override
+    public String refreshToken(String oldToken) {
+        String token = oldToken.substring(tokenHead.length());
+        if (!jwtTokenUtil.isTokenExpired(token)) {
+            return jwtTokenUtil.refreshToken(token);
+        }
+        return null;
     }
 
     @Override

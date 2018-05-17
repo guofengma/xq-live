@@ -2,8 +2,6 @@ package com.xq.live.service;
 
 import com.xq.live.common.Pager;
 import com.xq.live.model.User;
-import com.xq.live.model.UserAccount;
-import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -84,6 +82,32 @@ public interface UserService {
      * @return
      */
     public Integer updateByMobile(User user);
+
+    /**
+     * 用户登录
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 操作结果
+     */
+    String login(String username, String password);
+
+    /**
+     * 用户注册
+     *
+     * @param user 用户信息
+     * @return 操作结果
+     */
+    Long register(User user);
+
+    /**
+     * 刷新密钥
+     *
+     * @param oldToken 原密钥
+     * @return 新密钥
+     */
+    String refreshToken(String oldToken);
+
 
     /**
      * 通过商家端app注册用户（用微信登陆）,适合客户端app登陆，但是通过openId和mobile

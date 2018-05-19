@@ -130,6 +130,6 @@
     <include refid="Base_Column_List" />
     from data_dic
     where type = #{type,jdbcType=TINYINT}
-    and is_deleted = #{isDeleted,jdbcType=INTEGER}
+    and is_deleted =0
   </select>
 </mapper>

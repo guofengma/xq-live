@@ -120,28 +120,5 @@ public class SoWriteOffController {
     }
 
 
-    //返回时间段内各个月份的金额
-    @RequestMapping(value = "/listAmount",method = RequestMethod.GET)
-    public BaseResp<Map<Integer,SoWriteOffOut>> listAmount(SoWriteOffInVo inVo){
-        SoWriteOffInVo offInVo=null;
-        //获取分开好的月份
-        List<SoWriteOffInVo> listInVo= CutOutTimeUtils.getValueForDate(inVo);
-        if (listInVo.size()==0||listInVo==null){
-            return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);
-        }
-        Map<Integer,SoWriteOffOut> map = new HashMap<Integer,SoWriteOffOut>();
-
-        for (int i=0;i<listInVo.size();i++){
-            //可以将没有记录的月份不返回
-            /*if (soWriteOffService.listAmount(listInVo.get(i)).get(0)!=null){
-                map.put(i+1, soWriteOffService.listAmount(listInVo.get(i)).get(0));
-            }*/
-            map.put(i+1, soWriteOffService.listAmount(listInVo.get(i)).get(0));
-        }
-        if (map==null){
-            return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);
-        }
-        return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.SUCCESS,map);
-    }
 
 }

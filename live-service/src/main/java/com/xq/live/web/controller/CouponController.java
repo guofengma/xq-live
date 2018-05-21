@@ -51,10 +51,10 @@ public class CouponController {
             return new BaseResp<CouponOut>(ResultStatus.error_para_coupon_code_empty);
         }
         CouponOut cp = couponService.getByCouponCode(couponCode);
-            /*Integer integer = couponService.useLimit(cp.getUserId());
+            Integer integer = couponService.useLimit(cp.getUserId());
             if(integer>3){
                 return new BaseResp<CouponOut>(ResultStatus.error_use_coupon_limit);
-            }*/
+            }
         return new BaseResp<CouponOut>(ResultStatus.SUCCESS, cp);
     }
 

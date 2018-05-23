@@ -1,14 +1,25 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.config.ActSkuConfig;
+import com.xq.live.config.AgioSkuConfig;
+import com.xq.live.dao.ActShopMapper;
 import com.xq.live.dao.CouponMapper;
+import com.xq.live.dao.PromotionRulesMapper;
+import com.xq.live.dao.SkuMapper;
 import com.xq.live.model.Coupon;
+import com.xq.live.model.Sku;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.CouponInVo;
+import com.xq.live.vo.in.SkuInVo;
 import com.xq.live.vo.out.CouponOut;
+import com.xq.live.vo.out.PromotionRulesOut;
+import com.xq.live.vo.out.SkuForTscOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,6 +34,21 @@ public class CouponServiceImpl implements CouponService {
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
+    private ActShopMapper actShopMapper;
+
+    @Autowired
+    private PromotionRulesMapper promotionRulesMapper;
+
+    @Autowired
+    private AgioSkuConfig agioSkuConfig;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
 
     @Override
     public Coupon get(Long id) {
@@ -69,5 +95,64 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public Integer useLimit(Long userId) {
         return couponMapper.useLimit(userId);
+    }
+
+    @Override
+    public Pager<CouponOut> listShopUser(CouponInVo inVo) {
+
+        Pager<CouponOut> result = new Pager<CouponOut>();
+        int total = couponMapper.listTotal(inVo);
+        List<CouponOut> list = new ArrayList<CouponOut>();
+        if(total > 0){
+            list = couponMapper.list(inVo);
+            SkuInVo skuInVo = new SkuInVo();
+            skuInVo.setSkuType(Sku.SKU_TYPE_SJTC);
+
+            int agioTotal = skuMapper.tscListTotal(skuInVo);
+            if(agioTotal==0){
+                //没有套餐,那就不能使用套餐券
+                Iterator<CouponOut> sListIterator = list.iterator();
+                while (sListIterator.hasNext()) {
+                    CouponOut str = sListIterator.next();
+                    if (str.getSkuId()==agioSkuConfig.getSkuId()) {
+                        sListIterator.remove();
+                    }
+                }
+            }
+            Integer integer = actShopMapper.searchForShopId(inVo.getShopId());
+            List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(Integer.parseInt(String.valueOf(inVo.getShopId())));
+            List<Long> listLong = new ArrayList<Long>();
+            for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
+                listLong.add(promotionRulesOut.getSkuId());
+            }
+
+
+            //用户没有参加活动，无法使用活动券
+            if(integer<1){
+                Iterator<CouponOut> sListIterator = list.iterator();
+                while (sListIterator.hasNext()) {
+                    CouponOut str = sListIterator.next();
+                    if (str.getSkuId()==actSkuConfig.getSkuId()) {
+                        sListIterator.remove();
+                    }
+                }
+            }
+
+            //修改一下
+            if(promotionRulesOuts!=null&&promotionRulesOuts.size()>0){
+                Iterator<CouponOut> sListIterator = list.iterator();
+                while (sListIterator.hasNext()) {
+                    CouponOut str = sListIterator.next();
+                    if (!listLong.contains(str.getSkuId())) {
+                        sListIterator.remove();
+                    }
+                }
+            }
+
+            result.setList(list);
+        }
+        result.setPage(inVo.getPage());
+        result.setTotal(list.size());
+        return result;
     }
 }

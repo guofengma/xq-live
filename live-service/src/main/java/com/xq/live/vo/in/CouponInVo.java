@@ -36,6 +36,8 @@ public class CouponInVo extends BaseInVo {
 
     private Date expiryDate;
 
+    private Long shopId;//商家id
+
     public Long getId() {
         return id;
     }
@@ -124,4 +126,19 @@ public class CouponInVo extends BaseInVo {
         this.isUsed = isUsed;
     }
 
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
 }

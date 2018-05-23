@@ -35,6 +35,13 @@ public interface SoService {
     Long create(SoInVo inVo);
 
     /**
+     * 生成商家订单
+     * @param inVo
+     * @return
+     */
+    Long createForShop(SoInVo inVo);
+
+    /**
      * 查询一条记录
      * @param id
      * @return
@@ -103,6 +110,7 @@ public interface SoService {
      * @return
      */
     Integer hadBeenGiven(SoInVo inVo);
+
     /**
      * 根据订单ID获取userId
      * @param inVo

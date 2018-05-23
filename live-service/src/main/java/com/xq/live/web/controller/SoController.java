@@ -14,6 +14,7 @@ import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
+import com.xq.live.web.utils.IpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -106,12 +108,31 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public BaseResp<Long> create(@Valid SoInVo inVo, BindingResult result) {
+    public BaseResp<Long> create(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.create(inVo);
+        return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
+     * 生成商家订单
+     *
+     * @param inVo
+     * @param result
+     * @return
+     */
+    @RequestMapping(value = "/createForShop", method = RequestMethod.POST)
+    public BaseResp<Long> createForShop(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request) {
+        if (result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        inVo.setUserIp(IpUtils.getIpAddr(request));
+        Long id = soService.createForShop(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
@@ -122,7 +143,7 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/freeOrder", method = RequestMethod.POST)
-    public BaseResp<Long> freeOrder(@Valid SoInVo inVo, BindingResult result){
+    public BaseResp<Long> freeOrder(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request){
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
@@ -135,7 +156,7 @@ public class SoController {
         }
         inVo.setSkuId(freeSkuConfig.getSkuId());
         inVo.setSkuNum(freeSkuConfig.getSkuNum());
-
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
@@ -147,11 +168,12 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/freeOrderForAct", method = RequestMethod.POST)
-    public BaseResp<Long> freeOrderForAct(@Valid SoInVo inVo, BindingResult result){
+    public BaseResp<Long> freeOrderForAct(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request){
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.freeOrderForAct(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
@@ -163,7 +185,7 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/freeOrderForAgio", method = RequestMethod.POST)
-    public BaseResp<Long> freeOrderForAgio(@Valid SoInVo inVo, BindingResult result){
+    public BaseResp<Long> freeOrderForAgio(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request){
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
@@ -174,7 +196,7 @@ public class SoController {
         if(integer>=1){
             return new BaseResp<Long>(ResultStatus.error_agio_fail);
         }
-
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }

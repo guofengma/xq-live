@@ -148,6 +148,11 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    public Long createForShop(SoInVo inVo) {
+        return null;
+    }
+
+    @Override
     public Long freeOrder(SoInVo inVo){
         //1、查询SKU信息
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
@@ -380,6 +385,7 @@ public class SoServiceImpl implements SoService {
         soLog.setSoId(inVo.getId());
         soLog.setUserId(inVo.getUserId());
         soLog.setUserName(inVo.getUserName());
+        soLog.setUserIp(inVo.getUserIp());
         soLog.setOperateType(operateType);
         try {
             result = soLogMapper.insert(soLog);

@@ -36,6 +36,8 @@ public class SoInVo extends BaseInVo {
 
     private Long actId;//生成的订单对应的活动
 
+    private String userIp;//用户下单的ip地址
+
     public Long getId() {
         return id;
     }
@@ -114,5 +116,13 @@ public class SoInVo extends BaseInVo {
 
     public void setActId(Long actId) {
         this.actId = actId;
+    }
+
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
     }
 }

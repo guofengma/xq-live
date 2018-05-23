@@ -183,7 +183,7 @@ public class UserForAppController {
             return new BaseResp<Integer>(ResultStatus.error_para_user_empty);
         }
         byMobile.setUserType(User.USER_TYPE_PT);//更改状态为普通用户
-        byMobile.setShopId(null);
+        byMobile.setShopId(0L);
         Integer res = userService.updateByMobile(byMobile);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,res);
     }

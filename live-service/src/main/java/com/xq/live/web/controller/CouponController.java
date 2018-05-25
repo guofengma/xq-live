@@ -3,7 +3,6 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.Coupon;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.CouponInVo;
 import com.xq.live.vo.out.CouponOut;
@@ -66,6 +65,20 @@ public class CouponController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResp<Pager<CouponOut>> list(CouponInVo inVo){
         Pager<CouponOut> result = couponService.list(inVo);
+        return new BaseResp<Pager<CouponOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 分页查询用户在某个商家能够使用的优惠券
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listShopUser", method = RequestMethod.GET)
+    public BaseResp<Pager<CouponOut>> listShopUser(CouponInVo inVo){
+        if(inVo==null||inVo.getShopId()==null||inVo.getUserId()==null||inVo.getIsUsed()==null){
+            return new BaseResp<Pager<CouponOut>>(ResultStatus.error_param_empty);
+        }
+        Pager<CouponOut> result = couponService.listShopUser(inVo);
         return new BaseResp<Pager<CouponOut>>(ResultStatus.SUCCESS, result);
     }
 

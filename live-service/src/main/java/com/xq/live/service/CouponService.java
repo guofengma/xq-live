@@ -63,4 +63,11 @@ public interface CouponService {
      * @return
      */
     Integer useLimit(Long userId);
+
+    /**
+     * 分页查询用户在某个商家能够使用的优惠券
+     * @param inVo
+     * @return
+     */
+    Pager<CouponOut> listShopUser(CouponInVo inVo);
 }

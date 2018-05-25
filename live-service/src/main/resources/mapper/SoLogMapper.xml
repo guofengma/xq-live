@@ -30,7 +30,7 @@
         user_ip)
         values (#{soId,jdbcType=BIGINT}, #{operateType,jdbcType=TINYINT},
         #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, now(),
-        now())
+        #{userIp,jdbcType=VARCHAR})
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>

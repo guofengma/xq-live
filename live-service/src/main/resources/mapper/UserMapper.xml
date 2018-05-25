@@ -383,7 +383,10 @@
       <if test="userType != null">
         user_type = #{userType,jdbcType=TINYINT},
       </if>
-      <if test="shopId != null">
+      <if test="shopId != null and shopId == 0">
+        shop_id = null,
+      </if>
+      <if test="shopId != null and shopId != 0">
         shop_id = #{shopId,jdbcType=BIGINT},
       </if>
       <if test="age != null">

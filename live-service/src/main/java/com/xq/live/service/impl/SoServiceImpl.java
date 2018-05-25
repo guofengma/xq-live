@@ -56,6 +56,9 @@ public class SoServiceImpl implements SoService {
     private SoLogMapper soLogMapper;
 
     @Autowired
+    private SoShopLogMapper soShopLogMapper;
+
+    @Autowired
     private CouponMapper couponMapper;
 
     @Autowired
@@ -143,6 +146,32 @@ public class SoServiceImpl implements SoService {
             //更新订单支付状态，写入订单日志
             this.paid(inVo);
         }
+
+        return id;
+    }
+
+    @Override
+    public Long createForShop(SoInVo inVo) {
+        //1、查询SKU信息
+        Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
+        if(sku == null){
+            return null;
+        }
+        //2、保存订单信息
+        inVo.setSoStatus(So.SO_STATUS_WAIT_PAID);
+        inVo.setSoType(So.SO_TYPE_SJ);
+        int ret = soMapper.insert(inVo);
+        if (ret < 1) {
+            logger.error("保存订单失败,userId : "+inVo.getUserId()+" skuId : "+inVo.getSkuId());
+            return null;
+        }
+        Long id = inVo.getId();
+        //3、保存订单明细信息
+        inVo.setId(id);
+        //4、保存订单日志
+        this.saveSoShopLog(inVo, SoLog.SO_STATUS_WAIT_PAID);
+
+
 
         return id;
     }
@@ -290,6 +319,18 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    public Integer paidForShop(SoInVo inVo) {
+        //1、更新订单状态
+        inVo.setSoStatus(So.SO_STATUS_PAID);
+        int ret = soMapper.paid(inVo);
+        if (ret > 0) {
+            //2、商家订单日志
+            this.saveSoShopLog(inVo, SoLog.SO_STATUS_PAID);
+        }
+        return ret;
+    }
+
+    @Override
     public Integer finished(SoInVo inVo) {
         return null;
     }
@@ -380,11 +421,34 @@ public class SoServiceImpl implements SoService {
         soLog.setSoId(inVo.getId());
         soLog.setUserId(inVo.getUserId());
         soLog.setUserName(inVo.getUserName());
+        soLog.setUserIp(inVo.getUserIp());
         soLog.setOperateType(operateType);
         try {
             result = soLogMapper.insert(soLog);
         } catch (Exception e) {
             logger.error("保存订单操作日志失败，订单soId :"+ inVo.getId()+" 操作类型，operateType: "+operateType);
+        }
+        return result;
+    }
+
+    /**
+     * 保存商家订单日志
+     * @return
+     */
+    private Integer saveSoShopLog(SoInVo inVo, int operateType){
+        int result = 0;
+        SoShopLog soShopLog = new SoShopLog();
+        soShopLog.setSoId(inVo.getId());
+        soShopLog.setUserId(inVo.getUserId());
+        soShopLog.setUserName(inVo.getUserName());
+        soShopLog.setUserIp(inVo.getUserIp());
+        soShopLog.setShopId(inVo.getShopId());
+        soShopLog.setSkuId(inVo.getSkuId());
+        soShopLog.setOperateType(operateType);
+        try {
+            result = soShopLogMapper.insert(soShopLog);
+        } catch (Exception e) {
+            logger.error("保存商家订单操作日志失败，订单soId :"+ inVo.getId()+" 操作类型，operateType: "+operateType);
         }
         return result;
     }

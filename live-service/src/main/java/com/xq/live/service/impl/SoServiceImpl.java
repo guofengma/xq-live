@@ -286,6 +286,12 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    public So selectForShop(Long id) {
+        return soMapper.selectByPrimaryKey(id);
+    }
+
+
+    @Override
     public SoForOrderOut getForOrder(Long id) {
         SoForOrderOut soForOrderOut = soMapper.selectByPkForOrder(id);
         if(soForOrderOut==null||soForOrderOut.getUserId()==null){
@@ -331,7 +337,8 @@ public class SoServiceImpl implements SoService {
         int ret = soMapper.paid(inVo);
         if (ret > 0) {
             SoShopLog soShopLog = soShopLogMapper.selectBySoId(inVo.getId());
-            inVo.setShopId(soShopLog.getShopId());
+            inVo.setSkuId(soShopLog.getSkuId());//为了让paidForShop接口的skuId的值能获取到
+            inVo.setShopId(soShopLog.getShopId());//为了能让wxNotifyForShop接口的shopId的值能够获取到
             //2、商家订单日志
             this.saveSoShopLog(inVo, SoLog.SO_STATUS_PAID);
         }

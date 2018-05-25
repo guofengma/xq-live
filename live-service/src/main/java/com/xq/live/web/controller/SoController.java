@@ -235,13 +235,13 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/paidForShop", method = RequestMethod.POST)
-    public BaseResp<Integer> paidForShop(SoInVo inVo) {
+    public BaseResp<Integer> paidForShop(SoInVo inVo,HttpServletRequest request) {
         //入参校验
         if (inVo.getId() == null || inVo.getUserId() == null || StringUtils.isEmpty(inVo.getUserName())) {
             return new BaseResp<Integer>(ResultStatus.error_param_empty);
         }
         //订单不存在
-        SoOut soOut = soService.get(inVo.getId());
+        So soOut = soService.selectForShop(inVo.getId());
         if (soOut == null) {
             return new BaseResp<Integer>(ResultStatus.error_so_not_exist);
         }
@@ -250,7 +250,7 @@ public class SoController {
         if(soOut.getSoStatus() != So.SO_STATUS_WAIT_PAID){
             return new BaseResp<Integer>(ResultStatus.error_so_not_wait_pay);
         }
-        inVo.setSkuId(soOut.getSkuId());
+        inVo.setUserIp(IpUtils.getIpAddr(request));
         int ret = soService.paidForShop(inVo);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
     }

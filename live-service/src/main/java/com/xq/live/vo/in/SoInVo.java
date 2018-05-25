@@ -32,13 +32,13 @@ public class SoInVo extends BaseInVo {
     @NotNull(message = "skuNum必填")
     private Integer skuNum;
 
-    private BigDecimal soAmount;
+    private BigDecimal soAmount;//如果是商家订单创建的时候，这个值必填
 
     private Long actId;//生成的订单对应的活动
 
     private String userIp;//用户下单的ip地址
 
-    private Long shopId;//商家订单对应的shopId
+    private Long shopId;//商家订单对应的shopId,在商家订单创建的时候必填
 
     public Long getId() {
         return id;

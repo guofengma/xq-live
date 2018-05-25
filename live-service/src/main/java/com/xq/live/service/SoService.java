@@ -49,6 +49,13 @@ public interface SoService {
     SoOut get(Long id);
 
     /**
+     * 通过订单id查询商家订单
+     * @param id
+     * @return
+     */
+    So selectForShop(Long id);
+
+    /**
      * 查询我的订单中的订单详情
      * @param id
      * @return

@@ -1,11 +1,5 @@
 package com.xq.live.config;
 
-import com.github.binarywang.wxpay.config.WxPayConfig;
-import com.github.binarywang.wxpay.service.WxPayService;
-import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
-import com.xq.live.common.PaymentConfig;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +7,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WechaPayConfig {
-    @Bean
+    /*@Bean
     public WxPayService wxMpService(WxPayConfig payConfig) {
         WxPayService wxPayService = new WxPayServiceImpl();
         wxPayService.setConfig(payConfig);
@@ -26,10 +20,10 @@ public class WechaPayConfig {
         payConfig.setAppId(PaymentConfig.APPID);
         payConfig.setMchId(PaymentConfig.MCH_ID);
         payConfig.setMchKey(PaymentConfig.API_KEY);
-        /*payConfig.setSubAppId(StringUtils.trimToNull(this.properties.getSubAppId()));
+        *//*payConfig.setSubAppId(StringUtils.trimToNull(this.properties.getSubAppId()));
         payConfig.setSubMchId(StringUtils.trimToNull(this.properties.getSubMchId()));
-        payConfig.setKeyPath(this.properties.getKeyPath());*/
+        payConfig.setKeyPath(this.properties.getKeyPath());*//*
 
         return payConfig;
-    }
+    }*/
 }

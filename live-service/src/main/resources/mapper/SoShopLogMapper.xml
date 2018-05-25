@@ -21,6 +21,13 @@
     from so_shop_log
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectBySoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from so_shop_log
+    where so_id = #{soId,jdbcType=BIGINT}
+    and operate_type = 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from so_shop_log
     where id = #{id,jdbcType=BIGINT}
@@ -32,7 +39,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{soId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, 
       #{skuId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
-      #{operateType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR}
+      #{operateType,jdbcType=INTEGER}, now(), #{userIp,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.SoShopLog">

@@ -131,6 +131,12 @@
             <version>2.7.0</version>
         </dependency>
 
+        <!--<dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>3.0.0</version>
+        </dependency>-->
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -147,11 +153,11 @@
             <version>1.1.2</version>
         </dependency>
         <!-- 消息推送信鸽第三方SDK -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.push.java.SDK</groupId>
             <artifactId>PushJavaSDK</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
         <!-- spring-security 和 jwt -->
         <!--		<dependency>
                     <groupId>org.springframework.boot</groupId>

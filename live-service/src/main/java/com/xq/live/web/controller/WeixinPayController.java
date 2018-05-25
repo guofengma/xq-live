@@ -433,12 +433,14 @@ public class WeixinPayController {
                     // 注意特殊情况：订单已经退款，但收到了支付结果成功的通知，不应把商户侧订单状态从退款改成支付成功
                     if (So.SO_STATUS_WAIT_PAID == soOut.getSoStatus()) {//支付的状态判断
                         //订单状态的修改。根据实际业务逻辑执行
+                        //商家订单支付成功之后，钱进入平台，然后在商家的钱包中充入钱，等商家提现申请通过之后，转账给商家
                         SoInVo inVo = new SoInVo();
                         inVo.setId(soOut.getId());
                         inVo.setUserId(soOut.getUserId());
                         inVo.setUserName(soOut.getUserName());
                         inVo.setSkuId(soOut.getSkuId());
                         inVo.setSkuNum(soOut.getSkuNum());
+                        inVo.setSoAmount(soOut.getSoAmount());
                         inVo.setUserIp(IpUtils.getIpAddr(request));
                         int ret = soService.paidForShop(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";

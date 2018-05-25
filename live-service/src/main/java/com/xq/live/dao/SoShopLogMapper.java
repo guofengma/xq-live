@@ -13,6 +13,8 @@ public interface SoShopLogMapper {
 
     SoShopLog selectByPrimaryKey(Long id);
 
+    SoShopLog selectBySoId(Long soId);
+
     int updateByPrimaryKeySelective(SoShopLog record);
 
     int updateByPrimaryKey(SoShopLog record);

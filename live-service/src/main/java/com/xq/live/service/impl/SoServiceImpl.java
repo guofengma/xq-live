@@ -322,8 +322,16 @@ public class SoServiceImpl implements SoService {
     public Integer paidForShop(SoInVo inVo) {
         //1、更新订单状态
         inVo.setSoStatus(So.SO_STATUS_PAID);
+
+        UserAccountInVo accountInVo = new UserAccountInVo();
+        accountInVo.setUserId(inVo.getUserId());
+        accountInVo.setOccurAmount(inVo.getSoAmount());
+        accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
+
         int ret = soMapper.paid(inVo);
         if (ret > 0) {
+            SoShopLog soShopLog = soShopLogMapper.selectBySoId(inVo.getId());
+            inVo.setShopId(soShopLog.getShopId());
             //2、商家订单日志
             this.saveSoShopLog(inVo, SoLog.SO_STATUS_PAID);
         }

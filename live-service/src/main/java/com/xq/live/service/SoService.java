@@ -111,6 +111,14 @@ public interface SoService {
      */
     Integer hadBeenGiven(SoInVo inVo);
 
+
+    /**
+     * 商家订单支付
+     * @param inVo
+     * @return
+     */
+    Integer paidForShop(SoInVo inVo);
+
     /**
      * 根据订单ID获取userId
      * @param inVo

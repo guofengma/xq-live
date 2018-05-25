@@ -38,6 +38,8 @@ public class SoInVo extends BaseInVo {
 
     private String userIp;//用户下单的ip地址
 
+    private Long shopId;//商家订单对应的shopId
+
     public Long getId() {
         return id;
     }
@@ -124,5 +126,13 @@ public class SoInVo extends BaseInVo {
 
     public void setUserIp(String userIp) {
         this.userIp = userIp;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

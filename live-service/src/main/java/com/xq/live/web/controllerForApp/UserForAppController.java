@@ -292,6 +292,7 @@ public class UserForAppController {
         if(byMobile==null){
             return new BaseResp<>(ResultStatus.error_para_user_empty);
         }
+        user.setId(byMobile.getId());//为了能正确的清空缓存，带上id
         Integer integer = userService.updateByMobile(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }

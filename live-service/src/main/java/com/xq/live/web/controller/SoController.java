@@ -229,6 +229,33 @@ public class SoController {
     }
 
     /**
+     * 商家订单支付
+     *
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/paidForShop", method = RequestMethod.POST)
+    public BaseResp<Integer> paidForShop(SoInVo inVo) {
+        //入参校验
+        if (inVo.getId() == null || inVo.getUserId() == null || StringUtils.isEmpty(inVo.getUserName())) {
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        //订单不存在
+        SoOut soOut = soService.get(inVo.getId());
+        if (soOut == null) {
+            return new BaseResp<Integer>(ResultStatus.error_so_not_exist);
+        }
+
+        //订单不是待支付状态，不能修改支付状态
+        if(soOut.getSoStatus() != So.SO_STATUS_WAIT_PAID){
+            return new BaseResp<Integer>(ResultStatus.error_so_not_wait_pay);
+        }
+        inVo.setSkuId(soOut.getSkuId());
+        int ret = soService.paidForShop(inVo);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS, ret);
+    }
+
+    /**
      * 订单取消
      *
      * @param inVo

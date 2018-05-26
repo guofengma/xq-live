@@ -13,12 +13,66 @@
   <sql id="Base_Column_List">
     id, shop_id, operator_id, is_delete, create_time, update_time, payment_method
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+
+  <resultMap id="ShopAllocationMap" extends="BaseResultMap" type="com.xq.live.vo.out.ShopAllocationOut">
+
+  </resultMap>
+  <!--根据id,shopid查看单条数据-->
+  <select id="selectByPrimaryKey" parameterType="com.xq.live.vo.in.ShopAllocationInVo" resultMap="ShopAllocationMap">
     select 
     <include refid="Base_Column_List" />
     from shop_allocation
-    where id = #{id,jdbcType=BIGINT}
+    <where>
+      <if test="id != null">AND id = #{id,jdbcType=BIGINT}</if>
+      <if test="shopId != null">AND shop_id=#{shopId,jdbcType=BIGINT}</if>
+    </where>
   </select>
+
+  <!--添加sql-->
+  <!--根据id,shopid或者operatorid查看多条数据-->
+<select id="selectByCan" parameterType="com.xq.live.vo.in.ShopAllocationInVo" resultMap="ShopAllocationMap">
+    select <include refid="Base_Column_List" />
+    from shop_allocation
+    <where>
+      1=1
+      <if test="shopId != null">AND shop_id=#{shopId,jdbcType=BIGINT}</if>
+      <if test="id != null">AND id = #{id,jdbcType=BIGINT}</if>
+      <if test="operatorId != null">AND operator_id = #{operatorId,jdbcType=BIGINT}</if>
+      AND is_delete=1
+    </where>
+</select>
+  <!--根据id或者shopid修改数据-->
+<update id="updateByInfo" parameterType="com.xq.live.vo.in.ShopAllocationInVo">
+    update shop_allocation
+  <set>
+    <if test="operatorId != null">
+      operator_id = #{operatorId,jdbcType=BIGINT},
+    </if>
+    <if test="isDelete != null">
+      is_delete = #{isDelete,jdbcType=INTEGER},
+    </if>
+    <if test="createTime != null">
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="paymentMethod != null">
+      payment_method = #{paymentMethod,jdbcType=INTEGER},
+    </if>
+    update_time = now()
+  </set>
+  <where>
+    <if test="id != null">id = #{id,jdbcType=BIGINT}</if>
+    <if test="shopId != null">shop_id= #{shopId,jdbcType=BIGINT}</if>
+  </where>
+</update>
+  <!--添加数据-->
+<insert id="insertByID" parameterType="com.xq.live.vo.in.ShopAllocationInVo">
+    INSERT INTO shop_allocation(shop_id, operator_id,is_delete,create_time,update_time,payment_method)
+    VALUES (#{shopId,jdbcType=BIGINT}, #{operatorId,jdbcType=BIGINT},
+      #{isDelete,jdbcType=INTEGER}, now(), now(), #{paymentMethod,jdbcType=INTEGER})
+</insert>
+  <!--END-->
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from shop_allocation
     where id = #{id,jdbcType=BIGINT}

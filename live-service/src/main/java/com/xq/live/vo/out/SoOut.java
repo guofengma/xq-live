@@ -53,6 +53,16 @@ public class SoOut {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paidTime;
 
+    private Long shopId;//商家订单绑定的shopId
+
+    private String shopName;//商家名称
+
+    private String logoUrl;//商家的主图
+
+    private BigDecimal inPrice;//商家订单消费享七券的面值
+
+    private String mobile;//下单用户的手机号
+
     public Long getId() {
         return id;
     }
@@ -187,5 +197,45 @@ public class SoOut {
 
     public void setPaidTime(Date paidTime) {
         this.paidTime = paidTime;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public BigDecimal getInPrice() {
+        return inPrice;
+    }
+
+    public void setInPrice(BigDecimal inPrice) {
+        this.inPrice = inPrice;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

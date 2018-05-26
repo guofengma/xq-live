@@ -101,6 +101,19 @@ public class SoController {
     }
 
     /**
+     * 查我的商家订单
+     *查询我的订单中的商家订单，基本参数与平台订单相同  userId ,page,rows,soStatus
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/myorderForShop", method = RequestMethod.GET)
+    public BaseResp<List<SoOut>> myorderForShop(SoInVo inVo) {
+        inVo.setSoType(So.SO_TYPE_SJ);
+        List<SoOut> result = soService.findSoListForShop(inVo);
+        return new BaseResp<List<SoOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
      * 生成订单
      *
      * @param inVo
@@ -157,6 +170,8 @@ public class SoController {
         inVo.setSkuId(freeSkuConfig.getSkuId());
         inVo.setSkuNum(freeSkuConfig.getSkuNum());
         inVo.setUserIp(IpUtils.getIpAddr(request));
+        inVo.setSoType(So.SO_TYPE_PT);
+        inVo.setPayType(So.SO_PAY_TYPE_XQ);
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
@@ -174,6 +189,8 @@ public class SoController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         inVo.setUserIp(IpUtils.getIpAddr(request));
+        inVo.setSoType(So.SO_TYPE_PT);
+        inVo.setPayType(So.SO_PAY_TYPE_XQ);
         Long id = soService.freeOrderForAct(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
@@ -197,6 +214,8 @@ public class SoController {
             return new BaseResp<Long>(ResultStatus.error_agio_fail);
         }
         inVo.setUserIp(IpUtils.getIpAddr(request));
+        inVo.setSoType(So.SO_TYPE_PT);
+        inVo.setPayType(So.SO_PAY_TYPE_XQ);
         Long id = soService.freeOrder(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }

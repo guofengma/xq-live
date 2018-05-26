@@ -75,7 +75,7 @@ public class CouponController {
      */
     @RequestMapping(value = "/listShopUser", method = RequestMethod.GET)
     public BaseResp<Pager<CouponOut>> listShopUser(CouponInVo inVo){
-        if(inVo==null||inVo.getShopId()==null||inVo.getUserId()==null||inVo.getIsUsed()==null){
+        if(inVo==null||inVo.getShopId()==null||inVo.getUserId()==null||inVo.getIsUsed()==null||inVo.getFinalAmount()==null){
             return new BaseResp<Pager<CouponOut>>(ResultStatus.error_param_empty);
         }
         Pager<CouponOut> result = couponService.listShopUser(inVo);

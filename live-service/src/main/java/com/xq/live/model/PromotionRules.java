@@ -3,6 +3,7 @@ package com.xq.live.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class PromotionRules {
@@ -43,6 +44,10 @@ public class PromotionRules {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    private BigDecimal manAmount;
+
+    private BigDecimal jianAmount;
 
     public Long getId() {
         return id;
@@ -122,5 +127,21 @@ public class PromotionRules {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getManAmount() {
+        return manAmount;
+    }
+
+    public void setManAmount(BigDecimal manAmount) {
+        this.manAmount = manAmount;
+    }
+
+    public BigDecimal getJianAmount() {
+        return jianAmount;
+    }
+
+    public void setJianAmount(BigDecimal jianAmount) {
+        this.jianAmount = jianAmount;
     }
 }

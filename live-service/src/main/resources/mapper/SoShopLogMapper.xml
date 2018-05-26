@@ -21,12 +21,12 @@
     from so_shop_log
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectBySoId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectBySoId" parameterType="com.xq.live.model.SoShopLog" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from so_shop_log
-    where so_id = #{soId,jdbcType=BIGINT}
-    and operate_type = 1
+    where so_id =  #{soId,jdbcType=BIGINT}
+    and operate_type = #{operateType,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from so_shop_log

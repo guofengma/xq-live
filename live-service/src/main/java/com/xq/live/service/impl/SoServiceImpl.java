@@ -74,6 +74,9 @@ public class SoServiceImpl implements SoService {
     private UserMapper userMapper;
 
     @Autowired
+    private ShopMapper shopMapper;
+
+    @Autowired
     private AccountService accountService;
 
     @Override
@@ -94,6 +97,31 @@ public class SoServiceImpl implements SoService {
         List<SoOut> list = soMapper.list(inVo);
         for (SoOut soOut : list) {
             soOut.setRuleDesc(" ");
+        }
+        return list;
+    }
+
+    @Override
+    public List<SoOut> findSoListForShop(SoInVo inVo) {
+        List<SoOut> list = soMapper.listForShop(inVo);
+        for (SoOut soOut : list) {
+            SoShopLog soShopLog = new SoShopLog();
+
+                 soShopLog.setOperateType(soOut.getSoStatus());
+                 soShopLog.setSoId(soOut.getId());
+                 SoShopLog in = soShopLogMapper.selectBySoId(soShopLog);
+                 User user = userMapper.selectByPrimaryKey(soOut.getUserId());
+
+                 soOut.setMobile(user.getMobile());
+                 if(in!=null){
+                     Shop shop = shopMapper.selectByPrimaryKey(in.getShopId());
+                     Sku sku = skuMapper.selectByPrimaryKey(in.getSkuId());
+                     soOut.setShopId(in.getShopId());
+                     soOut.setShopName(shop.getShopName());
+                     soOut.setLogoUrl(shop.getLogoUrl());
+                     soOut.setInPrice(sku.getInPrice());
+                 }
+
         }
         return list;
     }
@@ -336,7 +364,10 @@ public class SoServiceImpl implements SoService {
 
         int ret = soMapper.paid(inVo);
         if (ret > 0) {
-            SoShopLog soShopLog = soShopLogMapper.selectBySoId(inVo.getId());
+            SoShopLog logInVo = new SoShopLog();
+            logInVo.setSoId(inVo.getId());
+            logInVo.setOperateType(SoShopLog.OPERATE_TYPE_WAIT_PAID);//通过查询下单的数据，来货单商家订单的商家id
+            SoShopLog soShopLog = soShopLogMapper.selectBySoId(logInVo);
             inVo.setSkuId(soShopLog.getSkuId());//为了让paidForShop接口的skuId的值能获取到
             inVo.setShopId(soShopLog.getShopId());//为了能让wxNotifyForShop接口的shopId的值能够获取到
             //2、商家订单日志

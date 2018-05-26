@@ -27,6 +27,8 @@ public interface SoService {
 
     List<SoOut> findSoList(SoInVo inVo);
 
+    List<SoOut> findSoListForShop(SoInVo inVo);
+
     /**
      * 下单
      * @param inVo

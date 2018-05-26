@@ -3,6 +3,12 @@ package com.xq.live.model;
 import java.util.Date;
 
 public class SoShopLog {
+
+    //操作类型 1下单 2 已支付
+    public final static int OPERATE_TYPE_WAIT_PAID = 1;
+    public final static int OPERATE_TYPE_PAID = 2;
+
+
     private Long id;
 
     private Long soId;

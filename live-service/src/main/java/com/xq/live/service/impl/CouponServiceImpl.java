@@ -19,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ${DESCRIPTION}
@@ -108,7 +111,8 @@ public class CouponServiceImpl implements CouponService {
             SkuInVo skuInVo = new SkuInVo();
             skuInVo.setSkuType(Sku.SKU_TYPE_SJTC);
 
-            int agioTotal = skuMapper.tscListTotal(skuInVo);
+            //此接口完全无需折扣券
+            /*int agioTotal = skuMapper.tscListTotal(skuInVo);
             if(agioTotal==0){
                 //没有套餐,那就不能使用套餐券
                 Iterator<CouponOut> sListIterator = list.iterator();
@@ -118,12 +122,29 @@ public class CouponServiceImpl implements CouponService {
                         sListIterator.remove();
                     }
                 }
-            }
+            }*/
             Integer integer = actShopMapper.searchForShopId(inVo.getShopId());
             List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(Integer.parseInt(String.valueOf(inVo.getShopId())));
             List<Long> listLong = new ArrayList<Long>();
             for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
-                listLong.add(promotionRulesOut.getSkuId());
+                //判断金额是否比满的金额大，大或者等于的话就加入进去
+                int i = inVo.getFinalAmount().compareTo(promotionRulesOut.getManAmount());
+                if(i == 0 || i ==1) {
+                    listLong.add(promotionRulesOut.getSkuId());
+                }
+            }
+
+            //删除已经过期的代金券和删除折扣券
+            Iterator<CouponOut> sListIteratorAll = list.iterator();
+            while (sListIteratorAll.hasNext()) {
+                CouponOut str = sListIteratorAll.next();
+                int i = str.getExpiryDate().compareTo(new Date());
+                if (i<0) {
+                    sListIteratorAll.remove();
+                }
+                if(str.getSkuId()==agioSkuConfig.getSkuId()){
+                    sListIteratorAll.remove();
+                }
             }
 
 
@@ -138,7 +159,7 @@ public class CouponServiceImpl implements CouponService {
                 }
             }
 
-            //修改一下
+            //删除不满足商家优惠力度的代金券
             if(promotionRulesOuts!=null&&promotionRulesOuts.size()>0){
                 Iterator<CouponOut> sListIterator = list.iterator();
                 while (sListIterator.hasNext()) {
@@ -148,7 +169,6 @@ public class CouponServiceImpl implements CouponService {
                     }
                 }
             }
-
             result.setList(list);
         }
         result.setPage(inVo.getPage());

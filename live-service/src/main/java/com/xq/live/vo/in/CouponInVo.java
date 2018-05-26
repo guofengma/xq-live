@@ -38,6 +38,8 @@ public class CouponInVo extends BaseInVo {
 
     private Long shopId;//商家id
 
+    private BigDecimal  finalAmount;//用户在没使用享七券，并且已经把不参与优惠的金额去除的钱
+
     public Long getId() {
         return id;
     }
@@ -140,5 +142,13 @@ public class CouponInVo extends BaseInVo {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public BigDecimal getFinalAmount() {
+        return finalAmount;
+    }
+
+    public void setFinalAmount(BigDecimal finalAmount) {
+        this.finalAmount = finalAmount;
     }
 }

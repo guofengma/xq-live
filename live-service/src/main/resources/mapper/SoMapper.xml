@@ -21,6 +21,7 @@
         <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
         <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
     </resultMap>
 
     <resultMap id="SoOutForOrderResultMap" type="com.xq.live.vo.out.SoForOrderOut" extends="BaseResultMap">
@@ -112,10 +113,51 @@
         limit #{start}, #{rows}
     </select>
 
+    <select id="listForShop" resultMap="SoOutResultMap">
+        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time
+        from so s
+        <where>
+            <if test="id != null">
+                s.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and s.user_id = #{userId}
+            </if>
+            <if test="soStatus != null">
+                and s.so_status = #{soStatus}
+            </if>
+            <if test="soType != null">
+                and s.so_type = #{soType}
+            </if>
+        </where>
+        order by id desc
+        limit #{start}, #{rows}
+    </select>
+
     <select id="listTotal" resultType="java.lang.Integer">
         select count(s.id)
         from so s
         inner join so_detail sd on s.id = sd.so_id
+        <where>
+            <if test="id != null">
+                s.id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and s.user_id = #{userId}
+            </if>
+            <if test="soStatus != null">
+                and s.so_status = #{soStatus}
+            </if>
+            <if test="soType != null">
+                and s.so_type = #{soType}
+            </if>
+        </where>
+    </select>
+
+    <select id="listForShopTotal" resultMap="SoOutResultMap">
+        select count(s.id)
+        from so s
         <where>
             <if test="id != null">
                 s.id = #{id,jdbcType=BIGINT}

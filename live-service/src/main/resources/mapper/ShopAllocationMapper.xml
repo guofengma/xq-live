@@ -29,7 +29,7 @@
   </select>
 
   <!--添加sql-->
-  <!--根据id,shopid或者operatorid查看多条数据-->
+  <!--根据id,shopid或者operatorid查看多条数据  -->
 <select id="selectByCan" parameterType="com.xq.live.vo.in.ShopAllocationInVo" resultMap="ShopAllocationMap">
     select <include refid="Base_Column_List" />
     from shop_allocation

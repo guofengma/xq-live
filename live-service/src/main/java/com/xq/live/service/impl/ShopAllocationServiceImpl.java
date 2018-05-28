@@ -50,6 +50,7 @@ public class ShopAllocationServiceImpl implements ShopAllocationService{
     @Override
     public int insertInfo(ShopAllocationInVo allocation) {
         int i=allocationMapper.insertByID(allocation);
+        //
         if (i>0){
             return 1;
         }else {

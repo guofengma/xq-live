@@ -26,7 +26,7 @@ public interface ShopAllocationService {
     List<ShopAllocationOut> listAll(ShopAllocationInVo shopAllocationInVo);
 
     /**
-     * 根据id或者shopid逻辑删除信息
+     * 根据id或者shopid修改信息
      * @param shopAllocationInVo
      * @return
      */

@@ -14,7 +14,7 @@ public interface ShopAllocationMapper {
     int insert(ShopAllocation record);
 
     int insertSelective(ShopAllocation record);
-    //查询单条数据
+    //  查询单条数据
     ShopAllocationOut selectByPrimaryKey(ShopAllocationInVo shopAllocationInVo);
 
     int updateByPrimaryKeySelective(ShopAllocation record);

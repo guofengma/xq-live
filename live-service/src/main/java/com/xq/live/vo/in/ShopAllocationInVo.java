@@ -6,7 +6,6 @@ import java.util.Date;
  * Created by ss on 2018/5/25.
  */
 public class ShopAllocationInVo {
-    //
     private Long id;
 
     private Long shopId;

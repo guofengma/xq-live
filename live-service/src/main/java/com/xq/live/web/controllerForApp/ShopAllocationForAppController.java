@@ -23,7 +23,7 @@ public class ShopAllocationForAppController {
     private ShopAllocationService allocationService;
 
     /**
-     * 通过id,shopid或者operatorid查看多条数据
+     *  通过id,shopid或者operatorid查看多条数据
      * @param allocationInVo
      * @return
      */

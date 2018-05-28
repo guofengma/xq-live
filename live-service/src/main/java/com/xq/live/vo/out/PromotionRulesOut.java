@@ -38,6 +38,10 @@ public class PromotionRulesOut {
 
     private BigDecimal inPrice;
 
+    private BigDecimal manAmount;
+
+    private BigDecimal jianAmount;
+
     public Long getId() {
         return id;
     }
@@ -132,5 +136,21 @@ public class PromotionRulesOut {
 
     public void setInPrice(BigDecimal inPrice) {
         this.inPrice = inPrice;
+    }
+
+    public BigDecimal getManAmount() {
+        return manAmount;
+    }
+
+    public void setManAmount(BigDecimal manAmount) {
+        this.manAmount = manAmount;
+    }
+
+    public BigDecimal getJianAmount() {
+        return jianAmount;
+    }
+
+    public void setJianAmount(BigDecimal jianAmount) {
+        this.jianAmount = jianAmount;
     }
 }

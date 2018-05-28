@@ -25,7 +25,11 @@ public interface SoMapper {
 
     int listTotal(SoInVo inVo);
 
+    int listForShopTotal(SoInVo inVo);
+
     List<SoOut> list(SoInVo inVo);
+
+    List<SoOut> listForShop(SoInVo inVo);
 
     SoOut selectByPk(Long id);
 

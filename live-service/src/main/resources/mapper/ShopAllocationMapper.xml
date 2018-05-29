@@ -25,6 +25,7 @@
     <where>
       <if test="id != null">AND id = #{id,jdbcType=BIGINT}</if>
       <if test="shopId != null">AND shop_id=#{shopId,jdbcType=BIGINT}</if>
+      AND is_delete=0
     </where>
   </select>
 
@@ -38,7 +39,7 @@
       <if test="shopId != null">AND shop_id=#{shopId,jdbcType=BIGINT}</if>
       <if test="id != null">AND id = #{id,jdbcType=BIGINT}</if>
       <if test="operatorId != null">AND operator_id = #{operatorId,jdbcType=BIGINT}</if>
-      AND is_delete=1
+      AND is_delete=0
     </where>
 </select>
   <!--根据id或者shopid修改数据-->

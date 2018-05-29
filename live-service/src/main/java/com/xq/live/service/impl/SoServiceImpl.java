@@ -10,8 +10,10 @@ import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
 import com.xq.live.service.UploadService;
 import com.xq.live.vo.in.ProRuInVo;
+import com.xq.live.vo.in.ShopAllocationInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserAccountInVo;
+import com.xq.live.vo.out.ShopAllocationOut;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.apache.commons.lang3.StringUtils;
@@ -78,6 +80,12 @@ public class SoServiceImpl implements SoService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ShopAllocationMapper shopAllocationMapper;
+
+    @Autowired
+    private SoWriteOffMapper soWriteOffMapper;
 
     @Override
     public Pager<SoOut> list(SoInVo inVo) {
@@ -353,14 +361,41 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    @Transactional
     public Integer paidForShop(SoInVo inVo) {
         //1、更新订单状态
         inVo.setSoStatus(So.SO_STATUS_PAID);
 
-        UserAccountInVo accountInVo = new UserAccountInVo();
-        accountInVo.setUserId(inVo.getUserId());
-        accountInVo.setOccurAmount(inVo.getSoAmount());
-        accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
+        ShopAllocationInVo shopAllocationInVo = new ShopAllocationInVo();
+        shopAllocationInVo.setShopId(inVo.getShopId());
+        ShopAllocationOut shopAllocationOut = shopAllocationMapper.selectByPrimaryKey(shopAllocationInVo);
+        if(shopAllocationOut.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
+            //注意完成对账功能之前，一定要保证该券先调用核销,及要前端先调用hx/add接口
+            //平台代收，要收取服务费，并且还要完成对账操作(把核销之后的券的对账改成已对账状态)
+            UserAccountInVo accountInVo = new UserAccountInVo();
+            accountInVo.setUserId(inVo.getUserId());
+            accountInVo.setOccurAmount(inVo.getSoAmount());
+            accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
+
+            /** 完成对账操作 */
+            SoWriteOff soWriteOff = soWriteOffMapper.selectByCouponId(inVo.getCouponId());
+            soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+            soWriteOffMapper.updateByPrimaryKeySelective(soWriteOff);
+
+            Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());//查询被核销的券,进而查询要收取的服务费
+            UserAccountInVo accountInVoForFw = new UserAccountInVo();
+            accountInVoForFw.setUserId(inVo.getUserId());
+            accountInVoForFw.setOccurAmount(sku.getSellPrice());
+            accountService.payout(accountInVoForFw, "商家订单平台代收,收取服务费,票券号：" + inVo.getCouponId());
+        }else if(shopAllocationOut.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
+            //商家自收，服务费另外算，不完成对账操作,此代码需后期补充
+           /* UserAccountInVo accountInVo = new UserAccountInVo();
+            accountInVo.setUserId(inVo.getUserId());
+            accountInVo.setOccurAmount(inVo.getSoAmount());
+            accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());*/
+        }
+
+
 
         int ret = soMapper.paid(inVo);
         if (ret > 0) {

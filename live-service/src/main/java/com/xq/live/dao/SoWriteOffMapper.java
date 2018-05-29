@@ -18,6 +18,8 @@ public interface SoWriteOffMapper {
 
     SoWriteOff selectByPrimaryKey(Long id);
 
+    SoWriteOff selectByCouponId(Long couponId);
+
     int updateByPrimaryKeySelective(SoWriteOff record);
 
     int updateByPrimaryKey(SoWriteOff record);

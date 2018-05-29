@@ -7,10 +7,15 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.ShopAllocation;
 import com.xq.live.model.So;
+import com.xq.live.service.CouponService;
+import com.xq.live.service.ShopAllocationService;
 import com.xq.live.service.SoService;
+import com.xq.live.vo.in.ShopAllocationInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.WeixinInVo;
+import com.xq.live.vo.out.ShopAllocationOut;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
 import com.xq.live.web.utils.PayUtils;
@@ -48,6 +53,12 @@ public class WeixinPayController {
 
     @Autowired
     private SoService soService;
+
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private ShopAllocationService shopAllocationService;
 
 
 
@@ -264,6 +275,26 @@ public class WeixinPayController {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_paid);
         }
 
+        //商家订单中判断couponId是否为空
+        if(inVo.getCouponId()==null){
+           return new BaseResp<Map<String, String>>(ResultStatus.error_para_coupon_id_empty);
+        }
+
+        //商家订单中判断shopId是否为空
+        if(inVo.getShopId()==null){
+            return new BaseResp<Map<String, String>>(ResultStatus.error_para_shop_id_empty);
+        }
+
+        ShopAllocationInVo shopAllocationInVo = new ShopAllocationInVo();
+        shopAllocationInVo.setShopId(inVo.getShopId());
+        ShopAllocationOut admin = shopAllocationService.admin(shopAllocationInVo);
+
+        //判断该商家是否配置付款方式
+        if(admin==null){
+          return new BaseResp<Map<String, String>>(ResultStatus.error_para_shop_allocation_empty);
+        }
+
+
         //生成的随机字符串
         String nonce_str = WXPayUtil.generateNonceStr();
         //获取客户端的ip地址
@@ -272,20 +303,45 @@ public class WeixinPayController {
         int price100 = soOut.getSoAmount().multiply(new BigDecimal(100)).intValue();
         //统一下单接口
         HashMap<String, String> data = new HashMap<String, String>();
-        data.put("appid", config.getAppID());
-        data.put("mch_id", config.getMchID());
-        data.put("nonce_str", nonce_str);
-        data.put("body", soOut.getSkuName());    //商品描述
-        data.put("out_trade_no", soOut.getId().toString());//商户订单号
-        data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
-        data.put("spbill_create_ip", spbill_create_ip);
-        data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
-        data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
-        data.put("openid", inVo.getOpenId());
+        if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
+            //平台代收所需参数
+            data.put("appid", config.getAppID());
+            data.put("mch_id", config.getMchID());
+            data.put("nonce_str", nonce_str);
+            data.put("body", soOut.getSkuName()+","+inVo.getCouponId()+","+inVo.getShopId());    //商品描述,里面包含了couponId和shopId
+            data.put("out_trade_no", soOut.getId().toString());//商户订单号
+            data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            data.put("spbill_create_ip", spbill_create_ip);
+            data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
+            data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
+            data.put("openid", inVo.getOpenId());
+        }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
+            //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
+            //商家自收,此段代码的参数需要修改
+            /*data.put("appid", config.getAppID());
+            data.put("mch_id", config.getMchID());
+            data.put("nonce_str", nonce_str);
+            data.put("body", soOut.getSkuName());    //商品描述
+            data.put("out_trade_no", soOut.getId().toString());//商户订单号
+            data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            data.put("spbill_create_ip", spbill_create_ip);
+            data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
+            data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
+            data.put("openid", inVo.getOpenId());*/
+        }
+
+
 
         //返回给小程序端需要的参数
         Map<String, String> response = new HashMap<String, String>();
-        response.put("appId", config.getAppID());
+        if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
+            //平台代收二次签名所需参数
+            response.put("appId", config.getAppID());
+        }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
+            //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
+            //商家自收二次签名所需参数
+            /*response.put("appId", config.getAppID());*/
+        }
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);
             System.out.println("统一下单接口返回: " + rMap);
@@ -423,8 +479,19 @@ public class WeixinPayController {
                 String out_trade_no = (String) notifyMap.get("out_trade_no"); //商户订单号
                 String total_fee = (String) notifyMap.get("total_fee");
                 String transaction_id = (String) notifyMap.get("transaction_id"); //微信支付订单号
+                String body = (String) notifyMap.get("body");//商家订单中对应的body，其中包含有couponId，可以通过此来完成对账
                 //查询订单 根据订单号查询订单  SoOut -订单实体类
                 Long soId = Long.valueOf(out_trade_no);
+                Long couponId =null;
+                Long shopId = null;
+                if(body!=null) {
+                    String[] nums = body.split(",");//通过","分割，读取出couponId和shopId
+                    if(nums.length>=3) {
+                        couponId = Long.valueOf(nums[1]);
+                        shopId = Long.valueOf(nums[2]);
+                    }
+                }
+
                 SoOut soOut = soService.get(soId);
                 if (!PaymentConfig.MCH_ID.equals(mch_id) || soOut == null || new BigDecimal(total_fee).compareTo(soOut.getSoAmount().multiply(new BigDecimal(100))) != 0) {
                     logger.info("支付失败,错误信息：" + "参数错误");
@@ -442,6 +509,8 @@ public class WeixinPayController {
                         inVo.setSkuNum(soOut.getSkuNum());
                         inVo.setSoAmount(soOut.getSoAmount());
                         inVo.setUserIp(IpUtils.getIpAddr(request));
+                        inVo.setCouponId(couponId);
+                        inVo.setShopId(shopId);
                         int ret = soService.paidForShop(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {

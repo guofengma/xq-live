@@ -51,6 +51,8 @@ public class SoWriteOffInVo extends BaseInVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date endTime;//截止时间
 
+    private Integer isBill;//是否对账 0未对账 1对账
+
     public Long getId() {
         return id;
     }
@@ -193,5 +195,13 @@ public class SoWriteOffInVo extends BaseInVo {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getIsBill() {
+        return isBill;
+    }
+
+    public void setIsBill(Integer isBill) {
+        this.isBill = isBill;
     }
 }

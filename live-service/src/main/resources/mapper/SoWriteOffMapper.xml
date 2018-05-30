@@ -118,6 +118,10 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="isBill != null">
+        is_bill,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -167,6 +171,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isBill != null">
+        #{isBill,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -277,6 +284,9 @@
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
       </if>
+      <if test="begainTime !=null and endTime != null">
+        and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
     </where>
     order by create_time ASC
     limit #{start}, #{rows}
@@ -315,6 +325,9 @@
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
       </if>
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
+      </if>
     </where>
   </select>
 
@@ -348,6 +361,9 @@
       </if>
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
       </if>
     </where>
   </select>

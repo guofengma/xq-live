@@ -377,7 +377,7 @@ public class SoServiceImpl implements SoService {
         shopAllocationInVo.setShopId(inVo.getShopId());
         ShopAllocationOut shopAllocationOut = shopAllocationMapper.selectByPrimaryKey(shopAllocationInVo);
         if(shopAllocationOut.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
-            //注意完成对账功能之前，一定要保证该券先调用核销,及要前端先调用hx/add接口
+            //注意完成对账功能之前，一定要保证该券先调用核销
             //平台代收，要收取服务费，并且还要完成对账操作(把核销之后的券的对账改成已对账状态)
             UserAccountInVo accountInVo = new UserAccountInVo();
             accountInVo.setUserId(inVo.getUserId());
@@ -385,7 +385,7 @@ public class SoServiceImpl implements SoService {
             accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
 
             //当商家订单中，并没有买券，则不做核销和收取服务费
-            if(inVo.getSkuId()!=null) {
+            if(inVo.getSkuId()!=null&&inVo.getCouponId()!=null) {
                 /** 完成对账操作 */
                 SoWriteOff soWriteOff = soWriteOffMapper.selectByCouponId(inVo.getCouponId());
                 soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);

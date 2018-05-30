@@ -7,14 +7,12 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.ShopAllocation;
-import com.xq.live.model.So;
-import com.xq.live.service.CouponService;
-import com.xq.live.service.ShopAllocationService;
-import com.xq.live.service.SoService;
+import com.xq.live.model.*;
+import com.xq.live.service.*;
 import com.xq.live.vo.in.ShopAllocationInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.WeixinInVo;
+import com.xq.live.vo.out.CouponOut;
 import com.xq.live.vo.out.ShopAllocationOut;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
@@ -59,6 +57,15 @@ public class WeixinPayController {
 
     @Autowired
     private ShopAllocationService shopAllocationService;
+
+    @Autowired
+    private ShopService shopService;
+
+    @Autowired
+    private SkuService skuService;
+
+    @Autowired
+    private SoWriteOffService soWriteOffService;
 
 
 
@@ -491,7 +498,9 @@ public class WeixinPayController {
                 if(body!=null) {
                     String[] nums = body.split(",");//通过","分割，读取出couponId和shopId
                     if(nums.length>=3) {
-                        couponId = Long.valueOf(nums[1]);
+                        if(StringUtils.isNotBlank(nums[1])){
+                            couponId = Long.valueOf(nums[1]);
+                        }
                         shopId = Long.valueOf(nums[2]);
                     }
                 }
@@ -515,6 +524,31 @@ public class WeixinPayController {
                         inVo.setUserIp(IpUtils.getIpAddr(request));
                         inVo.setCouponId(couponId);
                         inVo.setShopId(shopId);
+
+                        /** 为了完成同一个事务,把券给核销掉  begin*/
+                        if(couponId!=null) {
+                            CouponOut cp = couponService.selectById(couponId);
+                            Shop shopById = shopService.getShopById(shopId);
+                            Sku sku = skuService.get(soOut.getSkuId());
+                            SoWriteOff soWriteOff = new SoWriteOff();
+                            soWriteOff.setSoId(soOut.getId());
+                            soWriteOff.setShopId(shopId);
+                            soWriteOff.setShopName(shopById.getShopName());
+                            soWriteOff.setShopAmount(soOut.getSoAmount().add(sku.getInPrice()));
+                            soWriteOff.setCouponId(couponId);
+                            soWriteOff.setCouponCode(cp.getCouponCode());
+                            soWriteOff.setSkuId(soOut.getSkuId());
+                            soWriteOff.setCouponAmount(new BigDecimal(cp.getCouponAmount()));
+                            soWriteOff.setUserId(soOut.getUserId());
+                            soWriteOff.setUserName(soOut.getUserName());
+                            /*soWriteOff.setCashierId(soOut.getUserId());//用户买单之后,直接自己核销了
+                            soWriteOff.setCashierName(soOut.getUserName());//用户买单之后,直接自己核销了*/
+                            soWriteOff.setPaidAmount(soOut.getSoAmount());
+                            soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                            Long id = soWriteOffService.add(soWriteOff);
+                        }
+                        /** end */
+
                         int ret = soService.paidForShop(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {

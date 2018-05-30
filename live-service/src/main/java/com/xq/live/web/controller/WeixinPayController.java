@@ -266,7 +266,8 @@ public class WeixinPayController {
         }
 
         //根据id获取订单信息
-        SoOut soOut = soService.get(inVo.getSoId());
+        /*SoOut soOut = soService.get(inVo.getSoId());*/
+        SoOut soOut = soService.selectByPkForShop(inVo.getSoId());
         if (soOut == null) {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_not_exist);
         }
@@ -275,9 +276,12 @@ public class WeixinPayController {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_paid);
         }
 
+        //如果商家订单中买了券，则必须要传入couponId这个参数
+        if(soOut.getSkuId()!=null){
         //商家订单中判断couponId是否为空
         if(inVo.getCouponId()==null){
            return new BaseResp<Map<String, String>>(ResultStatus.error_para_coupon_id_empty);
+           }
         }
 
         //商家订单中判断shopId是否为空
@@ -492,7 +496,7 @@ public class WeixinPayController {
                     }
                 }
 
-                SoOut soOut = soService.get(soId);
+                SoOut soOut = soService.selectByPkForShop(soId);
                 if (!PaymentConfig.MCH_ID.equals(mch_id) || soOut == null || new BigDecimal(total_fee).compareTo(soOut.getSoAmount().multiply(new BigDecimal(100))) != 0) {
                     logger.info("支付失败,错误信息：" + "参数错误");
                     resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";

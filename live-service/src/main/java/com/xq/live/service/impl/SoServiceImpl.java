@@ -189,16 +189,18 @@ public class SoServiceImpl implements SoService {
     @Override
     public Long createForShop(SoInVo inVo) {
         //1、查询SKU信息
+        if(inVo.getSkuId()!=null){
         Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
-        if(sku == null){
+          if(sku == null){
             return null;
+          }
         }
-        //2、保存订单信息
+        //1、保存订单信息
         inVo.setSoStatus(So.SO_STATUS_WAIT_PAID);
         inVo.setSoType(So.SO_TYPE_SJ);
         int ret = soMapper.insert(inVo);
         if (ret < 1) {
-            logger.error("保存订单失败,userId : "+inVo.getUserId()+" skuId : "+inVo.getSkuId());
+            logger.error("保存订单失败,userId : "+inVo.getUserId());
             return null;
         }
         Long id = inVo.getId();
@@ -322,6 +324,11 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
+    public SoOut selectByPkForShop(Long id) {
+        return soMapper.selectByPkForShop(id);
+    }
+
+    @Override
     public So selectForShop(Long id) {
         return soMapper.selectByPrimaryKey(id);
     }
@@ -377,16 +384,19 @@ public class SoServiceImpl implements SoService {
             accountInVo.setOccurAmount(inVo.getSoAmount());
             accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
 
-            /** 完成对账操作 */
-            SoWriteOff soWriteOff = soWriteOffMapper.selectByCouponId(inVo.getCouponId());
-            soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
-            soWriteOffMapper.updateByPrimaryKeySelective(soWriteOff);
+            //当商家订单中，并没有买券，则不做核销和收取服务费
+            if(inVo.getSkuId()!=null) {
+                /** 完成对账操作 */
+                SoWriteOff soWriteOff = soWriteOffMapper.selectByCouponId(inVo.getCouponId());
+                soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+                soWriteOffMapper.updateByPrimaryKeySelective(soWriteOff);
 
-            Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());//查询被核销的券,进而查询要收取的服务费
-            UserAccountInVo accountInVoForFw = new UserAccountInVo();
-            accountInVoForFw.setUserId(inVo.getUserId());
-            accountInVoForFw.setOccurAmount(sku.getSellPrice());
-            accountService.payout(accountInVoForFw, "商家订单平台代收,收取服务费,票券号：" + inVo.getCouponId());
+                Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());//查询被核销的券,进而查询要收取的服务费
+                UserAccountInVo accountInVoForFw = new UserAccountInVo();
+                accountInVoForFw.setUserId(inVo.getUserId());
+                accountInVoForFw.setOccurAmount(sku.getSellPrice());
+                accountService.payout(accountInVoForFw, "商家订单平台代收,收取服务费,票券号：" + inVo.getCouponId());
+            }
         }else if(shopAllocationOut.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
             //商家自收，服务费另外算，不完成对账操作,此代码需后期补充
            /* UserAccountInVo accountInVo = new UserAccountInVo();

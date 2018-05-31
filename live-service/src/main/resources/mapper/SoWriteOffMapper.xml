@@ -284,8 +284,8 @@
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
       </if>
-      <if test="begainTime !=null and endTime != null">
-        and (create_time BETWEEN #{begainTime} and #{endTime})
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
       </if>
     </where>
     order by create_time ASC

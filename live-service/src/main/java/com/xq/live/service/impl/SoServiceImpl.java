@@ -127,7 +127,9 @@ public class SoServiceImpl implements SoService {
                      soOut.setShopId(in.getShopId());
                      soOut.setShopName(shop.getShopName());
                      soOut.setLogoUrl(shop.getLogoUrl());
-                     soOut.setInPrice(sku.getInPrice());
+                     if(sku!=null) {
+                         soOut.setInPrice(sku.getInPrice());
+                     }
                  }
 
         }

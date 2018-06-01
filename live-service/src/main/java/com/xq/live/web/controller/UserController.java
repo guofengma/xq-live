@@ -110,7 +110,7 @@ public class UserController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
             userNew.setUserName("xq_" + sdf.format(date));
             userNew.setPassword(RandomStringUtil.getRandomCode(6,3));
-            userNew.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            userNew.setPassword(DigestUtils.md5DigestAsHex(userNew.getPassword().getBytes()));
             userNew.setSourceType(1);  //来源小程序
             Long id  = userService.add(userNew);
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);
@@ -165,7 +165,7 @@ public class UserController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
             userNew.setUserName("xq_" + sdf.format(date));
             userNew.setPassword(RandomStringUtil.getRandomCode(6,3));
-            userNew.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            userNew.setPassword(DigestUtils.md5DigestAsHex(userNew.getPassword().getBytes()));
             userNew.setSourceType(1);  //来源小程序
             Long id  = userService.add(userNew);
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);

@@ -116,6 +116,8 @@ public class UserForAppController {
          }
         user.setUserIp(IpUtils.getIpAddr(request));
         user.setUserName(user.getMobile());
+        user.setPassword(RandomStringUtil.getRandomCode(6, 3));
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         Long add = userService.add(user);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }
@@ -144,6 +146,8 @@ public class UserForAppController {
         }
         user.setUserIp(IpUtils.getIpAddr(request));
         user.setUserName(user.getMobile());
+        user.setPassword(RandomStringUtil.getRandomCode(6, 3));
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         Long add = userService.addAppUser(user);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }

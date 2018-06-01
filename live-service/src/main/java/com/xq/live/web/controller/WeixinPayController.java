@@ -104,6 +104,7 @@ public class WeixinPayController {
             }
             result.put("openId", jsonObject.getString("openid"));
             result.put("sessionKey", jsonObject.getString("session_key"));
+            result.put("unionId",jsonObject.getString("unionid"));
         }
         return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, result);
     }

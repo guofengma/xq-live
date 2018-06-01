@@ -120,6 +120,8 @@ public class SmsSendServiceImpl implements SmsSendService {
         SmsSend smsSend = new SmsSend();
         Long time = System.currentTimeMillis();
         if (smsOut == null) {
+            //查询缓存是否存在，缓存有效时间为1个小时,走正常流程的话，过了一个小时，缓存不存在，数据库里面的时间也超过了
+            //一个小时，则清空数据库里面原有的数据，让其重新发送验证码
             smsSend = smsSendMapper.selectByMobile(inVo);
             if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
                 return null;
@@ -136,6 +138,7 @@ public class SmsSendServiceImpl implements SmsSendService {
             return smsOut;
         }
 
+        //如果缓存依旧存在，且过了10分钟限制，则清空缓存和数据库里面的数据，让其重新发送验证码
         if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
             smsSend = smsSendMapper.selectByMobile(inVo);
             smsSendMapper.deleteByPrimaryKey(smsSend.getId());
@@ -171,6 +174,7 @@ public class SmsSendServiceImpl implements SmsSendService {
         }
 
         byMobile.setOpenId(user.getOpenId());
+        byMobile.setUnionId(user.getUnionId());
         userMapper.updateByMobile(byMobile);
         userMapper.deleteByPrimaryKey(user.getId());
         return byMobile.getId();

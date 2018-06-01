@@ -21,6 +21,8 @@ public interface UserService {
 
     public User findByOpenId(String openId);
 
+    public User findByUnionId(String unionId);
+
     public User findByMobile(String mobile);
 
     public Pager<User> list(UserInVo inVo);

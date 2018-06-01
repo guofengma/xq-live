@@ -138,6 +138,7 @@ public class UserForAppController {
      */
     @RequestMapping(value = "/addAppUser",method =RequestMethod.POST )
     public BaseResp<Long> addAppUser(User user, HttpServletRequest request){
+        //为了保证，线上正常，此地方的unionId不显示的传，但是是要必传的
         if(user==null||user.getMobile()==null||user.getOpenId()==null){
             return new BaseResp<Long>(ResultStatus.error_param_empty);
         }
@@ -253,6 +254,35 @@ public class UserForAppController {
     public BaseResp<User> findByOpenId(@PathVariable("openId") String openId){
         User user = userService.findByOpenId(openId);
         return new BaseResp<User>(ResultStatus.SUCCESS, user);
+    }
+
+    /**
+     * 根据openId和unionId查询用户信息
+     * @param openId
+     * @return
+     */
+    @RequestMapping(value = "/findByOpIdAndUnId", method = RequestMethod.GET)
+    public BaseResp<User> findByOpIdAndUnId(String openId,String unionId){
+        User byUnionId = userService.findByUnionId(unionId);
+        User user = userService.findByOpenId(openId);
+        User userById = new User();
+        if(byUnionId==null){
+            if(user!=null){
+                user.setUnionId(unionId);
+                Integer update = userService.update(user);
+                userById = userService.getUserById(user.getId());
+                return new BaseResp<User>(ResultStatus.SUCCESS,userById);
+            }
+        }else if(byUnionId!=null){
+            if(!StringUtils.equals(byUnionId.getOpenId(),openId)){
+                byUnionId.setOpenId(openId);
+                Integer update = userService.update(byUnionId);
+                userById = userService.getUserById(byUnionId.getId());
+                return new BaseResp<User>(ResultStatus.SUCCESS,userById);
+            }
+            userById = byUnionId;
+        }
+        return new BaseResp<User>(ResultStatus.SUCCESS, userById);
     }
 
     /**

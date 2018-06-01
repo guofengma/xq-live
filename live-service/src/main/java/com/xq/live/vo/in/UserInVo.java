@@ -14,6 +14,7 @@ public class UserInVo extends BaseInVo {
     private Integer sourceType;
     private String userIp;
     private Long shopId;//商家id
+    private String unionId;
 
     public Long getId() {
         return id;
@@ -69,5 +70,13 @@ public class UserInVo extends BaseInVo {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 }

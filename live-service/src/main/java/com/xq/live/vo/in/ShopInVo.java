@@ -43,6 +43,16 @@ public class ShopInVo extends BaseInVo {
 
     private String city;//选择的城市
 
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
+
+    private String shopCode;//商家编码
+
 
     public String getShopName() {
         return shopName;

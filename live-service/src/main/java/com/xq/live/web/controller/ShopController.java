@@ -3,14 +3,17 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.Attachment;
 import com.xq.live.model.Shop;
+import com.xq.live.model.So;
 import com.xq.live.model.User;
-import com.xq.live.service.CountService;
-import com.xq.live.service.ShopService;
-import com.xq.live.service.UserService;
+import com.xq.live.service.*;
+import com.xq.live.service.impl.ShopServiceImpl;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.web.utils.IpUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -18,9 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +41,11 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/shop")
 public class ShopController {
+
+    private static Logger logger = Logger.getLogger(ShopController.class);
+
+    @Autowired
+    private SoService soService;
 
     @Autowired
     private ShopService shopService;
@@ -182,4 +195,32 @@ public class ShopController {
         Shop result = shopService.getShopByUserId(userId);
         return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
     }
+
+
+    /**
+     * 生成商家二维码图(包括商家id和商家code)
+     * @param inVo
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/CreateCode")
+    public BaseResp<String> freeOrder(ShopInVo inVo,HttpServletRequest request){
+        if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
+            return new BaseResp<String>(ResultStatus.error_param_empty);
+        }
+        Long id=inVo.getId();
+        ShopOut out=shopService.findShopOutById(id);
+        if (out==null){
+            return new BaseResp<String>(ResultStatus.error_shop_info_empty);
+        }
+        out.setShopCode(inVo.getShopCode());
+        ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopUrl= codeUrl.uploadQRCodeToCos(out);
+        if (shopUrl==null){
+            return new BaseResp<String>(ResultStatus.error_shop_code);
+        }
+        return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
+
+    }
+
 }

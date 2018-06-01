@@ -1,21 +1,27 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
+import com.xq.live.common.QRCodeUtil;
 import com.xq.live.common.RedisCache;
 import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
+import com.xq.live.service.UploadService;
 import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.vo.out.PromotionRulesOut;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.vo.out.ShopTopPicOut;
+import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -29,7 +35,6 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopMapper shopMapper;
-
 
     @Autowired
     private AccessLogMapper accessLogMapper;
@@ -242,5 +247,50 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Shop getShopByUserId(Long userId) {
         return shopMapper.getShopByUserId(userId);
+    }
+
+
+
+    /**
+     * 生成券二维码图片并上传到腾讯云服务器
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToCos(ShopOut out) {
+        String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + out.getShopCode() + ".jpg";
+        String text = Constants.DOMAIN_XQ_URL + "/shop/CreateCode/"+out;
+
+        //生成logo图片到destPath
+        try {
+            QRCodeUtil.encode(text, imagePath, destPath, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        UploadServiceImpl uploadService = new UploadServiceImpl();
+        //上传文件到腾讯云cos--缩放0.8
+        String imgUrl = uploadService.uploadFileToCos(destPath, "shopcode");
+        int i=0;
+        do {
+            i++;
+            if (imgUrl==null){
+                imgUrl=uploadService.uploadFileToCos(destPath, "shopcode");
+            }
+            if (imgUrl!=null){
+                break;
+            }
+            if (i==4){
+                break;
+            }
+        }while (true);
+
+        if (StringUtils.isEmpty(imgUrl)) {
+            return null;
+        }
+
+        //删除服务器上临时文件
+        uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
+        return imgUrl;
     }
 }

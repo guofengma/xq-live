@@ -11,13 +11,13 @@
     <name>live-service</name>
     <description>live platform service pool</description>
 
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.9.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath></relativePath> <!-- lookup parent from repository -->
     </parent>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -197,7 +197,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
         </dependency>
-        <!--END-->
 
 
         <!--Activemq消息队列推送-->
@@ -206,7 +205,6 @@
                 <artifactId>activemq-core</artifactId>
                 <version>5.7.0</version>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-activemq</artifactId>
@@ -231,6 +229,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <!-- mybatis generator 自动生成代码插件 -->
             <!--<plugin>
                 <groupId>org.mybatis.generator</groupId>
@@ -269,6 +268,5 @@
             </plugin>-->
         </plugins>
     </build>
-
 
 </project>

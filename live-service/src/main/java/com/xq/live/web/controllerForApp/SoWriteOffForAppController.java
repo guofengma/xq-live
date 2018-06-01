@@ -111,6 +111,7 @@ public class SoWriteOffForAppController {
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public BaseResp<Pager<SoWriteOffOut>> list(SoWriteOffInVo inVo){
+        //为了防止线上报错，先不传inVo.getIsBill()
         if(inVo==null||inVo.getShopId()==null||inVo.getBegainTime()==null||inVo.getEndTime()==null){
             return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.error_param_empty);
         }

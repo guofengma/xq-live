@@ -118,6 +118,59 @@ public class UserController {
         return new BaseResp<Long>(ResultStatus.FAIL);
     }
 
+    /**
+     * 通过openId和unionId新增用户
+     * @param openId
+     * @param unionId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addUserUnionId", method = RequestMethod.POST)
+    public BaseResp<Long> addUserUnionId(String openId,String unionId,HttpServletRequest request){
+        //获取openId
+        if (StringUtils.isEmpty(openId)||StringUtils.isEmpty(unionId)) {
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
+        }
+            /*
+            通过unionid查询唯一用户，如果没有查到再查询openId，如果也没有查到证明是新用户或者是仅仅通过手机号在商家端里面注册的用户，直接插入数据即可,
+            如果通过unionid没查到，通过openId查到了，则证明是之前的老用户，没有unionId，则更新用户，返回userId给前端,
+            如果通过unionid查到了用户，则里面必有openId,再比较其中的openId，如果openId相等的话，则不用更新用户，不相等的话更新用户(更新openId)
+            */
+            User byUnionId = userService.findByUnionId(unionId);
+            User user = userService.findByOpenId(openId);
+            if(byUnionId==null){
+                if(user!=null){
+                    user.setUnionId(unionId);
+                    Integer update = userService.update(user);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+                }
+            }else if(byUnionId!=null){
+                if(!StringUtils.equals(byUnionId.getOpenId(),openId)){
+                    byUnionId.setOpenId(openId);
+                    Integer update = userService.update(byUnionId);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+                }
+                return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+            }
+
+            /*User user = userService.findByOpenId(openId);
+            if(user != null){
+                return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+            }*/
+            User userNew = new User();
+            userNew.setOpenId(openId);
+            userNew.setUnionId(unionId);
+            userNew.setUserIp(IpUtils.getIpAddr(request));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
+            userNew.setUserName("xq_" + sdf.format(date));
+            userNew.setPassword(RandomStringUtil.getRandomCode(6,3));
+            userNew.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            userNew.setSourceType(1);  //来源小程序
+            Long id  = userService.add(userNew);
+            return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
 
     /**
      * 最新版本的新增用户,此接口没有用处，不启用

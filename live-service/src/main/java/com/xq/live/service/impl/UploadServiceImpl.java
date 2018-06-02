@@ -119,6 +119,26 @@ public class UploadServiceImpl implements UploadService {
         return null;
     }
 
+    public String uploadCodeToCos(String localPath,  String userName) {
+        String cosPath = null;
+        // 获取文件名
+        File file = new File(localPath);
+        String key = "/" + userName + "_" + file.getName();
+        try {
+            PutObjectResult putObjectResult = cosClient.putObject(bucketName, key, file);
+            String etag = putObjectResult.getETag();
+            if (StringUtils.isNotEmpty(etag)) {
+                cosPath = Constants.COS_IMAGE_BASE_PATH + key;
+                return cosPath;
+            }
+        } catch (CosServiceException e) {
+            logger.error("上传图片到cos异常CosServiceException ：" + e.getErrorMessage());
+        } catch (CosClientException e1) {
+            logger.error("上传图片到cos异常CosClientException ：" + e1.getStackTrace());
+        }
+        return null;
+    }
+
     @Override
     public String uploadFileToCosForMp4(String localPath,  String userName) {
         String cosPath = null;

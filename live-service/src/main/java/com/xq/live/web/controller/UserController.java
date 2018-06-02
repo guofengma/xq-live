@@ -58,6 +58,10 @@ public class UserController {
         if (StringUtils.isEmpty(code)) {
             return new BaseResp<Long>(ResultStatus.error_weixin_user_code_empty);
         }
+
+        /*if(StringUtils.isEmpty(unionId)){
+            return new BaseResp<Long>(ResultStatus.error_weixin_user_unionid_empty);
+        }*/
         //获取openId
         String param = "?grant_type=" + PaymentConfig.GRANT_TYPE + "&appid=" + PaymentConfig.APPID + "&secret=" + PaymentConfig.API_KEY + "&js_code=" + code;
         //创建请求对象
@@ -71,34 +75,111 @@ public class UserController {
                 return new BaseResp<Long>(errcode, jsonObject.getString("errmsg"), null);
             }
             String openId = jsonObject.getString("openid");
+            String unionId = jsonObject.getString("unionid");
+            /*
+            通过unionid查询唯一用户，如果没有查到再查询openId，如果也没有查到证明是新用户或者是仅仅通过手机号在商家端里面注册的用户，直接插入数据即可,
+            如果通过unionid没查到，通过openId查到了，则证明是之前的老用户，没有unionId，则更新用户，返回userId给前端,
+            如果通过unionid查到了用户，则里面必有openId,再比较其中的openId，如果openId相等的话，则不用更新用户，不相等的话更新用户(更新openId)
+            */
+            User byUnionId = userService.findByUnionId(unionId);
             User user = userService.findByOpenId(openId);
+            if(byUnionId==null){
+                if(user!=null){
+                   user.setUnionId(unionId);
+                    Integer update = userService.update(user);
+                   return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+                }
+            }else if(byUnionId!=null){
+                if(!StringUtils.equals(byUnionId.getOpenId(),openId)){
+                    byUnionId.setOpenId(openId);
+                    Integer update = userService.update(byUnionId);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+                }
+                return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+            }
+
+            /*User user = userService.findByOpenId(openId);
             if(user != null){
                 return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
-            }
-            user = new User();
-            user.setOpenId(openId);
-            user.setUserIp(IpUtils.getIpAddr(request));
+            }*/
+            User userNew = new User();
+            userNew.setOpenId(openId);
+            userNew.setUnionId(unionId);
+            userNew.setUserIp(IpUtils.getIpAddr(request));
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
-            user.setUserName("xq_" + sdf.format(date));
-            user.setPassword(RandomStringUtil.getRandomCode(6,3));
-            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
-            user.setSourceType(1);  //来源小程序
-            Long id  = userService.add(user);
+            userNew.setUserName("xq_" + sdf.format(date));
+            userNew.setPassword(RandomStringUtil.getRandomCode(6,3));
+            userNew.setPassword(DigestUtils.md5DigestAsHex(userNew.getPassword().getBytes()));
+            userNew.setSourceType(1);  //来源小程序
+            Long id  = userService.add(userNew);
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);
         }
         return new BaseResp<Long>(ResultStatus.FAIL);
     }
 
+    /**
+     * 通过openId和unionId新增用户
+     * @param openId
+     * @param unionId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addUserUnionId", method = RequestMethod.POST)
+    public BaseResp<Long> addUserUnionId(String openId,String unionId,HttpServletRequest request){
+        //获取openId
+        if (StringUtils.isEmpty(openId)||StringUtils.isEmpty(unionId)) {
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
+        }
+            /*
+            通过unionid查询唯一用户，如果没有查到再查询openId，如果也没有查到证明是新用户或者是仅仅通过手机号在商家端里面注册的用户，直接插入数据即可,
+            如果通过unionid没查到，通过openId查到了，则证明是之前的老用户，没有unionId，则更新用户，返回userId给前端,
+            如果通过unionid查到了用户，则里面必有openId,再比较其中的openId，如果openId相等的话，则不用更新用户，不相等的话更新用户(更新openId)
+            */
+            User byUnionId = userService.findByUnionId(unionId);
+            User user = userService.findByOpenId(openId);
+            if(byUnionId==null){
+                if(user!=null){
+                    user.setUnionId(unionId);
+                    Integer update = userService.update(user);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+                }
+            }else if(byUnionId!=null){
+                if(!StringUtils.equals(byUnionId.getOpenId(),openId)){
+                    byUnionId.setOpenId(openId);
+                    Integer update = userService.update(byUnionId);
+                    return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+                }
+                return new BaseResp<Long>(ResultStatus.error_user_exist,byUnionId.getId());
+            }
+
+            /*User user = userService.findByOpenId(openId);
+            if(user != null){
+                return new BaseResp<Long>(ResultStatus.error_user_exist,user.getId());
+            }*/
+            User userNew = new User();
+            userNew.setOpenId(openId);
+            userNew.setUnionId(unionId);
+            userNew.setUserIp(IpUtils.getIpAddr(request));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
+            userNew.setUserName("xq_" + sdf.format(date));
+            userNew.setPassword(RandomStringUtil.getRandomCode(6,3));
+            userNew.setPassword(DigestUtils.md5DigestAsHex(userNew.getPassword().getBytes()));
+            userNew.setSourceType(1);  //来源小程序
+            Long id  = userService.add(userNew);
+            return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
 
     /**
-     * 最新版本的新增用户
+     * 最新版本的新增用户,此接口没有用处，不启用
      * @param openId
      * @param mobile
      * @param request
      * @return
      */
-    @RequestMapping(value = "/addUserForVersion", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/addUserForVersion", method = RequestMethod.POST)
     public BaseResp<Long> addUserForVersion(String openId,String mobile, HttpServletRequest request){
         //获取openId
         if (StringUtils.isEmpty(openId)) {
@@ -134,9 +215,9 @@ public class UserController {
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
 
-            /*//如果有手机号，则把手机号对应的userName隐藏
-            Map<String, String> rmp = SignUtil.encryNameAndMobile(mobile);
-            user.setUserName(rmp.get("mobile"));*/
+            //如果有手机号，则把手机号对应的userName隐藏
+            //Map<String, String> rmp = SignUtil.encryNameAndMobile(mobile);
+            //user.setUserName(rmp.get("mobile"));
             user.setUserName(mobile);
             user.setMobile(mobile);
             user.setPassword(RandomStringUtil.getRandomCode(6,3));
@@ -144,7 +225,7 @@ public class UserController {
             user.setSourceType(1);  //来源小程序
             Long id  = userService.add(user);
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);
-    }
+    }*/
 
     /**
      * 通过code获取用户信息
@@ -226,18 +307,18 @@ public class UserController {
     }
 
     /**
-     * 根据openId查询用户信息
+     * 根据openId查询用户信息,加入unionId之后，通过openId查出来的数据有可能不准，小程序不启用
      * @param openId
      * @return
      */
-    @RequestMapping(value = "/findByOpenId/{openId}", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/findByOpenId/{openId}", method = RequestMethod.GET)
     public BaseResp<User> findByOpenId(@PathVariable("openId") String openId){
         User user = userService.findByOpenId(openId);
         return new BaseResp<User>(ResultStatus.SUCCESS, user);
-    }
+    }*/
 
     /**
-     * 更新用户信息
+     * 更新用户信息,要通过userId来更新用户信息
      * @param user
      * @return
      */
@@ -250,11 +331,20 @@ public class UserController {
             return new BaseResp<Integer>(ResultStatus.error_input_user_id);
         }
 
-        User u = userService.findByOpenId(user.getOpenId());
+        User u = userService.getUserById(user.getId());
         if(u == null){
             return new BaseResp<Integer>(ResultStatus.error_param_open_id);
         }
-        Integer result = userService.updateByOpenId(user);
+        Date now = new Date();
+        //1、更新用户表登录ip，登录次数等
+        user.setUpdateTime(now);
+        user.setLastLoginTime(now);
+        if(user!=null&&user.getMobile()!=null){
+            /*Map<String, String> rmp = SignUtil.encryNameAndMobile(user.getMobile());
+            user.setUserName(rmp.get("mobile"));*/
+            user.setUserName(user.getMobile());
+        }
+        Integer result = userService.update(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
     }
 

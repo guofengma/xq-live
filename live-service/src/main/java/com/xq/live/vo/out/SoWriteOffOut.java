@@ -58,6 +58,8 @@ public class SoWriteOffOut {
 
     private BigDecimal totalService;//总服务费
 
+    private Integer isBill;//是否对账 0未对账 1对账
+
     public Long getId() {
         return id;
     }
@@ -200,5 +202,13 @@ public class SoWriteOffOut {
 
     public void setTotalService(BigDecimal totalService) {
         this.totalService = totalService;
+    }
+
+    public Integer getIsBill() {
+        return isBill;
+    }
+
+    public void setIsBill(Integer isBill) {
+        this.isBill = isBill;
     }
 }

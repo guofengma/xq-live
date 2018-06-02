@@ -112,7 +112,7 @@ public class SoWriteOffController {
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public BaseResp<Pager<SoWriteOffOut>> list(SoWriteOffInVo inVo){
-        if(inVo==null||inVo.getShopId()==null||inVo.getBegainTime()==null||inVo.getEndTime()==null){
+        if(inVo==null||inVo.getShopId()==null||inVo.getBegainTime()==null||inVo.getEndTime()==null||inVo.getIsBill()==null){
             return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.error_param_empty);
         }
         Pager<SoWriteOffOut> list = soWriteOffService.list(inVo);

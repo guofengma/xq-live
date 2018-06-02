@@ -79,6 +79,10 @@ public class CouponController {
             return new BaseResp<Pager<CouponOut>>(ResultStatus.error_param_empty);
         }
         Pager<CouponOut> result = couponService.listShopUser(inVo);
+        Integer integer = couponService.useLimit(inVo.getUserId());
+        if(integer>3){
+            return new BaseResp<Pager<CouponOut>>(ResultStatus.error_use_coupon_limit,result);
+        }
         return new BaseResp<Pager<CouponOut>>(ResultStatus.SUCCESS, result);
     }
 

@@ -79,6 +79,16 @@
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByPkForShop" parameterType="java.lang.Long" resultMap="SoOutResultMap">
+        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sk.sku_code, sk.sku_name,sd.shop_id
+        from so s
+        left join so_shop_log sd on s.id = sd.so_id
+        left join sku sk on sd.sku_id = sk.id
+        where s.id = #{id,jdbcType=BIGINT}
+        and sd.operate_type = 1
+    </select>
+
     <select id="selectByPkForOrder" parameterType="java.lang.Long" resultMap="SoOutForOrderResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
         s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,

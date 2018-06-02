@@ -33,6 +33,8 @@ public interface SoMapper {
 
     SoOut selectByPk(Long id);
 
+    SoOut selectByPkForShop(Long id);
+
     SoForOrderOut selectByPkForOrder(Long id);
 
     int paid(SoInVo inVo);

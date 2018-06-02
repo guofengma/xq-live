@@ -3,6 +3,15 @@ package com.xq.live.model;
 import java.util.Date;
 
 public class ShopAllocation {
+
+    /**
+     * paymentMethod  1 商家自收  2 平台代收
+     */
+    public final static int SHOP_ALLOCATION_ZS = 1;
+
+    public final static int SHOP_ALLOCATION_DS = 2;
+
+
     private Long id;
 
     private Long shopId;

@@ -135,14 +135,13 @@ public class SoController {
      * 生成商家订单
      *
      * @param inVo
-     * @param result
      * @return
      */
     @RequestMapping(value = "/createForShop", method = RequestMethod.POST)
-    public BaseResp<Long> createForShop(@Valid SoInVo inVo, BindingResult result,HttpServletRequest request) {
-        if (result.hasErrors()) {
-            List<ObjectError> list = result.getAllErrors();
-            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+    public BaseResp<Long> createForShop(SoInVo inVo,HttpServletRequest request) {
+        //如果生成的商家单中用了券，则必须要传skuId和skuNum
+        if(inVo==null||inVo.getUserId()==null||inVo.getUserName()==null||inVo.getPayType()==null||inVo.getSoAmount()==null||inVo.getShopId()==null){
+            return new BaseResp<Long>(ResultStatus.error_param_empty);
         }
         inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.createForShop(inVo);

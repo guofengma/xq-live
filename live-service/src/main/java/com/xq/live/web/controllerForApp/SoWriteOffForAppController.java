@@ -111,6 +111,7 @@ public class SoWriteOffForAppController {
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public BaseResp<Pager<SoWriteOffOut>> list(SoWriteOffInVo inVo){
+        //为了防止线上报错，先不传inVo.getIsBill()
         if(inVo==null||inVo.getShopId()==null||inVo.getBegainTime()==null||inVo.getEndTime()==null){
             return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.error_param_empty);
         }
@@ -124,7 +125,6 @@ public class SoWriteOffForAppController {
      */
     @RequestMapping(value = "/listAmount",method = RequestMethod.GET)
     public BaseResp<Map<Integer,SoWriteOffOut>> listAmount(SoWriteOffInVo inVo){
-        SoWriteOffInVo offInVo=null;
         //获取分开好的月份
         List<SoWriteOffInVo> listInVo= CutOutTimeUtils.getValueForDate(inVo);
         if (listInVo.size()==0||listInVo==null){
@@ -137,7 +137,19 @@ public class SoWriteOffForAppController {
             /*if (soWriteOffService.listAmount(listInVo.get(i)).get(0)!=null){
                 map.put(i+1, soWriteOffService.listAmount(listInVo.get(i)).get(0));
             }*/
-            map.put(i+1, soWriteOffService.listAmount(listInVo.get(i)).get(0));
+            SoWriteOffOut offOut=soWriteOffService.listAmount(listInVo.get(i)).get(0);
+            //offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+            listInVo.get(i).setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+            SoWriteOffOut offOutByBill=soWriteOffService.listAmount(listInVo.get(i)).get(0);
+            if (offOutByBill!=null){
+                offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                map.put(i + 1, offOut);
+            }else {
+                if (offOut!=null){
+                    offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+                }
+                map.put(i + 1, offOut);
+            }
         }
         if (map==null){
             return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);

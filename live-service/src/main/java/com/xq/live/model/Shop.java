@@ -55,6 +55,17 @@ public class Shop {
 
     private String businessCate;//经营品类
 
+    private String shopCode;//商家编码
+
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
+
     public Long getId() {
         return id;
     }

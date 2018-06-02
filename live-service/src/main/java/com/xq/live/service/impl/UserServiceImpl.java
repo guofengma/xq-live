@@ -1,8 +1,11 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
+import com.xq.live.dao.SoMapper;
+import com.xq.live.dao.UserAccountMapper;
 import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
@@ -10,20 +13,16 @@ import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
-import com.xq.live.web.utils.JwtTokenUtil;
+import com.xq.live.web.utils.SignUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -50,16 +49,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AccessLogMapper accessLogMapper;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
 
     @Autowired
     private UserAccountMapper userAccountMapper;
@@ -90,6 +79,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByOpenId(String openId) {
         return userMapper.findByOpenId(openId);
+    }
+
+    @Override
+    public User findByUnionId(String unionId) {
+        return userMapper.findByUnionId(unionId);
     }
 
     @Override
@@ -201,38 +195,57 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(String username, String password){
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return jwtTokenUtil.generateToken(userDetails);
-    }
-
-    @Override
-    public Long register(User user) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = user.getPassword();
-        user.setPassword(encoder.encode(rawPassword));
-//        rawPassword = DigestUtils.md5DigestAsHex((rawPassword).getBytes());
-        userMapper.insert(user);
-        return user.getId();
-    }
-
-    @Override
-    public String refreshToken(String oldToken) {
-        String token = oldToken.substring(tokenHead.length());
-        if (!jwtTokenUtil.isTokenExpired(token)) {
-            return jwtTokenUtil.refreshToken(token);
-        }
-        return null;
-    }
-
-    @Override
     public Long addAppUser(User user) {
         User byOpenId = userMapper.findByOpenId(user.getOpenId());
+        User byUnionId = userMapper.findByUnionId(user.getUnionId());
         User byMobile = userMapper.findByMobile(user.getMobile());
-        if(byOpenId==null) {
+        /*
+        商家端中用微信登录必有openId，且openId应该都是不同的
+        byUnionId如果为空,byMobile也为空,则证明要么没用户，要么没有有效用户(该用户要被合并)，则直接插入一条数据,返回userId
+        byUnionId如果为空,byMobile不为空，则到byMobile
+         */
+        if(byUnionId==null){
+            if(byMobile==null){
+                    int i = userMapper.insert(user);
+                    if (i < 1) {
+                        return null;
+                    }
+                    //新增用户成功后，新增一条账户信息
+                    this.addUserAccount(user);
+                    return user.getId();
+            }
+            byMobile.setOpenId(user.getOpenId());
+            byMobile.setUnionId(user.getUnionId());
+            Integer k = userMapper.updateByMobile(byMobile);
+            if(k<1){
+                return null;
+            }
+            return byMobile.getId();
+        }else {
+            if(byUnionId.getMobile()!=null&&!StringUtils.equals("",byUnionId.getMobile())){
+                if(!StringUtils.equals(byUnionId.getOpenId(), user.getOpenId())){
+                    byUnionId.setOpenId(user.getOpenId());
+                    userMapper.updateByPrimaryKeySelective(byUnionId);
+                }
+                return byUnionId.getId();
+            }
+            if(byMobile==null){
+                byUnionId.setMobile(user.getMobile());
+                Integer j = userMapper.updateByPrimaryKeySelective(byUnionId);
+                if (j < 1) {
+                    return null;
+                }
+                return byUnionId.getId();
+            }
+            byMobile.setOpenId(user.getOpenId());
+            byMobile.setUnionId(user.getUnionId());
+            userMapper.updateByMobile(byMobile);
+            userMapper.deleteByPrimaryKey(byUnionId.getId());
+            return byMobile.getId();
+        }
+
+
+        /*if(byOpenId==null) {
             if (byMobile == null) {
                 int i = userMapper.insert(user);
                 if (i < 1) {
@@ -262,9 +275,9 @@ public class UserServiceImpl implements UserService {
             }
             byMobile.setOpenId(user.getOpenId());
             userMapper.updateByMobile(byMobile);
-            userMapper.deleteByPrimaryKey(user.getId());
+            userMapper.deleteByPrimaryKey(byOpenId.getId());
             return byMobile.getId();
-        }
+        }*/
     }
 
     /**

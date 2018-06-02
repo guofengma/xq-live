@@ -20,6 +20,7 @@
     <result column="shop_status" jdbcType="INTEGER" property="shopStatus"/>
     <result column="apply_status" jdbcType="INTEGER" property="applyStatus"/>
     <result column="business_cate" jdbcType="VARCHAR" property="businessCate"/>
+    <result column="shop_code" jdbcType="VARCHAR" property="shopCode"/>
   </resultMap>
 
   <resultMap id="ShopOutResultMap" type="com.xq.live.vo.out.ShopOut" extends="BaseResultMap">
@@ -32,7 +33,7 @@
 
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
-    is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate
+    is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate,shop_code
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -68,6 +69,7 @@
         s.shop_status,
         s.apply_status,
         s.business_cate
+        s.shop_code
     FROM
         shop s inner join user u on s.id = u.shop_id
     where u.id = #{id,jdbcType=BIGINT}
@@ -82,11 +84,11 @@
       mobile, phone, index_url,logo_url,
       shop_info, location_x, location_y, 
       remark, create_time,
-      update_time,business_cate)
+      update_time,business_cate,shop_code)
     values (#{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR},
       #{shopInfo,jdbcType=VARCHAR}, #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL},
-      #{remark,jdbcType=VARCHAR}, now(), now(), #{businessCate,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, now(), now(), #{businessCate,jdbcType=VARCHAR},#{shopCode,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -142,6 +144,9 @@
       <if test="businessCate != null">
         business_cate,
       </if>
+      <if test="shopCode != null">
+        shop_code
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopName != null">
@@ -191,6 +196,9 @@
       </if>
       <if test="businessCate != null">
         #{businessCate,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCode != null">
+        #{shopCode,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -243,6 +251,9 @@
       <if test="businessCate != null">
         business_cate = #{businessCate,jdbcType=VARCHAR},
       </if>
+      <if test="shopCode != null">
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -260,6 +271,7 @@
       is_deleted = #{isDeleted,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR},
       update_time = now(),
+      shop_code = #{shopCode,jdbcType=VARCHAR},
       business_cate = #{businessCate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -284,6 +296,7 @@
       s.shop_status,
       s.apply_status,
       s.business_cate,
+      s.shop_code,
       <choose>
         <when test="locationX != null and locationY != null"> ROUND(
           6378.138 * 2 * ASIN(
@@ -360,6 +373,7 @@
     s.shop_status,
     s.apply_status,
     s.business_cate,
+    s.shop_code,
     <choose>
       <when test="locationX != null and locationY != null"> ROUND(
         6378.138 * 2 * ASIN(
@@ -421,6 +435,7 @@
       <if test="city !=null">
         and city = #{city}
       </if>
+      <if test="shopCode != null">AND shop_code = #{shopCode,jdbcType=VARCHAR}</if>
     </where>
   </select>
 
@@ -432,6 +447,15 @@
     select
     <include refid="Base_Column_List" />, 0 as distance, '' as sku_name,'' as rule_desc
     from shop
-    where id = #{id,jdbcType=BIGINT}
+    where
+    id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="findShopOutByCode" resultMap="ShopOutResultMap">
+    select
+    <include refid="Base_Column_List"/>, 0 as distance, '' as sku_name,'' as rule_desc
+    from shop
+    where
+    shop_code = #{shopCode,jdbcType=VARCHAR}
   </select>
 </mapper>

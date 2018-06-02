@@ -6,6 +6,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class SoWriteOff {
+    /**
+     * is_bill 0 未对账  1 对账
+     */
+    public final static int SO_WRITE_OFF_NO_BILL = 0;   //未对账
+
+    public final static int SO_WRITE_OFF_IS_BILL = 1;   //对账
+
+
+
     private Long id;
 
     @NotNull(message = "soId必填")
@@ -47,6 +56,8 @@ public class SoWriteOff {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer isBill;//是否对账  0 未对账  1对账
 
     public Long getId() {
         return id;
@@ -174,5 +185,13 @@ public class SoWriteOff {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsBill() {
+        return isBill;
+    }
+
+    public void setIsBill(Integer isBill) {
+        this.isBill = isBill;
     }
 }

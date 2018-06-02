@@ -7,10 +7,13 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.So;
-import com.xq.live.service.SoService;
+import com.xq.live.model.*;
+import com.xq.live.service.*;
+import com.xq.live.vo.in.ShopAllocationInVo;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.WeixinInVo;
+import com.xq.live.vo.out.CouponOut;
+import com.xq.live.vo.out.ShopAllocationOut;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
 import com.xq.live.web.utils.PayUtils;
@@ -49,6 +52,21 @@ public class WeixinPayController {
     @Autowired
     private SoService soService;
 
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private ShopAllocationService shopAllocationService;
+
+    @Autowired
+    private ShopService shopService;
+
+    @Autowired
+    private SkuService skuService;
+
+    @Autowired
+    private SoWriteOffService soWriteOffService;
+
 
 
     private WXPay wxpay;
@@ -86,6 +104,7 @@ public class WeixinPayController {
             }
             result.put("openId", jsonObject.getString("openid"));
             result.put("sessionKey", jsonObject.getString("session_key"));
+            result.put("unionId",jsonObject.getString("unionid"));
         }
         return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, result);
     }
@@ -255,7 +274,8 @@ public class WeixinPayController {
         }
 
         //根据id获取订单信息
-        SoOut soOut = soService.get(inVo.getSoId());
+        /*SoOut soOut = soService.get(inVo.getSoId());*/
+        SoOut soOut = soService.selectByPkForShop(inVo.getSoId());
         if (soOut == null) {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_not_exist);
         }
@@ -263,6 +283,29 @@ public class WeixinPayController {
         if (soOut.getSoStatus() != So.SO_STATUS_WAIT_PAID) {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_paid);
         }
+
+        //如果商家订单中买了券，则必须要传入couponId这个参数
+        if(soOut.getSkuId()!=null){
+        //商家订单中判断couponId是否为空
+        if(inVo.getCouponId()==null){
+           return new BaseResp<Map<String, String>>(ResultStatus.error_para_coupon_id_empty);
+           }
+        }
+
+        //商家订单中判断shopId是否为空
+        if(inVo.getShopId()==null){
+            return new BaseResp<Map<String, String>>(ResultStatus.error_para_shop_id_empty);
+        }
+
+        ShopAllocationInVo shopAllocationInVo = new ShopAllocationInVo();
+        shopAllocationInVo.setShopId(inVo.getShopId());
+        ShopAllocationOut admin = shopAllocationService.admin(shopAllocationInVo);
+
+        //判断该商家是否配置付款方式
+        if(admin==null){
+          return new BaseResp<Map<String, String>>(ResultStatus.error_para_shop_allocation_empty);
+        }
+
 
         //生成的随机字符串
         String nonce_str = WXPayUtil.generateNonceStr();
@@ -272,20 +315,54 @@ public class WeixinPayController {
         int price100 = soOut.getSoAmount().multiply(new BigDecimal(100)).intValue();
         //统一下单接口
         HashMap<String, String> data = new HashMap<String, String>();
-        data.put("appid", config.getAppID());
-        data.put("mch_id", config.getMchID());
-        data.put("nonce_str", nonce_str);
-        data.put("body", soOut.getSkuName());    //商品描述
-        data.put("out_trade_no", soOut.getId().toString());//商户订单号
-        data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
-        data.put("spbill_create_ip", spbill_create_ip);
-        data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
-        data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
-        data.put("openid", inVo.getOpenId());
+        if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
+            //平台代收所需参数
+            data.put("appid", config.getAppID());
+            data.put("mch_id", config.getMchID());
+            data.put("nonce_str", nonce_str);
+            if(soOut.getSkuName()!=null) {
+                data.put("body", soOut.getSkuName());    //商品描述
+            }else{
+                data.put("body", "商家订单");
+            }
+            data.put("out_trade_no", soOut.getId().toString());//商户订单号
+            data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            data.put("spbill_create_ip", spbill_create_ip);
+            data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
+            data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
+            data.put("openid", inVo.getOpenId());
+            if(inVo.getCouponId()!=null) {
+                data.put("attach", inVo.getCouponId() + "," + inVo.getShopId());//自定义参数，返回给回调接口
+            }else{
+                data.put("attach", "," + inVo.getShopId());//自定义参数，返回给回调接口
+            }
+        }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
+            //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
+            //商家自收,此段代码的参数需要修改
+            /*data.put("appid", config.getAppID());
+            data.put("mch_id", config.getMchID());
+            data.put("nonce_str", nonce_str);
+            data.put("body", soOut.getSkuName());    //商品描述
+            data.put("out_trade_no", soOut.getId().toString());//商户订单号
+            data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+            data.put("spbill_create_ip", spbill_create_ip);
+            data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
+            data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
+            data.put("openid", inVo.getOpenId());*/
+        }
+
+
 
         //返回给小程序端需要的参数
         Map<String, String> response = new HashMap<String, String>();
-        response.put("appId", config.getAppID());
+        if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
+            //平台代收二次签名所需参数
+            response.put("appId", config.getAppID());
+        }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
+            //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
+            //商家自收二次签名所需参数
+            /*response.put("appId", config.getAppID());*/
+        }
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);
             System.out.println("统一下单接口返回: " + rMap);
@@ -423,9 +500,22 @@ public class WeixinPayController {
                 String out_trade_no = (String) notifyMap.get("out_trade_no"); //商户订单号
                 String total_fee = (String) notifyMap.get("total_fee");
                 String transaction_id = (String) notifyMap.get("transaction_id"); //微信支付订单号
+                String attach = (String) notifyMap.get("attach");//商家订单中对应的body，其中包含有couponId，可以通过此来完成对账
                 //查询订单 根据订单号查询订单  SoOut -订单实体类
                 Long soId = Long.valueOf(out_trade_no);
-                SoOut soOut = soService.get(soId);
+                Long couponId =null;
+                Long shopId = null;
+                if(attach!=null) {
+                    String[] nums = attach.split(",");//通过","分割，读取出couponId和shopId
+                    if(nums.length>=2) {
+                        if(StringUtils.isNotBlank(nums[0])){
+                            couponId = Long.valueOf(nums[0]);
+                        }
+                        shopId = Long.valueOf(nums[1]);
+                    }
+                }
+
+                SoOut soOut = soService.selectByPkForShop(soId);
                 if (!PaymentConfig.MCH_ID.equals(mch_id) || soOut == null || new BigDecimal(total_fee).compareTo(soOut.getSoAmount().multiply(new BigDecimal(100))) != 0) {
                     logger.info("支付失败,错误信息：" + "参数错误");
                     resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
@@ -442,6 +532,33 @@ public class WeixinPayController {
                         inVo.setSkuNum(soOut.getSkuNum());
                         inVo.setSoAmount(soOut.getSoAmount());
                         inVo.setUserIp(IpUtils.getIpAddr(request));
+                        inVo.setCouponId(couponId);
+                        inVo.setShopId(shopId);
+
+                        /** 为了完成同一个事务,把券给核销掉  begin*/
+                        if(couponId!=null) {
+                            CouponOut cp = couponService.selectById(couponId);
+                            Shop shopById = shopService.getShopById(shopId);
+                            Sku sku = skuService.get(soOut.getSkuId());
+                            SoWriteOff soWriteOff = new SoWriteOff();
+                            soWriteOff.setSoId(soOut.getId());
+                            soWriteOff.setShopId(shopId);
+                            soWriteOff.setShopName(shopById.getShopName());
+                            soWriteOff.setShopAmount(soOut.getSoAmount().add(sku.getInPrice()));
+                            soWriteOff.setCouponId(couponId);
+                            soWriteOff.setCouponCode(cp.getCouponCode());
+                            soWriteOff.setSkuId(soOut.getSkuId());
+                            soWriteOff.setCouponAmount(new BigDecimal(cp.getCouponAmount()));
+                            soWriteOff.setUserId(soOut.getUserId());
+                            soWriteOff.setUserName(soOut.getUserName());
+                            /*soWriteOff.setCashierId(soOut.getUserId());//用户买单之后,直接自己核销了
+                            soWriteOff.setCashierName(soOut.getUserName());//用户买单之后,直接自己核销了*/
+                            soWriteOff.setPaidAmount(soOut.getSoAmount());
+                            soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                            Long id = soWriteOffService.add(soWriteOff);
+                        }
+                        /** end */
+
                         int ret = soService.paidForShop(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {
@@ -466,4 +583,65 @@ public class WeixinPayController {
         out.flush();
         out.close();
     }
+
+    /**
+     * 测试所用
+     */
+    /*@RequestMapping(value = "/kkk",method = RequestMethod.GET)
+    public BaseResp<Integer> kkk(WeixinInVo inVo,HttpServletRequest request){
+        Long soId = Long.valueOf(inVo.getOut_trade_no());
+        Long couponId =null;
+        Long shopId = null;
+        if(inVo.getBody()!=null) {
+            String[] nums = inVo.getBody().split(",");//通过","分割，读取出couponId和shopId
+            if(nums.length>=3) {
+                if(StringUtils.isNotBlank(nums[1])){
+                    couponId = Long.valueOf(nums[1]);
+                }
+                shopId = Long.valueOf(nums[2]);
+            }
+        }
+        SoOut soOut = soService.selectByPkForShop(soId);
+        if (So.SO_STATUS_WAIT_PAID == soOut.getSoStatus()) {//支付的状态判断
+            //订单状态的修改。根据实际业务逻辑执行
+            //商家订单支付成功之后，钱进入平台，然后在商家的钱包中充入钱，等商家提现申请通过之后，转账给商家
+            SoInVo inVo1 = new SoInVo();
+            inVo1.setId(soOut.getId());
+            inVo1.setUserId(soOut.getUserId());
+            inVo1.setUserName(soOut.getUserName());
+            inVo1.setSkuId(soOut.getSkuId());
+            inVo1.setSkuNum(soOut.getSkuNum());
+            inVo1.setSoAmount(soOut.getSoAmount());
+            inVo1.setUserIp(IpUtils.getIpAddr(request));
+            inVo1.setCouponId(couponId);
+            inVo1.setShopId(shopId);
+
+            *//** 为了完成同一个事务,把券给核销掉  begin*//*
+            if (couponId != null) {
+                CouponOut cp = couponService.selectById(couponId);
+                Shop shopById = shopService.getShopById(shopId);
+                Sku sku = skuService.get(soOut.getSkuId());
+                SoWriteOff soWriteOff = new SoWriteOff();
+                soWriteOff.setSoId(soOut.getId());
+                soWriteOff.setShopId(shopId);
+                soWriteOff.setShopName(shopById.getShopName());
+                soWriteOff.setShopAmount(soOut.getSoAmount().add(sku.getInPrice()));
+                soWriteOff.setCouponId(couponId);
+                soWriteOff.setCouponCode(cp.getCouponCode());
+                soWriteOff.setSkuId(soOut.getSkuId());
+                soWriteOff.setCouponAmount(new BigDecimal(cp.getCouponAmount()));
+                soWriteOff.setUserId(soOut.getUserId());
+                soWriteOff.setUserName(soOut.getUserName());
+                            *//*soWriteOff.setCashierId(soOut.getUserId());//用户买单之后,直接自己核销了
+                            soWriteOff.setCashierName(soOut.getUserName());//用户买单之后,直接自己核销了*//*
+                soWriteOff.setPaidAmount(soOut.getSoAmount());
+                soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                Long id = soWriteOffService.add(soWriteOff);
+            }
+            *//** end *//*
+
+            int ret = soService.paidForShop(inVo1);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS);
+    }*/
 }

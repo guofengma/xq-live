@@ -49,6 +49,8 @@ public interface UserMapper{
     @Cacheable(value = "1h")
     User findByOpenId(String openId);
 
+    User findByUnionId(String unionId);
+
     //@Cacheable(value = "1h")
     User findByMobile(String mobile);
 

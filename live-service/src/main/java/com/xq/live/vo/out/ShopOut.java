@@ -62,6 +62,17 @@ public class ShopOut implements Comparable<ShopOut>{
 
     private List<String> ruleDescs;//商家规则列
 
+    private String shopCode;//商家编码
+
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,7 @@
     <result column="paid_amount" jdbcType="DECIMAL" property="paidAmount" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_bill" jdbcType="INTEGER" property="isBill" />
   </resultMap>
 
   <resultMap id="SoWriteOffOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.SoWriteOffOut">
@@ -28,13 +29,20 @@
 
   <sql id="Base_Column_List">
     id, so_id, shop_id, shop_name, shop_amount, coupon_id, coupon_code, sku_id, coupon_amount,
-    user_id, user_name, cashier_id, cashier_name, paid_amount, create_time, update_time
+    user_id, user_name, cashier_id, cashier_name, paid_amount, create_time, update_time,is_bill
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from so_write_off
     where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByCouponId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from so_write_off
+    where coupon_id = #{couponId,jdbcType=BIGINT}
   </select>
 
 
@@ -48,13 +56,13 @@
       coupon_code, sku_id, coupon_amount, 
       user_id, user_name, cashier_id, 
       cashier_name, paid_amount, create_time, 
-      update_time)
+      update_time,is_bill)
     values (#{id,jdbcType=BIGINT}, #{soId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
       #{shopName,jdbcType=VARCHAR}, #{shopAmount,jdbcType=DECIMAL}, #{couponId,jdbcType=BIGINT}, 
       #{couponCode,jdbcType=VARCHAR}, #{skuId,jdbcType=BIGINT}, #{couponAmount,jdbcType=DECIMAL}, 
       #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{cashierId,jdbcType=BIGINT}, 
       #{cashierName,jdbcType=VARCHAR}, #{paidAmount,jdbcType=DECIMAL}, now(),
-      now())
+      now(),0)
       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
         select last_insert_id() as id
       </selectKey>
@@ -110,6 +118,10 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="isBill != null">
+        is_bill,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -159,6 +171,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isBill != null">
+        #{isBill,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -210,6 +225,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isBill != null">
+        is_bill = #{isBill,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -229,7 +247,8 @@
       cashier_name = #{cashierName,jdbcType=VARCHAR},
       paid_amount = #{paidAmount,jdbcType=DECIMAL},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_bill = #{isBill,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -264,6 +283,9 @@
       </if>
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
       </if>
     </where>
     order by create_time ASC
@@ -303,6 +325,9 @@
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
       </if>
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
+      </if>
     </where>
   </select>
 
@@ -336,6 +361,9 @@
       </if>
       <if test="begainTime !=null and endTime != null">
         and (create_time BETWEEN #{begainTime} and #{endTime})
+      </if>
+      <if test="isBill !=null">
+        and is_bill = #{isBill,jdbcType=INTEGER}
       </if>
     </where>
   </select>

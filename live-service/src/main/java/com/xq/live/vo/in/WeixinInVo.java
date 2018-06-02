@@ -33,6 +33,10 @@ public class WeixinInVo {
     @NotNull(message = "soId必填")
     private Long soId;
 
+    private Long couponId;//为了完成之后的对账操作，加入的票卷的id,主要是商家订单中的平台代收，直接把服务费扣掉
+
+    private Long shopId;//商家单中对应的shopId
+
     public String getAppid() {
         return appid;
     }
@@ -191,5 +195,21 @@ public class WeixinInVo {
 
     public void setSoId(Long soId) {
         this.soId = soId;
+    }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

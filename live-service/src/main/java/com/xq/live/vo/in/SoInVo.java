@@ -40,6 +40,8 @@ public class SoInVo extends BaseInVo {
 
     private Long shopId;//商家订单对应的shopId,在商家订单创建的时候必填
 
+    private Long couponId;//商家订单中,核销票券的couponId
+
     public Long getId() {
         return id;
     }
@@ -134,5 +136,13 @@ public class SoInVo extends BaseInVo {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
     }
 }

@@ -68,7 +68,7 @@
         s.update_time,
         s.shop_status,
         s.apply_status,
-        s.business_cate
+        s.business_cate,
         s.shop_code
     FROM
         shop s inner join user u on s.id = u.shop_id
@@ -145,7 +145,7 @@
         business_cate,
       </if>
       <if test="shopCode != null">
-        shop_code
+        shop_code,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">

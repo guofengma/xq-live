@@ -16,8 +16,18 @@ public class JpushServlet extends HttpServlet{
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 享七
+     */
     private static final String appKey ="dbef2534ff7ecc8956b6b451";
     private static final String masterSecret = "102c4486e66ead82d2ef8343";
+
+
+    /**
+     * 申通
+     */
+    private static final String appKey1 ="84cf5ee2099c654aa03a5d70";
+    private static final String masterSecret1 = "7cf23f25a41806d5fd29e3c5";
 
     public JpushServlet() {
         super();
@@ -29,7 +39,7 @@ public class JpushServlet extends HttpServlet{
     }
 
     public void  push(){
-        Jpush.testSendPush(appKey, masterSecret);
+        Jpush.testSendPush(appKey1, masterSecret1);
         System.out.println("sucess");
     }
     /**

@@ -450,4 +450,12 @@
     where
     id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="findShopOutByCode" resultMap="ShopOutResultMap">
+    select
+    <include refid="Base_Column_List"/>, 0 as distance, '' as sku_name,'' as rule_desc
+    from shop
+    where
+    shop_code = #{shopCode,jdbcType=VARCHAR}
+  </select>
 </mapper>

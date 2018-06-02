@@ -116,6 +116,21 @@ public class ShopController {
     }
 
     /**
+     * 查询一条商家记录
+     *
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/getByCode", method = RequestMethod.GET)
+    public BaseResp<ShopOut> getShopById(String code) {
+        ShopOut result = shopService.getShopByCode(code);
+        if (result==null){
+            return new BaseResp<ShopOut>(ResultStatus.getError_allocation_selectList);
+        }
+        return new BaseResp<ShopOut>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
      * 删除一条商家记录
      *
      * @param id

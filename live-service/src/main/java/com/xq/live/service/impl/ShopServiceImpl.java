@@ -249,6 +249,14 @@ public class ShopServiceImpl implements ShopService {
         return shopMapper.getShopByUserId(userId);
     }
 
+    @Override
+    public ShopOut getShopByCode(String code) {
+        ShopOut out = shopMapper.findShopOutByCode(code);
+        if (out!=null){
+            return out;
+        }
+        return null;
+    }
 
 
     /**
@@ -259,7 +267,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToCos(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/shop/get/"+out.getId();
+        String text = Constants.DOMAIN_XQ_URL + "/service?shopId="+out.getId()+"&flag="+1;
 
         //生成logo图片到destPath
         try {

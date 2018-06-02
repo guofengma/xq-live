@@ -60,4 +60,11 @@ public interface ShopMapper {
 
     ShopOut findShopOutById(Long id);
 
+    /**
+     * 根据用户code查询自己的店铺
+     * @param code
+     * @return
+     */
+    ShopOut findShopOutByCode(String code);
+
 }

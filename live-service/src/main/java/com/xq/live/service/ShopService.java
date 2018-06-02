@@ -9,6 +9,7 @@ import com.xq.live.common.Pager;
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.vo.out.ShopOut;
+import org.opencv.phase_unwrapping.Phase_unwrapping;
 
 import java.util.List;
 import java.util.Map;
@@ -95,5 +96,12 @@ public interface ShopService {
      * @return
      */
     public Shop getShopByUserId(Long userId);
+
+    /**
+     * 根据商家编码信息查询自己的店铺
+     * @param code
+     * @return
+     */
+    public ShopOut getShopByCode(String code);
 
 }

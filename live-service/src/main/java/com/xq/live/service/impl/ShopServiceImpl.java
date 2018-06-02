@@ -259,7 +259,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToCos(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/shop/CreateCode/"+out;
+        String text = Constants.DOMAIN_XQ_URL + "/shop/get/"+out.getId();
 
         //生成logo图片到destPath
         try {

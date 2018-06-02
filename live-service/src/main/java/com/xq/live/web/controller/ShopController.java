@@ -200,11 +200,10 @@ public class ShopController {
     /**
      * 生成商家二维码图(包括商家id和商家code)
      * @param inVo
-     * @param request
      * @return
      */
     @RequestMapping(value = "/CreateCode")
-    public BaseResp<String> freeOrder(ShopInVo inVo,HttpServletRequest request){
+    public BaseResp<String> freeOrder(ShopInVo inVo){
         if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
             return new BaseResp<String>(ResultStatus.error_param_empty);
         }

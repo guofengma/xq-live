@@ -7,6 +7,7 @@ import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,6 +25,8 @@ public interface SoService {
      * @return
      */
     Pager<SoOut> list(SoInVo inVo);
+
+    BigDecimal totalAmount(Long shopId);
 
     List<SoOut> findSoList(SoInVo inVo);
 

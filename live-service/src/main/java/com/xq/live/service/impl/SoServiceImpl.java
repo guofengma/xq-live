@@ -87,6 +87,7 @@ public class SoServiceImpl implements SoService {
     @Autowired
     private SoWriteOffMapper soWriteOffMapper;
 
+
     @Override
     public Pager<SoOut> list(SoInVo inVo) {
         Pager<SoOut> ret = new Pager<SoOut>();
@@ -98,6 +99,12 @@ public class SoServiceImpl implements SoService {
         ret.setTotal(total);
         ret.setPage(inVo.getPage());
         return ret;
+    }
+
+    @Override
+    public BigDecimal totalAmount(Long shopId){
+        BigDecimal bigDecimal = soShopLogMapper.totalAmount(shopId);
+        return bigDecimal;
     }
 
     @Override
@@ -121,6 +128,7 @@ public class SoServiceImpl implements SoService {
                  User user = userMapper.selectByPrimaryKey(soOut.getUserId());
 
                  soOut.setMobile(user.getMobile());
+                 soOut.setUserIconUrl(user.getIconUrl());
                  if(in!=null){
                      Shop shop = shopMapper.selectByPrimaryKey(in.getShopId());
                      Sku sku = skuMapper.selectByPrimaryKey(in.getSkuId());

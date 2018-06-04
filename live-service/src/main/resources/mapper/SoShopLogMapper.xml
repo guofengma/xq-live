@@ -145,4 +145,16 @@
       user_ip = #{userIp,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="totalAmount" resultType="java.math.BigDecimal">
+    select sum(ss.so_amount)
+    from so_shop_log s
+    inner join shop_allocation sa on s.shop_id = sa.shop_id
+    inner join so ss on s.so_id = ss.id
+    where s.shop_id = #{shopId,jdbcType=BIGINT}
+    and s.operate_type = 2
+    and sa.payment_method = 2
+    and sa.is_delete = 0
+    and ss.so_type = 2
+  </select>
 </mapper>

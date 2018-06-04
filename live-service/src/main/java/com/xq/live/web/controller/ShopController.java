@@ -116,7 +116,7 @@ public class ShopController {
     }
 
     /**
-     * 查询一条商家记录
+     * 通过查询一条商家记录
      *
      * @param code
      * @return

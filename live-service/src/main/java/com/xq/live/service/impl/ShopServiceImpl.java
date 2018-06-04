@@ -315,7 +315,7 @@ public class ShopServiceImpl implements ShopService {
 
         //生成logo图片到destPath
         try {
-            ShopCodeUtil.encode(text, imagePath, destPath, true);
+            ShopCodeBySoUtil.encode(text, imagePath, destPath, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

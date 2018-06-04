@@ -1,35 +1,23 @@
 package com.xq.live.common;
 
-/**
- * Created by ss on 2018/6/2.
- */
-
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.OutputStream;
-import java.util.Hashtable;
-import javax.imageio.ImageIO;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.Result;
+import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.OutputStream;
+import java.util.Hashtable;
 
-public class ShopCodeUtil {
+/**
+ * Created by ss on 2018/6/4.
+ */
+public class ShopCodeBySoUtil {
 
     private static final String CHARSET = "utf-8";
     private static final String FORMAT_NAME = "JPG";
@@ -67,7 +55,7 @@ public class ShopCodeUtil {
             return image;
         }
         // 插入图片
-        ShopCodeUtil.insertImage(image, imgPath, needCompress);
+        ShopCodeBySoUtil.insertImage(image, imgPath, needCompress);
         return image;
     }
 
@@ -126,8 +114,8 @@ public class ShopCodeUtil {
     public static void encode(String content, String imgPath, String destPath, boolean needCompress) throws Exception {
 
         try {
-            BufferedImage biQR = ShopCodeUtil.createImage(content, imgPath, needCompress);//输出二维码到缓冲区
-            String bgroup = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "bdFile.jpg";
+            BufferedImage biQR = ShopCodeBySoUtil.createImage(content, imgPath, needCompress);//输出二维码到缓冲区
+            String bgroup = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "bgFile.jpg";
             File bgFile = new File(bgroup);
             File logoFile = new File(imgPath);
             if (!bgFile.exists()) {
@@ -203,7 +191,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, String imgPath, String destPath) throws Exception {
-        ShopCodeUtil.encode(content, imgPath, destPath, false);
+        ShopCodeBySoUtil.encode(content, imgPath, destPath, false);
     }
 
     /**
@@ -215,7 +203,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, String destPath, boolean needCompress) throws Exception {
-        ShopCodeUtil.encode(content, null, destPath, needCompress);
+        ShopCodeBySoUtil.encode(content, null, destPath, needCompress);
     }
 
 
@@ -228,7 +216,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, String destPath) throws Exception {
-        ShopCodeUtil.encode(content, null, destPath, false);
+        ShopCodeBySoUtil.encode(content, null, destPath, false);
     }
 
     /**
@@ -241,7 +229,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, String imgPath, OutputStream output, boolean needCompress) throws Exception {
-        BufferedImage image = ShopCodeUtil.createImage(content, imgPath, needCompress);
+        BufferedImage image = ShopCodeBySoUtil.createImage(content, imgPath, needCompress);
         ImageIO.write(image, FORMAT_NAME, output);
     }
 
@@ -253,7 +241,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, OutputStream output) throws Exception {
-        ShopCodeUtil.encode(content, null, output, false);
+        ShopCodeBySoUtil.encode(content, null, output, false);
     }
 
     /**
@@ -287,7 +275,7 @@ public class ShopCodeUtil {
      * @throws Exception
      */
     public static String decode(String path) throws Exception {
-        return ShopCodeUtil.decode(new File(path));
+        return ShopCodeBySoUtil.decode(new File(path));
     }
 
     public static void main(String[] args) {
@@ -297,7 +285,7 @@ public class ShopCodeUtil {
         String imagePath = System.getProperty("user.dir") + "/data/1.png";
         String destPath = System.getProperty("user.dir") + "/data/output/";
         try {
-            ShopCodeUtil.encode(text, imagePath, destPath, true);
+            ShopCodeBySoUtil.encode(text, imagePath, destPath, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,9 +1,6 @@
 package com.xq.live.service.impl;
 
-import com.xq.live.common.Constants;
-import com.xq.live.common.Pager;
-import com.xq.live.common.QRCodeUtil;
-import com.xq.live.common.RedisCache;
+import com.xq.live.common.*;
 import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
@@ -21,8 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 /**
  * 商家sevice实现类
@@ -260,18 +261,61 @@ public class ShopServiceImpl implements ShopService {
 
 
     /**
-     * 生成券二维码图片并上传到腾讯云服务器
+     * 生成商家详情二维码图片并上传到腾讯云服务器
      * @param out
      * @return
      */
-    public String uploadQRCodeToCos(ShopOut out) {
+    public String uploadQRCodeToCosByInfo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
-        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/service?shopId="+out.getId()+"&flag="+1;
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopInfo"+out.getShopCode() + ".jpg";
+        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+1+"&shopCode="+out.getShopCode();
 
         //生成logo图片到destPath
         try {
-            QRCodeUtil.encode(text, imagePath, destPath, true);
+            ShopCodeUtil.encode(text, imagePath, destPath, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        UploadServiceImpl uploadService = new UploadServiceImpl();
+        //上传文件到腾讯云cos--缩放0.8
+        String imgUrl = uploadService.uploadFileToCos(destPath, "shopcode");
+        int i=0;
+        do {
+            i++;
+            if (imgUrl==null){
+                imgUrl=uploadService.uploadFileToCos(destPath, "shopcode");
+            }
+            if (imgUrl!=null){
+                break;
+            }
+            if (i==4){
+                break;
+            }
+        }while (true);
+
+        if (StringUtils.isEmpty(imgUrl)) {
+            return null;
+        }
+
+        //删除服务器上临时文件
+        uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
+        return imgUrl;
+    }
+
+    /**
+     * 生成商家订单二维码图片并上传到腾讯云服务器
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToCosBySo(ShopOut out) {
+        String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSo"+ out.getShopCode() + ".jpg";
+        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+2+"&shopCode="+out.getShopCode();
+
+        //生成logo图片到destPath
+        try {
+            ShopCodeBySoUtil.encode(text, imagePath, destPath, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

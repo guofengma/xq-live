@@ -8,6 +8,7 @@ import com.xq.live.model.User;
 import com.xq.live.service.CountService;
 import com.xq.live.service.ShopService;
 import com.xq.live.service.UserService;
+import com.xq.live.service.impl.ShopServiceImpl;
 import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.web.utils.IpUtils;
@@ -184,5 +185,70 @@ public class ShopForAppController {
     public BaseResp<Shop> getShopByUserId(@PathVariable(value = "userId") Long userId) {
         Shop result = shopService.getShopByUserId(userId);
         return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 生成商家二维码图(包括商家id和商家code)这是跳转商家详情页
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/CreateCodeByInfo")
+    public BaseResp<String> freeOrderByInfo(ShopInVo inVo){
+        if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
+            return new BaseResp<String>(ResultStatus.error_param_empty);
+        }
+        Long id=inVo.getId();
+        ShopOut out=shopService.findShopOutById(id);
+        if (out==null){
+            return new BaseResp<String>(ResultStatus.error_shop_info_empty);
+        }
+        out.setShopCode(inVo.getShopCode());
+        ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopUrl= codeUrl.uploadQRCodeToCosByInfo(out);
+        if (shopUrl==null){
+            return new BaseResp<String>(ResultStatus.error_shop_code);
+        }
+        return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
+
+    }
+
+    /**
+     * 生成商家二维码图(包括商家id和商家code)这是跳转商家订单页
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/CreateCodeBySo")
+    public BaseResp<String> freeOrderBySo(ShopInVo inVo){
+        if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
+            return new BaseResp<String>(ResultStatus.error_param_empty);
+        }
+        Long id=inVo.getId();
+        ShopOut out=shopService.findShopOutById(id);
+        if (out==null){
+            return new BaseResp<String>(ResultStatus.error_shop_info_empty);
+        }
+        out.setShopCode(inVo.getShopCode());
+        ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopUrl= codeUrl.uploadQRCodeToCosBySo(out);
+        if (shopUrl==null){
+            return new BaseResp<String>(ResultStatus.error_shop_code);
+        }
+        return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
+
+    }
+
+    /**
+     * 通过Code查询一条商家记录
+     *
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/getByCode", method = RequestMethod.GET)
+    public BaseResp<ShopOut> getShopById(String code) {
+        ShopOut result = shopService.getShopByCode(code);
+        if (result==null){
+            return new BaseResp<ShopOut>(ResultStatus.getError_allocation_selectList);
+        }
+        return new BaseResp<ShopOut>(ResultStatus.SUCCESS, result);
     }
 }

@@ -5,9 +5,9 @@ package com.xq.live.common;
  */
 import java.awt.Color;
 import java.awt.Font;
-import java.io.FileOutputStream;
+/*import java.io.FileOutputStream;
 import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;*/
 
 
 import java.awt.BasicStroke;
@@ -28,15 +28,17 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
+/*import com.google.zxing.NotFoundException;*/
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
+/*import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;*/
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+/*
 import org.bytedeco.javacpp.presets.opencv_core;
+*/
 
 
 public class ShopCodeUtil {
@@ -151,10 +153,20 @@ public class ShopCodeUtil {
             BufferedImage image = new BufferedImage(width, height,
                     BufferedImage.TYPE_INT_RGB);
             Graphics g = image.createGraphics();
-            g.drawImage(bgSrc, 0, 0, width, height, null);                                            // 绘制背景图
+            g.drawImage(bgSrc, 0, 0, width, height, null);
+
             //g.drawImage(logoSrc, 277, 283, 162,162, null);    // 绘制微信头像logo
             //参数分别为image，x，y, width, height，  x表示离背景图左边框距离，y表示离上边边框距离，w和h表示二维码大小，大致是这样
             g.drawImage(biQR, 118, 362, 590, 590, null);// 绘制二维码
+            /*g.setColor(Color.BLACK);
+            Font f = new Font("宋体", Font.BOLD, 30);//bold表示粗体，后面45是字体大小
+            Color mycolor = new Color(136, 135, 135);//new Color(0, 0, 255);
+            g.setColor(mycolor);
+            g.setFont(f);
+            //g.drawString("享七支付", 260, 840);
+            g.drawString(("我是某某"),360,210);
+            g.drawString("我为享七代言",360,260);*/
+            g.dispose();// 绘制背景图
             /*g.setColor(Color.BLACK);
             Font f = new Font("宋体", Font.BOLD, 45);//bold表示粗体，后面45是字体大小
             Color mycolor = new Color(136, 135, 135);//new Color(0, 0, 255);

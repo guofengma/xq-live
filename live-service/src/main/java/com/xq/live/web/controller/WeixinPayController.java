@@ -339,16 +339,27 @@ public class WeixinPayController {
         }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
             //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
             //商家自收,此段代码的参数需要修改
-            /*data.put("appid", config.getAppID());
-            data.put("mch_id", config.getMchID());
+            data.put("appid", config.getFW_APP_ID());//服务商appid
+            data.put("mch_id", config.getFW_MCH_ID());//服务商mch_id
             data.put("nonce_str", nonce_str);
-            data.put("body", soOut.getSkuName());    //商品描述
+            if(soOut.getSkuName()!=null) {
+                data.put("body", soOut.getSkuName());    //商品描述
+            }else{
+                data.put("body", "商家订单");
+            }
             data.put("out_trade_no", soOut.getId().toString());//商户订单号
             data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
             data.put("spbill_create_ip", spbill_create_ip);
             data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_URL);//支付成功后的回调地址
             data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
-            data.put("openid", inVo.getOpenId());*/
+            data.put("sub_openid", inVo.getOpenId());
+            data.put("sub_appid", config.getAppID());
+            data.put("sub_mch_id", inVo.getSubMchId());
+            if(inVo.getCouponId()!=null) {
+                data.put("attach", inVo.getCouponId() + "," + inVo.getShopId());//自定义参数，返回给回调接口
+            }else{
+                data.put("attach", "," + inVo.getShopId());//自定义参数，返回给回调接口
+            }
         }
 
 
@@ -361,7 +372,7 @@ public class WeixinPayController {
         }else if(admin.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_ZS){
             //可以参考此链接 https://developers.weixin.qq.com/blogdetail?action=get_post_info&lang=zh_CN&token=&docid=0f0110d772c9d219296b54d4665b7001
             //商家自收二次签名所需参数
-            /*response.put("appId", config.getAppID());*/
+            response.put("sub_appid", config.getAppID());//不知道是sub_appid还是sub_appId
         }
         try {
             Map<String, String> rMap = wxpay.unifiedOrder(data);

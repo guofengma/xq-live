@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,6 +46,21 @@ public class RedisCache{
     public <T> T get(String key, Class<T> clazz) {
         return (T)redisTemplate.boundValueOps(key).get();
     }
+
+
+
+    /**
+     * 模糊删除满足条件的redis数据
+     * @param key
+     * @return
+     */
+    public  void  delAll(String key){
+        Set keys = redisTemplate.keys(key);
+        redisTemplate.delete(keys);
+    }
+
+
+
 
     /**
      * 将value对象写入缓存

@@ -93,6 +93,7 @@ public class ActShopServiceImpl implements ActShopService {
                         actShopOut.setSkuId(sku.getId());
                         actShopOut.setSkuName(sku.getSkuName());
                         actShopOut.setPicUrl(sku.getPicUrl());
+                        actShopOut.setSellPrice(sku.getSellPrice());
                     }
                 }
             }
@@ -152,5 +153,10 @@ public class ActShopServiceImpl implements ActShopService {
     @Override
     public Integer searchForShopId(Long shopId) {
         return actShopMapper.searchForShopId(shopId);
+    }
+
+    @Override
+    public Integer searchForShopIdNew(ActShopInVo inVo) {
+        return actShopMapper.searchForShopIdNew(inVo);
     }
 }

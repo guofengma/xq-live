@@ -52,7 +52,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{userCode,jdbcType=VARCHAR}, #{actUserName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR}, 
-      0, now(), now()
+      1, now(), now()
       )
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       select last_insert_id() as id

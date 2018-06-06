@@ -38,6 +38,8 @@ public interface ActShopMapper {
 
     Integer searchForShopId(Long shopId);
 
+    Integer searchForShopIdNew(ActShopInVo inVo);
+
     //批量更新活动落选名单
     int udateByLuo(List<ActShopOut> shopOuts);
 

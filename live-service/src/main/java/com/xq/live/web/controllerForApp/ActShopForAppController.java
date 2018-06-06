@@ -137,4 +137,18 @@ public class ActShopForAppController {
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
+
+    /**
+     * 查询商家是否参与用活动券的活动(适用于所有的活动券)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/searchForShopIdNew",method =RequestMethod.GET)
+    public BaseResp<Integer> searchForShopIdNew(ActShopInVo inVo){
+        Integer integer = actShopService.searchForShopIdNew(inVo);
+        if(integer<1){
+            return new BaseResp<Integer>(-1,"商家没有参与该活动",integer);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
 }

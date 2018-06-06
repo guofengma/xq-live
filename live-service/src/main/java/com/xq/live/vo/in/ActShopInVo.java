@@ -30,6 +30,8 @@ public class ActShopInVo extends BaseInVo{
 
     private Integer type;//查询类型  null 不分组，查询单个list   2 分组 ，查询分组后的信息
 
+    private Long skuId;//查询跟活动绑定的商家中用到的skuId
+
     public Long getId() {
         return id;
     }
@@ -92,5 +94,13 @@ public class ActShopInVo extends BaseInVo{
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 }

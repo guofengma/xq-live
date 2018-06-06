@@ -2,6 +2,7 @@ package com.xq.live.vo.out;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -58,6 +59,8 @@ public class ActShopOut implements Comparable<ActShopOut>{
     private String skuName;//推荐菜的名字
 
     private String picUrl;//推荐菜的图片
+
+    private BigDecimal sellPrice;//票券的售价
 
     public Long getId() {
         return id;
@@ -233,6 +236,14 @@ public class ActShopOut implements Comparable<ActShopOut>{
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public BigDecimal getSellPrice() {
+        return sellPrice;
+    }
+
+    public void setSellPrice(BigDecimal sellPrice) {
+        this.sellPrice = sellPrice;
     }
 
     @Override

@@ -54,7 +54,7 @@
         insert into act_shop (id, act_id, shop_id, shop_code, apply_status,
         create_time, update_time)
         values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT},
-        #{shopCode,jdbcType=VARCHAR}, 0, now(), now())
+        #{shopCode,jdbcType=VARCHAR}, 1, now(), now())
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             select last_insert_id() as id
         </selectKey>
@@ -296,6 +296,20 @@
         FROM
         act_shop
          where  (act_id = 34 or act_id = 35) and  apply_status = 1 AND  shop_id = #{shopId,jdbcType=BIGINT}
+    </select>
+
+    <select id="searchForShopIdNew" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        act_shop
+        where
+        <if test="skuId == 383">
+            (act_id = 34 or act_id = 35) and  apply_status = 1 AND  shop_id = #{shopId,jdbcType=BIGINT}
+        </if>
+        <if test="skuId == 848">
+            (act_id = 36) and  apply_status = 1 AND  shop_id = #{shopId,jdbcType=BIGINT}
+        </if>
     </select>
 
     <select id="listForActByShopId" resultMap="ActShopForVoteByShopIdMap">

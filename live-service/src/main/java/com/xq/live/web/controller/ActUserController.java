@@ -3,6 +3,7 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.dao.ActUserMapper;
 import com.xq.live.model.ActUser;
 import com.xq.live.service.ActUserService;
 import com.xq.live.vo.in.ActUserInVo;
@@ -29,6 +30,9 @@ public class ActUserController {
     @Autowired
     private ActUserService actUserService;
 
+    @Autowired
+    private ActUserMapper actUserMapper;
+
     /**
      * 选手报名接口
      * @param inVo
@@ -52,7 +56,38 @@ public class ActUserController {
     }
 
     /**
-     * 分页查询参与商家列表信息(针对的是新活动，带有开始时间和截止时间，可以多次投票)
+     *根据活动id和人数落选选手
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/updateDown", method = RequestMethod.GET)
+    public BaseResp<Integer> listlistNewAct(Long actID,Integer length){
+        if (actID==null||length==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        ActUserInVo userInVo = new ActUserInVo();
+        userInVo.setActId(actID);
+        List<ActUserOut> userOut= actUserMapper.listForNewAct(userInVo);
+        if (userOut==null){
+            return new BaseResp<Integer>(ResultStatus.error_actuser_code);
+        }
+        int leth=userOut.size();
+        for (int i=userOut.size()-1;i>length-1;i--){
+            userOut.remove(i);
+        }
+        if (userOut.size()<=leth){
+            int change=actUserMapper.udateByLuoXuan(userOut);
+            if (change>0){
+                return new BaseResp<Integer>(ResultStatus.SUCCESS, 1);
+            }
+            return new BaseResp<Integer>(ResultStatus.FAIL);
+        }
+
+        return new BaseResp<Integer>(ResultStatus.FAIL);
+    }
+
+    /**
+     * 根据传入人数落选选手
      * @param inVo
      * @return
      */
@@ -73,7 +108,6 @@ public class ActUserController {
         Pager<ActUserOut> result = actUserService.listForNewAct(inVo);
         return new BaseResp<Pager<ActUserOut>>(ResultStatus.SUCCESS, result);
     }
-
 
     /**
      * 查询选手详情

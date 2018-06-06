@@ -43,4 +43,7 @@ public interface ActShopMapper {
 
     //批量更新第二轮活动落选名单
     int udateByLuoTwo(List<ActShopOut> shopOuts);
+
+    //根据活动id查询商家列表
+    List<ActShopOut> listByActId(Long actId);
 }

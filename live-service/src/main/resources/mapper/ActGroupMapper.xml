@@ -34,7 +34,7 @@
     select
     <include refid="Base_Column_List" />
     from act_group
-    where act_id = #{actId,jdbcType=BIGINT} AND group_code= #{groupCode,jdbcType=VARCHAR}
+    where act_id = #{actId,jdbcType=BIGINT} OR group_code= #{groupCode,jdbcType=VARCHAR}
   </select>
   <select id="selectOutAll" parameterType="java.lang.Long" resultMap="ActGroupOutMap">
     select
@@ -42,6 +42,17 @@
     from act_group
     WHERE act_id = #{actId,jdbcType=BIGINT}
     and is_deleted = 0
+  </select>
+
+  <!--根据商家,和活动id查询信息-->
+  <select id="actByshopId" resultMap="ActGroupOutMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_group
+    WHERE
+        shop_id= #{shopId,jdbcType=BIGINT}
+    AND act_id = #{actId,jdbcType=BIGINT}
+    AND is_deleted = 0
   </select>
 
   <select id="listForSoWrite" resultMap="ActGroupOutMap">
@@ -202,11 +213,23 @@
     set
     is_deleted = 1
     <where>
-      <if test="id!=null">id=#{id,jdbcType=BIGINT}</if>
+      1=1
+      <if test="id!=null">AND id=#{id,jdbcType=BIGINT}</if>
       <if test="actId!=null">AND act_id=#{actId,jdbcType=BIGINT}</if>
     </where>
-
   </update>
+
+  <!--根据商家id和活动id更改票数-->
+  <update id="updateGroupNum" parameterType="com.xq.live.vo.in.ActGroupInVo">
+    update act_group
+    set group_vote_num=#{groupVoteNum,jdbcType=INTEGER}
+    <where>
+      1=1
+      <if test="shopId!=null">AND shop_id=#{shopId,jdbcType=BIGINT}</if>
+      <if test="actId!=null">AND act_id=#{actId,jdbcType=BIGINT}</if>
+    </where>
+  </update>
+
 
   <!--根据传入的集合修改其他的小组落选状态-->
   <update id="updateByGroup" parameterType="java.util.List">

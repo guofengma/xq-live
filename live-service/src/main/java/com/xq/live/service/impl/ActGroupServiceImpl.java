@@ -74,6 +74,18 @@ public class ActGroupServiceImpl implements ActGroupService{
         }
     }
 
+    //更新小组的票数
+    @Override
+    public int updateGroupNum(ActGroupInVo inVo) {
+        int i=actGroupMapper.updateGroupNum(inVo);
+        //1更新成功0失败
+        if (i>0){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
     //根据票数多小查询活动小组列表信息
     @Override
     public List<ActGroupOut> selectGroupOut() {
@@ -90,6 +102,15 @@ public class ActGroupServiceImpl implements ActGroupService{
         int i = actGroupMapper.updateByID(actGroup);
         if (i>0){
             return actGroup.getId();
+        }
+        return null;
+    }
+
+    @Override
+    public ActGroupOut listActByShop(ActGroupInVo inVo) {
+        ActGroupOut out=actGroupMapper.actByshopId(inVo);
+        if (out!=null){
+            return  out;
         }
         return null;
     }

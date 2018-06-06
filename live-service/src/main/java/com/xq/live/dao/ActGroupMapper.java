@@ -42,10 +42,24 @@ public interface ActGroupMapper {
     int updateByID(ActGroup actGroup);
 
     /**
+     * 修改商家票数
+     * @param inVo
+     * @return
+     */
+    int updateGroupNum(ActGroupInVo inVo);
+
+    /**
      * 查询活动分组详情
      * @param inVo
      * @return
      */
     ActGroup findByInVo(ActGroupInVo inVo);
+
+    /**
+     * 根据商家,和活动id查询信息
+     * @param inVo
+     * @return
+     */
+    ActGroupOut actByshopId(ActGroupInVo inVo);
 
 }

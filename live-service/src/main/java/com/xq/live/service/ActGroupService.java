@@ -50,6 +50,12 @@ public interface ActGroupService {
     int updateByGroup(List<ActGroupOut> list);
 
     /**
+     * 修改活动小组的票数信息
+     * @param inVo
+     * @return
+     */
+    int updateGroupNum(ActGroupInVo inVo);
+    /**
      * 根据票数多小查询活动小组列表信息
      * @param
      * @return
@@ -62,6 +68,13 @@ public interface ActGroupService {
      * @return
      */
     Long updateID(ActGroup actGroup);
+
+    /**
+     * 根据商家和活动id查询信息
+     * @param inVo
+     * @return
+     */
+    ActGroupOut listActByShop(ActGroupInVo inVo);
 
     /**
      * 接收商家ID和用户列表

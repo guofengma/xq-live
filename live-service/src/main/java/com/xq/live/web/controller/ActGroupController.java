@@ -4,11 +4,13 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.dao.ActShopMapper;
 import com.xq.live.dao.ActUserMapper;
+import com.xq.live.dao.SoWriteOffMapper;
 import com.xq.live.model.ActGroup;
 import com.xq.live.service.ActGroupService;
 import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.in.ActUserInVo;
+import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.out.ActGroupOut;
 import com.xq.live.vo.out.ActShopOut;
 import com.xq.live.vo.out.ActUserOut;
@@ -28,6 +30,8 @@ import java.util.*;
 @RequestMapping("/actGroup")
 public class ActGroupController {
 
+    @Autowired
+    private SoWriteOffMapper soWriteOffMapper;
     @Autowired
     private ActGroupService actGroupService;
     @Autowired
@@ -183,11 +187,40 @@ public class ActGroupController {
             return new BaseResp<Map<ActShopOut,ActUserOut>>(ResultStatus.SUCCESS,mapList);
     }
 
-    //根据活动ID和入选小组人数落选小组(批量更新小组落选信息)
+    /**
+     * 根据活动ID和入选小组人数落选小组(批量更新小组落选信息)
+     * @param  //传入开始和结束时间，票券id
+     * @return
+     */
     @RequestMapping(value = "/updateLouXuan",method = RequestMethod.GET)
-    public BaseResp<Integer> updateLuoXuan(Long actID,Integer length){
+    public BaseResp<Integer> updateLuoXuan(Long actID,Integer length,Long skuId,Date begainTime,Date endTime){
         if (length==null||actID==null){
             return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+
+        SoWriteOffInVo inVo= new SoWriteOffInVo();
+        inVo.setSkuId(skuId);
+        inVo.setBegainTime(begainTime);
+        inVo.setEndTime(endTime);
+
+        //商家列表
+        List<ActShopOut> listShop=actShopMapper.listByActId(actID);
+        ActGroupInVo groupInVo=new ActGroupInVo();
+        groupInVo.setActId(actID);
+
+        for (int i=0;i<listShop.size();i++){
+            inVo.setShopId(listShop.get(i).getShopId());
+            groupInVo.setShopId(listShop.get(i).getShopId());
+            //获取小组票数
+           /* ActGroupOut out=actGroupService.listActByShop(groupInVo);
+            Integer groupNum=out.getGroupVoteNum();*/
+            Integer total = soWriteOffMapper.listTotal(inVo);
+            groupInVo.setGroupVoteNum(total);
+            int shop=actGroupService.updateGroupNum(groupInVo);
+            if (shop!=1){
+                return new BaseResp<Integer>(ResultStatus.error_group_list);
+            }
+
         }
         //查看小组列表
         List<ActGroupOut> list=actGroupService.selectGroupOut();

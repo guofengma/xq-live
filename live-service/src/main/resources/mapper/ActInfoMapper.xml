@@ -28,6 +28,7 @@
     <include refid="Base_Column_List" />
     from act_info
     where id = #{id,jdbcType=BIGINT}
+    and is_deleted = 0
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from act_info
@@ -137,12 +138,14 @@
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1) from act_info
     <where>
+      1=1
       <if test="id != null">
-        id = #{id}
+       and id = #{id}
       </if>
       <if test="actName != null">
-        act_name = #{actName}
+       and act_name = #{actName}
       </if>
+      and is_deleted = 0
     </where>
   </select>
 
@@ -162,12 +165,14 @@
     (select count(1) from access_log al where ai.id = al.ref_id and al.biz_type = 2) as view_num
     from act_info ai
     <where>
+      1=1
       <if test="id != null">
-        ai.id = #{id}
+       and ai.id = #{id}
       </if>
       <if test="actName != null">
-        ai.act_name = #{actName}
+       and ai.act_name = #{actName}
       </if>
+      and is_deleted = 0
     </where>
     order by ai.id desc
     limit #{start}, #{rows}
@@ -190,5 +195,6 @@
     (select count(1) from access_log al where ai.id = al.ref_id and al.biz_type = 2) as view_num
     from act_info ai
     where ai.id = #{id}
+    and is_deleted = 0
   </select>
 </mapper>

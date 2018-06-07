@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -83,6 +84,30 @@ public class SoForAppController {
     @RequestMapping(value = "/myorder", method = RequestMethod.GET)
     public BaseResp<List<SoOut>> top(SoInVo inVo) {
         List<SoOut> result = soService.findSoList(inVo);
+        return new BaseResp<List<SoOut>>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 查询商家端中平台代收的营业额
+     * @param shopId
+     * @return
+     */
+    @RequestMapping(value = "/totalAmount",method = RequestMethod.GET)
+    public BaseResp<BigDecimal> totalAmount(Long shopId){
+        BigDecimal bigDecimal = soService.totalAmount(shopId);
+        return  new BaseResp<BigDecimal>(ResultStatus.SUCCESS,bigDecimal);
+    }
+
+    /**
+     * 查我的商家订单
+     *查询我的订单中的商家订单，基本参数与平台订单相同  userId ,page,rows,soStatus
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/myorderForShop", method = RequestMethod.GET)
+    public BaseResp<List<SoOut>> myorderForShop(SoInVo inVo) {
+        inVo.setSoType(So.SO_TYPE_SJ);
+        List<SoOut> result = soService.findSoListForShop(inVo);
         return new BaseResp<List<SoOut>>(ResultStatus.SUCCESS, result);
     }
 

@@ -98,7 +98,7 @@ public class ActSignServiceImpl implements ActSignService{
                 sku.setSkuType(Sku.SKU_TYPE_TSC);
                 sku.setStockNum(9999);
                 //先把数据插入到sku表中，标注状态为已删除状态不展示，等审核通过之后，人工把状态改成0
-                sku.setIsDeleted(Sku.SKU_IS_DELETED);
+                sku.setIsDeleted(Sku.SKU_NO_DELETED);
                 String skuCode = RandomStringUtil.getRandomCode(8, 0);
                 String code = isSku(skuCode);//判断给的skuCode是否已存在数据，返回一个不存在数据的code
                 sku.setSkuCode(code);

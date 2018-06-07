@@ -3,6 +3,8 @@ package com.xq.live.dao;
 import com.xq.live.model.SoShopLog;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+
 @Repository
 public interface SoShopLogMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,4 +20,6 @@ public interface SoShopLogMapper {
     int updateByPrimaryKeySelective(SoShopLog record);
 
     int updateByPrimaryKey(SoShopLog record);
+
+    BigDecimal totalAmount(Long shopId);
 }

@@ -37,6 +37,8 @@ public class WeixinInVo {
 
     private Long shopId;//商家单中对应的shopId
 
+    private String subMchId;//特约商户的mchId
+
     public String getAppid() {
         return appid;
     }
@@ -211,5 +213,13 @@ public class WeixinInVo {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public String getSubMchId() {
+        return subMchId;
+    }
+
+    public void setSubMchId(String subMchId) {
+        this.subMchId = subMchId;
     }
 }

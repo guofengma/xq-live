@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -187,54 +188,37 @@ public class ShopForAppController {
         return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
     }
 
+
     /**
-     * 生成商家二维码图(包括商家id和商家code)这是跳转商家详情页
+     * 生成商家二维码图(包括商家id和商家code)这是跳转商家订单页,商家详情页(一共4张图)
      * @param inVo
      * @return
      */
-    @RequestMapping(value = "/CreateCodeByInfo")
-    public BaseResp<String> freeOrderByInfo(ShopInVo inVo){
+    @RequestMapping(value = "/CreateCode")
+    public BaseResp<Map<String,String>> freeOrderBySo(ShopInVo inVo){
         if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
-            return new BaseResp<String>(ResultStatus.error_param_empty);
+            return new BaseResp<Map<String,String>>(ResultStatus.error_param_empty);
         }
         Long id=inVo.getId();
         ShopOut out=shopService.findShopOutById(id);
         if (out==null){
-            return new BaseResp<String>(ResultStatus.error_shop_info_empty);
+            return new BaseResp<Map<String,String>>(ResultStatus.error_shop_info_empty);
         }
         out.setShopCode(inVo.getShopCode());
         ShopServiceImpl codeUrl=new ShopServiceImpl();
-        String shopUrl= codeUrl.uploadQRCodeToCosByInfo(out);
-        if (shopUrl==null){
-            return new BaseResp<String>(ResultStatus.error_shop_code);
+        String shopSoImge=codeUrl.uploadQRCodeToCosBySo(out);
+        String shopSo= codeUrl.uploadQRCodeToCosBySo(out);
+        String shopInfoImge=codeUrl.uploadQRCodeToCosByInfo(out);
+        String shopInfo=codeUrl.uploadQRCodeToByInfo(out);
+        if (shopSoImge==null||shopSo==null||shopInfoImge==null||shopInfo==null){
+            return new BaseResp<Map<String,String>>(ResultStatus.error_shop_code);
         }
-        return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
-
-    }
-
-    /**
-     * 生成商家二维码图(包括商家id和商家code)这是跳转商家订单页
-     * @param inVo
-     * @return
-     */
-    @RequestMapping(value = "/CreateCodeBySo")
-    public BaseResp<String> freeOrderBySo(ShopInVo inVo){
-        if (inVo==null||inVo.getId()==null||inVo.getShopCode()==null) {
-            return new BaseResp<String>(ResultStatus.error_param_empty);
-        }
-        Long id=inVo.getId();
-        ShopOut out=shopService.findShopOutById(id);
-        if (out==null){
-            return new BaseResp<String>(ResultStatus.error_shop_info_empty);
-        }
-        out.setShopCode(inVo.getShopCode());
-        ShopServiceImpl codeUrl=new ShopServiceImpl();
-        String shopUrl= codeUrl.uploadQRCodeToCosBySo(out);
-        if (shopUrl==null){
-            return new BaseResp<String>(ResultStatus.error_shop_code);
-        }
-        return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
-
+        Map<String,String> shopUrl=new HashMap<>();
+        shopUrl.put("商家买单有背景图",shopSoImge);
+        shopUrl.put("商家买单无背景图",shopSo);
+        shopUrl.put("商家详情有背景图",shopInfoImge);
+        shopUrl.put("商家详情无背景图",shopInfo);
+        return new BaseResp<Map<String,String>>(ResultStatus.SUCCESS,shopUrl);
     }
 
     /**

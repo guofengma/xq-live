@@ -11,9 +11,14 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "actSku")
 public class ActSkuConfig {
     /**
-     * 免费领取的id
+     * 免费领取的id(20元活动券)
      */
     private Long skuId;
+
+    /**
+     * 免费领取的id(7.7元活动券)
+     */
+    private Long skuIdOther;
 
     /**
      * #免费领取的数量(默认为1)
@@ -26,6 +31,14 @@ public class ActSkuConfig {
 
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
+    }
+
+    public Long getSkuIdOther() {
+        return skuIdOther;
+    }
+
+    public void setSkuIdOther(Long skuIdOther) {
+        this.skuIdOther = skuIdOther;
     }
 
     public Integer getSkuNum() {

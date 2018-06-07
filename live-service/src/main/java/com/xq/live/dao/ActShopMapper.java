@@ -38,9 +38,14 @@ public interface ActShopMapper {
 
     Integer searchForShopId(Long shopId);
 
+    Integer searchForShopIdNew(ActShopInVo inVo);
+
     //批量更新活动落选名单
     int udateByLuo(List<ActShopOut> shopOuts);
 
     //批量更新第二轮活动落选名单
     int udateByLuoTwo(List<ActShopOut> shopOuts);
+
+    //根据活动id查询商家列表
+    List<ActShopOut> listByActId(Long actId);
 }

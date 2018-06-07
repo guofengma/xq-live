@@ -58,4 +58,10 @@ public interface ActShopService {
      * @return
      */
     Integer searchForShopId(Long shopId);
+
+    /**
+     * 查询商家是否参与用活动券的活动
+     * @return
+     */
+    Integer searchForShopIdNew(ActShopInVo inVo);
 }

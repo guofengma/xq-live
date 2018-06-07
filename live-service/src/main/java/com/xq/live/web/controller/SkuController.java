@@ -73,7 +73,7 @@ public class SkuController {
     @RequestMapping(value = "/listForAct", method = RequestMethod.GET)
     public BaseResp<Pager<SkuOut>> listForAct(SkuInVo inVo){
         inVo.setSkuType(Sku.SKU_TYPE_HDQ);
-        inVo.setId(actSkuConfig.getSkuId());
+        //inVo.setId(actSkuConfig.getSkuId());
         Pager<SkuOut> result = skuService.list(inVo);
         return new BaseResp<Pager<SkuOut>>(ResultStatus.SUCCESS, result);
     }

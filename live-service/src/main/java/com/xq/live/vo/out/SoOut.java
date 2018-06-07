@@ -63,6 +63,8 @@ public class SoOut {
 
     private String mobile;//下单用户的手机号
 
+    private String userIconUrl;//下单人的头像
+
     public Long getId() {
         return id;
     }
@@ -237,5 +239,13 @@ public class SoOut {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getUserIconUrl() {
+        return userIconUrl;
+    }
+
+    public void setUserIconUrl(String userIconUrl) {
+        this.userIconUrl = userIconUrl;
     }
 }

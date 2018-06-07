@@ -22,6 +22,13 @@ public class PaymentConfig implements WXPayConfig {
 
     public static final String APP_SECRET = "4921641fc679dd76a7141ba750d88204";
 
+    /**
+     * 服务商模式下的关键信息
+     */
+    public static final String FW_APP_ID = "";//服务商的appId
+
+    public static final String FW_MCH_ID = "";//服务商的mchId(服务商的商户id)
+
     //支付成功后的服务器回调url
     public static final String WX_NOTIFY_URL = "https://hbxq001.cn/wxpay/wxNotify";
 
@@ -81,6 +88,14 @@ public class PaymentConfig implements WXPayConfig {
 
     public String getKey() {
         return API_KEY;
+    }
+
+    public static String getFW_APP_ID() {
+        return FW_APP_ID;
+    }
+
+    public static String getFW_MCH_ID() {
+        return FW_MCH_ID;
     }
 
     public InputStream getCertStream() {

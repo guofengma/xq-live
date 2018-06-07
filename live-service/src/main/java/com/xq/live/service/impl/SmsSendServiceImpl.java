@@ -52,11 +52,13 @@ public class SmsSendServiceImpl implements SmsSendService {
         SmsSend smsSend = new SmsSend();
         Long time = System.currentTimeMillis();
         if (smsOut == null) {
+            //查询缓存是否存在，缓存有效时间为10分钟,走正常流程的话，过了10分钟，缓存不存在，数据库里面的时间也超过了
+            //10分钟，则清空数据库里面原有的数据，让其重新发送验证码
             smsSend = smsSendMapper.selectByMobile(inVo);
             if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
                 return null;
             }
-            if(time > (smsSend.getCreateTime().getTime() + 3600000)){
+            if(time > (smsSend.getCreateTime().getTime() + 600000)){
                 smsSendMapper.deleteByPrimaryKey(smsSend.getId());
                 redisCache.del(key);
                 return null;
@@ -64,11 +66,12 @@ public class SmsSendServiceImpl implements SmsSendService {
             smsOut = new SmsOut();
             smsOut.setVerifyId(smsSend.getSmsContent());
             smsOut.setVeridyTime(smsSend.getCreateTime());
-            redisCache.set(key, smsOut, 1l, TimeUnit.HOURS);
+            redisCache.set(key, smsOut, 10l, TimeUnit.MINUTES);
             return smsOut;
         }
 
-        if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
+        //如果缓存依旧存在，且过了1分钟限制，则清空缓存和数据库里面的数据，让其重新发送验证码
+        if (time > (smsOut.getVeridyTime().getTime() + 60000)) {    //如果1分钟之后，则清空数据
             smsSend = smsSendMapper.selectByMobile(inVo);
             smsSendMapper.deleteByPrimaryKey(smsSend.getId());
             redisCache.del(key);
@@ -86,11 +89,13 @@ public class SmsSendServiceImpl implements SmsSendService {
         SmsSend smsSend = new SmsSend();
         Long time = System.currentTimeMillis();
         if (smsOut == null) {
+            //查询缓存是否存在，缓存有效时间为10分钟,走正常流程的话，过了10分钟，缓存不存在，数据库里面的时间也超过了
+            //10分钟，则清空数据库里面原有的数据，让其重新发送验证码
             smsSend = smsSendMapper.selectByMobile(inVo);
             if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
                 return null;
             }
-            if(time > (smsSend.getCreateTime().getTime() + 3600000)){
+            if(time > (smsSend.getCreateTime().getTime() + 600000)){
                 smsSendMapper.deleteByPrimaryKey(smsSend.getId());
                 redisCache.del(key);
                 return null;
@@ -98,11 +103,12 @@ public class SmsSendServiceImpl implements SmsSendService {
             smsOut = new SmsOut();
             smsOut.setVerifyId(smsSend.getSmsContent());
             smsOut.setVeridyTime(smsSend.getCreateTime());
-            redisCache.set(key, smsOut, 1l, TimeUnit.HOURS);
+            redisCache.set(key, smsOut, 10l, TimeUnit.MINUTES);
             return smsOut;
         }
 
-        if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
+        //如果缓存依旧存在，且过了1分钟限制，则清空缓存和数据库里面的数据，让其重新发送验证码
+        if (time > (smsOut.getVeridyTime().getTime() + 60000)) {    //如果1分钟之后，则清空数据
             smsSend = smsSendMapper.selectByMobile(inVo);
             smsSendMapper.deleteByPrimaryKey(smsSend.getId());
             redisCache.del(key);
@@ -120,13 +126,13 @@ public class SmsSendServiceImpl implements SmsSendService {
         SmsSend smsSend = new SmsSend();
         Long time = System.currentTimeMillis();
         if (smsOut == null) {
-            //查询缓存是否存在，缓存有效时间为1个小时,走正常流程的话，过了一个小时，缓存不存在，数据库里面的时间也超过了
-            //一个小时，则清空数据库里面原有的数据，让其重新发送验证码
+            //查询缓存是否存在，缓存有效时间为10分钟,走正常流程的话，过了10分钟，缓存不存在，数据库里面的时间也超过了
+            //10分钟，则清空数据库里面原有的数据，让其重新发送验证码
             smsSend = smsSendMapper.selectByMobile(inVo);
             if(smsSend==null||smsSend.getSmsContent()==null||smsSend.getCreateTime()==null){
                 return null;
             }
-            if(time > (smsSend.getCreateTime().getTime() + 3600000)){
+            if(time > (smsSend.getCreateTime().getTime() + 600000)){
                 smsSendMapper.deleteByPrimaryKey(smsSend.getId());
                 redisCache.del(key);
                 return null;
@@ -134,12 +140,12 @@ public class SmsSendServiceImpl implements SmsSendService {
             smsOut = new SmsOut();
             smsOut.setVerifyId(smsSend.getSmsContent());
             smsOut.setVeridyTime(smsSend.getCreateTime());
-            redisCache.set(key, smsOut, 1l, TimeUnit.HOURS);
+            redisCache.set(key, smsOut, 10l, TimeUnit.MINUTES);
             return smsOut;
         }
 
-        //如果缓存依旧存在，且过了10分钟限制，则清空缓存和数据库里面的数据，让其重新发送验证码
-        if (time > (smsOut.getVeridyTime().getTime() + 600000)) {    //如果10分钟之后，则清空数据
+        //如果缓存依旧存在，且过了1分钟限制，则清空缓存和数据库里面的数据，让其重新发送验证码
+        if (time > (smsOut.getVeridyTime().getTime() + 60000)) {    //如果1分钟之后，则清空数据
             smsSend = smsSendMapper.selectByMobile(inVo);
             smsSendMapper.deleteByPrimaryKey(smsSend.getId());
             redisCache.del(key);

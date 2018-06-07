@@ -26,7 +26,7 @@ public interface SoService {
      */
     Pager<SoOut> list(SoInVo inVo);
 
-    BigDecimal totalAmount(Long shopId);
+    BigDecimal totalAmount(SoInVo inVo);
 
     List<SoOut> findSoList(SoInVo inVo);
 

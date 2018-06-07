@@ -102,8 +102,8 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
-    public BigDecimal totalAmount(Long shopId){
-        BigDecimal bigDecimal = soShopLogMapper.totalAmount(shopId);
+    public BigDecimal totalAmount(SoInVo inVo){
+        BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);
         return bigDecimal;
     }
 

@@ -89,12 +89,12 @@ public class SoForAppController {
 
     /**
      * 查询商家端中平台代收的营业额
-     * @param shopId
+     * @param inVo
      * @return
      */
     @RequestMapping(value = "/totalAmount",method = RequestMethod.GET)
-    public BaseResp<BigDecimal> totalAmount(Long shopId){
-        BigDecimal bigDecimal = soService.totalAmount(shopId);
+    public BaseResp<BigDecimal> totalAmount(SoInVo inVo){
+        BigDecimal bigDecimal = soService.totalAmount(inVo);
         return  new BaseResp<BigDecimal>(ResultStatus.SUCCESS,bigDecimal);
     }
 

@@ -156,5 +156,8 @@
     and sa.payment_method = 2
     and sa.is_delete = 0
     and ss.so_type = 2
+    <if test="beginTime !=null and endTime != null">
+      and (ss.create_time BETWEEN #{beginTime} and #{endTime})
+    </if>
   </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.xq.live.web.utils;
 
+import com.xq.live.dao.UserMapper;
 import com.xq.live.model.User;
 import com.xq.live.vo.in.UserInVo;
 import org.slf4j.Logger;
@@ -16,8 +17,11 @@ import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,18 +32,28 @@ import cn.jpush.api.push.model.notification.Notification;
  */
 @SuppressWarnings({ "deprecation", "restriction" })//该批注的作用是给编译器一条指令，告诉它对被批注的代码元素内部的某些警告保持静默
 public class XqJiguangPush {
+    @Autowired
+    private UserMapper userMapper;
     private static final Logger log = LoggerFactory.getLogger(XqJiguangPush.class);
-    private static String masterSecret = "102c4486e66ead82d2ef8343";
-    private static String appKey = "dbef2534ff7ecc8956b6b451";
+   /* private static String masterSecret = "102c4486e66ead82d2ef8343";
+    private static String appKey = "dbef2534ff7ecc8956b6b451";*/
     private static final String ALERT = "推送信息";
 
+    /**
+     * 申通
+     */
+    private static final String appKey ="84cf5ee2099c654aa03a5d70";
+    private static final String masterSecret = "7cf23f25a41806d5fd29e3c5";
 
 
     public static void main(String[] args)throws Exception{
 
         UserInVo inVo=new UserInVo();
-        inVo.setShopId((long) 38);
+        inVo.setId((long) 38);
+        //inVo.setShopId((long) 38);
+
         XqJiguangPush jiguangPush= new XqJiguangPush();
+
         jiguangPush.jiguangPush(inVo);
     }
     /**
@@ -47,14 +61,48 @@ public class XqJiguangPush {
      */
     public void jiguangPush(UserInVo inVo){
 
-        String alias = inVo.getShopId().toString();//声明别名
+        User out=userMapper.selectByPrimaryKey(inVo.getShopId());
+        List<User> list=null;
+        if (out.getShopId()!=null){
+            UserInVo inVos=new UserInVo();
+            inVos.setShopId(out.getShopId());
+            list = userMapper.listForShopId(inVos);
+        }
+        List<String> alias=null;
+        if (list==null){
+            alias.add(inVo.getId().toString());//声明别名
+            log.info("对别名" + alias.get(0) + "的用户推送信息");
+            PushResult result = push(String.valueOf(alias),ALERT);
+            if(result != null && result.isResultOK()){
+                log.info("针对别名" + alias + "的信息推送成功！");
+            }else{
+                log.info("针对别名" + alias + "的信息推送失败！");
+            }
+        }
+        if (list!=null){
+
+            for (int i=0;i<list.size();i++){
+                alias.add(list.get(i).getId().toString());//声明别名
+            }
+            for (int als=0;als<list.size();als++){
+                log.info("对别名" + alias.get(als) + "的用户推送信息");
+                PushResult result = push(String.valueOf(alias),ALERT);
+                if(result != null && result.isResultOK()){
+                    log.info("针对别名" + alias + "的信息推送成功！");
+                }else{
+                    log.info("针对别名" + alias + "的信息推送失败！");
+                }
+            }
+
+        }
+        /*String alias = inVo.toString();//声明别名
         log.info("对别名" + alias + "的用户推送信息");
         PushResult result = push(String.valueOf(alias),ALERT);
         if(result != null && result.isResultOK()){
             log.info("针对别名" + alias + "的信息推送成功！");
         }else{
             log.info("针对别名" + alias + "的信息推送失败！");
-        }
+        }*/
     }
 
     /**

@@ -111,10 +111,10 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/myorderForShop", method = RequestMethod.GET)
-    public BaseResp<List<SoOut>> myorderForShop(SoInVo inVo) {
+    public BaseResp<Pager<SoOut>> myorderForShop(SoInVo inVo) {
         inVo.setSoType(So.SO_TYPE_SJ);
-        List<SoOut> result = soService.findSoListForShop(inVo);
-        return new BaseResp<List<SoOut>>(ResultStatus.SUCCESS, result);
+        Pager<SoOut> result = soService.findSoListForShop(inVo);
+        return new BaseResp<Pager<SoOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**

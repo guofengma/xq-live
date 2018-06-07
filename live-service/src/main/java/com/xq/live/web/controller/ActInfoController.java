@@ -5,6 +5,7 @@ import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ActInfo;
 import com.xq.live.service.ActInfoService;
+import com.xq.live.service.CountService;
 import com.xq.live.vo.in.ActInfoInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import com.xq.live.web.utils.IpUtils;
@@ -32,6 +33,9 @@ public class ActInfoController {
 
     @Autowired
     private ActInfoService actInfoService;
+
+    @Autowired
+    private CountService countService;
 
     /**
      * 根据id查询一条活动记录
@@ -110,5 +114,17 @@ public class ActInfoController {
         inVo.setUserIp(IpUtils.getIpAddr(request));
         ActInfoOut actInfoOut = actInfoService.detail(inVo);
         return new BaseResp<ActInfoOut>(ResultStatus.SUCCESS, actInfoOut);
+    }
+
+    /**
+     * 查询用户在活动中可用的投票次数
+     * 注:写此接口，而不是直接加到detail中，是为了减少代码的耦合度，方便以后的业务扩展
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/actVoteNums",method = RequestMethod.GET)
+    public BaseResp<Integer> actVoteNums(Long userId){
+        Integer integer = countService.actVoteNums(userId);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
 }

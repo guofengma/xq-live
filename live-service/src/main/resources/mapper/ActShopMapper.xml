@@ -254,6 +254,9 @@
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
                 or k.group_code = #{searchKey,jdbcType=VARCHAR})
             </if>
+            <if test="city!=null">
+                and s.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
+            </if>
             and  a.apply_status = 1
             and  a.is_luoxuan = 0
             <if test="type == 2">
@@ -374,6 +377,9 @@
             <if test="searchKey != null and type == 2">
                 and (s.shop_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
                 or k.group_code = #{searchKey,jdbcType=VARCHAR})
+            </if>
+            <if test="city!=null">
+                and s.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
             </if>
             and a.apply_status = 1
             and  a.is_luoxuan = 0

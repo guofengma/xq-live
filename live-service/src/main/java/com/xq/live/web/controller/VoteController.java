@@ -7,6 +7,7 @@ package com.xq.live.web.controller;
  */
 
 import com.xq.live.common.BaseResp;
+import com.xq.live.common.RedisCache;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.config.ActSkuConfig;
 import com.xq.live.model.So;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 投票管理类
@@ -47,6 +49,9 @@ public class VoteController {
 
     @Autowired
     private ActSkuConfig actSkuConfig;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 根据ID查询投票信息
@@ -121,6 +126,16 @@ public class VoteController {
         Long id  = voteService.add(vote);
         vote.setType(Vote.VOTE_ADD);
         Integer integer = countService.voteNumsNow(vote);
+        //如果活动id为7.7元的活动券的actId,则每次投票更新投票次数的缓存
+        if(vote.getActId().equals(actSkuConfig.getActId())){
+            String key = "actVoteNums_" + vote.getUserId();
+            Integer i = redisCache.get(key, Integer.class);
+            if(i==null){
+                redisCache.set(key,0,1l, TimeUnit.DAYS);
+            }else{
+                redisCache.set(key,i-1,1l,TimeUnit.DAYS);
+            }
+        }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 

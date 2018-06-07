@@ -140,6 +140,9 @@
             <if test="soType != null">
                 and s.so_type = #{soType}
             </if>
+            <if test="beginTime !=null and endTime != null">
+                and (create_time BETWEEN #{beginTime} and #{endTime})
+            </if>
         </where>
         order by id desc
         limit #{start}, #{rows}

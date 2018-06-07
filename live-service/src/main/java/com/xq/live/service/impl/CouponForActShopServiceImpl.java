@@ -1,5 +1,6 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.RedisCache;
 import com.xq.live.dao.ActGroupMapper;
 import com.xq.live.dao.ActShopMapper;
 import com.xq.live.dao.SoWriteOffMapper;
@@ -18,6 +19,7 @@ import java.util.List;
 
 /**
  * 门给新活动建立的，用来参与活动的商家核销完券码后投票数目加5票
+ * 注:现在准备专门做定时任务的serviceImpl
  * Created by lipeng on 2018/5/4.
  */
 @Service
@@ -30,6 +32,9 @@ public class CouponForActShopServiceImpl implements CouponForActShopService{
 
     @Autowired
     private ActGroupMapper actGroupMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
 
     @Override
@@ -61,6 +66,14 @@ public class CouponForActShopServiceImpl implements CouponForActShopService{
             }
         }
 
+        System.out.println("now time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    }
+
+    @Override
+    /*@Scheduled(fixedRate = 5000)*/
+    public void deleteActVoteNums() {
+        String key = "actVoteNums_" + "*";
+        redisCache.delAll(key);
         System.out.println("now time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 }

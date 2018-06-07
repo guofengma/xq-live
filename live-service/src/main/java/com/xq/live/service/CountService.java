@@ -45,4 +45,12 @@ public interface CountService {
      */
     Integer voteNumsNow(VoteInVo invo);
 
+    /**
+     * 根据userId查询用户在某个活动的可用投票数目
+     * 注:这里没有加入actId，后期业务扩展可自行添加
+     * @param userId
+     * @return
+     */
+    Integer actVoteNums(Long userId);
+
 }

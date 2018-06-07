@@ -42,6 +42,10 @@ public class SoInVo extends BaseInVo {
 
     private Long couponId;//商家订单中,核销票券的couponId
 
+    private Date beginTime;//查询商家订单中的开始时间
+
+    private Date endTime;//查询商家订单中的结束时间
+
     public Long getId() {
         return id;
     }
@@ -144,5 +148,21 @@ public class SoInVo extends BaseInVo {
 
     public void setCouponId(Long couponId) {
         this.couponId = couponId;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

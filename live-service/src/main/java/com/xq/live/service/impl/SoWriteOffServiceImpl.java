@@ -1,6 +1,8 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.common.RedisCache;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.SoWriteOffService;
@@ -12,9 +14,11 @@ import com.xq.live.vo.out.SoWriteOffOut;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ${DESCRIPTION}
@@ -39,6 +43,12 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public Pager<SoWriteOffOut> list(SoWriteOffInVo inVo) {
@@ -71,6 +81,7 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     }
 
     @Override
+    @Transactional
     public Long add(SoWriteOff soWriteOff) {
         //1、新增核销记录
         Integer ret = soWriteOffMapper.insert(soWriteOff);
@@ -110,6 +121,18 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
         coupon.setShopCashierId(soWriteOff.getCashierId()); //核销人
         couponMapper.useCoupon(coupon);
 
+        /* 当核销的是7.7元的活动券的时候，给当前券的使用人的可用投票次数加2，
+        * 当查缓存不存在的时候，则证明用户没有投过票，核销完之后，用户的可用投票次数为3
+        * */
+        if(soWriteOff.getSkuId().equals(actSkuConfig.getSkuIdOther())){
+            String key = "actVoteNums_" + soWriteOff.getUserId();
+            Integer integer = redisCache.get(key, Integer.class);
+            if(integer==null){
+                redisCache.set(key,3,1l, TimeUnit.DAYS);
+            }else{
+                redisCache.set(key,integer+2,1l,TimeUnit.DAYS);
+            }
+        }
         return id;
     }
 

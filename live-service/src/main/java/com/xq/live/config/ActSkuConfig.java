@@ -21,6 +21,11 @@ public class ActSkuConfig {
     private Long skuIdOther;
 
     /**
+     * 7.7元活动券对应的活动id
+     */
+    private Long actId;
+
+    /**
      * #免费领取的数量(默认为1)
      */
     private Integer skuNum;
@@ -39,6 +44,14 @@ public class ActSkuConfig {
 
     public void setSkuIdOther(Long skuIdOther) {
         this.skuIdOther = skuIdOther;
+    }
+
+    public Long getActId() {
+        return actId;
+    }
+
+    public void setActId(Long actId) {
+        this.actId = actId;
     }
 
     public Integer getSkuNum() {

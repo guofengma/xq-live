@@ -32,6 +32,8 @@ public class ActShopInVo extends BaseInVo{
 
     private Long skuId;//查询跟活动绑定的商家中用到的skuId
 
+    private String city;//活动报名的商家划分的城市
+
     public Long getId() {
         return id;
     }
@@ -102,5 +104,13 @@ public class ActShopInVo extends BaseInVo{
 
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

@@ -10,4 +10,6 @@ public interface CouponForActShopService {
      * 给参与活动的商家每次核销之后加5票
      */
     void addVoteForActShop();
+
+     void deleteActVoteNums();
 }

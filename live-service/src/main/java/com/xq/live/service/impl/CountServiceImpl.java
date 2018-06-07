@@ -223,4 +223,15 @@ public class CountServiceImpl implements CountService {
 
         return nums;
     }
+
+    @Override
+    public Integer actVoteNums(Long userId) {
+        String key = "actVoteNums_" + userId;
+        Integer integer = redisCache.get(key, Integer.class);
+        if(integer==null){
+            return 1;
+        }else{
+            return integer;
+        }
+    }
 }

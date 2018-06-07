@@ -3,6 +3,7 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
@@ -51,6 +52,9 @@ public class SoController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
 
     /**
      * 查一条记录
@@ -125,6 +129,13 @@ public class SoController {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        //当购买的是7.7元的活动券的时候,要判断之前是否领过该券，并且券是否已被使用
+        if(inVo.getSkuId().equals(actSkuConfig.getSkuIdOther())){
+            Integer integer = soWriteOffService.canGetAgio(inVo);
+            if(integer>=1){
+                return new BaseResp<Long>(ResultStatus.error_act_sku_not_use);
+            }
         }
         inVo.setUserIp(IpUtils.getIpAddr(request));
         Long id = soService.create(inVo);

@@ -286,7 +286,11 @@
         and k.is_deleted = 0
       </if>
     </where>
-    ORDER by a.vote_num DESC
+    ORDER by
+    <if test="sortType == 1">
+      a.create_time DESC,
+    </if>
+    a.vote_num DESC
     limit #{start}, #{rows}
   </select>
 

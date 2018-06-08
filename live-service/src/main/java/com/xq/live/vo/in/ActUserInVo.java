@@ -55,6 +55,8 @@ public class ActUserInVo extends BaseInVo{
 
     private Integer isLuoxuan;//是否落选
 
+    private Integer sortType;//参与报名的选手排序规则  不传 最热  1最新
+
     public Long getId() {
         return id;
     }
@@ -189,5 +191,13 @@ public class ActUserInVo extends BaseInVo{
 
     public void setIsLuoxuan(Integer isLuoxuan) {
         this.isLuoxuan = isLuoxuan;
+    }
+
+    public Integer getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(Integer sortType) {
+        this.sortType = sortType;
     }
 }

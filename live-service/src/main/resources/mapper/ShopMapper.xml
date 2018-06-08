@@ -335,7 +335,7 @@
     <where>
       1=1
       <if test="searchKey !=null">
-       and s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%')
+       and (s.id = #{searchKey} or shop_name like concat('%', #{searchKey}, '%'))
       </if>
       <if test="businessCate !=null">
         and business_cate like concat('%', #{businessCate}, '%')

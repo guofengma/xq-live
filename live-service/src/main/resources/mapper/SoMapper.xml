@@ -143,7 +143,7 @@
                 and s.so_type = #{soType}
             </if>
             <if test="beginTime !=null and endTime != null">
-                and (create_time BETWEEN #{beginTime} and #{endTime})
+                and (s.create_time BETWEEN #{beginTime} and #{endTime})
             </if>
             <if test="shopId != null">
                 and ss.shop_id = #{shopId,jdbcType=BIGINT}
@@ -193,7 +193,7 @@
                 and s.so_type = #{soType}
             </if>
             <if test="beginTime !=null and endTime != null">
-                and (create_time BETWEEN #{beginTime} and #{endTime})
+                and (s.create_time BETWEEN #{beginTime} and #{endTime})
             </if>
             <if test="shopId != null">
                 and ss.shop_id = #{shopId,jdbcType=BIGINT}

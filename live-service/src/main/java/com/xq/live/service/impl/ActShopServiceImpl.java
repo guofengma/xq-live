@@ -105,6 +105,26 @@ public class ActShopServiceImpl implements ActShopService {
     }
 
     @Override
+    public List<ActShopOut> listActForId(ActShopInVo inVo) {
+        return actShopMapper.listForNewAct(inVo);
+    }
+
+    @Override
+    public List<ActShopOut> listShopForAct(Long id) {
+        return actShopMapper.listByActId(id);
+    }
+
+    @Override
+    public int udateByLuo(List<ActShopOut> shopOuts) {
+        return actShopMapper.udateByLuo(shopOuts);
+    }
+
+    @Override
+    public int udateByLuoTwo(List<ActShopOut> shopOuts) {
+        return actShopMapper.udateByLuoTwo(shopOuts);
+    }
+
+    @Override
     public List<ActShopOut> top(ActShopInVo inVo) {
         List<ActShopOut> list = actShopMapper.list(inVo);
         Collections.sort(list);

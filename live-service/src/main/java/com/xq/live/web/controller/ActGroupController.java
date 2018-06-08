@@ -7,6 +7,9 @@ import com.xq.live.dao.ActUserMapper;
 import com.xq.live.dao.SoWriteOffMapper;
 import com.xq.live.model.ActGroup;
 import com.xq.live.service.ActGroupService;
+import com.xq.live.service.ActShopService;
+import com.xq.live.service.ActUserService;
+import com.xq.live.service.SoWriteOffService;
 import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.in.ActUserInVo;
@@ -29,15 +32,14 @@ import java.util.*;
 @RestController
 @RequestMapping("/actGroup")
 public class ActGroupController {
-
     @Autowired
-    private SoWriteOffMapper soWriteOffMapper;
+    private SoWriteOffService soWriteOffService;
     @Autowired
     private ActGroupService actGroupService;
     @Autowired
-    private ActUserMapper actUserMapper;
+    private ActUserService actUserService;
     @Autowired
-    private ActShopMapper actShopMapper;
+    private ActShopService actShopService;
 
     /**
      * 根据活动ID查询全部参加活动的小组列表
@@ -111,12 +113,12 @@ public class ActGroupController {
         ActShopInVo shopInVo = new ActShopInVo();
         shopInVo.setActId(actID);
         //根据活动ID查询商家和用户信息
-        List<ActShopOut> shopOuts= actShopMapper.listForNewAct(shopInVo);
+        List<ActShopOut> shopOuts= actShopService.listActForId(shopInVo);
         List<Long> shopID=new ArrayList<Long>();
         for (int i=0;i<shopOuts.size();i++){
             shopID.add(i, shopOuts.get(i).getShopId());
         }
-        List<ActUserOut> userOuts= actUserMapper.listForNewAct(userInVo);
+        List<ActUserOut> userOuts= actUserService.listActForId(userInVo);
         Map<Long,ActUserOut> mapList=actGroupService.mapList(shopID, userOuts);
         return new BaseResp<Map<Long,ActUserOut>>(ResultStatus.SUCCESS,mapList);
     }
@@ -132,8 +134,8 @@ public class ActGroupController {
         ActShopInVo shopInVo = new ActShopInVo();
         shopInVo.setActId(actID);
         //根据活动ID查询商家和用户信息
-        List<ActShopOut> shopOuts= actShopMapper.listForNewAct(shopInVo);
-        List<ActUserOut> userOuts= actUserMapper.listForNewAct(userInVo);
+        List<ActShopOut> shopOuts= actShopService.listActForId(shopInVo);
+        List<ActUserOut> userOuts= actUserService.listActForId(userInVo);
         //判断用户和商家数量
         int sizeNum;
         if (shopOuts.size()>userOuts.size()){
@@ -204,7 +206,7 @@ public class ActGroupController {
         inVo.setEndTime(endTime);
 
         //商家列表
-        List<ActShopOut> listShop=actShopMapper.listByActId(actID);
+        List<ActShopOut> listShop=actShopService.listShopForAct(actID);
         ActGroupInVo groupInVo=new ActGroupInVo();
         groupInVo.setActId(actID);
 
@@ -214,7 +216,7 @@ public class ActGroupController {
             //获取小组票数
            /* ActGroupOut out=actGroupService.listActByShop(groupInVo);
             Integer groupNum=out.getGroupVoteNum();*/
-            Integer total = soWriteOffMapper.listTotal(inVo);
+            Integer total = soWriteOffService.listTotal(inVo);
             groupInVo.setGroupVoteNum(total);
             int shop=actGroupService.updateGroupNum(groupInVo);
             if (shop!=1){
@@ -247,11 +249,11 @@ public class ActGroupController {
             shopList.add(i,shopOut);
             userList.add(i,userOut);
         }
-        int s=actShopMapper.udateByLuoTwo(shopList);
+        int s=actShopService.udateByLuoTwo(shopList);
         if (s==0){
             return new BaseResp<Integer>(ResultStatus.error_act_update);
         }
-        int u=actUserMapper.udateByLuoXuanTwo(userList);
+        int u=actUserService.udateByLuoXuanTwo(userList);
         if (u==0){
             return new BaseResp<Integer>(ResultStatus.error_act_update);
         }
@@ -278,14 +280,14 @@ public class ActGroupController {
         int s;
         int o;
         if (i==0){
-            s=actShopMapper.udateByLuo(shopOuts);
+            s=actShopService.udateByLuo(shopOuts);
             if (s>0){
                 return 1;
             }
         }else if (i==2){
             return 1;
         }else {
-            o=actUserMapper.udateByLuoXuan(userOuts);
+            o=actUserService.udateByLuoXuan(userOuts);
             if (o>0){
                 return 1;
             }

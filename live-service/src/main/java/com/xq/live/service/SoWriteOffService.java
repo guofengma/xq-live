@@ -66,4 +66,11 @@ public interface SoWriteOffService {
      * @return
      */
     Integer canGetAgio(SoInVo inVo);
+
+    /**
+     * 查询一段时间内商家核销票数
+     * @param inVo
+     * @return
+     */
+    int listTotal(SoWriteOffInVo inVo);
 }

@@ -87,7 +87,7 @@ public class ActUserController {
     }
 
     /**
-     * 根据传入人数落选选手
+     * 分页查询参与商家列表信息(针对的是新活动，带有开始时间和截止时间，可以多次投票)
      * @param inVo
      * @return
      */

@@ -141,4 +141,19 @@ public class ActUserServiceImpl implements ActUserService{
         result.setPage(inVo.getPage());
         return result;
     }
+
+    @Override
+    public List<ActUserOut> listActForId(ActUserInVo inVo) {
+        return actUserMapper.listForNewAct(inVo);
+    }
+
+    @Override
+    public int udateByLuoXuan(List<ActUserOut> userOuts) {
+        return actUserMapper.udateByLuoXuan(userOuts);
+    }
+
+    @Override
+    public int udateByLuoXuanTwo(List<ActUserOut> userOuts) {
+        return actUserMapper.udateByLuoXuanTwo(userOuts);
+    }
 }

@@ -255,6 +255,7 @@ public class UserController {
             if(user != null){
                 return new BaseResp<User>(ResultStatus.SUCCESS,user);
             }
+            user = new User();
             user.setOpenId(openId);
             return new BaseResp<User>(ResultStatus.SUCCESS,user);
 

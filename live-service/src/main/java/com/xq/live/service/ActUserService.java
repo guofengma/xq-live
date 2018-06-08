@@ -5,6 +5,8 @@ import com.xq.live.model.ActUser;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActUserOut;
 
+import java.util.List;
+
 /**
  * 选手活动Service
  * Created by lipeng on 2018/4/27.
@@ -27,4 +29,16 @@ public interface ActUserService {
      */
     Pager<ActUserOut> listForNewAct(ActUserInVo inVo);
 
+    /**
+     * 不分页查询参与此活动的用户
+     * @param inVo
+     * @return
+     */
+    List<ActUserOut> listActForId(ActUserInVo inVo);
+
+    //批量更新活动落选名单
+    int udateByLuoXuan(List<ActUserOut> userOuts);
+
+    //批量更新活动落选名单
+    int udateByLuoXuanTwo(List<ActUserOut> userOuts);
 }

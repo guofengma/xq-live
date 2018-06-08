@@ -35,4 +35,7 @@ public interface ActUserMapper {
     //批量更新活动落选名单
     int udateByLuoXuanTwo(List<ActUserOut> userOuts);
 
+
+
+
 }

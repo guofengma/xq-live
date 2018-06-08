@@ -30,6 +30,27 @@ public interface ActShopService {
      */
     Pager<ActShopOut> listForNewAct(ActShopInVo inVo);
 
+
+    /**
+     * 不分页查询参此活动的商家
+     * @param inVo
+     * @return
+     */
+    List<ActShopOut> listActForId(ActShopInVo inVo);
+
+    /**
+     * 根据活动id查询参此活动的商家
+     * @param id
+     * @return
+     */
+    List<ActShopOut> listShopForAct(Long id);
+
+    //批量更新活动落选名单
+    int udateByLuo(List<ActShopOut> shopOuts);
+
+    //批量更新第二轮活动落选名单
+    int udateByLuoTwo(List<ActShopOut> shopOuts);
+
     /**
      * 查询参与商家列表信息
      * @param inVo
@@ -52,6 +73,7 @@ public interface ActShopService {
     ActShop findByInVo(ActShopInVo inVo);
 
     List<ActShopByShopIdOut> listForActByShopId(ActShopInVo inVo);
+
 
     /**
      * 查询商家是否参与用活动券的活动

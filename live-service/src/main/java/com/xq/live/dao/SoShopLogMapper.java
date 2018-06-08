@@ -1,6 +1,7 @@
 package com.xq.live.dao;
 
 import com.xq.live.model.SoShopLog;
+import com.xq.live.vo.in.SoInVo;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -21,5 +22,5 @@ public interface SoShopLogMapper {
 
     int updateByPrimaryKey(SoShopLog record);
 
-    BigDecimal totalAmount(Long shopId);
+    BigDecimal totalAmount(SoInVo inVo);
 }

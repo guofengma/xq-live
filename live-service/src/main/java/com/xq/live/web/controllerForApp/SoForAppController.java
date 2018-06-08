@@ -89,12 +89,12 @@ public class SoForAppController {
 
     /**
      * 查询商家端中平台代收的营业额
-     * @param shopId
+     * @param inVo
      * @return
      */
     @RequestMapping(value = "/totalAmount",method = RequestMethod.GET)
-    public BaseResp<BigDecimal> totalAmount(Long shopId){
-        BigDecimal bigDecimal = soService.totalAmount(shopId);
+    public BaseResp<BigDecimal> totalAmount(SoInVo inVo){
+        BigDecimal bigDecimal = soService.totalAmount(inVo);
         return  new BaseResp<BigDecimal>(ResultStatus.SUCCESS,bigDecimal);
     }
 
@@ -105,10 +105,10 @@ public class SoForAppController {
      * @return
      */
     @RequestMapping(value = "/myorderForShop", method = RequestMethod.GET)
-    public BaseResp<List<SoOut>> myorderForShop(SoInVo inVo) {
+    public BaseResp<Pager<SoOut>> myorderForShop(SoInVo inVo) {
         inVo.setSoType(So.SO_TYPE_SJ);
-        List<SoOut> result = soService.findSoListForShop(inVo);
-        return new BaseResp<List<SoOut>>(ResultStatus.SUCCESS, result);
+        Pager<SoOut> result = soService.findSoListForShop(inVo);
+        return new BaseResp<Pager<SoOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**

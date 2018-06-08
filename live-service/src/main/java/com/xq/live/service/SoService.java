@@ -26,11 +26,11 @@ public interface SoService {
      */
     Pager<SoOut> list(SoInVo inVo);
 
-    BigDecimal totalAmount(Long shopId);
+    BigDecimal totalAmount(SoInVo inVo);
 
     List<SoOut> findSoList(SoInVo inVo);
 
-    List<SoOut> findSoListForShop(SoInVo inVo);
+    Pager<SoOut> findSoListForShop(SoInVo inVo);
 
     /**
      * 下单

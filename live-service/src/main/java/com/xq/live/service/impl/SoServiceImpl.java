@@ -16,6 +16,7 @@ import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.out.ShopAllocationOut;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
+import com.xq.live.vo.out.SoWriteOffOut;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.javatuples.Triplet;
@@ -102,8 +103,8 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
-    public BigDecimal totalAmount(Long shopId){
-        BigDecimal bigDecimal = soShopLogMapper.totalAmount(shopId);
+    public BigDecimal totalAmount(SoInVo inVo){
+        BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);
         return bigDecimal;
     }
 
@@ -117,31 +118,41 @@ public class SoServiceImpl implements SoService {
     }
 
     @Override
-    public List<SoOut> findSoListForShop(SoInVo inVo) {
+    public Pager<SoOut> findSoListForShop(SoInVo inVo) {
+        Pager<SoOut> ret = new Pager<SoOut>();
+        int total = soMapper.listForShopTotal(inVo);
+        if(total>0){
         List<SoOut> list = soMapper.listForShop(inVo);
         for (SoOut soOut : list) {
-            SoShopLog soShopLog = new SoShopLog();
+            /*SoShopLog soShopLog = new SoShopLog();
 
                  soShopLog.setOperateType(soOut.getSoStatus());
                  soShopLog.setSoId(soOut.getId());
-                 SoShopLog in = soShopLogMapper.selectBySoId(soShopLog);
+                 SoShopLog in = soShopLogMapper.selectBySoId(soShopLog);*/
                  User user = userMapper.selectByPrimaryKey(soOut.getUserId());
 
-                 soOut.setMobile(user.getMobile());
-                 soOut.setUserIconUrl(user.getIconUrl());
-                 if(in!=null){
-                     Shop shop = shopMapper.selectByPrimaryKey(in.getShopId());
-                     Sku sku = skuMapper.selectByPrimaryKey(in.getSkuId());
-                     soOut.setShopId(in.getShopId());
-                     soOut.setShopName(shop.getShopName());
-                     soOut.setLogoUrl(shop.getLogoUrl());
-                     if(sku!=null) {
-                         soOut.setInPrice(sku.getInPrice());
-                     }
+                 if(user!=null) {
+                     soOut.setMobile(user.getMobile());
+                     soOut.setUserIconUrl(user.getIconUrl());
                  }
 
+                     Shop shop = shopMapper.selectByPrimaryKey(soOut.getShopId());
+                     Sku sku = skuMapper.selectByPrimaryKey(soOut.getSkuId());
+                     //soOut.setShopId(in.getShopId());
+                     if(shop!=null) {
+                         soOut.setShopName(shop.getShopName());
+                         soOut.setLogoUrl(shop.getLogoUrl());
+                     }
+                     if(sku!=null) {
+                         soOut.setInPrice(sku.getInPrice());
+                         soOut.setSkuName(sku.getSkuName());
+                     }
+             }
+            ret.setList(list);
         }
-        return list;
+        ret.setTotal(total);
+        ret.setPage(inVo.getPage());
+        return ret;
     }
 
     @Override

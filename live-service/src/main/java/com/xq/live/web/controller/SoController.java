@@ -2,11 +2,13 @@ package com.xq.live.web.controller;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
+import com.xq.live.common.RedisCache;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.config.ActSkuConfig;
 import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
+import com.xq.live.model.User;
 import com.xq.live.model.UserAccount;
 import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
@@ -16,6 +18,7 @@ import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
+import com.xq.live.web.utils.UserContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -39,7 +42,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping(value = "/so")
-public class SoController {
+public class SoController{
 
     @Autowired
     private SoService soService;
@@ -56,6 +59,8 @@ public class SoController {
     @Autowired
     private ActSkuConfig actSkuConfig;
 
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查一条记录
      *
@@ -63,7 +68,8 @@ public class SoController {
      * @return
      */
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public BaseResp<SoOut> get(@PathVariable("id") Long id) {
+    public BaseResp<SoOut> get(@PathVariable("id") Long id, HttpServletRequest request) {
+        User user = UserContext.getUserSession();
         SoOut soOut = soService.get(id);
         return new BaseResp<SoOut>(ResultStatus.SUCCESS, soOut);
     }

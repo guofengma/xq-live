@@ -138,8 +138,8 @@
       )
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
-      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, now(),
-      now(), #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},#{sourceType,jdbcType=TINYINT}, 0, #{openId, jdbcType=VARCHAR},
+      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},#{sourceType,jdbcType=TINYINT}, 0, #{openId, jdbcType=VARCHAR},
       #{unionId, jdbcType=VARCHAR},#{age,jdbcType=INTEGER},#{height,jdbcType=INTEGER}
       )
     <selectKey resultType="java.lang.Long" keyProperty="id">

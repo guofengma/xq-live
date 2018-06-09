@@ -159,7 +159,7 @@
             <version>1.0</version>
         </dependency>-->
         <!-- spring-security 和 jwt -->
-        <!--		<dependency>
+        		<dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-security</artifactId>
                 </dependency>
@@ -167,7 +167,7 @@
                     <groupId>io.jsonwebtoken</groupId>
                     <artifactId>jjwt</artifactId>
                     <version>0.7.0</version>
-                </dependency>-->
+                </dependency>
 
         <!--极光消息推送-->
         <dependency>

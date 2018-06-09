@@ -15,6 +15,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -401,4 +402,42 @@ public class UserController {
         }
         return new BaseResp<User>(ResultStatus.SUCCESS, user);
     }
+
+    @RequestMapping(value = "/batch", method = RequestMethod.GET)
+    public BaseResp<?> batchAddUser(String date,Integer num){
+        Long count = 0L;
+        if(num == null){
+            num = 1000;
+        }
+        for(int i = 0; i< num; i++){
+            User in = new User();
+            in.setUserName("xq_"+System.currentTimeMillis());
+            in.setPassword(RandomStringUtil.getRandomCode(6,3));
+            in.setPassword(DigestUtils.md5DigestAsHex(in.getPassword().getBytes()));
+            in.setOpenId("ogDNV4"+RandomStringUtil.getRandomCode(22, 6));
+            in.setSourceType(1);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            try {
+                if(StringUtils.isNotEmpty(date)){
+                    Date d = sdf.parse(date);
+                    in.setCreateTime(d);
+                    in.setUpdateTime(d);
+                }else{
+                    Date d = new Date();
+                    in.setCreateTime(d);
+                    in.setUpdateTime(d);
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Long id  = userService.add(in);
+            count++;
+        }
+
+        return new BaseResp<Long>(ResultStatus.SUCCESS, count);
+    }
+
 }

@@ -48,4 +48,6 @@ public class Constants {
      */
     public final static String DEFAULT_ICON_URL = "https://xq-1256079679.file.myqcloud.com/test_图层 24_0.8.jpg";
 
+    public final static String USER_SESSION_KEY = "user_session_key";
+
 }

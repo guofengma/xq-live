@@ -2,6 +2,8 @@ package com.xq.live.service;
 
 import com.xq.live.common.Pager;
 import com.xq.live.model.User;
+import com.xq.live.model.UserAccount;
+import com.xq.live.vo.in.UserAccountInVo;
 import com.xq.live.vo.in.UserInVo;
 import org.apache.ibatis.annotations.Param;
 

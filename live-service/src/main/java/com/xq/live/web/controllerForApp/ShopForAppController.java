@@ -205,11 +205,11 @@ public class ShopForAppController {
             return new BaseResp<Map<String,String>>(ResultStatus.error_shop_info_empty);
         }
         out.setShopCode(inVo.getShopCode());
-        ShopServiceImpl codeUrl=new ShopServiceImpl();
-        String shopSoImge=codeUrl.uploadQRCodeToCosBySo(out);
-        String shopSo= codeUrl.uploadQRCodeToCosBySo(out);
-        String shopInfoImge=codeUrl.uploadQRCodeToCosByInfo(out);
-        String shopInfo=codeUrl.uploadQRCodeToByInfo(out);
+        //ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopSoImge=shopService.uploadQRCodeToCosBySo(out);
+        String shopSo= shopService.uploadQRCodeToBySo(out);
+        String shopInfoImge=shopService.uploadQRCodeToCosByInfo(out);
+        String shopInfo=shopService.uploadQRCodeToByInfo(out);
         if (shopSoImge==null||shopSo==null||shopInfoImge==null||shopInfo==null){
             return new BaseResp<Map<String,String>>(ResultStatus.error_shop_code);
         }

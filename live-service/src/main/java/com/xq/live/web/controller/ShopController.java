@@ -228,8 +228,8 @@ public class ShopController {
             return new BaseResp<String>(ResultStatus.error_shop_info_empty);
         }
         out.setShopCode(inVo.getShopCode());
-        ShopServiceImpl codeUrl=new ShopServiceImpl();
-        String shopUrl= codeUrl.uploadQRCodeToCosByInfo(out);
+        //ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopUrl= shopService.uploadQRCodeToCosByInfo(out);
         if (shopUrl==null){
             return new BaseResp<String>(ResultStatus.error_shop_code);
         }
@@ -253,8 +253,8 @@ public class ShopController {
             return new BaseResp<String>(ResultStatus.error_shop_info_empty);
         }
         out.setShopCode(inVo.getShopCode());
-        ShopServiceImpl codeUrl=new ShopServiceImpl();
-        String shopUrl= codeUrl.uploadQRCodeToCosBySo(out);
+        //ShopServiceImpl codeUrl=new ShopServiceImpl();
+        String shopUrl= shopService.uploadQRCodeToCosBySo(out);
         if (shopUrl==null){
             return new BaseResp<String>(ResultStatus.error_shop_code);
         }

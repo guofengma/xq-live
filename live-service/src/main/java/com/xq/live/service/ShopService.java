@@ -103,5 +103,29 @@ public interface ShopService {
      * @return
      */
     public ShopOut getShopByCode(String code);
+    /**
+     * 生成商家详情二维码图片并上传到腾讯云服务器(有背景图片的二维码)
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToCosByInfo(ShopOut out);
+    /**
+     * 生成商家订单二维码图片并上传到腾讯云服务器(有背景图片的二维码)
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToCosBySo(ShopOut out);
+    /**
+     * 生成商家订单二维码图片并上传到腾讯云服务器(无背景图片的二维码)
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToBySo(ShopOut out);
+    /**
+     * 生成商家详情二维码图片并上传到腾讯云服务器(无背景图片的二维码)
+     * @param out
+     * @return
+     */
+    public String uploadQRCodeToByInfo(ShopOut out);
 
 }

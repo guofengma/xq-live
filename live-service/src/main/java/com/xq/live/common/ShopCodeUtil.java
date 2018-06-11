@@ -179,6 +179,70 @@ public class ShopCodeUtil {
     }
 
     /**
+     * 生成二维码(内嵌LOGO)(专门为活动选手分享的)
+     *
+     * @param content      内容
+     * @param imgPath      LOGO地址
+     * @param destPath     存放目录
+     * @param needCompress 是否压缩LOGO
+     * @throws Exception
+     */
+    public static void encodeForAct(String content, String imgPath, String destPath, boolean needCompress) throws Exception {
+
+        try {
+            BufferedImage biQR = ShopCodeUtil.createImage(content, imgPath, needCompress);//输出二维码到缓冲区
+            String bgroup = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "bdFile.jpg";
+            File bgFile = new File(bgroup);
+            File logoFile = new File(imgPath);
+            if (!bgFile.exists()) {
+                System.err.println("" + bgroup + "   该文件不存在！");
+                return;
+            }
+            Image bgSrc = ImageIO.read(bgFile);
+            Image logoSrc = ImageIO.read(logoFile);
+            int width = bgSrc.getWidth(null);
+            int height = bgSrc.getHeight(null);
+            BufferedImage image = new BufferedImage(width, height,
+                    BufferedImage.TYPE_INT_RGB);
+            Graphics g = image.createGraphics();
+            g.drawImage(bgSrc, 0, 0, width, height, null);
+
+            //g.drawImage(logoSrc, 277, 283, 162,162, null);    // 绘制微信头像logo
+            //参数分别为image，x，y, width, height，  x表示离背景图左边框距离，y表示离上边边框距离，w和h表示二维码大小，大致是这样
+            g.drawImage(biQR, 118, 362, 590, 590, null);// 绘制二维码
+            /*g.setColor(Color.BLACK);
+            Font f = new Font("宋体", Font.BOLD, 30);//bold表示粗体，后面45是字体大小
+            Color mycolor = new Color(136, 135, 135);//new Color(0, 0, 255);
+            g.setColor(mycolor);
+            g.setFont(f);
+            //g.drawString("享七支付", 260, 840);
+            g.drawString(("我是某某"),360,210);
+            g.drawString("我为享七代言",360,260);*/
+            g.dispose();// 绘制背景图
+            /*g.setColor(Color.BLACK);
+            Font f = new Font("宋体", Font.BOLD, 45);//bold表示粗体，后面45是字体大小
+            Color mycolor = new Color(136, 135, 135);//new Color(0, 0, 255);
+            g.setColor(mycolor);
+            g.setFont(f);
+            g.drawString("享七支付", 260, 840);
+            //           g.drawString(("我是"+xm),360,210);
+            //           g.drawString("我为享七代言",360,260);
+            g.dispose();*/
+
+           /* FileOutputStream out = new FileOutputStream(outputPath);
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+            encoder.encode(image);
+            out.close();*/
+            mkdirs(destPath);
+            ImageIO.write(image, FORMAT_NAME, new File(destPath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        String file = new Random().nextInt(99999999) + ".jpg";
+//        ImageIO.write(image, FORMAT_NAME, new File(destPath + "/" + file));
+    }
+
+    /**
      * 当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．(mkdir如果父目录不存在则会抛出异常)
      *
      * @param destPath 存放目录

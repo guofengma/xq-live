@@ -598,7 +598,7 @@ public class WeixinPayController {
     /**
      * 测试所用
      */
-    /*@RequestMapping(value = "/kkk",method = RequestMethod.GET)
+    @RequestMapping(value = "/kkk",method = RequestMethod.GET)
     public BaseResp<Integer> kkk(WeixinInVo inVo,HttpServletRequest request){
         Long soId = Long.valueOf(inVo.getOut_trade_no());
         Long couponId =null;
@@ -627,7 +627,7 @@ public class WeixinPayController {
             inVo1.setCouponId(couponId);
             inVo1.setShopId(shopId);
 
-            *//** 为了完成同一个事务,把券给核销掉  begin*//*
+            /** 为了完成同一个事务,把券给核销掉  begin*/
             if (couponId != null) {
                 CouponOut cp = couponService.selectById(couponId);
                 Shop shopById = shopService.getShopById(shopId);
@@ -643,16 +643,16 @@ public class WeixinPayController {
                 soWriteOff.setCouponAmount(new BigDecimal(cp.getCouponAmount()));
                 soWriteOff.setUserId(soOut.getUserId());
                 soWriteOff.setUserName(soOut.getUserName());
-                            *//*soWriteOff.setCashierId(soOut.getUserId());//用户买单之后,直接自己核销了
-                            soWriteOff.setCashierName(soOut.getUserName());//用户买单之后,直接自己核销了*//*
+                            soWriteOff.setCashierId(soOut.getUserId());//用户买单之后,直接自己核销了
+                            soWriteOff.setCashierName(soOut.getUserName());//用户买单之后,直接自己核销了
                 soWriteOff.setPaidAmount(soOut.getSoAmount());
                 soWriteOff.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
                 Long id = soWriteOffService.add(soWriteOff);
             }
-            *//** end *//*
+            /** end */
 
             int ret = soService.paidForShop(inVo1);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS);
-    }*/
+    }
 }

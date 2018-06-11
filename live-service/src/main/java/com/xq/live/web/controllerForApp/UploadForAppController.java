@@ -4,6 +4,7 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.Constants;
 import com.xq.live.common.QRCodeUtil;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.config.ConstantsConfig;
 import com.xq.live.model.Attachment;
 import com.xq.live.model.User;
 import com.xq.live.service.UploadService;
@@ -41,6 +42,9 @@ public class UploadForAppController {
 
     @Autowired
     private UploadService uploadService;
+
+    @Autowired
+    private ConstantsConfig constantsConfig;
 
     /**
      * 单个文件上传
@@ -132,7 +136,7 @@ public class UploadForAppController {
         }
         String imagePath = this.getImagePath(request) + "logo.jpg";
         String destPath = this.getUploadPath(request) + inVo.getCouponCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/cp/get/" + inVo.getId();
+        String text = constantsConfig.getDomainXqUrl() + "/cp/get/" + inVo.getId();
 
         //生成logo图片到destPath
         try {

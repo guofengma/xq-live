@@ -1,6 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.*;
+import com.xq.live.config.ConstantsConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.AccessLog;
 import com.xq.live.model.Shop;
@@ -46,6 +47,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ConstantsConfig constantsConfig;
 
     @Override
     public Shop getShopById(Long id) {
@@ -263,7 +267,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToCosByInfo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopInfo"+out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+1+"&shopCode="+out.getShopCode();
+        String text = constantsConfig.getDomainXqUrl() + "/service?flag="+1+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {
             ShopCodeUtil.encode(text, imagePath, destPath, true);
@@ -302,7 +306,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToCosBySo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSo"+ out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+2+"&shopCode="+out.getShopCode();
+        String text = constantsConfig.getDomainXqUrl() + "/service?flag="+2+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {
             ShopCodeBySoUtil.encode(text, imagePath, destPath, true);
@@ -342,7 +346,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToBySo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSo"+ out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+2+"&shopCode="+out.getShopCode();
+        String text = constantsConfig.getDomainXqUrl() + "/service?flag="+2+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {
             QRCodeUtil.encode(text, imagePath, destPath, true);
@@ -382,7 +386,7 @@ public class ShopServiceImpl implements ShopService {
     public String uploadQRCodeToByInfo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopInfo"+out.getShopCode() + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/service?flag="+1+"&shopCode="+out.getShopCode();
+        String text = constantsConfig.getDomainXqUrl() + "/service?flag="+1+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {
             QRCodeUtil.encode(text, imagePath, destPath, true);

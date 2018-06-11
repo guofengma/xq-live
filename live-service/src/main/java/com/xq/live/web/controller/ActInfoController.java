@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 平台活动controller
@@ -107,7 +109,11 @@ public class ActInfoController {
      */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public BaseResp<ActInfoOut> detail(ActInfoInVo inVo, HttpServletRequest request){
-        if(inVo == null || inVo.getId() == null || inVo.getUserId() == null || StringUtils.isEmpty(inVo.getUserName()) || inVo.getSourceType() == null){
+        /*if(inVo == null || inVo.getId() == null || inVo.getUserId() == null || StringUtils.isEmpty(inVo.getUserName()) || inVo.getSourceType() == null){
+            return new BaseResp<ActInfoOut>(ResultStatus.error_param_empty);
+        }*/
+        //userId 和 userName 也是要必填,但是为了能正常分享，此地方注释掉
+        if(inVo == null || inVo.getId() == null || inVo.getSourceType() == null){
             return new BaseResp<ActInfoOut>(ResultStatus.error_param_empty);
         }
 
@@ -126,5 +132,25 @@ public class ActInfoController {
     public BaseResp<Integer> actVoteNums(Long userId){
         Integer integer = countService.actVoteNums(userId);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
+
+    /**
+     * 生成活动选手分享二维码
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/CreateCode")
+    public BaseResp<Map<String,String>> CreateCode(ActInfoInVo inVo){
+        if (inVo==null||inVo.getId()==null||inVo.getUserId()==null) {
+            return new BaseResp<Map<String,String>>(ResultStatus.error_param_empty);
+        }
+
+        String imge=actInfoService.uploadQRCodeToCos(inVo);
+        if (imge==null){
+            return new BaseResp<Map<String,String>>(ResultStatus.error_shop_code);
+        }
+        Map<String,String> shopUrl=new HashMap<>();
+        shopUrl.put("A",imge);//带背景图的二维码
+        return new BaseResp<Map<String,String>>(ResultStatus.SUCCESS,shopUrl);
     }
 }

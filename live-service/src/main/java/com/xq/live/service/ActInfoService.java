@@ -63,4 +63,11 @@ public interface ActInfoService {
      * @return
      */
     ActInfoOut detail(ActInfoInVo inVo);
+
+    /**
+     * 根据actId和userId来生成活动分享的二维码
+     * @param inVo
+     * @return
+     */
+    String uploadQRCodeToCos(ActInfoInVo inVo);
 }

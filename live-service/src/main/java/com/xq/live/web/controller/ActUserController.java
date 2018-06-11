@@ -116,9 +116,10 @@ public class ActUserController {
      */
     @RequestMapping(value = "/findByInVo",method = RequestMethod.GET)
     public BaseResp<ActUserOut> findByInVo(ActUserInVo inVo){
-        if(inVo.getVoteUserId()==null){
+        //此地方是必传，但是这里注释掉是为了分享能正常进行
+        /*if(inVo.getVoteUserId()==null){
             return new BaseResp<ActUserOut>(-1,"voteUserId必填", null);
-        }
+        }*/
         if(inVo.getActId()==null){
             return new BaseResp<ActUserOut>(-1,"actId必填", null);
         }

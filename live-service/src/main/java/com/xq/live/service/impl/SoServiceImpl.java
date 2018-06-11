@@ -4,6 +4,8 @@ import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
 import com.xq.live.common.QRCodeUtil;
 import com.xq.live.common.RandomStringUtil;
+import com.xq.live.config.ActSkuConfig;
+import com.xq.live.config.ConstantsConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.AccountService;
@@ -87,6 +89,12 @@ public class SoServiceImpl implements SoService {
 
     @Autowired
     private SoWriteOffMapper soWriteOffMapper;
+
+    @Autowired
+    private ConstantsConfig constantsConfig;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
 
 
     @Override
@@ -473,7 +481,7 @@ public class SoServiceImpl implements SoService {
     private String uploadQRCodeToCos(String code) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator + code + ".jpg";
-        String text = Constants.DOMAIN_XQ_URL + "/cp/getByCode/"+code;
+        String text = constantsConfig.getDomainXqUrl() + "/cp/getByCode/"+code;
 
         //生成logo图片到destPath
         try {
@@ -587,7 +595,11 @@ public class SoServiceImpl implements SoService {
             coupon.setSkuCode(sku.getSkuCode());
             coupon.setSkuName(sku.getSkuName());
             coupon.setCouponAmount(couponSku.getAmount());
-            coupon.setType(Coupon.COUPON_TYPE_PLAT);
+            if(sku.getId().equals(actSkuConfig.getSkuIdOther())){
+                coupon.setType(Coupon.OUNPON_TYPE_ACT);
+            }else {
+                coupon.setType(Coupon.COUPON_TYPE_PLAT);
+            }
             coupon.setUserId(soOut.getUserId());
             coupon.setUserName(soOut.getUserName());
             //上传二维码图片到腾讯COS服务器

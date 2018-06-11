@@ -1,6 +1,9 @@
 package com.xq.live.service.impl;
 
+import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
+import com.xq.live.common.ShopCodeUtil;
+import com.xq.live.config.ConstantsConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.ActInfoService;
@@ -9,10 +12,13 @@ import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActInfoOut;
 import com.xq.live.vo.out.ActUserOut;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +47,9 @@ public class ActInfoServiceImpl implements ActInfoService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ConstantsConfig constantsConfig;
 
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
@@ -184,5 +193,41 @@ public class ActInfoServiceImpl implements ActInfoService {
 
         return actInfoOut;
 
+    }
+
+    @Override
+    public String uploadQRCodeToCos(ActInfoInVo inVo) {
+        String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ActInfo"+inVo.getId()+"userId"+inVo.getUserId()+System.currentTimeMillis() +".jpg";
+        String text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=36&userId="+inVo.getUserId();
+        //String text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=36&userId="+57;
+        //生成logo图片到destPath
+        try {
+            ShopCodeUtil.encodeForAct(text, imagePath, destPath, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        UploadServiceImpl uploadService = new UploadServiceImpl();
+        //上传文件到腾讯云cos--缩放0.8
+        String imgUrl = uploadService.uploadFileToCos(destPath, "actInfo");
+        int i=0;
+        do {
+            i++;
+            if (imgUrl==null){
+                imgUrl=uploadService.uploadFileToCos(destPath, "actInfo");
+            }
+            if (imgUrl!=null){
+                break;
+            }
+            if (i==4){
+                break;
+            }
+        }while (true);
+        if (StringUtils.isEmpty(imgUrl)) {
+            return null;
+        }
+        //删除服务器上临时文件
+        uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
+        return imgUrl;
     }
 }

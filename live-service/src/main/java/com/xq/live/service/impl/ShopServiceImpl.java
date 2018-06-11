@@ -264,6 +264,7 @@ public class ShopServiceImpl implements ShopService {
      * @param out
      * @return
      */
+    @Override
     public String uploadQRCodeToCosByInfo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopInfo"+out.getShopCode() + ".jpg";
@@ -303,9 +304,10 @@ public class ShopServiceImpl implements ShopService {
      * @param out
      * @return
      */
+    @Override
     public String uploadQRCodeToCosBySo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
-        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSo"+ out.getShopCode() + ".jpg";
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSoInfo"+ out.getShopCode() + ".jpg";
         String text = constantsConfig.getDomainXqUrl() + "/service?flag="+2+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {
@@ -343,6 +345,7 @@ public class ShopServiceImpl implements ShopService {
      * @param out
      * @return
      */
+    @Override
     public String uploadQRCodeToBySo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
         String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopSo"+ out.getShopCode() + ".jpg";
@@ -383,9 +386,10 @@ public class ShopServiceImpl implements ShopService {
      * @param out
      * @return
      */
+    @Override
     public String uploadQRCodeToByInfo(ShopOut out) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
-        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ShopInfo"+out.getShopCode() + ".jpg";
+        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"Shop"+out.getShopCode() + ".jpg";
         String text = constantsConfig.getDomainXqUrl() + "/service?flag="+1+"&shopCode="+out.getShopCode();
         //生成logo图片到destPath
         try {

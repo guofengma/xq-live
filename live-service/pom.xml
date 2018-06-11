@@ -170,7 +170,7 @@
                 </dependency>-->
 
         <!--极光消息推送-->
-        <dependency>
+        <!--<dependency>
             <groupId>cn.jpush.api</groupId>
             <artifactId>jpush-client</artifactId>
             <version>3.3.4</version>
@@ -197,10 +197,10 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
         </dependency>
-
+-->
 
         <!--Activemq消息队列推送-->
-            <dependency>
+<!--            <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-core</artifactId>
                 <version>5.7.0</version>
@@ -212,7 +212,7 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-pool</artifactId>
-            </dependency>
+            </dependency>-->
         <!--END-->
 
         <!--视频处理-->

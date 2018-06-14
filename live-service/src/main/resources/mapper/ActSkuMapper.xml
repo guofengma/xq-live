@@ -15,6 +15,22 @@
   </resultMap>
 
   <resultMap id="ActSkuOutResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.ActSkuOut">
+    <result column="pr_sku_id" jdbcType="BIGINT" property="prSkuId" />
+    <result column="pr_sku_code" jdbcType="VARCHAR" property="prSkuCode" />
+    <result column="pr_sku_name" jdbcType="VARCHAR" property="prSkuName" />
+    <result column="rule_type" jdbcType="INTEGER" property="ruleType" />
+    <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc" />
+    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+    <result column="man_amount" jdbcType="DECIMAL" property="manAmount" />
+    <result column="jian_amount" jdbcType="DECIMAL" property="jianAmount" />
+    <result column="act_sku_code" jdbcType="VARCHAR" property="actSkuCode" />
+    <result column="act_sku_name" jdbcType="VARCHAR" property="actSkuName" />
+    <result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
+    <result column="in_price" jdbcType="DECIMAL" property="inPrice" />
+    <result column="agio_price" jdbcType="DECIMAL" property="agioPrice" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="sku_info" jdbcType="VARCHAR" property="skuInfo" />
+    <result column="is_vote" jdbcType="INTEGER" property="isVote" />
 
   </resultMap>
   <sql id="Base_Column_List">
@@ -154,26 +170,36 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <!--<select id="listForNewAct" resultMap="ActSkuOutResultMap">
+  <select id="listForNewAct" resultMap="ActSkuOutResultMap">
     select
     a.id, a.act_id, a.sku_id, a.sku_code,a.pr_id,a.apply_status,a.vote_num, a.create_time,
     a.update_time,a.is_luoxuan,
-    u.icon_url,
-    u.age,
-    u.height,
-    u.nick_name,
-    u.user_name,
-    u.mobile,
-    u.sex,
+    pr.sku_id as pr_sku_id,
+    pr.sku_code as pr_sku_code,
+    pr.sku_name as pr_sku_name,
+    pr.rule_type,
+    pr.rule_desc,
+    pr.shop_id,
+    pr.man_amount,
+    pr.jian_amount,
+    s.sku_code as act_sku_code,
+    s.sku_name as act_sku_name,
+    s.sell_price,
+    s.in_price,
+    s.agio_price,
+    s.pic_url,
+    s.sku_info,
     (select count(1) from vote where sku_id = a.sku_id
+      and act_id = a.act_id
     <if test="voteUserId != null and beginTime !=null and endTime !=null">
       AND  user_id = #{voteUserId}
       AND  (create_time BETWEEN #{beginTime} and #{endTime})
     </if>
     ) as is_vote
     FROM
-    act_user a
+    act_sku a
     inner join promotion_rules pr on a.pr_id = pr.id
+    inner join sku s on a.sku_id = s.id
     <where>
       1=1
       <if test="id != null">
@@ -182,16 +208,13 @@
       <if test="actId != null">
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
-      <if test="searchKey != null and type == null">
-        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or a.user_code = #{searchKey,jdbcType=VARCHAR})
-      </if>
-      <if test="searchKey != null and type == 2">
-        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or k.group_code = #{searchKey,jdbcType=VARCHAR})
+      <if test="searchKey != null">
+        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
       and  a.is_luoxuan = 0
+      and  s.is_deleted = 0
     </where>
     ORDER by
     <if test="sortType == 1">
@@ -202,13 +225,12 @@
   </select>
 
   <select id="listTotal" resultType="java.lang.Integer">
-    select count(1)
+    select
+    count(1)
     FROM
-    act_user a
-    inner join user u on a.user_id = u.id
-    <if test="type == 2">
-      inner join act_group k on a.user_id = k.user_id and a.act_id = k.act_id
-    </if>
+    act_sku a
+    inner join promotion_rules pr on a.pr_id = pr.id
+    inner join sku s on a.sku_id = s.id
     <where>
       1=1
       <if test="id != null">
@@ -217,19 +239,70 @@
       <if test="actId != null">
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
-      <if test="searchKey != null and type == null">
-        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or a.user_code = #{searchKey,jdbcType=VARCHAR})
-      </if>
-      <if test="searchKey != null and type == 2">
-        and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or k.group_code = #{searchKey,jdbcType=VARCHAR})
+      <if test="searchKey != null">
+        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
       and  a.is_luoxuan = 0
-      <if test="type == 2">
-        and k.is_deleted = 0
-      </if>
+      and  s.is_deleted = 0
     </where>
-  </select>-->
+    ORDER by
+    <if test="sortType == 1">
+      a.create_time DESC,
+    </if>
+    a.vote_num DESC
+    limit #{start}, #{rows}
+  </select>
+
+  <select id="findByInVo" resultMap="ActSkuOutResultMap">
+    select
+    a.id, a.act_id, a.sku_id, a.sku_code,a.pr_id,a.apply_status,a.vote_num, a.create_time,
+    a.update_time,a.is_luoxuan,
+    pr.sku_id as pr_sku_id,
+    pr.sku_code as pr_sku_code,
+    pr.sku_name as pr_sku_name,
+    pr.rule_type,
+    pr.rule_desc,
+    pr.shop_id,
+    pr.man_amount,
+    pr.jian_amount,
+    s.sku_code as act_sku_code,
+    s.sku_name as act_sku_name,
+    s.sell_price,
+    s.in_price,
+    s.agio_price,
+    s.pic_url,
+    s.sku_info,
+    (select count(1) from vote where sku_id = a.sku_id
+    and act_id = a.act_id
+    <if test="voteUserId != null and beginTime !=null and endTime !=null">
+      AND  user_id = #{voteUserId}
+      AND  (create_time BETWEEN #{beginTime} and #{endTime})
+    </if>
+    ) as is_vote
+    FROM
+    act_sku a
+    inner join promotion_rules pr on a.pr_id = pr.id
+    inner join sku s on a.sku_id = s.id
+    <where>
+      1=1
+      <if test="id != null">
+        and  a.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        AND  a.act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="skuId != null">
+        and a.sku_id = #{skuId,jdbcType=BIGINT}
+      </if>
+      <if test="searchKey != null">
+        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+      </if>
+      and  a.apply_status != 2
+      and  a.is_luoxuan = 0
+      and  s.is_deleted = 0
+    </where>
+  </select>
 </mapper>

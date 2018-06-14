@@ -15,4 +15,11 @@ public interface ActSkuService {
      * @return
      */
     Pager<ActSkuOut> listForNewAct(ActSkuInVo inVo);
+
+    /**
+     * 查询单个详情页的活动推荐菜信息
+     * @param inVo
+     * @return
+     */
+    ActSkuOut findByInVo(ActSkuInVo inVo);
 }

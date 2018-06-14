@@ -55,6 +55,7 @@ public class ActSkuController {
      */
     @RequestMapping(value = "/listNewAct", method = RequestMethod.GET)
     public BaseResp<Pager<ActSkuOut>> listNewAct(ActSkuInVo inVo){
+        //如果要查最新的话，要传个sortType为1
         //为了分享这个地方注释掉，但是这里是要必传的，判断用户的已投票状态
         /*if(inVo.getVoteUserId()==null){
             return new BaseResp<Pager<ActSkuOut>>(-1,"voteUserId必填", null);
@@ -65,34 +66,31 @@ public class ActSkuController {
         if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
             return new BaseResp<Pager<ActSkuOut>>(-1,"时间必填",null);
         }
-        /*if(inVo.getType()==null){
-            return new BaseResp<Pager<ActUserOut>>(-1,"type必填",null);
-        }*/
         Pager<ActSkuOut> result = actSkuService.listForNewAct(inVo);
         return new BaseResp<Pager<ActSkuOut>>(ResultStatus.SUCCESS, result);
     }
 
     /**
-     * 查询选手详情
+     * 查询单个详情页的活动推荐菜信息
      * @param inVo
      * @return
      */
-    /*@RequestMapping(value = "/findByInVo",method = RequestMethod.GET)
-    public BaseResp<ActUserOut> findByInVo(ActUserInVo inVo){
+    @RequestMapping(value = "/findByInVo",method = RequestMethod.GET)
+    public BaseResp<ActSkuOut> findByInVo(ActSkuInVo inVo){
         //此地方是必传，但是这里注释掉是为了分享能正常进行
-        *//*if(inVo.getVoteUserId()==null){
-            return new BaseResp<ActUserOut>(-1,"voteUserId必填", null);
-        }*//*
+       /* if(inVo.getVoteUserId()==null){
+            return new BaseResp<ActSkuOut>(-1,"voteUserId必填", null);
+        }*/
         if(inVo.getActId()==null){
-            return new BaseResp<ActUserOut>(-1,"actId必填", null);
+            return new BaseResp<ActSkuOut>(-1,"actId必填", null);
         }
         if(inVo.getBeginTime()==null||inVo.getEndTime()==null){
-            return new BaseResp<ActUserOut>(-1,"时间必填",null);
+            return new BaseResp<ActSkuOut>(-1,"时间必填",null);
         }
-        if(inVo.getUserId()==null){
-            return new BaseResp<ActUserOut>(-1,"userId必填",null);
+        if(inVo.getSkuId()==null){
+            return new BaseResp<ActSkuOut>(-1,"skuId必填",null);
         }
-        ActUserOut byInVo = actUserService.findByInVo(inVo);
-        return new BaseResp<ActUserOut>(ResultStatus.SUCCESS,byInVo);
-    }*/
+        ActSkuOut byInVo = actSkuService.findByInVo(inVo);
+        return new BaseResp<ActSkuOut>(ResultStatus.SUCCESS,byInVo);
+    }
 }

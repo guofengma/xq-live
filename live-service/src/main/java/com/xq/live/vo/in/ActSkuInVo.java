@@ -6,7 +6,7 @@ import java.util.Date;
  * 活动推荐菜入参
  * Created by lipeng on 2018/6/13.
  */
-public class ActSkuInVo {
+public class ActSkuInVo extends BaseInVo{
     private Long id;
 
     private Long actId;
@@ -32,6 +32,8 @@ public class ActSkuInVo {
     private Date beginTime;//开始时间
 
     private Date endTime;//结束时间
+
+    private Integer sortType;//排序类型 1最新  null最热
 
     public Long getId() {
         return id;
@@ -135,5 +137,13 @@ public class ActSkuInVo {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(Integer sortType) {
+        this.sortType = sortType;
     }
 }

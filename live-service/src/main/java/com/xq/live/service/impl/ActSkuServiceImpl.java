@@ -1,9 +1,12 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
+import com.xq.live.dao.ActSkuMapper;
 import com.xq.live.service.ActSkuService;
 import com.xq.live.vo.in.ActSkuInVo;
 import com.xq.live.vo.out.ActSkuOut;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,43 +17,40 @@ import java.util.List;
  */
 @Service
 public class ActSkuServiceImpl implements ActSkuService{
+    @Autowired
+    private ActSkuMapper actSkuMapper;
+
+    private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
+
     @Override
     public Pager<ActSkuOut> listForNewAct(ActSkuInVo inVo) {
-        /*Pager<ActUserOut> result = new Pager<ActUserOut>();
-        int listTotal = actUserMapper.listTotal(inVo);
+        Pager<ActSkuOut> result = new Pager<ActSkuOut>();
+        int listTotal = actSkuMapper.listTotal(inVo);
         result.setTotal(listTotal);
-        if (listTotal > 0) {
-            List<ActUserOut> list = actUserMapper.listForNewAct(inVo);
-            for (ActUserOut actUserOut : list) {
-                actUserOut = getPicUrls(actUserOut);
-            }
-            //如果是查询分组的，把分组的关联信息加入进去
-            if(inVo.getType()!=null&&inVo.getType()== ActUser.ACT_USER_GROUP){
-                for (ActUserOut actUserOut : list) {
-                    Shop shop = shopMapper.selectByPrimaryKey(actUserOut.getShopId());
-                    actUserOut.setLogoUrl(shop.getLogoUrl());
-                    actUserOut.setShopName(shop.getShopName());
+        if(listTotal>0){
+            List<ActSkuOut> list = actSkuMapper.listForNewAct(inVo);
+            /*for (ActSkuOut actSkuOut : list) {
 
-
-                    ActSignInVo actSignInVo = new ActSignInVo();
-                    actSignInVo.setType(ActSign.ACT_SIGN_TYPE_SHOP);
-                    actSignInVo.setRefId(shop.getId());
-                    actSignInVo.setActId(actUserOut.getActId());
-                    ActSign sign = actSignMapper.isSign(actSignInVo);
-
-                    if(sign!=null) {
-                        Sku sku = skuMapper.selectByPrimaryKey(sign.getSkuId());
-                        if (sku != null) {
-                            actUserOut.setSkuName(sku.getSkuName());
-                        }
-                    }
-                }
-            }
-            //Collections.sort(list);
+            }*/
             result.setList(list);
         }
         result.setPage(inVo.getPage());
-        return result;*/
-        return null;
+        return result;
+    }
+
+    @Override
+    public ActSkuOut findByInVo(ActSkuInVo inVo) {
+
+        ActSkuOut byInVo = null;
+        try {
+            byInVo = actSkuMapper.findByInVo(inVo);//主要是为了防止脏数据，其实也可以直接查询单个
+            if (byInVo == null) {
+                return null;
+            }
+            return byInVo;
+        }catch (Exception e){
+            logger.error("查询活动推荐菜异常TooManyResultException ：" + e.getMessage());
+            return new ActSkuOut();
+        }
     }
 }

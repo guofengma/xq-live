@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.xq.live.model.CouponSku">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
         <result column="sku_code" jdbcType="VARCHAR" property="skuCode"/>
         <result column="amount" jdbcType="INTEGER" property="amount"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
@@ -12,7 +13,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, sku_id,sku_code, amount, type, is_deleted, create_time, update_time
+    id, sku_id,sku_name,sku_code, amount, type, is_deleted, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -21,11 +22,14 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectBySkuId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectBySkuId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from coupon_sku
         where sku_id = #{skuId,jdbcType=BIGINT}
+        <if test="isDeleted != null">
+            and is_deleted = #{isDeleted,jdbcType=INTEGER}
+        </if>
     </select>
 
     <select id="list" resultMap="BaseResultMap">
@@ -57,10 +61,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
     <insert id="insert" parameterType="com.xq.live.model.CouponSku">
-        insert into coupon_sku (sku_id, sku_code, amount,
+        insert into coupon_sku (sku_id,sku_name, sku_code, amount,
         type, is_deleted, create_time,
         update_time)
-        values (#{skuId,jdbcType=BIGINT}, #{skuCode,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER},
+        values (#{skuId,jdbcType=BIGINT},#{skuName,jdbcType=VARCHAR}, #{skuCode,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER},
         #{type,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, now(),
         now())
         <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
@@ -75,6 +79,9 @@
             </if>
             <if test="skuId != null">
                 sku_id,
+            </if>
+            <if test="skuName != null">
+                sku_name,
             </if>
             <if test="skuCode != null">
                 sku_code,
@@ -102,6 +109,9 @@
             <if test="skuId != null">
                 #{skuId,jdbcType=BIGINT},
             </if>
+            <if test="skuName != null">
+                #{skuName,jdbcType=VARCHAR},
+            </if>
             <if test="skuCode != null">
                 #{skuCode,jdbcType=VARCHAR},
             </if>
@@ -128,6 +138,9 @@
             <if test="skuId != null">
                 sku_id = #{skuId,jdbcType=BIGINT},
             </if>
+            <if test="skuName != null">
+                sku_name = #{skuName,jdbcType=VARCHAR},
+            </if>
             <if test="skuCode != null">
                 sku_code = #{skuCode,jdbcType=VARCHAR},
             </if>
@@ -152,6 +165,7 @@
     <update id="updateByPrimaryKey" parameterType="com.xq.live.model.CouponSku">
     update coupon_sku
     set sku_id = #{skuId,jdbcType=BIGINT},
+      sku_name = #{skuName,jdbcType=VARCHAR},
       sku_code = #{skuCode,jdbcType=VARCHAR},
       amount = #{amount,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER},

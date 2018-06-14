@@ -24,6 +24,8 @@ public class Vote {
 
     private Long playerUserId;//参与选手的用户id
 
+    private Long skuId;//推荐菜的sku_id
+
     private Date createTime;
 
     public Long getId() {
@@ -72,5 +74,13 @@ public class Vote {
 
     public void setPlayerUserId(Long playerUserId) {
         this.playerUserId = playerUserId;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 }

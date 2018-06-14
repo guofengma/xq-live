@@ -30,8 +30,8 @@ public interface CouponSkuService {
 
     /**
      * 查询单条记录
-     * @param id
+     * @param sku
      * @return
      */
-    CouponSku selectBySkuId(Long id);
+    CouponSku selectBySkuId(CouponSku sku);
 }

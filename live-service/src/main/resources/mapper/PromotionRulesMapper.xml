@@ -63,6 +63,7 @@
     from promotion_rules p
     INNER JOIN sku s on p.sku_id = s.id
     where p.shop_id =  #{shopId,jdbcType=INTEGER}
+    and p.rule_type != 3
     ORDER by s.in_price
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

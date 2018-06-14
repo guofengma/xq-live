@@ -586,7 +586,10 @@ public class SoServiceImpl implements SoService {
         for (int i = 0; i < inVo.getSkuNum(); i++) {
             //3、查询券信息
             Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
-            CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
+            CouponSku couponSkuNew = new CouponSku();
+            couponSkuNew.setSkuId(inVo.getSkuId());
+            couponSkuNew.setIsDeleted(CouponSku.COUPON_SKU_NO_DELETED);
+            CouponSku couponSku = couponSkuMapper.selectBySkuId(couponSkuNew);
             SoOut soOut = this.get(inVo.getId());
             Coupon coupon = new Coupon();
             coupon.setSoId(inVo.getId());
@@ -625,7 +628,10 @@ public class SoServiceImpl implements SoService {
         for (int i = 0; i < inVo.getSkuNum(); i++) {
             //3、查询券信息
             Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());
-            CouponSku couponSku = couponSkuMapper.selectBySkuId(inVo.getSkuId());
+            CouponSku couponSkuNew = new CouponSku();
+            couponSkuNew.setSkuId(inVo.getSkuId());
+            couponSkuNew.setIsDeleted(CouponSku.COUPON_SKU_NO_DELETED);
+            CouponSku couponSku = couponSkuMapper.selectBySkuId(couponSkuNew);
             SoOut soOut = this.get(inVo.getId());
             Coupon coupon = new Coupon();
             coupon.setSoId(inVo.getId());

@@ -8,6 +8,7 @@ import com.xq.live.service.SkuService;
 import com.xq.live.vo.in.SkuInVo;
 import com.xq.live.vo.out.SkuForTscOut;
 import com.xq.live.vo.out.SkuOut;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -79,6 +80,38 @@ public class SkuForAppController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Long skuId = skuService.add(sku);
+        return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
+    }
+
+    /**
+     * 新增食典券
+     * @param sku
+     * @return
+     */
+    @RequestMapping(value = "/addSku", method = RequestMethod.POST)
+    public BaseResp<Long> addSku(@Valid Sku sku, BindingResult result){
+        if (result.hasErrors()) {
+            List<ObjectError> list = result.getAllErrors();
+            return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
+        }
+        //查询生成的食典券是否存在，如果存在的话那就不用再生成票券了
+        Sku skuNew = new Sku();
+        BeanUtils.copyProperties(sku,skuNew);
+        skuNew.setIsDeleted(Sku.SKU_NO_DELETED);
+        Sku skuForAct = skuService.selectForActSku(skuNew);
+        if(skuForAct!=null){
+             return new BaseResp<Long>(ResultStatus.SUCCESS,skuForAct.getId());
+        }
+        //查询是否存在已经被删除的食典券,如果存在，则需把删除状态改成正常状态
+        skuNew.setIsDeleted(Sku.SKU_IS_DELETED);
+        skuForAct = skuService.selectForActSku(skuNew);
+        if(skuForAct!=null){
+           Integer i =  skuService.updateSku(skuForAct);
+            if(i==1){
+                return new BaseResp<Long>(ResultStatus.SUCCESS,skuForAct.getId());
+            }
+        }
+        Long skuId = skuService.addSku(sku);
         return new BaseResp<Long>(ResultStatus.SUCCESS, skuId);
     }
 

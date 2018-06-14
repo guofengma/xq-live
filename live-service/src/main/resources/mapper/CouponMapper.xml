@@ -54,7 +54,7 @@
     where user_id = #{userId,jdbcType=BIGINT}
     and is_used = 1
     and is_deleted = 0
-    and (TO_DAYS(create_time) = TO_DAYS(now()))
+    and (TO_DAYS(used_time) = TO_DAYS(now()))
   </select>
 
   <select id="getByCouponCode" parameterType="java.lang.String" resultMap="CouponOutResultMap">

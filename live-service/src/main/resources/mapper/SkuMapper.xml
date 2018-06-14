@@ -65,6 +65,20 @@
     where sku_code = #{skuCode,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectForActSku" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sku
+    where sku_type = #{skuType,jdbcType=INTEGER}
+    and sku_name = #{skuName,jdbcType=VARCHAR}
+    <if test="sellPrice !=null">
+      and sell_price = #{sellPrice,jdbcType=DECIMAL}
+    </if>
+    <if test="isDeleted != null">
+      and is_deleted = #{isDeleted,jdbcType=INTEGER}
+    </if>
+  </select>
+
   <!--分页查询  start-->
   <select id="list" resultMap="SkuOutResultMap">
     SELECT

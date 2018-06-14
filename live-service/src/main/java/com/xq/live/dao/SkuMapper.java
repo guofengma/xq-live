@@ -22,6 +22,8 @@ public interface SkuMapper {
 
     Sku selectBySkuCode(String skuCode);
 
+    Sku selectForActSku(Sku record);
+
     int updateByPrimaryKeySelective(Sku record);
 
     int updateByPrimaryKey(Sku record);

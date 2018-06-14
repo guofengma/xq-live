@@ -37,7 +37,7 @@ public class CouponSkuServiceImpl implements CouponSkuService {
     }
 
     @Override
-    public CouponSku selectBySkuId(Long id){
-        return couponSkuMapper.selectBySkuId(id);
+    public CouponSku selectBySkuId(CouponSku sku){
+        return couponSkuMapper.selectBySkuId(sku);
     }
 }

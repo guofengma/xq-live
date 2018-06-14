@@ -3,15 +3,14 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.Attachment;
-import com.xq.live.model.Shop;
-import com.xq.live.model.So;
-import com.xq.live.model.User;
+import com.xq.live.model.*;
 import com.xq.live.service.*;
 import com.xq.live.service.impl.ShopServiceImpl;
 import com.xq.live.vo.in.ShopInVo;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.UserInVo;
 import com.xq.live.vo.out.ShopOut;
+import com.xq.live.web.utils.GtPush;
 import com.xq.live.web.utils.IpUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,6 +259,42 @@ public class ShopController {
         }
         return new BaseResp<String>(ResultStatus.SUCCESS,shopUrl);
 
+    }
+    /**
+     * 群推推送信息给商家（客户端升级）
+     * @return
+     */
+    @RequestMapping(value = "/pushInfo")
+    public BaseResp<String> GTPush(PushMsg msg){
+        String push= GtPush.pushInfoByShop(msg);
+        return new BaseResp<String>(ResultStatus.SUCCESS,push);
+    }
+
+    /**
+     * 点对点推送信息给一个商家的所有人（客户端升级）
+     * @return
+     */
+    @RequestMapping(value = "/pushSoByShop")
+    public BaseResp<String> GTPushSoBuShop(PushMsg msg){
+        if (msg.getShopId()!=null){
+            UserInVo inVo=new UserInVo();
+            inVo.setShopId(msg.getShopId());
+            List<User> user=userService.listForShopId(inVo);
+            for (int i =0;i<user.size();i++){
+                PushMsg pushMsg= new PushMsg();
+                pushMsg.setAlias(user.get(i).getId().toString());
+                pushMsg.setTitle(msg.getTitle());
+                pushMsg.setMessageInfo(msg.getMessageInfo());
+                pushMsg.setIos(msg.getIos());
+                pushMsg.setType(msg.getType());
+                pushMsg.setBadge(msg.getBadge());
+                GtPush.sendMessage(pushMsg);
+            }
+        }
+        if (msg.getShopId()==null) {
+            GtPush.sendMessage(msg);
+        }
+        return new BaseResp<String>(ResultStatus.SUCCESS,"发出消息");
     }
 
 

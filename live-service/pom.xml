@@ -214,7 +214,13 @@
                 <artifactId>activemq-pool</artifactId>
             </dependency>-->
         <!--END-->
-
+        <!--个推-->
+        <dependency>
+            <groupId>com.gexin.platform</groupId>
+            <artifactId>gexin-rp-sdk-http</artifactId>
+            <version>4.0.1.17</version>
+        </dependency>
+        <!--END-->
         <!--视频处理-->
         <dependency>
             <groupId>org.bytedeco</groupId>
@@ -222,7 +228,14 @@
             <version>1.4.1</version>
         </dependency>
     </dependencies>
-
+    <!--个推-->
+    <repositories>
+        <repository>
+            <id>getui-nexus</id>
+            <url>http://mvn.gt.igexin.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+    <!--END-->
     <build>
         <plugins>
             <plugin>

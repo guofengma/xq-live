@@ -46,6 +46,20 @@ public interface SkuService {
     Long add(Sku sku);
 
     /**
+     * 新增食典券
+     * @param sku
+     * @return
+     */
+    Long addSku(Sku sku);
+
+    /**
+     * 根据skuType,skuName,sellPrice来查询票券信息
+     * @param inVo
+     * @return
+     */
+    Sku selectForActSku(Sku inVo);
+
+    /**
      * 根据id查询，返回结果包含促销信息
      * @param id
      * @return
@@ -86,4 +100,11 @@ public interface SkuService {
      * @return
      */
     Integer update(Sku sku);
+
+    /**
+     * 更新食典券和coupon_sku的信息
+     * @param skuForAct
+     * @return
+     */
+    Integer updateSku(Sku skuForAct);
 }

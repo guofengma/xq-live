@@ -24,6 +24,8 @@ public class VoteInVo extends  BaseInVo {
 
     private Long playerUserId;//参与选手的用户id
 
+    private Long skuId;//推荐菜的id
+
     private Date createTime;
 
     private Integer type;//投票操作  1投票 2取消投票
@@ -102,5 +104,13 @@ public class VoteInVo extends  BaseInVo {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 }

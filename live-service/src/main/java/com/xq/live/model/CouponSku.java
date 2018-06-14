@@ -9,10 +9,19 @@ import java.util.Date;
  * 券基础信息entity
  */
 public class CouponSku {
+    /**
+     * 判断是否被删除 0未删除 1已删除
+     */
+    public final static int COUPON_SKU_NO_DELETED = 0;
+
+    public final static int COUPON_SKU_IS_DELETED = 1;
+
     private Long id;
 
     @NotNull(message = "skuId必填")
     private Long skuId;
+
+    private String skuName;
 
     @NotNull(message = "skuCode必填")
     private String skuCode;
@@ -45,6 +54,14 @@ public class CouponSku {
 
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
+    }
+
+    public String getSkuName() {
+        return skuName;
+    }
+
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 
     public Integer getAmount() {

@@ -35,9 +35,9 @@ public class Sku {
     @NotNull(message = "skuType必填")
     private Integer skuType;   //sku类型 1 券  2 其他
 
-    private BigDecimal sellPrice;
+    private BigDecimal sellPrice;//相当于原价
 
-    private BigDecimal inPrice;
+    private BigDecimal inPrice;//相当于进价
 
     private BigDecimal agioPrice;//折扣价
 

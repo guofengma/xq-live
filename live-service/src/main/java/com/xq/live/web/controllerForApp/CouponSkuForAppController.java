@@ -41,7 +41,10 @@ public class CouponSkuForAppController {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
-        CouponSku cs = couponSkuService.selectBySkuId(couponSku.getSkuId());
+        CouponSku sku = new CouponSku();
+        sku.setIsDeleted(CouponSku.COUPON_SKU_NO_DELETED);
+        sku.setSkuId(couponSku.getSkuId());
+        CouponSku cs = couponSkuService.selectBySkuId(sku);
         if(cs != null){
             return new BaseResp<Long>(ResultStatus.error_coupon_sku_exist);
         }

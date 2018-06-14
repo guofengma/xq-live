@@ -26,5 +26,5 @@ public interface CouponSkuMapper {
 
     List<CouponSku> list(CouponSkuInVo inVo);
 
-    CouponSku selectBySkuId(Long skuId);
+    CouponSku selectBySkuId(CouponSku record);
 }

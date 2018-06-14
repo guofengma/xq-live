@@ -2,6 +2,8 @@ package com.xq.live.service;
 
 import com.xq.live.vo.in.VoteInVo;
 
+import java.util.Map;
+
 /**
  * @package: com.xq.live.service
  * @description: 各种统计service
@@ -51,6 +53,6 @@ public interface CountService {
      * @param userId
      * @return
      */
-    Integer actVoteNums(Long userId);
+    Map<String,Integer> actVoteNums(Long userId,Long actId);
 
 }

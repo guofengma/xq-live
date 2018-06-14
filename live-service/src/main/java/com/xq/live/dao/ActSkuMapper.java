@@ -11,15 +11,15 @@ import java.util.List;
 public interface ActSkuMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(ActSku record);
+    int insert(ActSkuInVo record);
 
-    int insertSelective(ActSku record);
+    int insertSelective(ActSkuInVo record);
 
     ActSku selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(ActSku record);
+    int updateByPrimaryKeySelective(ActSkuInVo record);
 
-    int updateByPrimaryKey(ActSku record);
+    int updateByPrimaryKey(ActSkuInVo record);
 
     List<ActSkuOut> listForNewAct(ActSkuInVo inVo);
 

@@ -124,14 +124,15 @@ public class ActInfoController {
 
     /**
      * 查询用户在活动中可用的投票次数
+     * (包含了选手可用投票次数和推荐菜可用投票次数)
      * 注:写此接口，而不是直接加到detail中，是为了减少代码的耦合度，方便以后的业务扩展
      * @param userId
      * @return
      */
     @RequestMapping(value = "/actVoteNums",method = RequestMethod.GET)
-    public BaseResp<Integer> actVoteNums(Long userId){
-        Integer integer = countService.actVoteNums(userId);
-        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    public BaseResp<Map<String, Integer>> actVoteNums(Long userId,Long actId){
+        Map<String, Integer> map = countService.actVoteNums(userId, actId);
+        return new BaseResp<Map<String, Integer>>(ResultStatus.SUCCESS,map);
     }
 
     /**

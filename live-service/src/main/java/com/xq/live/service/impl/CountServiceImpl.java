@@ -4,16 +4,16 @@ import com.xq.live.common.RedisCache;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.CountService;
-import com.xq.live.vo.in.ActGroupInVo;
-import com.xq.live.vo.in.ActShopInVo;
-import com.xq.live.vo.in.ActUserInVo;
-import com.xq.live.vo.in.VoteInVo;
+import com.xq.live.vo.in.*;
+import com.xq.live.vo.out.ActSkuOut;
 import com.xq.live.vo.out.ActUserOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +43,9 @@ public class CountServiceImpl implements CountService {
 
     @Autowired
     ActGroupMapper actGroupMapper;
+
+    @Autowired
+    ActSkuMapper actSkuMapper;
 
     private static Long viewArticleTime = System.currentTimeMillis();
 
@@ -177,6 +180,7 @@ public class CountServiceImpl implements CountService {
         ActShop actShop = null;
         ActUserOut actUser = null;
         ActGroup actGroup = null;
+        ActSkuOut actSku = null;
         if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
             ActGroupInVo actGroupInVo = new ActGroupInVo();
             actGroupInVo.setActId(invo.getActId());
@@ -199,6 +203,12 @@ public class CountServiceImpl implements CountService {
             //可以后期修改一下
             actUser = actUserMapper.findByInVo(actUserInVo);
             nums = actUser.getVoteNum() == null ? 0 : actUser.getVoteNum();
+        }else if(invo.getSkuId()!=null){
+            ActSkuInVo actSkuInVo = new ActSkuInVo();
+            actSkuInVo.setSkuId(invo.getSkuId());
+            actSkuInVo.setActId(invo.getActId());
+            actSku = actSkuMapper.findByInVo(actSkuInVo);
+            nums = actSku.getVoteNum() == null ? 0 : actSku.getVoteNum();
         }
         if(invo.getType()== Vote.VOTE_ADD){
             nums ++;
@@ -220,18 +230,28 @@ public class CountServiceImpl implements CountService {
                 actGroup.setGroupVoteNum(nums);
                 actGroupMapper.updateByPrimaryKeySelective(actGroup);
             }
+            if(actSku!=null){
+                ActSkuInVo actSkuInVo = new ActSkuInVo();
+                actSkuInVo.setId(actSku.getId());
+                actSkuInVo.setVoteNum(nums);
+                actSkuMapper.updateByPrimaryKeySelective(actSkuInVo);
+            }
+
 
         return nums;
     }
 
     @Override
-    public Integer actVoteNums(Long userId) {
-        String key = "actVoteNums_" + userId;
-        Integer integer = redisCache.get(key, Integer.class);
-        if(integer==null){
-            return 1;
-        }else{
-            return integer;
-        }
+     public   Map<String,Integer> actVoteNums(Long userId,Long actId) {
+        String keyUser = "actVoteNumsUser_" + actId + "_" +userId;
+        String keySku  = "actVoteNumsSku_" + actId + "_" +userId;
+        Integer userNums = redisCache.get(keyUser, Integer.class);
+        Integer skuNums = redisCache.get(keySku, Integer.class);
+        userNums = userNums == null ? 1 : userNums;
+        skuNums = skuNums == null ? 10 : skuNums;
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        map.put("user",userNums);
+        map.put("sku",skuNums);
+        return map;
     }
 }

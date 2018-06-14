@@ -45,6 +45,9 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     private CouponMapper couponMapper;
 
     @Autowired
+    private SkuMapper skuMapper;
+
+    @Autowired
     private ActSkuConfig actSkuConfig;
 
     @Autowired
@@ -121,10 +124,25 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
         coupon.setShopCashierId(soWriteOff.getCashierId()); //核销人
         couponMapper.useCoupon(coupon);
 
+        /*
+        当核销的是活动券的时候，根据配置的活动id，来对当前活动的券的使用人投票次数加5，
+        当查缓存不存在的时候，则证明用户没有投过票，核销完之后，用户的可用投票次数为6
+         */
+        Sku sku = skuMapper.selectByPrimaryKey(soWriteOff.getSkuId());
+        if(sku.getSkuType()==Sku.SKU_TYPE_HDQ){
+            String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +soWriteOff.getUserId();
+            Integer integer = redisCache.get(keyUser, Integer.class);
+            if(integer==null){
+                redisCache.set(keyUser,6,1l, TimeUnit.DAYS);
+            }else{
+                redisCache.set(keyUser,integer+5,1l,TimeUnit.DAYS);
+            }
+        }
+
         /* 当核销的是7.7元的活动券的时候，给当前券的使用人的可用投票次数加2，
         * 当查缓存不存在的时候，则证明用户没有投过票，核销完之后，用户的可用投票次数为3
         * */
-        if(soWriteOff.getSkuId().equals(actSkuConfig.getSkuIdOther())){
+        /*if(soWriteOff.getSkuId().equals(actSkuConfig.getSkuIdOther())){
             String key = "actVoteNums_" + soWriteOff.getUserId();
             Integer integer = redisCache.get(key, Integer.class);
             if(integer==null){
@@ -132,7 +150,7 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
             }else{
                 redisCache.set(key,integer+2,1l,TimeUnit.DAYS);
             }
-        }
+        }*/
         return id;
     }
 

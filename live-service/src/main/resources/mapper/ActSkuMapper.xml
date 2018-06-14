@@ -46,17 +46,17 @@
     delete from act_sku
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <insert id="insert" parameterType="com.xq.live.vo.in.ActSkuInVo">
     insert into act_sku (id, act_id, sku_id, 
       sku_code,pr_id, apply_status, is_luoxuan,
       vote_num, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, 
       #{skuCode,jdbcType=VARCHAR},  #{prId,jdbcType=BIGINT},#{applyStatus,jdbcType=TINYINT}, #{isLuoxuan,jdbcType=TINYINT},
-      #{voteNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{voteNum,jdbcType=INTEGER}, now(), now()
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <insert id="insertSelective" parameterType="com.xq.live.vo.in.ActSkuInVo">
     insert into act_sku
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -123,7 +123,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.vo.in.ActSkuInVo">
     update act_sku
     <set>
       <if test="actId != null">
@@ -156,7 +156,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.vo.in.ActSkuInVo">
     update act_sku
     set act_id = #{actId,jdbcType=BIGINT},
       sku_id = #{skuId,jdbcType=BIGINT},

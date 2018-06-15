@@ -22,4 +22,11 @@ public interface ActSkuService {
      * @return
      */
     ActSkuOut findByInVo(ActSkuInVo inVo);
+
+    /**
+     * 根据id来修改信息
+     * @param inVo
+     * @return
+     */
+    Integer update(ActSkuInVo inVo);
 }

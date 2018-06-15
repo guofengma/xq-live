@@ -1,6 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.RedisCache;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.CountService;
@@ -30,7 +31,7 @@ public class CountServiceImpl implements CountService {
     RedisCache redisCache;
 
     @Autowired
-    TopicMapper topicMapper;
+     TopicMapper topicMapper;
 
     @Autowired
     ShopMapper shopMapper;
@@ -46,6 +47,8 @@ public class CountServiceImpl implements CountService {
 
     @Autowired
     ActSkuMapper actSkuMapper;
+
+
 
     private static Long viewArticleTime = System.currentTimeMillis();
 
@@ -239,6 +242,41 @@ public class CountServiceImpl implements CountService {
 
 
         return nums;
+    }
+
+    @Override
+    public Integer zanNumsNow(Zan zan) {
+        Topic topic = topicMapper.selectByPrimaryKey(zan.getRefId());
+        TopicInVo topicInVo = new TopicInVo();
+        topicInVo.setUserId(topic.getUserId());
+        Integer integer = topicMapper.zanTotalForUser(topicInVo);
+        if(zan.getZanType()== Zan.ZAN_ADD){
+            integer ++;
+        }else{
+            integer --;
+        }
+        //当integer小于0的时候,直接返回0
+        if(integer<0){
+            integer = 0;
+        }
+        //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
+        ActUserInVo actUserInVo = new ActUserInVo();
+        actUserInVo.setUserId(topic.getUserId());
+        actUserInVo.setVoteNum(integer);
+        //此处判断活动id，是为了方便以后的扩展，当需要对单个活动进行投票的时候，就传入acrId
+        if(zan.getActId()!=null) {
+            actUserInVo.setActId(zan.getActId());
+        }
+        actUserMapper.updateForVoteNums(actUserInVo);
+        return integer;
+    }
+
+    @Override
+    public Integer zanTotal(Long userId) {
+        TopicInVo topicInVo = new TopicInVo();
+        topicInVo.setUserId(userId);//个人主页的userId
+        Integer integer = topicMapper.zanTotalForUser(topicInVo);
+        return integer;
     }
 
     @Override

@@ -53,4 +53,10 @@ public class ActSkuServiceImpl implements ActSkuService{
             return new ActSkuOut();
         }
     }
+
+    @Override
+    public Integer update(ActSkuInVo inVo) {
+        int i = actSkuMapper.updateByPrimaryKeySelective(inVo);
+        return i;
+    }
 }

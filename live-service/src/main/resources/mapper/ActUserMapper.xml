@@ -168,6 +168,48 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <update id="updateForVoteNums" parameterType="com.xq.live.vo.in.ActUserInVo">
+    update act_user
+    <set>
+      <if test="actId != null">
+        act_id = #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actUserName != null">
+        act_user_name = #{actUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="picIds != null">
+        pic_ids = #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="voteNum != null">
+        vote_num = #{voteNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLuoxuan != null">
+        is_luoxuan = #{isLuoxuan,jdbcType=TINYINT},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+    and apply_status = 1
+    and is_luoxuan = 0
+    <if test="actId != null">
+     and act_id = #{actId,jdbcType=BIGINT}
+    </if>
+  </update>
+
   <!--批量更新落选状态-->
   <update id="udateByLuoXuan" parameterType="java.util.List">
     update act_user

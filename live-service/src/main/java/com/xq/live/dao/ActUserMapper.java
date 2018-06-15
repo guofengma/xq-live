@@ -21,6 +21,8 @@ public interface ActUserMapper {
 
     int updateByPrimaryKey(ActUserInVo record);
 
+    int updateForVoteNums(ActUserInVo record);
+
     int countByActId(Long actId);
 
     ActUserOut findByInVo(ActUserInVo inVo);

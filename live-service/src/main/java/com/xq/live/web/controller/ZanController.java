@@ -8,6 +8,7 @@ package com.xq.live.web.controller;/**
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Zan;
+import com.xq.live.service.CountService;
 import com.xq.live.service.ZanService;
 import com.xq.live.vo.in.ZanInVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class ZanController {
 
     @Autowired
     private ZanService zanService;
+
+    @Autowired
+    private CountService countService;
     /**
      * 查询一条记录
      *
@@ -57,6 +61,10 @@ public class ZanController {
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Long id = zanService.add(zan);
+        if(zan.getType()==Zan.ZAN_TOPIC){
+            zan.setZanType(Zan.ZAN_ADD);
+            Integer integer = countService.zanNumsNow(zan);
+        }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
@@ -80,6 +88,10 @@ public class ZanController {
             return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         int res = zanService.deleteByZan(zan);
+        if(zan.getType()==Zan.ZAN_TOPIC){
+            zan.setZanType(Zan.ZAN_DELETE);
+            Integer integer = countService.zanNumsNow(zan);
+        }
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
     }
 

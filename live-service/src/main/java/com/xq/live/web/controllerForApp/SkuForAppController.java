@@ -167,6 +167,7 @@ public class SkuForAppController {
      */
     @RequestMapping(value = "/tsc", method = RequestMethod.GET)
     public BaseResp<Pager<SkuForTscOut>> tscList(SkuInVo inVo){
+        //注意:如果想查询某个推荐菜是否参与活动报名的话，要传递一个actId,判断isSign是否大于0
         if(inVo == null){
             return new BaseResp<Pager<SkuForTscOut>>(ResultStatus.error_param_empty);
         }

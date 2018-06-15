@@ -29,6 +29,8 @@ public class SkuInVo extends BaseInVo {
 
     private BigDecimal agioPrice;// 折扣价
 
+    private Long actId;//报名参加活动的actId
+
     public Long getId() {
         return id;
     }
@@ -99,5 +101,13 @@ public class SkuInVo extends BaseInVo {
 
     public void setAgioPrice(BigDecimal agioPrice) {
         this.agioPrice = agioPrice;
+    }
+
+    public Long getActId() {
+        return actId;
+    }
+
+    public void setActId(Long actId) {
+        this.actId = actId;
     }
 }

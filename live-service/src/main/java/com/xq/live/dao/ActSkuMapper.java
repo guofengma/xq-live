@@ -26,4 +26,6 @@ public interface ActSkuMapper {
     int listTotal(ActSkuInVo inVo);
 
     ActSkuOut findByInVo(ActSkuInVo inVo);
+
+    int countByActId(Long actId);
 }

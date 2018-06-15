@@ -29,4 +29,11 @@ public interface ActSkuService {
      * @return
      */
     Integer update(ActSkuInVo inVo);
+
+    /**
+     * 新增一个活动推荐菜信息
+     * @param record
+     * @return
+     */
+    Long insert(ActSkuInVo record);
 }

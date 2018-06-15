@@ -6,6 +6,7 @@ import com.xq.live.service.PromotionRulesService;
 import com.xq.live.vo.out.PromotionRulesOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class PromotionRulesServiceImpl implements PromotionRulesService{
     }
 
     @Override
+    @Transactional
     public Long add(PromotionRules rules) {
         int res = promotionRulesMapper.insert(rules);
         if(res < 1){
@@ -39,7 +41,14 @@ public class PromotionRulesServiceImpl implements PromotionRulesService{
     }
 
     @Override
+    @Transactional
     public int deleteById(Long id) {
         return promotionRulesMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public PromotionRules selectByPrimaryKey(Long id) {
+        PromotionRules rules=promotionRulesMapper.selectByPrimaryKey(id);
+        return rules;
     }
 }

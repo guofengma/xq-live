@@ -135,17 +135,20 @@ public class ActSkuForAppController {
         if (byInVo!=null){
             return new BaseResp<Long>(-1,"菜品已报名", null);
         }
+        //菜品的详情信息
         SkuOut skuOut = skuService.selectById(proSku.getSkuId());
+        //获取券的详情信息
+        SkuOut skugout = skuService.selectById(proSku.getSkugId());
         //添加规则
         PromotionRules promotionRules=new PromotionRules();
         promotionRules.setSkuId(proSku.getSkugId());
-        promotionRules.setSkuCode(proSku.getSkugCode());
+        promotionRules.setSkuCode(skugout.getSkuCode());
         promotionRules.setJianAmount(proSku.getJianAmount());
         promotionRules.setManAmount(proSku.getManAmount());
         promotionRules.setRuleType(proSku.getRuleType());
         promotionRules.setRuleDesc(proSku.getRuleDesc());
         promotionRules.setShopId(proSku.getShopId().intValue());
-        promotionRules.setSkuName(proSku.getSkuName());
+        promotionRules.setSkuName(skugout.getSkuName());
         Long pid = promotionRulesService.add(promotionRules);
         //添加actsku
         //PromotionRules rules=promotionRulesService.selectByPrimaryKey(pid);

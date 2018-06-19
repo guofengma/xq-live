@@ -75,6 +75,9 @@ public class WeixinPayController {
     @Autowired
     private ActSkuService actSkuService;
 
+    @Autowired
+    private ShopCashierService shopCashierService;
+
 
 
     private WXPay wxpay;
@@ -314,6 +317,12 @@ public class WeixinPayController {
           return new BaseResp<Map<String, String>>(ResultStatus.error_para_shop_allocation_empty);
         }
 
+        //判断商家信息是否完全(商家是否配置管理员)
+        ShopCashier shopCashier = shopCashierService.adminByShopId(inVo.getShopId());
+        if(shopCashier==null){
+          return new BaseResp<Map<String, String>>(ResultStatus.error_shop_info_empty);
+        }
+
 
         //生成的随机字符串
         String nonce_str = WXPayUtil.generateNonceStr();
@@ -429,7 +438,8 @@ public class WeixinPayController {
             return new BaseResp<Map<String, String>>(ResultStatus.error_so_paid);
         }
 
-        if(inVo.getActId()==null||inVo.getSkuId()==null){
+        //参数校验
+        if(inVo.getActId()==null||inVo.getSkuId()==null||inVo.getShopId()==null){
             return new BaseResp<Map<String, String>>(ResultStatus.error_param_empty);
         }
 
@@ -440,6 +450,12 @@ public class WeixinPayController {
         ActSkuOut byInVo = actSkuService.findByInVo(actSkuInVo);
         if(byInVo==null){
             return new BaseResp<Map<String, String>>(ResultStatus.error_actuser_code);
+        }
+
+        //判断商家信息是否完全(商家是否配置管理员)
+        ShopCashier shopCashier = shopCashierService.adminByShopId(inVo.getShopId());
+        if(shopCashier==null){
+            return new BaseResp<Map<String, String>>(ResultStatus.error_shop_info_empty);
         }
 
         //生成的随机字符串
@@ -460,7 +476,7 @@ public class WeixinPayController {
         data.put("notify_url", PaymentConfig.WX_NOTIFY_ACT_URL);//支付成功后的回调地址
         data.put("trade_type", PaymentConfig.TRADE_TYPE);//支付方式
         data.put("openid", inVo.getOpenId());
-        data.put("attach", inVo.getActId() + "," + inVo.getSkuId());//自定义参数，返回给回调接口
+        data.put("attach", inVo.getActId() + "," + inVo.getSkuId()+","+inVo.getShopId());//自定义参数，返回给回调接口
 
         //返回给小程序端需要的参数
         Map<String, String> response = new HashMap<String, String>();
@@ -723,11 +739,13 @@ public class WeixinPayController {
                 Long soId = Long.valueOf(out_trade_no);
                 Long actId =null;
                 Long skuId = null;
+                Long shopId = null;
                 if(attach!=null) {
                     String[] nums = attach.split(",");//通过","分割，读取出couponId和shopId
-                    if(nums.length>=2) {
+                    if(nums.length>=3) {
                         actId = Long.valueOf(nums[0]);
                         skuId = Long.valueOf(nums[1]);
+                        shopId = Long.valueOf(nums[2]);
                     }
                 }
 
@@ -755,7 +773,8 @@ public class WeixinPayController {
                         inVo.setSkuId(soOut.getSkuId());
                         inVo.setSkuNum(soOut.getSkuNum());
                         inVo.setUserIp(IpUtils.getIpAddr(request));
-                        int ret = soService.paid(inVo);
+                        inVo.setShopId(shopId);
+                        int ret = soService.paidForAct(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";

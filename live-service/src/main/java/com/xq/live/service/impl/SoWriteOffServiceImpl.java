@@ -3,6 +3,7 @@ package com.xq.live.service.impl;
 import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.config.ActSkuConfig;
+import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.SoWriteOffService;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +54,9 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     private ActSkuConfig actSkuConfig;
 
     @Autowired
+    private AgioSkuConfig agioSkuConfig;
+
+    @Autowired
     private RedisCache redisCache;
 
     @Override
@@ -60,6 +66,15 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
         List<SoWriteOffOut> totalOut = soWriteOffMapper.total(inVo);
         if(total > 0){
             List<SoWriteOffOut> list = soWriteOffMapper.list(inVo);
+            for (SoWriteOffOut soWriteOffOut : list) {
+                Sku sku = skuMapper.selectByPrimaryKey(soWriteOffOut.getSkuId());
+                if((sku.getSkuType()==Sku.SKU_TYPE_XQQ&&sku.getId().equals(agioSkuConfig.getSkuId()))||
+                        (sku.getSkuType()!=Sku.SKU_TYPE_XQQ)){
+                    soWriteOffOut.setServicePrice(BigDecimal.ONE);
+                }else{
+                    soWriteOffOut.setServicePrice(soWriteOffOut.getCouponAmount().divide(new BigDecimal(10), 2, RoundingMode.HALF_UP));
+                }
+            }
             list.addAll(0,totalOut);//把总销售额和总服务费放到list的第一个数据里面
             ret.setList(list);
         }

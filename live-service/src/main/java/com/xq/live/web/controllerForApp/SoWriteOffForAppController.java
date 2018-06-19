@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,10 +144,12 @@ public class SoWriteOffForAppController {
             SoWriteOffOut offOutByBill=soWriteOffService.listAmount(listInVo.get(i)).get(0);
             if (offOutByBill!=null){
                 offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                offOut.setTotalNoService(offOutByBill.getTotalService());
                 map.put(i + 1, offOut);
             }else {
                 if (offOut!=null){
                     offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+                    offOut.setTotalNoService(BigDecimal.ZERO);
                 }
                 map.put(i + 1, offOut);
             }

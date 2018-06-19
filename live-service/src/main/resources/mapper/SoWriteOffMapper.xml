@@ -295,7 +295,45 @@
   <select id="total" resultMap="SoWriteOffOutMap">
     select
     SUM(paid_amount) as total_price,
-    SUM(coupon_amount)/10 as total_service
+    (
+    (
+    SELECT
+    COUNT(1)
+    FROM
+    so_write_off swo,
+    sku ss
+    WHERE
+    swo.sku_id = ss.id
+    AND ss.sku_type != 1
+    <if test="shopId != null">
+      and swo.shop_id = #{shopId}
+    </if>
+    <if test="begainTime !=null and endTime != null">
+      and (swo.create_time BETWEEN #{begainTime} and #{endTime})
+    </if>
+    <if test="isBill !=null">
+      and swo.is_bill = #{isBill,jdbcType=INTEGER}
+    </if>
+    ) + (
+    SELECT
+    sum(coupon_amount) / 10
+    FROM
+    so_write_off swo,
+    sku ss
+    WHERE
+    swo.sku_id = ss.id
+    AND ss.sku_type = 1
+    <if test="shopId != null">
+      and swo.shop_id = #{shopId}
+    </if>
+    <if test="begainTime !=null and endTime != null">
+      and (swo.create_time BETWEEN #{begainTime} and #{endTime})
+    </if>
+    <if test="isBill !=null">
+      and swo.is_bill = #{isBill,jdbcType=INTEGER}
+    </if>
+    )
+    ) as total_service
     from so_write_off
     <where>
       <if test="id != null">

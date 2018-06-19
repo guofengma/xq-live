@@ -91,6 +91,9 @@ public class SoServiceImpl implements SoService {
     private SoWriteOffMapper soWriteOffMapper;
 
     @Autowired
+    private ShopCashierMapper shopCashierMapper;
+
+    @Autowired
     private ConstantsConfig constantsConfig;
 
     @Autowired
@@ -405,11 +408,12 @@ public class SoServiceImpl implements SoService {
         ShopAllocationInVo shopAllocationInVo = new ShopAllocationInVo();
         shopAllocationInVo.setShopId(inVo.getShopId());
         ShopAllocationOut shopAllocationOut = shopAllocationMapper.selectByPrimaryKey(shopAllocationInVo);
+        ShopCashier shopCashier = shopCashierMapper.adminByShopId(inVo.getShopId());
         if(shopAllocationOut.getPaymentMethod()==ShopAllocation.SHOP_ALLOCATION_DS){
             //注意完成对账功能之前，一定要保证该券先调用核销
             //平台代收，要收取服务费，并且还要完成对账操作(把核销之后的券的对账改成已对账状态)
             UserAccountInVo accountInVo = new UserAccountInVo();
-            accountInVo.setUserId(inVo.getUserId());
+            accountInVo.setUserId(shopCashier.getCashierId());//商家管理员的用户id
             accountInVo.setOccurAmount(inVo.getSoAmount());
             accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
 
@@ -422,7 +426,7 @@ public class SoServiceImpl implements SoService {
 
                 Sku sku = skuMapper.selectByPrimaryKey(inVo.getSkuId());//查询被核销的券,进而查询要收取的服务费
                 UserAccountInVo accountInVoForFw = new UserAccountInVo();
-                accountInVoForFw.setUserId(inVo.getUserId());
+                accountInVoForFw.setUserId(shopCashier.getCashierId());
                 accountInVoForFw.setOccurAmount(sku.getSellPrice());
                 accountService.payout(accountInVoForFw, "商家订单平台代收,收取服务费,票券号：" + inVo.getCouponId());
             }
@@ -446,6 +450,36 @@ public class SoServiceImpl implements SoService {
             inVo.setShopId(soShopLog.getShopId());//为了能让wxNotifyForShop接口的shopId的值能够获取到
             //2、商家订单日志
             this.saveSoShopLog(inVo, SoLog.SO_STATUS_PAID);
+        }
+        return ret;
+    }
+
+    @Override
+    @Transactional
+    public int paidForAct(SoInVo inVo) {
+        ShopCashier shopCashier = shopCashierMapper.adminByShopId(inVo.getShopId());
+        //1、更新订单状态
+        inVo.setSoStatus(So.SO_STATUS_PAID);
+        int ret = soMapper.paid(inVo);
+        if (ret > 0) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, 3);     //有效时间为3个月
+            //2、支付成功生成抵用券
+            this.createCoupon(inVo);
+            //3、支付日志
+            this.savePayLog(inVo);
+            //4、订单日志
+            this.saveSoLog(inVo, SoLog.SO_STATUS_PAID);
+            //5. 账户日志
+            UserAccountInVo accountInVo = new UserAccountInVo();
+            accountInVo.setUserId(shopCashier.getCashierId());
+            accountInVo.setOccurAmount(inVo.getSoAmount());
+            accountService.income(accountInVo, "用户买单，订单号：" + inVo.getId());
+            //6. 收取服务费，记录日志
+            UserAccountInVo accountInVoForFw = new UserAccountInVo();
+            accountInVoForFw.setUserId(shopCashier.getCashierId());
+            accountInVoForFw.setOccurAmount(BigDecimal.ONE);
+            accountService.payout(accountInVoForFw, "活动订单平台收取服务费:1元");
         }
         return ret;
     }

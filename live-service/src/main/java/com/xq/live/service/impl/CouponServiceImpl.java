@@ -134,7 +134,7 @@ public class CouponServiceImpl implements CouponService {
                 }
             }
 
-            //删除已经过期的代金券和删除折扣券和删除7.7元活动券
+            //删除已经过期的代金券和删除折扣券和删除所有活动券
             Iterator<CouponOut> sListIteratorAll = list.iterator();
             while (sListIteratorAll.hasNext()) {
                 CouponOut str = sListIteratorAll.next();
@@ -142,10 +142,14 @@ public class CouponServiceImpl implements CouponService {
                 if (i<0) {
                     sListIteratorAll.remove();
                 }
-                if(str.getSkuId().equals(agioSkuConfig.getSkuId())){
+                /*if(str.getSkuId().equals(agioSkuConfig.getSkuId())){
                     sListIteratorAll.remove();
                 }
                 if(str.getSkuId().equals(actSkuConfig.getSkuIdOther())){
+                    sListIteratorAll.remove();
+                }*/
+                //删除所有活动券
+                if(str.getType()==Coupon.OUNPON_TYPE_ACT){
                     sListIteratorAll.remove();
                 }
             }

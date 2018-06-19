@@ -229,7 +229,7 @@
         or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
-      <if test="flag != null">
+      <if test="flag == null">
         and  a.is_luoxuan = 0
       </if>
       and  s.is_deleted = 0
@@ -265,7 +265,7 @@
         or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
-      <if test="flag != null">
+      <if test="flag == null">
         and  a.is_luoxuan = 0
       </if>
       and  s.is_deleted = 0

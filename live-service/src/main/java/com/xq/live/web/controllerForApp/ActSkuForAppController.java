@@ -6,10 +6,14 @@ import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ActProSku;
 import com.xq.live.model.PromotionRules;
 import com.xq.live.model.Sku;
+import com.xq.live.service.ActShopService;
 import com.xq.live.service.ActSkuService;
 import com.xq.live.service.PromotionRulesService;
 import com.xq.live.service.SkuService;
+import com.xq.live.vo.in.ActGroupInVo;
 import com.xq.live.vo.in.ActSkuInVo;
+import com.xq.live.vo.in.SoWriteOffInVo;
+import com.xq.live.vo.out.ActShopOut;
 import com.xq.live.vo.out.ActSkuOut;
 import com.xq.live.vo.out.PromotionRulesOut;
 import com.xq.live.vo.out.SkuOut;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +38,9 @@ import java.util.List;
 public class ActSkuForAppController {
     @Autowired
     private ActSkuService actSkuService;
+
+    @Autowired
+    private ActShopService actShopService;
 
     @Autowired
     private PromotionRulesService promotionRulesService;
@@ -134,7 +142,7 @@ public class ActSkuForAppController {
         promotionRules.setManAmount(proSku.getManAmount());
         promotionRules.setRuleType(proSku.getRuleType());
         promotionRules.setRuleDesc(proSku.getRuleDesc());
-        promotionRules.setShopId(proSku.getShopId());
+        promotionRules.setShopId(proSku.getShopId().intValue());
         promotionRules.setSkuName(proSku.getSkuName());
         Long pid = promotionRulesService.add(promotionRules);
         //添加actsku
@@ -144,11 +152,40 @@ public class ActSkuForAppController {
         //inVo.setSkuCode(skuOut.getSkuCode());
         inVo.setSkuId(proSku.getSkuId());
         inVo.setPrId(pid);
+        inVo.setShopId(proSku.getShopId());
         Long actSkuid=actSkuService.insert(inVo);
         if (actSkuid==null){
             return new BaseResp<Long>(-1,"添加菜品失败", null);
         }
         return new BaseResp<Long>(ResultStatus.SUCCESS,actSkuid);
+    }
+
+    /**
+     * 修改活动推荐菜信息（落选）
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/updateLouXuan",method = RequestMethod.POST)
+    public BaseResp<Integer> updateLouXuan(Long actId,Integer length){
+        if (actId==null||length==null){
+            return new BaseResp<Integer>(ResultStatus.error_param_empty);
+        }
+        ActSkuInVo inVo = new ActSkuInVo();
+        inVo.setActId(actId);
+        //商家活动菜列表
+        List<ActSkuOut> list = actSkuService.listActSkuOut(inVo);
+        if (list==null||list.size()==0){
+            return new BaseResp<Integer>(ResultStatus.FAIL);
+        }
+        for (int i=list.size()-1;i>length-1;i--){
+            list.remove(i);
+        }
+        int i=actSkuService.updateLuoXuan(list);
+        if (i<1){
+            return new BaseResp<Integer>(ResultStatus.error_act_update);
+        }
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,i);
+
     }
 
 }

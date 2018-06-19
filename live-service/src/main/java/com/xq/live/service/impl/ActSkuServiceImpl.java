@@ -76,4 +76,22 @@ public class ActSkuServiceImpl implements ActSkuService{
         return record.getId();
     }
 
+    @Override
+    public int updateLuoXuan(List<ActSkuOut> record) {
+        int i=actSkuMapper.updateLuoXuan(record);
+        if (i<1){
+            return 0;
+        }
+        return 1;
+    }
+
+    @Override
+    public List<ActSkuOut> listActSkuOut(ActSkuInVo record) {
+        List<ActSkuOut> list = actSkuMapper.listActSkuOut(record);
+        if (list==null||list.size()<1){
+            return null;
+        }
+        return list;
+    }
+
 }

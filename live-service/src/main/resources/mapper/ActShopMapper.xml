@@ -292,6 +292,7 @@
         WHERE
         act_id=#{actId,jdbcType=BIGINT}
         AND  apply_status = 1
+        AND is_luoxuan=0
     </select>
 
     <select id="searchForShopId" resultType="java.lang.Integer">

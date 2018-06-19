@@ -28,4 +28,9 @@ public interface ActSkuMapper {
     ActSkuOut findByInVo(ActSkuInVo inVo);
 
     int countByActId(Long actId);
+
+    int updateLuoXuan(List<ActSkuOut> record);
+
+    List<ActSkuOut> listActSkuOut(ActSkuInVo record);
+
 }

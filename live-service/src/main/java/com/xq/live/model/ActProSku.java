@@ -37,6 +37,18 @@ public class ActProSku {
     private Long id;
     //活动id
     private Long actId;
+
+
+
+    private Long shopId;
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
     //菜id
     private Long skuId;
     //券id
@@ -62,8 +74,6 @@ public class ActProSku {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
-
-    private Integer shopId;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
@@ -144,14 +154,6 @@ public class ActProSku {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
-    }
-
-    public Integer getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Integer shopId) {
-        this.shopId = shopId;
     }
 
     public Date getCreateTime() {

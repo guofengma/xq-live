@@ -229,7 +229,9 @@
         or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
-      and  a.is_luoxuan = 0
+      <if test="flag !=null">
+        and  a.is_luoxuan = #{isLuoxuan,jdbcType=TINYINT}
+      </if>
       and  s.is_deleted = 0
     </where>
     ORDER by
@@ -331,4 +333,38 @@
   <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
     select count(1) from act_sku where act_id = #{actId,jdbcType=BIGINT}
   </select>
+
+  <!--落选商家-->
+  <update id="updateLuoXuan" parameterType="java.util.List">
+    update act_sku
+    set
+    is_luoxuan = 1,
+    update_time = now()
+    WHERE 1=1
+    AND id NOT IN
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+
+  <!--按票数排序查看-->
+  <select id="listActSkuOut" resultMap="ActSkuOutResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from act_sku
+    <where>
+      1=1
+      <if test="actId != null">
+        AND  act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      and is_luoxuan = 0
+      AND apply_status = 1
+    </where>
+    ORDER by vote_num DESC
+  </select>
+
+
+
+
 </mapper>

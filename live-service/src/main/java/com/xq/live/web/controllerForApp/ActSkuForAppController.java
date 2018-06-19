@@ -102,6 +102,7 @@ public class ActSkuForAppController {
        /* if(inVo.getVoteUserId()==null){
             return new BaseResp<ActSkuOut>(-1,"voteUserId必填", null);
         }*/
+        //flag如果不传值，查询所有(包括落选)，如果传值如1则查询所有没有落选
         if(inVo.getActId()==null){
             return new BaseResp<ActSkuOut>(-1,"actId必填", null);
         }

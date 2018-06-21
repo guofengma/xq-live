@@ -12,6 +12,7 @@ import com.xq.live.web.utils.GroupUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,13 @@ public class ActGroupServiceImpl implements ActGroupService{
     //批量添加分组信息
     @Override
     public int addListGroup(List<ActGroup> list) {
+        for (int l=0;l<list.size();l++){
+            //int index = actSkuMapper.countByActId(record.getActId());
+            DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+            String s = mFormat.format(l+1);
+            list.get(l).setGroupCode(s);
+        }
+
         int i =actGroupMapper.insertList(list);
         //插入成功是返回i，失败返回0
         if (i>0){

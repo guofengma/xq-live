@@ -254,6 +254,10 @@
     u.icon_url,
     u.age,
     u.height,
+    u.nick_name,
+    u.user_name,
+    u.mobile,
+    u.sex,
     (select count(1) from vote where player_user_id = a.user_id
     <if test="voteUserId != null and beginTime !=null and endTime !=null">
       AND  user_id = #{voteUserId}

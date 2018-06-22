@@ -19,6 +19,16 @@ public class ActInfoInVo extends BaseInVo {
 
     private String actDesc;
 
+    private Long actSku;
+
+    public Long getActSku() {
+        return actSku;
+    }
+
+    public void setActSku(Long actSku) {
+        this.actSku = actSku;
+    }
+
     public Long getId() {
         return id;
     }

@@ -142,7 +142,7 @@ public class ActInfoController {
      */
     @RequestMapping(value = "/CreateCode")
     public BaseResp<Map<String,String>> CreateCode(ActInfoInVo inVo){
-        if (inVo==null||inVo.getId()==null||inVo.getUserId()==null) {
+        if (inVo==null||inVo.getId()==null) {
             return new BaseResp<Map<String,String>>(ResultStatus.error_param_empty);
         }
 

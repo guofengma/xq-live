@@ -191,7 +191,7 @@ public class ShopCodeUtil {
 
         try {
             BufferedImage biQR = ShopCodeUtil.createImage(content, imgPath, needCompress);//输出二维码到缓冲区
-            String bgroup = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "bdFile.jpg";
+            String bgroup = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "share.jpg";
             File bgFile = new File(bgroup);
             File logoFile = new File(imgPath);
             if (!bgFile.exists()) {

@@ -293,7 +293,7 @@
 
   <select id="zanTotalForUser" resultType="java.lang.Integer">
     select
-    SUM ((select count(1) from zan where ref_id = t.id)) as zanTotal
+     sum((select count(1) from zan where ref_id = t.id)) as zanTotal
     from topic t
     <where>
       1=1

@@ -12,6 +12,7 @@ import com.xq.live.service.CountService;
 import com.xq.live.service.ZanService;
 import com.xq.live.vo.in.ZanInVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,6 +56,7 @@ public class ZanController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @Transactional
     public BaseResp<Long> add(@Valid Zan zan, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
@@ -82,6 +84,7 @@ public class ZanController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
     }*/
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @Transactional
     public BaseResp<Integer> delete(@Valid Zan zan, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();

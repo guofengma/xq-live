@@ -126,7 +126,7 @@ public class VoteController {
         Long id  = voteService.add(vote);
         vote.setType(Vote.VOTE_ADD);
         Integer integer = countService.voteNumsNow(vote);
-        //如果活动id为7.7元的活动券的actId,则每次投票更新投票次数的缓存
+        //如果活动id为37,则每次投票更新投票次数的缓存
         if(vote.getActId().equals(actSkuConfig.getActId())&&vote.getPlayerUserId()!=null){
             String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +vote.getUserId();
             Integer i = redisCache.get(keyUser, Integer.class);

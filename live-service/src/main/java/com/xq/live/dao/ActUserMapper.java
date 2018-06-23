@@ -17,6 +17,8 @@ public interface ActUserMapper {
 
     ActUser selectByPrimaryKey(Long id);
 
+    List<ActUser> selectByUserId(ActUserInVo inVo);
+
     int updateByPrimaryKeySelective(ActUserInVo record);
 
     int updateByPrimaryKey(ActUserInVo record);

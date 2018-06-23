@@ -48,6 +48,9 @@ public class CountServiceImpl implements CountService {
     @Autowired
     ActSkuMapper actSkuMapper;
 
+    @Autowired
+    ActSkuConfig actSkuConfig;
+
 
 
     private static Long viewArticleTime = System.currentTimeMillis();
@@ -247,9 +250,18 @@ public class CountServiceImpl implements CountService {
     @Override
     public Integer zanNumsNow(Zan zan) {
         Topic topic = topicMapper.selectByPrimaryKey(zan.getRefId());
-        TopicInVo topicInVo = new TopicInVo();
+        /*TopicInVo topicInVo = new TopicInVo();
         topicInVo.setUserId(topic.getUserId());
-        Integer integer = topicMapper.zanTotalForUser(topicInVo);
+        Integer integer = topicMapper.zanTotalForUser(topicInVo);*/
+        //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
+        ActUserInVo actUserInVo = new ActUserInVo();
+        actUserInVo.setUserId(topic.getUserId());
+        actUserInVo.setActId(actSkuConfig.getActId());//先默认查询37这个活动，准备让同类型的活动的投票数都相同，后期可以扩展的时候变动
+        List<ActUser> actUsers = actUserMapper.selectByUserId(actUserInVo);
+        Integer integer =0;
+        if(actUsers!=null&&actUsers.size()>0){
+            integer = actUsers.get(0).getVoteNum();
+        }
         if(zan.getZanType()== Zan.ZAN_ADD){
             integer ++;
         }else{
@@ -260,13 +272,13 @@ public class CountServiceImpl implements CountService {
             integer = 0;
         }
         //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
-        ActUserInVo actUserInVo = new ActUserInVo();
-        actUserInVo.setUserId(topic.getUserId());
+        ActUserInVo invo = new ActUserInVo();
+        invo.setUserId(topic.getUserId());
         actUserInVo.setVoteNum(integer);
-        //此处判断活动id，是为了方便以后的扩展，当需要对单个活动进行投票的时候，就传入acrId
+        /*//此处判断活动id，是为了方便以后的扩展，当需要对单个活动进行投票的时候，就传入acrId
         if(zan.getActId()!=null) {
             actUserInVo.setActId(zan.getActId());
-        }
+        }*/
         actUserMapper.updateForVoteNums(actUserInVo);
         return integer;
     }

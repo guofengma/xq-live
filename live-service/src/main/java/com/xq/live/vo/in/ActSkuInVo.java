@@ -40,6 +40,16 @@ public class ActSkuInVo extends BaseInVo{
 
     private Integer sortType;//排序类型 1最新  null最热
 
+    private String city;//分类城市
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public Long getFlag() {
         return flag;
     }

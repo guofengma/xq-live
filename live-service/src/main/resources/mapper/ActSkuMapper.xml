@@ -213,6 +213,7 @@
     act_sku a
     inner join promotion_rules pr on a.pr_id = pr.id
     inner join sku s on a.sku_id = s.id
+    inner join shop sp on a.shop_id=sp.id
     <where>
       1=1
       <if test="id != null">
@@ -225,14 +226,18 @@
         AND  a.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and
+        ((s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
       <if test="flag == null">
         and  a.is_luoxuan = 0
       </if>
       and  s.is_deleted = 0
+      <if test="city != null">
+        and  sp.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
+      </if>
     </where>
     ORDER by
     <if test="sortType == 1">
@@ -249,6 +254,7 @@
     act_sku a
     inner join promotion_rules pr on a.pr_id = pr.id
     inner join sku s on a.sku_id = s.id
+    inner join shop sp on a.shop_id=sp.id
     <where>
       1=1
       <if test="id != null">
@@ -261,14 +267,18 @@
         AND  a.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and( (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
       <if test="flag == null">
         and  a.is_luoxuan = 0
       </if>
       and  s.is_deleted = 0
+      <if test="city != null">
+        and  sp.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
+      </if>
+
     </where>
     ORDER by
     <if test="sortType == 1">
@@ -322,8 +332,8 @@
         and a.sku_id = #{skuId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and( (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status != 2
       and  a.is_luoxuan = 0

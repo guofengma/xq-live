@@ -329,11 +329,11 @@
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null and type == null">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or a.user_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       <if test="searchKey != null and type == 2">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or k.group_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
@@ -367,11 +367,11 @@
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null and type == null">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or a.user_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       <if test="searchKey != null and type == 2">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or k.group_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1

@@ -1,9 +1,6 @@
 package com.xq.live.service.impl;
 
-import com.xq.live.common.Constants;
-import com.xq.live.common.Pager;
-import com.xq.live.common.QRCodeUtil;
-import com.xq.live.common.RandomStringUtil;
+import com.xq.live.common.*;
 import com.xq.live.config.ActSkuConfig;
 import com.xq.live.config.ConstantsConfig;
 import com.xq.live.dao.*;
@@ -31,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ${DESCRIPTION}
@@ -92,6 +90,9 @@ public class SoServiceImpl implements SoService {
 
     @Autowired
     private ShopCashierMapper shopCashierMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Autowired
     private ConstantsConfig constantsConfig;
@@ -480,6 +481,14 @@ public class SoServiceImpl implements SoService {
             accountInVoForFw.setUserId(shopCashier.getCashierId());
             accountInVoForFw.setOccurAmount(BigDecimal.ONE);
             accountService.payout(accountInVoForFw, "活动订单平台收取服务费:1元");
+            //用户对选手的可用投票次数加5
+            String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +inVo.getUserId();
+            Integer i = redisCache.get(keyUser, Integer.class);
+            if(i==null){
+                redisCache.set(keyUser,5,1l, TimeUnit.DAYS);
+            }else{
+                redisCache.set(keyUser,i+5,1l,TimeUnit.DAYS);
+            }
         }
         return ret;
     }

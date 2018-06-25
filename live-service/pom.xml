@@ -96,7 +96,7 @@
             <artifactId>sms</artifactId>
             <version>0.9.1</version>
         </dependency>
-
+        <!--压缩图片与生成二维码-->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
@@ -118,6 +118,7 @@
             <artifactId>javase</artifactId>
             <version>3.3.0</version>
         </dependency>
+        <!--压缩图片与生成二维码-->
 
         <dependency>
             <groupId>com.github.wxpay</groupId>

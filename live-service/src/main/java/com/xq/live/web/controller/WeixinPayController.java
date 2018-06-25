@@ -749,7 +749,7 @@ public class WeixinPayController {
                     }
                 }
 
-                SoOut soOut = soService.selectByPkForShop(soId);
+                SoOut soOut = soService.get(soId);
                 if (!PaymentConfig.MCH_ID.equals(mch_id) || soOut == null || new BigDecimal(total_fee).compareTo(soOut.getSoAmount().multiply(new BigDecimal(100))) != 0) {
                     logger.info("支付失败,错误信息：" + "参数错误");
                     resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
@@ -774,6 +774,7 @@ public class WeixinPayController {
                         inVo.setSkuNum(soOut.getSkuNum());
                         inVo.setUserIp(IpUtils.getIpAddr(request));
                         inVo.setShopId(shopId);
+                        inVo.setSoAmount(soOut.getSoAmount());
                         int ret = soService.paidForAct(inVo);
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                     } else {

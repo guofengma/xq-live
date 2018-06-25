@@ -485,7 +485,7 @@ public class SoServiceImpl implements SoService {
             String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +inVo.getUserId();
             Integer i = redisCache.get(keyUser, Integer.class);
             if(i==null){
-                redisCache.set(keyUser,5,1l, TimeUnit.DAYS);
+                redisCache.set(keyUser,6,1l, TimeUnit.DAYS);
             }else{
                 redisCache.set(keyUser,i+5,1l,TimeUnit.DAYS);
             }

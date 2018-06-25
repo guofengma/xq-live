@@ -154,4 +154,15 @@ public class ActInfoController {
         shopUrl.put("A",imge);//带背景图的二维码
         return new BaseResp<Map<String,String>>(ResultStatus.SUCCESS,shopUrl);
     }
+
+    /**
+     * 返回一个判断条件
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/flag")
+    public BaseResp<Integer> getFlag(){
+        //0是显示，1是不显示
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,1);
+    }
 }

@@ -75,6 +75,7 @@ public class CouponForActShopServiceImpl implements CouponForActShopService{
 
     @Override
     /*@Scheduled(fixedRate = 5000)*/
+    /*@Scheduled(cron = "0 0 2 * * ?")*/
     public void deleteActVoteNums() {
         //String key = "actVoteNums_" + "*";
         String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +"*";

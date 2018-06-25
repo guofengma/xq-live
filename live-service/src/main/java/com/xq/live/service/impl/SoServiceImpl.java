@@ -465,7 +465,7 @@ public class SoServiceImpl implements SoService {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, 3);     //有效时间为3个月
             //2、支付成功生成抵用券
-            this.createCoupon(inVo);
+            this.createCouponForAct(inVo);
             //3、支付日志
             this.savePayLog(inVo);
             //4、订单日志
@@ -632,7 +632,7 @@ public class SoServiceImpl implements SoService {
             coupon.setSkuCode(sku.getSkuCode());
             coupon.setSkuName(sku.getSkuName());
             coupon.setCouponAmount(couponSku.getAmount());
-            if(sku.getId().equals(actSkuConfig.getSkuIdOther())){
+            if(sku.getSkuType()==Sku.SKU_TYPE_HDQ){
                 coupon.setType(Coupon.OUNPON_TYPE_ACT);
             }else {
                 coupon.setType(Coupon.COUPON_TYPE_PLAT);

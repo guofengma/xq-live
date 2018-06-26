@@ -50,6 +50,8 @@ public class ActSignInVo {
 
     private String actUserName;//报名参加填写的名字
 
+    private String userInfo;//选手简介
+
 
     public Long getId() {
         return id;
@@ -185,5 +187,13 @@ public class ActSignInVo {
 
     public void setActUserName(String actUserName) {
         this.actUserName = actUserName;
+    }
+
+    public String getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 }

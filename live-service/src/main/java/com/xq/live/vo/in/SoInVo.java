@@ -165,4 +165,5 @@ public class SoInVo extends BaseInVo {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
 }

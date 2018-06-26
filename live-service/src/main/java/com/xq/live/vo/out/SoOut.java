@@ -65,6 +65,7 @@ public class SoOut {
 
     private String userIconUrl;//下单人的头像
 
+
     public Long getId() {
         return id;
     }
@@ -248,4 +249,5 @@ public class SoOut {
     public void setUserIconUrl(String userIconUrl) {
         this.userIconUrl = userIconUrl;
     }
+
 }

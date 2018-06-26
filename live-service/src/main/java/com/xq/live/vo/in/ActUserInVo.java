@@ -57,6 +57,8 @@ public class ActUserInVo extends BaseInVo{
 
     private Integer sortType;//参与报名的选手排序规则  不传 最热  1最新
 
+    private String userInfo;
+
     public Long getId() {
         return id;
     }
@@ -199,5 +201,13 @@ public class ActUserInVo extends BaseInVo{
 
     public void setSortType(Integer sortType) {
         this.sortType = sortType;
+    }
+
+    public String getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 }

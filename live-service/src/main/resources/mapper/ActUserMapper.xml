@@ -13,6 +13,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_luoxuan" jdbcType="INTEGER" property="isLuoxuan"/>
+    <result column="user_info" jdbcType="VARCHAR" property="userInfo" />
   </resultMap>
 
   <resultMap id="ActUserOutMap" type="com.xq.live.vo.out.ActUserOut" extends="BaseResultMap">
@@ -33,7 +34,7 @@
 
   <sql id="Base_Column_List">
     id, act_id, user_id, user_code, act_user_name, pic_ids, apply_status, vote_num,create_time,
-    update_time,is_luoxuan
+    update_time,is_luoxuan,user_info
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -57,11 +58,11 @@
   <insert id="insert" parameterType="com.xq.live.vo.in.ActUserInVo">
     insert into act_user (id, act_id, user_id, 
       user_code, act_user_name, pic_ids, 
-      apply_status, create_time, update_time
+      apply_status, create_time, update_time,user_info
       )
     values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{userCode,jdbcType=VARCHAR}, #{actUserName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR}, 
-      1, now(), now()
+      1, now(), now(), #{userInfo,jdbcType=VARCHAR}
       )
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       select last_insert_id() as id
@@ -97,6 +98,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="userInfo != null">
+        user_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -125,6 +129,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userInfo != null">
+        #{userInfo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -161,6 +168,9 @@
       <if test="isLuoxuan != null">
         is_luoxuan = #{isLuoxuan,jdbcType=TINYINT},
       </if>
+      <if test="userInfo != null">
+        user_info = #{userInfo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -173,7 +183,8 @@
       pic_ids = #{picIds,jdbcType=VARCHAR},
       apply_status = #{applyStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      user_info = #{userInfo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -260,6 +271,7 @@
     select
     a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
     a.update_time,
+    a.user_info,
     u.icon_url,
     u.age,
     u.height,
@@ -293,7 +305,7 @@
   <select id="listForNewAct" resultMap="ActUserOutMap">
     select
     a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
-    a.update_time,a.is_luoxuan,
+    a.update_time,a.is_luoxuan,a.user_info,
     u.icon_url,
     u.age,
     u.height,

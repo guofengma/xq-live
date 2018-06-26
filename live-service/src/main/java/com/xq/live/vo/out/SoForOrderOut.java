@@ -52,6 +52,9 @@ public class SoForOrderOut {
 
     private String moblie;
 
+    private Long shopId;
+
+
     public Long getId() {
         return id;
     }
@@ -194,5 +197,13 @@ public class SoForOrderOut {
 
     public void setMoblie(String moblie) {
         this.moblie = moblie;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

@@ -6,6 +6,7 @@
         <result column="so_amount" jdbcType="DECIMAL" property="soAmount"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
         <result column="pay_type" jdbcType="TINYINT" property="payType"/>
         <result column="so_status" jdbcType="TINYINT" property="soStatus"/>
         <result column="so_type" jdbcType="TINYINT" property="soType"/>
@@ -21,7 +22,6 @@
         <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
         <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
-        <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
     </resultMap>
 
     <resultMap id="SoOutForOrderResultMap" type="com.xq.live.vo.out.SoForOrderOut" extends="BaseResultMap">
@@ -54,7 +54,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, so_amount, user_id, user_name, pay_type, so_status, so_type, create_time, update_time
+    id, so_amount, user_id, user_name, shop_id,pay_type, so_status, so_type, create_time, update_time
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -72,16 +72,16 @@
     </select>
 
     <select id="selectByPk" parameterType="java.lang.Long" resultMap="SoOutResultMap">
-        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByPkForShop" parameterType="java.lang.Long" resultMap="SoOutResultMap">
-        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sk.sku_code, sk.sku_name,sd.shop_id
+        select s.id, s.so_amount, s.user_id, s.user_name,s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sk.sku_code, sk.sku_name,sd.shop_id
         from so s
         left join so_shop_log sd on s.id = sd.so_id
         left join sku sk on sd.sku_id = sk.id
@@ -90,8 +90,8 @@
     </select>
 
     <select id="selectByPkForOrder" parameterType="java.lang.Long" resultMap="SoOutForOrderResultMap">
-        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
+        select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
         c.id as coupon_id,c.coupon_code,c.coupon_amount,c.type,c.qrcode_url,c.is_used,c.is_deleted,c.expiry_date,
         c.used_time,' ' as rule_desc
         from so s
@@ -101,8 +101,8 @@
     </select>
 
     <select id="list" resultMap="SoOutResultMap">
-        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time, sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
+        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         <where>
@@ -124,7 +124,7 @@
     </select>
 
     <select id="listForShop" resultMap="SoOutResultMap">
-        select s.id, s.so_amount, s.user_id, s.user_name, s.pay_type, s.so_status, s.so_type, s.create_time,
+        select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
         s.update_time,s.paid_time,ss.shop_id,ss.sku_id
         from so s
         inner join so_shop_log ss on s.id = ss.so_id
@@ -224,11 +224,11 @@
     </delete>
     <insert id="insert" parameterType="com.xq.live.model.So">
         insert into so (so_amount, user_id,
-        user_name, pay_type, so_status,
+        user_name, shop_id,pay_type, so_status,
         so_type, create_time, update_time
         )
         values (#{soAmount,jdbcType=DECIMAL}, #{userId,jdbcType=BIGINT},
-        #{userName,jdbcType=VARCHAR}, #{payType,jdbcType=TINYINT}, #{soStatus,jdbcType=TINYINT},
+        #{userName,jdbcType=VARCHAR}, #{shopId,jdbcType=BIGINT},#{payType,jdbcType=TINYINT}, #{soStatus,jdbcType=TINYINT},
         #{soType,jdbcType=TINYINT}, now(), now()
         )
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -247,6 +247,9 @@
             </if>
             <if test="userName != null">
                 user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=BIGINT},
             </if>
             <if test="payType != null">
                 pay_type = #{payType,jdbcType=TINYINT},

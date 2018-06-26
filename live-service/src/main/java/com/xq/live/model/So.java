@@ -41,6 +41,10 @@ public class So {
 
     private SoDetail soDetail;
 
+    private Long shopId;
+
+
+
     public Long getId() {
         return id;
     }
@@ -120,4 +124,14 @@ public class So {
     public void setSoDetail(SoDetail soDetail) {
         this.soDetail = soDetail;
     }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+
 }

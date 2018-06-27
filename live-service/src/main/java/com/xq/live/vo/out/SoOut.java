@@ -65,6 +65,17 @@ public class SoOut {
 
     private String userIconUrl;//下单人的头像
 
+    private Integer isDui;//是否对账
+
+
+    public Integer getIsDui() {
+        return isDui;
+    }
+
+    public void setIsDui(Integer isDui) {
+        this.isDui = isDui;
+    }
+
 
     public Long getId() {
         return id;

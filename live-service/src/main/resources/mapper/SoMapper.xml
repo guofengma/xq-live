@@ -12,6 +12,7 @@
         <result column="so_type" jdbcType="TINYINT" property="soType"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_dui" jdbcType="TINYINT" property="isDui"/>
     </resultMap>
 
     <resultMap id="SoOutResultMap" type="com.xq.live.vo.out.SoOut" extends="BaseResultMap">
@@ -54,7 +55,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, so_amount, user_id, user_name, shop_id,pay_type, so_status, so_type, create_time, update_time
+    id, so_amount, user_id, user_name, shop_id,pay_type, so_status, so_type, create_time, update_time, is_dui
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -73,7 +74,7 @@
 
     <select id="selectByPk" parameterType="java.lang.Long" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        s.update_time,s.paid_time,s.is_dui ,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         where s.id = #{id,jdbcType=BIGINT}
@@ -81,7 +82,7 @@
 
     <select id="selectByPkForShop" parameterType="java.lang.Long" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name,s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sk.sku_code, sk.sku_name,sd.shop_id
+        s.update_time,s.paid_time,s.is_dui,sd.so_id, sd.sku_id, sk.sku_code, sk.sku_name,sd.shop_id
         from so s
         left join so_shop_log sd on s.id = sd.so_id
         left join sku sk on sd.sku_id = sk.id
@@ -91,7 +92,7 @@
 
     <select id="selectByPkForOrder" parameterType="java.lang.Long" resultMap="SoOutForOrderResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
+        s.update_time,s.paid_time,s.is_dui,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price,
         c.id as coupon_id,c.coupon_code,c.coupon_amount,c.type,c.qrcode_url,c.is_used,c.is_deleted,c.expiry_date,
         c.used_time,' ' as rule_desc
         from so s
@@ -102,7 +103,7 @@
 
     <select id="list" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
-        s.update_time,s.paid_time,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
+        s.update_time,s.paid_time,s.is_dui,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
         <where>
@@ -117,6 +118,9 @@
             </if>
             <if test="soType != null">
                 and s.so_type = #{soType}
+            </if>
+            <if test="isDui != null">
+                and s.is_dui =  #{isDui,jdbcType=TINYINT}
             </if>
         </where>
         order by id desc
@@ -148,6 +152,9 @@
             <if test="shopId != null">
                 and ss.shop_id = #{shopId,jdbcType=BIGINT}
             </if>
+            <if test="isDui != null">
+                and s.is_dui =  #{isDui,jdbcType=TINYINT}
+            </if>
         </where>
         order by id desc
         limit #{start}, #{rows}
@@ -170,6 +177,9 @@
             </if>
             <if test="soType != null">
                 and s.so_type = #{soType}
+            </if>
+            <if test="isDui != null">
+                and s.is_dui =  #{isDui,jdbcType=TINYINT}
             </if>
         </where>
     </select>
@@ -198,6 +208,9 @@
             <if test="shopId != null">
                 and ss.shop_id = #{shopId,jdbcType=BIGINT}
             </if>
+            <if test="isDui != null">
+                and s.is_dui =  #{isDui,jdbcType=TINYINT}
+            </if>
         </where>
     </select>
 
@@ -225,11 +238,11 @@
     <insert id="insert" parameterType="com.xq.live.model.So">
         insert into so (so_amount, user_id,
         user_name, shop_id,pay_type, so_status,
-        so_type, create_time, update_time
+        so_type, create_time, update_time ,is_dui
         )
         values (#{soAmount,jdbcType=DECIMAL}, #{userId,jdbcType=BIGINT},
         #{userName,jdbcType=VARCHAR}, #{shopId,jdbcType=BIGINT},#{payType,jdbcType=TINYINT}, #{soStatus,jdbcType=TINYINT},
-        #{soType,jdbcType=TINYINT}, now(), now()
+        #{soType,jdbcType=TINYINT}, now(), now(),0
         )
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             select last_insert_id() as id
@@ -266,6 +279,9 @@
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isDui != null">
+                is_dui =  #{isDui,jdbcType=TINYINT},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -278,7 +294,8 @@
           so_status = #{soStatus,jdbcType=TINYINT},
           so_type = #{soType,jdbcType=TINYINT},
           create_time = #{createTime,jdbcType=TIMESTAMP},
-          update_time = #{updateTime,jdbcType=TIMESTAMP}
+          update_time = #{updateTime,jdbcType=TIMESTAMP},
+          is_dui =  #{isDui,jdbcType=TINYINT}
         where id = #{id,jdbcType=BIGINT}
     </update>
 

@@ -137,8 +137,9 @@ public class ActShopServiceImpl implements ActShopService {
             return null;
         }
         int i = actShopMapper.countByActId(actShop.getActId());
-        DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
-        String s = mFormat.format(i+1);
+       /* DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+        String s = mFormat.format(i+1);*/
+        String s =(i + 1)+"";
         actShop.setShopCode(s);
         int ret = actShopMapper.insert(actShop);
         if(ret > 0){

@@ -57,8 +57,9 @@ public class ActGroupServiceImpl implements ActGroupService{
     public int addListGroup(List<ActGroup> list) {
         for (int l=0;l<list.size();l++){
             //int index = actSkuMapper.countByActId(record.getActId());
-            DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
-            String s = mFormat.format(l+1);
+           /* DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+            String s = mFormat.format(l+1);*/
+            String s = (l+1)+"";
             list.get(l).setGroupCode(s);
         }
 

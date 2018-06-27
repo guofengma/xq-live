@@ -66,8 +66,9 @@ public class ActSkuServiceImpl implements ActSkuService{
     @Transactional
     public Long insert(ActSkuInVo record) {
         int index = actSkuMapper.countByActId(record.getActId());
-        DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
-        String s = mFormat.format(index+1);
+        /*DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+        String s = mFormat.format(index+1);*/
+        String s =(index + 1)+"";
         record.setSkuCode(s);
         int i = actSkuMapper.insert(record);
         if (i<1){

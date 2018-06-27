@@ -46,6 +46,17 @@ public class SoInVo extends BaseInVo {
 
     private Date endTime;//查询商家订单中的结束时间
 
+    private Integer isDui;//是否对账
+
+
+    public Integer getIsDui() {
+        return isDui;
+    }
+
+    public void setIsDui(Integer isDui) {
+        this.isDui = isDui;
+    }
+
     public Long getId() {
         return id;
     }

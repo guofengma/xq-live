@@ -44,8 +44,8 @@
   <select id="selectByZan" parameterType="com.xq.live.vo.in.TopicInVo" resultMap="ZanSelect">
     select
     <include refid="Base_Column_List" />,
-    (select count(1) from zan where ref_id = a.id) as zan,
-    (select count(1) from zan where ref_id = a.id
+    (select count(1) from zan where ref_id = a.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = a.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -204,8 +204,8 @@
     t.trans_num,
     (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
     u.user_type,
-    (select count(1) from zan where ref_id = t.id) as zan,
-    (select count(1) from zan where ref_id = t.id
+    (select count(1) from zan where ref_id = t.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = t.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -264,8 +264,8 @@
     t.trans_num,
     (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
     u.user_type,
-    (select count(1) from zan where ref_id = t.id) as zan,
-    (select count(1) from zan where ref_id = t.id
+    (select count(1) from zan where ref_id = t.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = t.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -293,7 +293,7 @@
 
   <select id="zanTotalForUser" resultType="java.lang.Integer">
     select
-     sum((select count(1) from zan where ref_id = t.id)) as zanTotal
+     sum((select count(1) from zan where ref_id = t.id and type = 2)) as zanTotal
     from topic t
     <where>
       1=1

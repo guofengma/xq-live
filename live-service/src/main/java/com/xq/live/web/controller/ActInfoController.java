@@ -165,4 +165,15 @@ public class ActInfoController {
         //0是显示，1是不显示
         return new BaseResp<Integer>(ResultStatus.SUCCESS,1);
     }
+
+    /**
+     * 针对没有参与活动的个人主页的点赞数目
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/zanTotal")
+    public BaseResp<Integer> zanTotal(Long userId){
+        Integer integer = countService.zanTotal(userId);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
+    }
 }

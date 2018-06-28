@@ -51,6 +51,14 @@ public interface UploadService {
     public Attachment uploadPicToCos(String localPath,  String name);
 
     /**
+     * 上传文件到COS服务器，返回附件表对象
+     * @param localPath
+     * @param name
+     * @return
+     */
+    public Attachment uploadPicToCosForNew(String localPath,  String name);
+
+    /**
      * 上传文件到COS服务器，返回附件表对象(针对视频无需压缩)
      * @param localPath
      * @param name

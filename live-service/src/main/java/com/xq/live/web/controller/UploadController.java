@@ -71,6 +71,36 @@ public class UploadController {
     }
 
     /**
+     * 上传多个图片(不压缩比例)
+     *
+     * @param uploadfiles
+     * @param user
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadForNew/multi")
+    public BaseResp<List<Attachment>> uploadForNew(@RequestParam("file") MultipartFile[] uploadfiles, User user, HttpServletRequest request) {
+        if (user == null || StringUtils.isEmpty(user.getUserName())) {
+            return new BaseResp<List<Attachment>>(ResultStatus.error_para_user_empty);
+        }
+
+        if (uploadfiles.length == 0) {
+            return new BaseResp<List<Attachment>>(ResultStatus.error_file_upload_empty);
+        }
+        List<Attachment> result = new ArrayList<Attachment>();
+        try {
+            for (MultipartFile uploadFile : uploadfiles) {
+                Attachment p = this.uploadToCosForNew(uploadFile, this.getUploadPath(request), user.getUserName());
+                result.add(p);
+            }
+            return new BaseResp<List<Attachment>>(ResultStatus.SUCCESS, result);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new BaseResp<List<Attachment>>(ResultStatus.error_file_upload_error);
+        }
+    }
+
+    /**
      * 单个视频上传
      *
      * @param uploadFile
@@ -178,6 +208,35 @@ public class UploadController {
         logger.error("图片上传到服务器成功：" + localPath);
 
         Attachment result = uploadService.uploadPicToCos(localPath, userName);
+        if (result != null && result.getId() != null) {
+            return result;
+        }
+        return null;
+    }
+
+    /**
+     * 上传文件到临时目录，并上传到云COS
+     *
+     * @param file
+     * @param uploadPath
+     * @param userName
+     * @return
+     * @throws IOException
+     */
+    private Attachment uploadToCosForNew(MultipartFile file, String uploadPath, String userName) throws IOException {
+        if (file.isEmpty()) {
+            return null;
+        }
+        String localPath = uploadPath + file.getOriginalFilename();
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(localPath);
+        if (!path.toFile().getParentFile().exists()) {
+            path.toFile().getParentFile().mkdirs();
+        }
+        Files.write(path, bytes);
+        logger.error("图片上传到服务器成功：" + localPath);
+
+        Attachment result = uploadService.uploadPicToCosForNew(localPath, userName);
         if (result != null && result.getId() != null) {
             return result;
         }

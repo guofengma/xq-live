@@ -50,6 +50,8 @@
     <if test="actId != null">
       and act_id = #{actId,jdbcType=BIGINT}
     </if>
+    and apply_status = 1
+    and is_luoxuan = 0
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from act_user

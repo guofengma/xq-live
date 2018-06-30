@@ -61,4 +61,22 @@ public class ActTopicController {
         Pager<ActTopicOut> result = actTopicService.listForNewAct(inVo);
         return new BaseResp<Pager<ActTopicOut>>(ResultStatus.SUCCESS, result);
     }
+
+    /**
+     * 分页查询参与商家列表信息(针对的是新活动，带有开始时间和截止时间，可以多次投票)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/zanAndHitTotal", method = RequestMethod.GET)
+    public BaseResp<ActTopicOut> zanAndHitTotal(ActTopicInVo inVo){
+        if(inVo.getActId()==null){
+            return new BaseResp<ActTopicOut>(-1,"actId必填", null);
+        }
+        //为了分享，这个地方注释掉，但是还是必须要填
+        /*if(inVo.getZanUserId()==null){
+            return new BaseResp<Pager<ActTopicOut>>(-1,"zanUserId必填",null);
+        }*/
+        ActTopicOut result = actTopicService.zanAndHitTotal(inVo);
+        return new BaseResp<ActTopicOut>(ResultStatus.SUCCESS, result);
+    }
 }

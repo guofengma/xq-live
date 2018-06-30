@@ -30,4 +30,6 @@ public interface ActTopicMapper {
     List<ActTopic> selectByTopicId(ActTopicInVo actTopicInVo);
 
     int updateForVoteNums(ActTopicInVo topicInVo);
+
+    ActTopicOut zanAndHitTotal(ActTopicInVo inVo);
 }

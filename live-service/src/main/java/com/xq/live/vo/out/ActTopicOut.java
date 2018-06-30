@@ -29,6 +29,8 @@ public class ActTopicOut {
 
     private String summary;//文章摘要
 
+    private String homePic;
+
     private String content;//文章内容
 
     private Integer hitNum;//文章点击量
@@ -235,5 +237,13 @@ public class ActTopicOut {
 
     public void setActHitNum(Integer actHitNum) {
         this.actHitNum = actHitNum;
+    }
+
+    public String getHomePic() {
+        return homePic;
+    }
+
+    public void setHomePic(String homePic) {
+        this.homePic = homePic;
     }
 }

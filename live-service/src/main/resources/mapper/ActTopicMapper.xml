@@ -15,6 +15,7 @@
   <resultMap id="ActTopicOutMap" type="com.xq.live.vo.out.ActTopicOut" extends="BaseResultMap">
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="home_pic" jdbcType="VARCHAR" property="homePic" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="hit_num" jdbcType="INTEGER" property="hitNum" />
     <result column="topic_type" jdbcType="INTEGER" property="topicType" />
@@ -202,7 +203,7 @@
     select
     <include refid="Base_Column_List" />
     from act_topic
-    where topicId = #{topicId,jdbcType=BIGINT}
+    where topic_id = #{topicId,jdbcType=BIGINT}
     <if test="actId != null">
       and act_id = #{actId,jdbcType=BIGINT}
     </if>
@@ -214,6 +215,7 @@
     a.*,
     t.title,
     t.summary,
+    t.home_pic,
     t.content,
     t.hit_num,
     t.topic_type,
@@ -227,9 +229,7 @@
       AND  user_id = #{zanUserId}
     </if>
     ) as is_zan,
-    u.user_type,
-    sum((select count(1) from zan where ref_id = a.topic_id and type = 2)) as zan_total,
-    sum(t.hit_num) as act_hit_num
+    u.user_type
     FROM
     act_topic a
     inner join topic t on a.topic_id = t.id
@@ -249,7 +249,6 @@
         AND  a.user_id = #{userId,jdbcType=BIGINT}
       </if>
       and  a.apply_status = 1
-      and  s.is_deleted = 0
       and t.is_deleted = 0
     </where>
     ORDER by
@@ -282,7 +281,38 @@
         AND  a.user_id = #{userId,jdbcType=BIGINT}
       </if>
       and  a.apply_status = 1
-      and  s.is_deleted = 0
+      and t.is_deleted = 0
+    </where>
+    ORDER by
+    <if test="sortType == 1">
+      a.create_time DESC,
+    </if>
+    a.vote_num DESC
+  </select>
+
+  <select id="zanAndHitTotal" resultMap="ActTopicOutMap">
+    select
+    sum((select count(1) from zan where ref_id = a.topic_id and type = 2)) as zan_total,
+    sum(t.hit_num) as act_hit_num
+    FROM
+    act_topic a
+    inner join topic t on a.topic_id = t.id
+    inner join user u on a.user_id = u.id
+    <where>
+      1=1
+      <if test="id != null">
+        and  a.id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="actId != null">
+        AND  a.act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      <if test="topicId != null">
+        AND  a.topic_id = #{topicId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null">
+        AND  a.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      and  a.apply_status = 1
       and t.is_deleted = 0
     </where>
     ORDER by

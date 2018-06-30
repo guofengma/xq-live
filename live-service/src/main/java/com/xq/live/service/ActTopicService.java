@@ -22,4 +22,11 @@ public interface ActTopicService {
      * @return
      */
     Pager<ActTopicOut> listForNewAct(ActTopicInVo inVo);
+
+    /**
+     * 查询总点赞量和总浏览量
+     * @param inVo
+     * @return
+     */
+    ActTopicOut zanAndHitTotal(ActTopicInVo inVo);
 }

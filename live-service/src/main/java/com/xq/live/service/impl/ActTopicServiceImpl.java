@@ -40,12 +40,20 @@ public class ActTopicServiceImpl implements ActTopicService{
         result.setTotal(listTotal);
         if(listTotal>0){
             List<ActTopicOut> list = actTopicMapper.listForNewAct(inVo);
-            /*for (ActSkuOut actSkuOut : list) {
-
-            }*/
+            Integer zanTotal = 0;
+            Integer actHitNum = 0;
+            for (ActTopicOut actTopicOut : list) {
+                zanTotal = zanTotal + actTopicOut.getZan();
+                actHitNum = actHitNum + actTopicOut.getHitNum();
+            }
             result.setList(list);
         }
         result.setPage(inVo.getPage());
         return result;
+    }
+
+    @Override
+    public ActTopicOut zanAndHitTotal(ActTopicInVo inVo) {
+        return actTopicMapper.zanAndHitTotal(inVo);
     }
 }

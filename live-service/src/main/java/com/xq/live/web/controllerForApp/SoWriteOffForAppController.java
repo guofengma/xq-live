@@ -3,15 +3,10 @@ package com.xq.live.web.controllerForApp;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.Coupon;
-import com.xq.live.model.Shop;
-import com.xq.live.model.SoWriteOff;
-import com.xq.live.model.User;
-import com.xq.live.service.CouponService;
-import com.xq.live.service.ShopService;
-import com.xq.live.service.SoWriteOffService;
-import com.xq.live.service.UserService;
+import com.xq.live.model.*;
+import com.xq.live.service.*;
 import com.xq.live.vo.in.SoWriteOffInVo;
+import com.xq.live.vo.out.SoOut;
 import com.xq.live.vo.out.SoWriteOffOut;
 import com.xq.live.web.utils.CutOutTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +45,9 @@ public class SoWriteOffForAppController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private SoService soService;
 
     /**
      * 根据id查询记录
@@ -95,6 +93,16 @@ public class SoWriteOffForAppController {
             return new BaseResp<Long>(ResultStatus.error_shop_info_empty);
         }
 
+        SoOut soOut = soService.get(soWriteOff.getSoId());
+        if(soOut!=null) {
+            if (soOut.getSoType() == So.SO_TYPE_PT && soOut.getShopId() != null) {
+                if (!soWriteOff.getShopId().equals(soOut.getShopId())) {
+                    return new BaseResp<Long>(ResultStatus.error_act_shop_not_right);
+                }
+            }
+        }else{
+            return new BaseResp<Long>(ResultStatus.error_para_coupon_code_empty);
+        }
 
 
         soWriteOff.setShopId(shop.getId());

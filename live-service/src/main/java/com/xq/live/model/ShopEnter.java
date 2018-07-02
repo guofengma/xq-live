@@ -7,6 +7,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class ShopEnter {
+    /**
+     * 审批状态 0 审批中  1 审批通过  2审批不通过
+     */
+    public final static int SHOP_ENTER_WAIT = 0;
+
+    public final static int SHOP_ENTER_CAN = 1;
+
+    public final static int SHOP_ENTER_NO_CAN =2;
+
     private Long id;
     @NotNull(message = "userName必填")
     private String userName;//用户名称
@@ -38,6 +47,12 @@ public class ShopEnter {
     private BigDecimal locationY;//维度
 
     private String city;//城市
+    @NotNull(message = "logoPic必填")
+    private String logoPic;//主图
+    @NotNull(message = "shopHours必填")
+    private String shopHours;//商家营业时间
+    @NotNull(message = "otherService必填")
+    private String otherService;//其他服务
 
     public Long getId() {
         return id;
@@ -165,5 +180,29 @@ public class ShopEnter {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getLogoPic() {
+        return logoPic;
+    }
+
+    public void setLogoPic(String logoPic) {
+        this.logoPic = logoPic;
+    }
+
+    public String getShopHours() {
+        return shopHours;
+    }
+
+    public void setShopHours(String shopHours) {
+        this.shopHours = shopHours;
+    }
+
+    public String getOtherService() {
+        return otherService;
+    }
+
+    public void setOtherService(String otherService) {
+        this.otherService = otherService;
     }
 }

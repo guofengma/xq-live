@@ -51,6 +51,8 @@ public class ActInfoOut {
 
     private Integer isSignForUser;//选手是否报名
 
+    private Integer type;
+
     public Long getId() {
         return id;
     }
@@ -177,5 +179,13 @@ public class ActInfoOut {
 
     public void setIsSignForUser(Integer isSignForUser) {
         this.isSignForUser = isSignForUser;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

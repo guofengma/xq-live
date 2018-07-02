@@ -38,6 +38,8 @@ public class ActInfo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;    //更新时间
 
+    private Integer type;
+
     public Long getId() {
         return id;
     }
@@ -124,5 +126,13 @@ public class ActInfo {
 
     public void setActDesc(String actDesc) {
         this.actDesc = actDesc;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

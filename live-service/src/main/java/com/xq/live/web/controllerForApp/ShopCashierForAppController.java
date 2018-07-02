@@ -71,6 +71,7 @@ public class ShopCashierForAppController {
         }
         inVo.setCreatorId(inVo.getParentId());
         inVo.setUpdatorId(inVo.getParentId());
+        inVo.setIsAdmin(ShopCashier.SHOP_CASHIER_NO_ADMIN);
         Long add = shopCashierService.add(inVo);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }

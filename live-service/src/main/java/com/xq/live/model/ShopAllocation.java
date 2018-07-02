@@ -11,6 +11,13 @@ public class ShopAllocation {
 
     public final static int SHOP_ALLOCATION_DS = 2;
 
+    /**
+     * 是否删除  0 未删除  1 删除
+     */
+    public final static int SHOP_ALLOCATION_NO_DELETED = 0;
+
+    public final static int SHOP_ALLOCATION_IS_DELETED = 1;
+
 
     private Long id;
 

@@ -14,7 +14,7 @@ public interface ShopEnterMapper {
 
     int insertSelective(ShopEnter record);
 
-    ShopEnter selectByPrimaryKey(Long id);
+    ShopEnterOut selectByPrimaryKey(Long id);
 
     ShopEnterOut selectByUserIdAndShopName(ShopEnter record);
 

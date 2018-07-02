@@ -43,6 +43,12 @@ public class ShopInVo extends BaseInVo {
 
     private String city;//选择的城市
 
+    private String shopCode;//商家编码
+
+    private String shopHours;//商家营业时间
+
+    private String otherService;//其他服务
+
     public String getShopCode() {
         return shopCode;
     }
@@ -50,9 +56,6 @@ public class ShopInVo extends BaseInVo {
     public void setShopCode(String shopCode) {
         this.shopCode = shopCode;
     }
-
-    private String shopCode;//商家编码
-
 
     public String getShopName() {
         return shopName;
@@ -164,5 +167,21 @@ public class ShopInVo extends BaseInVo {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getShopHours() {
+        return shopHours;
+    }
+
+    public void setShopHours(String shopHours) {
+        this.shopHours = shopHours;
+    }
+
+    public String getOtherService() {
+        return otherService;
+    }
+
+    public void setOtherService(String otherService) {
+        this.otherService = otherService;
     }
 }

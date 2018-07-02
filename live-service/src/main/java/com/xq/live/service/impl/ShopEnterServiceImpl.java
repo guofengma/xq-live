@@ -1,15 +1,14 @@
 package com.xq.live.service.impl;
 
-import com.xq.live.dao.ShopEnterMapper;
-import com.xq.live.dao.ShopMapper;
-import com.xq.live.dao.UserMapper;
-import com.xq.live.model.Shop;
-import com.xq.live.model.ShopEnter;
-import com.xq.live.model.User;
+import com.xq.live.dao.*;
+import com.xq.live.model.*;
 import com.xq.live.service.ShopEnterService;
+import com.xq.live.vo.in.ShopCashierInVo;
 import com.xq.live.vo.out.ShopEnterOut;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,6 +28,12 @@ public class ShopEnterServiceImpl implements ShopEnterService{
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Autowired
+    private ShopCashierMapper shopCashierMapper;
+
+    @Autowired
+    private ShopAllocationMapper shopAllocationMapper;
 
     @Override
     public Long add(ShopEnter shopEnter) {
@@ -50,12 +55,19 @@ public class ShopEnterServiceImpl implements ShopEnterService{
     }
 
     @Override
+    @Transactional
     public Integer addShop(ShopEnter shopEnter) {
         List<ShopEnterOut> list = shopEnterMapper.selectByUserId(shopEnter.getUserId());
         if(list==null||list.size()==0){
             return null;
         }
         ShopEnterOut shopEnterOut = list.get(list.size()-1);//返回最后一条数据,前面的数据无需做判断
+        ShopEnter shopEnter1 = new ShopEnter();
+        shopEnter1.setId(shopEnterOut.getId());
+        shopEnter1.setStatus(ShopEnter.SHOP_ENTER_CAN);
+        shopEnterMapper.updateByPrimaryKeySelective(shopEnter1);
+
+        shopEnterOut = shopEnterMapper.selectByPrimaryKey(shopEnterOut.getId());
         if(shopEnterOut!=null&&shopEnterOut.getStatus()!=null&&shopEnterOut.getStatus()==1){
             Shop shop = new Shop();
             Long userId = shopEnterOut.getUserId();
@@ -79,6 +91,11 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             shop.setShopName(shopName);
             shop.setUserId(userId);
             shop.setBusinessCate(businessCate);
+            shop.setLogoUrl(shopEnterOut.getLogoPic());
+            shop.setIndexUrl(shopEnterOut.getDoorPic());
+            shop.setShopHours(shopEnterOut.getShopHours());
+            shop.setOtherService(shopEnterOut.getOtherService());
+            shop.setCity(shopEnterOut.getCity());
             int insert = shopMapper.insert(shop);
             /**
              * 判断插入shop表是否成功，失败返回-2
@@ -102,6 +119,22 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             if(i<1){
                 return -1;
             }
+            User user1 = userMapper.selectByPrimaryKey(userId);
+            //给商家加入管理员权限
+            ShopCashierInVo shopCashierInVo = new ShopCashierInVo();
+            shopCashierInVo.setCashierId(user1.getId());
+            shopCashierInVo.setCashierName(user1.getUserName());
+            shopCashierInVo.setShopId(id);
+            shopCashierInVo.setIsAdmin(ShopCashier.SHOP_CASHIER_IS_ADMIN);
+            shopCashierInVo.setIsDeleted(ShopCashier.SHOP_CASHIER_NO_DELETED);
+            shopCashierMapper.insert(shopCashierInVo);
+
+            //给商家配置收款方式，先配置已删除,为平台代收的数据，后期可以根据业务来修改
+            ShopAllocation shopAllocation = new ShopAllocation();
+            shopAllocation.setShopId(id);
+            shopAllocation.setIsDelete(ShopAllocation.SHOP_ALLOCATION_IS_DELETED);
+            shopAllocation.setPaymentMethod(ShopAllocation.SHOP_ALLOCATION_DS);
+            shopAllocationMapper.insert(shopAllocation);
         }else {
             return -3;//判断用户是否入驻且审批通过
         }

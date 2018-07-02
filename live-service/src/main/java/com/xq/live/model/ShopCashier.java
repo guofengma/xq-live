@@ -10,6 +10,13 @@ public class ShopCashier {
 
     public final static byte SHOP_CASHIER_IS_DELETED = 1;
 
+    /**
+     * is_deleted 0 未删除  1 已删除
+     */
+    public final static byte SHOP_CASHIER_NO_ADMIN = 0;
+
+    public final static byte SHOP_CASHIER_IS_ADMIN = 1;
+
 
     private Long id;
 

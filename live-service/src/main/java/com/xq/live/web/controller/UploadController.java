@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -347,7 +349,7 @@ public class UploadController {
         return Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator;
     }
 
-    @RequestMapping(value = "/testDownload", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/testDownload", method = RequestMethod.GET)
     public void testDownload(HttpServletResponse res) {
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath() +"static"+File.separator+ "upload" +  File.separator + "H567B9652_0702190916.apk";
         String fileName = "H567B9652_0702190916.apk";
@@ -393,6 +395,7 @@ public class UploadController {
         String fileName = "H567B9652_0702190916.apk";// 设置文件名，根据业务需要替换成要下载的文件名
         if (fileName != null) {
             //设置文件路径
+            String realPath1 = request.getSession().getServletContext().getRealPath("");
             String realPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() +"static"+File.separator+ "upload" + File.separator;
             File file = new File(realPath , fileName);
             if (file.exists()) {
@@ -433,6 +436,75 @@ public class UploadController {
         }
         return null;
     }
+
+    *//**
+     * @功能 下载临时素材接口
+     * @return
+     *//*
+
+    @RequestMapping("/download1")
+    public File saveUrlAs(){
+        String  url = "https://xqmp4-1256079679.file.myqcloud.com/xiangqi_H567B9652_0702190916.apk";
+        String  filePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() +"static"+File.separator+ "upload" +  File.separator +"xiangqi_H567B9652_0702190916.apk";
+        String method = "GET";
+        //System.out.println("fileName---->"+filePath);
+        //创建不同的文件夹目录
+        File file=new File(filePath);
+        //判断文件夹是否存在
+        if (!file.exists())
+        {
+            //如果文件夹不存在，则创建新的的文件夹
+            file.mkdirs();
+        }
+        FileOutputStream fileOut = null;
+        HttpURLConnection conn = null;
+        InputStream inputStream = null;
+        try
+        {
+            // 建立链接
+            URL httpUrl=new URL(url);
+            conn=(HttpURLConnection) httpUrl.openConnection();
+            //以Post方式提交表单，默认get方式
+            conn.setRequestMethod(method);
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            // post方式不能使用缓存
+            conn.setUseCaches(false);
+            //连接指定的资源
+            conn.connect();
+            //获取网络输入流
+            inputStream=conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(inputStream);
+            //判断文件的保存路径后面是否以/结尾
+            if (!filePath.endsWith("/")) {
+
+                filePath += "/";
+
+            }
+            //写入到文件（注意文件保存路径的后面一定要加上文件的名称）
+            fileOut = new FileOutputStream(filePath+"123.png");
+            BufferedOutputStream bos = new BufferedOutputStream(fileOut);
+
+            byte[] buf = new byte[4096];
+            int length = bis.read(buf);
+            //保存文件
+            while(length != -1)
+            {
+                bos.write(buf, 0, length);
+                length = bis.read(buf);
+            }
+            bos.close();
+            bis.close();
+            conn.disconnect();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("抛出异常！！");
+        }
+
+        return file;
+
+    }*/
 
 
 }

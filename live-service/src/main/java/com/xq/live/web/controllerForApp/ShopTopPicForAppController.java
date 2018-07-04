@@ -4,7 +4,8 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ShopTopPic;
 import com.xq.live.service.ShopTopPicService;
-import javafx.util.Pair;
+
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;

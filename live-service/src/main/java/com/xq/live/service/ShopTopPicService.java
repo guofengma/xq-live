@@ -1,7 +1,7 @@
 package com.xq.live.service;
 
 import com.xq.live.model.ShopTopPic;
-import javafx.util.Pair;
+import org.javatuples.Pair;
 
 import java.util.List;
 

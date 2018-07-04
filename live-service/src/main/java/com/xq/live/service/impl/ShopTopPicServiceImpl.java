@@ -4,11 +4,11 @@ import com.xq.live.dao.ShopTopPicMapper;
 import com.xq.live.model.ShopTopPic;
 import com.xq.live.service.ShopTopPicService;
 import com.xq.live.vo.out.ShopTopPicOut;
-import javafx.util.Pair;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 /**

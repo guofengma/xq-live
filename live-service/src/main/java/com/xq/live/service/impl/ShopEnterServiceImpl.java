@@ -101,7 +101,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
              * 判断插入shop表是否成功，失败返回-2
              */
             if(insert<1){
-                return -2;
+                throw new RuntimeException("插入shop表失败");
             }
             Long id = null;
             if(shop.getId()!=null) {
@@ -117,7 +117,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
              * 判断更改用户状态是否成功,失败返回-1
              */
             if(i<1){
-                return -1;
+                throw new RuntimeException("更新用户状态失败");
             }
             User user1 = userMapper.selectByPrimaryKey(userId);
             //给商家加入管理员权限
@@ -136,7 +136,7 @@ public class ShopEnterServiceImpl implements ShopEnterService{
             shopAllocation.setPaymentMethod(ShopAllocation.SHOP_ALLOCATION_DS);
             shopAllocationMapper.insert(shopAllocation);
         }else {
-            return -3;//判断用户是否入驻且审批通过
+            throw new RuntimeException("用户尚未入驻或审批未通过");//判断用户是否入驻且审批通过
         }
         return 0;
     }

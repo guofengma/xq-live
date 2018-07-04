@@ -118,6 +118,9 @@ public class SoServiceImpl implements SoService {
     public BigDecimal totalAmount(SoInVo inVo){
         BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);
         BigDecimal bigDecimal1 = soMapper.totalAmount(inVo);
+        if(bigDecimal1==null){
+            bigDecimal1 = BigDecimal.ZERO;
+        }
         BigDecimal total = bigDecimal.add(bigDecimal1).setScale(1,BigDecimal.ROUND_UP);
         return total;
     }

@@ -1,7 +1,7 @@
 package com.xq.live.service;
 
 import com.xq.live.model.ShopTopPic;
-import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface ShopTopPicService {
      * @param shopId
      * @return
      */
-    List<Pair<String,String>> selectByShopId(Long shopId);
+    List<Triplet<String, String,Long>> selectByShopId(Long shopId);
 
     /**
      * 增加顶部图片

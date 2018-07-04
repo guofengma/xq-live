@@ -4,11 +4,11 @@ import com.xq.live.dao.ShopTopPicMapper;
 import com.xq.live.model.ShopTopPic;
 import com.xq.live.service.ShopTopPicService;
 import com.xq.live.vo.out.ShopTopPicOut;
-import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,11 +26,11 @@ public class ShopTopPicServiceImpl implements ShopTopPicService{
      * @return
      */
     @Override
-    public List<Pair<String,String>> selectByShopId(Long shopId) {
+    public List<Triplet<String, String,Long>> selectByShopId(Long shopId) {
         List<ShopTopPicOut> shopTopPicOuts = shopTopPicMapper.selectByShopId(shopId);
-        List<Pair<String,String>> list = new ArrayList<>();
+        List<Triplet<String, String,Long>> list = new ArrayList<>();
         for (ShopTopPicOut shopTopPicOut : shopTopPicOuts) {
-            list.add(new Pair<String, String>(shopTopPicOut.getAttachment().getSmallPicUrl(),shopTopPicOut.getAttachment().getPicUrl()));
+            list.add(new Triplet<String, String,Long>(shopTopPicOut.getAttachment().getSmallPicUrl(),shopTopPicOut.getAttachment().getPicUrl(),shopTopPicOut.getId()));
         }
         return list;
     }

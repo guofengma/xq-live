@@ -4,8 +4,7 @@ import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.ShopTopPic;
 import com.xq.live.service.ShopTopPicService;
-
-import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -33,9 +32,9 @@ public class ShopTopPicForAppController {
      * @return
      */
     @RequestMapping(value = "/selectPic",method = RequestMethod.GET)
-    public BaseResp<List<Pair<String,String>>> selectByShopId(Long shopId){
-        List<Pair<String, String>> pairs = shopTopPicService.selectByShopId(shopId);
-        return new BaseResp<List<Pair<String,String>>>(ResultStatus.SUCCESS,pairs);
+    public BaseResp<List<Triplet<String, String,Long>>> selectByShopId(Long shopId){
+        List<Triplet<String, String,Long>> pairs = shopTopPicService.selectByShopId(shopId);
+        return new BaseResp<List<Triplet<String, String,Long>>>(ResultStatus.SUCCESS,pairs);
     }
 
     /**

@@ -8,12 +8,11 @@ public class ShopTopPic {
     @NotNull(message = "shopId必填")
     private Long shopId;
 
-    @NotNull(message = "shopId必填")
+    @NotNull(message = "attachementId必填")
     private Long attachementId;
 
     private Integer isDeleted;
 
-    @NotNull(message = "shopId必填")
     private Date createTime;
 
     public Long getId() {

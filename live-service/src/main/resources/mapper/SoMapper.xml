@@ -101,6 +101,17 @@
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="totalAmount" resultType="java.math.BigDecimal">
+        select sum(s.so_amount)
+        from so s
+        where s.shop_id = #{shopId,jdbcType=BIGINT}
+        and s.so_type = 1
+        and s.so_status = 2
+        <if test="beginTime !=null and endTime != null">
+            and (s.create_time BETWEEN #{beginTime} and #{endTime})
+        </if>
+    </select>
+
     <select id="list" resultMap="SoOutResultMap">
         select s.id, s.so_amount, s.user_id, s.user_name, s.shop_id,s.pay_type, s.so_status, s.so_type, s.create_time,
         s.update_time,s.paid_time,s.is_dui,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
@@ -118,6 +129,9 @@
             </if>
             <if test="soType != null">
                 and s.so_type = #{soType}
+            </if>
+            <if test="shopId != null">
+                and s.shop_id = #{shopId}
             </if>
             <if test="isDui != null">
                 and s.is_dui =  #{isDui,jdbcType=TINYINT}

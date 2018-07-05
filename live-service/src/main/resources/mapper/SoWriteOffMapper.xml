@@ -301,7 +301,7 @@
     (
     (
     SELECT
-    COUNT(1)
+    FORMAT(IFNULL(COUNT(1),0),2)
     FROM
     so_write_off swo,
     sku ss
@@ -319,7 +319,7 @@
     </if>
     ) + (
     SELECT
-    sum(coupon_amount) / 10
+    FORMAT(IFNULL(sum(coupon_amount) / 10,0),2)
     FROM
     so_write_off swo,
     sku ss

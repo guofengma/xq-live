@@ -64,6 +64,8 @@ public class SoWriteOffOut {
 
     private Integer isBill;//是否对账 0未对账 1对账
 
+    private String skuName;
+
     public Long getId() {
         return id;
     }
@@ -230,5 +232,13 @@ public class SoWriteOffOut {
 
     public void setServicePrice(BigDecimal servicePrice) {
         this.servicePrice = servicePrice;
+    }
+
+    public String getSkuName() {
+        return skuName;
+    }
+
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 }

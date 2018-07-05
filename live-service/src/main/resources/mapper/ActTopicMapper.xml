@@ -292,7 +292,7 @@
 
   <select id="zanAndHitTotal" resultMap="ActTopicOutMap">
     select
-    sum((select count(1) from zan where ref_id = a.topic_id and type = 2)) as zan_total,
+    sum(a.vote_num) as zan_total,
     sum(t.hit_num) as act_hit_num
     FROM
     act_topic a

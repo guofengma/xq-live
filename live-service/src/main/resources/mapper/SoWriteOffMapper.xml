@@ -24,7 +24,7 @@
   <resultMap id="SoWriteOffOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.SoWriteOffOut">
     <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="total_service" jdbcType="DECIMAL" property="totalService" />
-
+    <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -254,39 +254,42 @@
 
   <select id="list" resultMap="SoWriteOffOutMap">
     select
-    <include refid="Base_Column_List" />
-    from so_write_off
+    sw.*,
+    s.sku_name
+    from so_write_off sw
+    inner join sku s on sw.sku_id = s.id
     <where>
       <if test="id != null">
-        id = #{id}
+        sw.id = #{id}
       </if>
       <if test="soId != null">
-        and so_id = #{soId}
+        and sw.so_id = #{soId}
       </if>
       <if test="shopId != null">
-        and shop_id = #{shopId}
+        and sw.shop_id = #{shopId}
       </if>
       <if test="shopName != null and shopName !=''">
-        and shop_name = #{shopName}
+        and sw.shop_name = #{shopName}
       </if>
       <if test="userId != null and userId !=''">
-        and user_id = #{userId}
+        and sw.user_id = #{userId}
       </if>
       <if test="skuId != null">
-        and sku_id = #{skuId}
+        and sw.sku_id = #{skuId}
       </if>
       <if test="couponId != null">
-        and coupon_id = #{couponId}
+        and sw.coupon_id = #{couponId}
       </if>
       <if test="couponCode != null and couponCode !=''">
-        and coupon_code = #{couponCode}
+        and sw.coupon_code = #{couponCode}
       </if>
       <if test="begainTime !=null and endTime != null">
-        and (create_time BETWEEN #{begainTime} and #{endTime})
+        and (sw.create_time BETWEEN #{begainTime} and #{endTime})
       </if>
       <if test="isBill !=null">
-        and is_bill = #{isBill,jdbcType=INTEGER}
+        and sw.is_bill = #{isBill,jdbcType=INTEGER}
       </if>
+      and s.is_deleted = 0
     </where>
     order by create_time ASC
     limit #{start}, #{rows}
@@ -371,38 +374,40 @@
 
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1)
-    from so_write_off
+    from so_write_off sw
+    inner join sku s on sw.sku_id = s.id
     <where>
       <if test="id != null">
-        id = #{id}
+        sw.id = #{id}
       </if>
       <if test="soId != null">
-        and so_id = #{soId}
+        and sw.so_id = #{soId}
       </if>
       <if test="shopId != null">
-        and shop_id = #{shopId}
+        and sw.shop_id = #{shopId}
       </if>
       <if test="shopName != null and shopName !=''">
-        and shop_name = #{shopName}
+        and sw.shop_name = #{shopName}
       </if>
       <if test="userId != null and userId !=''">
-        and user_id = #{userId}
+        and sw.user_id = #{userId}
       </if>
       <if test="skuId != null">
-        and sku_id = #{skuId}
+        and sw.sku_id = #{skuId}
       </if>
       <if test="couponId != null">
-        and coupon_id = #{couponId}
+        and sw.coupon_id = #{couponId}
       </if>
       <if test="couponCode != null and couponCode !=''">
-        and coupon_code = #{couponCode}
+        and sw.coupon_code = #{couponCode}
       </if>
       <if test="begainTime !=null and endTime != null">
-        and (create_time BETWEEN #{begainTime} and #{endTime})
+        and (sw.create_time BETWEEN #{begainTime} and #{endTime})
       </if>
       <if test="isBill !=null">
-        and is_bill = #{isBill,jdbcType=INTEGER}
+        and sw.is_bill = #{isBill,jdbcType=INTEGER}
       </if>
+      and s.is_deleted = 0
     </where>
   </select>
 

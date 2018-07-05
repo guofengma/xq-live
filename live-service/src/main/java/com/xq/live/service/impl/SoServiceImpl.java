@@ -121,7 +121,7 @@ public class SoServiceImpl implements SoService {
         if(bigDecimal1==null){
             bigDecimal1 = BigDecimal.ZERO;
         }
-        BigDecimal total = bigDecimal.add(bigDecimal1).setScale(1,BigDecimal.ROUND_UP);
+        BigDecimal total = bigDecimal.add(bigDecimal1).setScale(2,BigDecimal.ROUND_UP);
         return total;
     }
 

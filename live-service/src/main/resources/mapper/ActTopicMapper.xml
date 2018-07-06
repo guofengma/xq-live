@@ -248,6 +248,9 @@
       <if test="userId != null">
         AND  a.user_id = #{userId,jdbcType=BIGINT}
       </if>
+      <if test="searchKey != null">
+        and a.act_topic_code = #{searchKey,jdbcType=VARCHAR}
+      </if>
       and  a.apply_status = 1
       and t.is_deleted = 0
     </where>
@@ -279,6 +282,9 @@
       </if>
       <if test="userId != null">
         AND  a.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="searchKey != null">
+        and a.act_topic_code = #{searchKey,jdbcType=VARCHAR}
       </if>
       and  a.apply_status = 1
       and t.is_deleted = 0

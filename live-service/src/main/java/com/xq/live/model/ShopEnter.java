@@ -47,7 +47,7 @@ public class ShopEnter {
     private BigDecimal locationY;//维度
 
     private String city;//城市
-    @NotNull(message = "logoPic必填")
+
     private String logoPic;//主图
     @NotNull(message = "shopHours必填")
     private String shopHours;//商家营业时间

@@ -8,8 +8,8 @@ package com.xq.live.service;/**
 import com.xq.live.common.Pager;
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ShopOut;
-import org.opencv.phase_unwrapping.Phase_unwrapping;
 
 import java.util.List;
 import java.util.Map;
@@ -128,4 +128,10 @@ public interface ShopService {
      */
     public String uploadQRCodeToByInfo(ShopOut out);
 
+    /**
+     * 查询商家参与的活动列表
+     * @param inVo
+     * @return
+     */
+    List<ActShopByShopIdOut> listForActByShopId(ShopInVo inVo);
 }

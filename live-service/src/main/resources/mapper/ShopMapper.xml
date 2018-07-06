@@ -34,6 +34,11 @@
     </collection>
   </resultMap>
 
+  <resultMap id="ActShopForVoteByShopIdMap" type="com.xq.live.vo.out.ActShopByShopIdOut">
+    <result column="act_name" jdbcType="VARCHAR" property="actName" />
+    <result column="act_id" jdbcType="BIGINT" property="actId" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
     is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate,shop_code,shop_hours,other_service,city
@@ -490,5 +495,33 @@
     from shop
     where
     shop_code = #{shopCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="listForActByShopId" resultMap="ActShopForVoteByShopIdMap">
+    SELECT a.act_id,
+    ai.act_name
+    FROM
+    act_shop a
+    INNER JOIN act_info ai ON a.act_id = ai.id
+    where
+     <if test="id !=null">
+       a.shop_id = #{id,jdbcType=BIGINT}
+     </if>
+    and a.apply_status = 1 and a.is_luoxuan = 0
+    AND ai.is_deleted = 0
+    and ai.act_status = 1
+    union
+    SELECT b.act_id,
+    ai.act_name
+    FROM
+    act_sku b
+    INNER JOIN act_info ai ON b.act_id = ai.id where
+    <if test="id !=null">
+      b.shop_id = #{id,jdbcType=BIGINT}
+    </if>
+    and b.apply_status = 1 and b.is_luoxuan = 0
+    AND ai.is_deleted = 0
+    and ai.act_status = 1
+    ORDER BY act_id
   </select>
 </mapper>

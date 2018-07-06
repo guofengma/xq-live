@@ -3,12 +3,16 @@ package com.xq.live.web.controller;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.*;
-import com.xq.live.service.*;
-import com.xq.live.service.impl.ShopServiceImpl;
+import com.xq.live.model.PushMsg;
+import com.xq.live.model.Shop;
+import com.xq.live.model.User;
+import com.xq.live.service.CountService;
+import com.xq.live.service.ShopService;
+import com.xq.live.service.SoService;
+import com.xq.live.service.UserService;
 import com.xq.live.vo.in.ShopInVo;
-import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.web.utils.GtPush;
 import com.xq.live.web.utils.IpUtils;
@@ -20,14 +24,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -208,6 +207,17 @@ public class ShopController {
     public BaseResp<Shop> getShopByUserId(@PathVariable(value = "userId") Long userId) {
         Shop result = shopService.getShopByUserId(userId);
         return new BaseResp<Shop>(ResultStatus.SUCCESS, result);
+    }
+
+    /**
+     * 查询商家参与的活动列表
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/listForActByShopId",method = RequestMethod.GET)
+    public BaseResp<List<ActShopByShopIdOut>> listForActByShopId(ShopInVo inVo){
+        List<ActShopByShopIdOut> result = shopService.listForActByShopId(inVo);
+        return new BaseResp<List<ActShopByShopIdOut>>(ResultStatus.SUCCESS,result);
     }
 
 

@@ -139,7 +139,7 @@ public class VoteController {
             String keySku  = "actVoteNumsSku_" + actSkuConfig.getActId() + "_" +vote.getUserId();
             Integer i = redisCache.get(keySku, Integer.class);
             if(i==null){
-                redisCache.set(keySku,9,1l, TimeUnit.DAYS);
+                redisCache.set(keySku,0,1l, TimeUnit.DAYS);
             }else{
                 redisCache.set(keySku,i-1,1l,TimeUnit.DAYS);
             }

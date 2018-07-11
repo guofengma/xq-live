@@ -319,7 +319,7 @@ public class CountServiceImpl implements CountService {
         Integer userNums = redisCache.get(keyUser, Integer.class);
         Integer skuNums = redisCache.get(keySku, Integer.class);
         userNums = userNums == null ? 1 : userNums;
-        skuNums = skuNums == null ? 10 : skuNums;
+        skuNums = skuNums == null ? 1 : skuNums;
         Map<String,Integer> map = new HashMap<String,Integer>();
         map.put("user",userNums);
         map.put("sku",skuNums);

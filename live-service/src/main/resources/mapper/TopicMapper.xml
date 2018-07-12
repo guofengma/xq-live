@@ -285,9 +285,16 @@
       <if test="shopId !=null">
         and u.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      <if test="topicType != null">
+        and t.topic_type = #{topicType}
+      </if>
       and is_deleted = 0
     </where>
-    order by update_time desc
+    order by
+    <if test="sortType !=null and sortType == 1">
+      t.hit_num desc,
+    </if>
+    t.update_time desc
     limit #{start}, #{rows}
   </select>
 
@@ -325,6 +332,9 @@
       </if>
       <if test="shopId !=null">
         and u.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+      <if test="topicType != null">
+        and t.topic_type = #{topicType}
       </if>
       and is_deleted = 0
     </where>

@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @MapperScan("com.xq.live.dao")// mapper 接口类扫描包配置
 @Controller
-/*@EnableScheduling*/
+@EnableScheduling
 public class LiveServiceApplication extends SpringBootServletInitializer {
 
     @Override

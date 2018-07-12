@@ -19,10 +19,10 @@ public interface UserMapper{
 
     int insertSelective(User record);
 
-    @Cacheable(value = "1h",key = "#p0.toString()")     //缓存时间1小时，key为自动生成
+    @Cacheable(value = "1h",key = "'userId_'+#p0.toString()")     //缓存时间1小时，key为自动生成
     User selectByPrimaryKey(Long id);
 
-    @CacheEvict(key = "#p0.id.toString()")
+    @CacheEvict(key = "'userId_'+#p0.id.toString()")
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
@@ -42,10 +42,10 @@ public interface UserMapper{
      * @param record
      * @return
      */
-    @CacheEvict(key = "#p0.id.toString()")
+    @CacheEvict(key = "'userId_'+#p0.id.toString()")
     int updateUserType(User record);
 
-    @Cacheable(value = "1h")
+    @Cacheable(value = "1h",key = "'openId_'+#p0.toString()")
     User findByOpenId(String openId);
 
     User findByUnionId(String unionId);
@@ -53,9 +53,9 @@ public interface UserMapper{
     //@Cacheable(value = "1h")
     User findByMobile(String mobile);
 
-    @CacheEvict(key = "#p0.id.toString()")
+    @CacheEvict(key = "'userId_'+#p0.id.toString()")
     Integer updateByOpenId(User user);
 
-    @CacheEvict(key = "#p0.id.toString()")
+    @CacheEvict(key = "'userId_'+#p0.id.toString()")
     Integer updateByMobile(User user);
 }

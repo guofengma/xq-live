@@ -75,14 +75,14 @@ public class UserConcernServiceImpl implements UserConcernService{
         UserConcernInVo userConcernInVo = new UserConcernInVo();
         userConcernInVo.setType(inVo.getType());
         userConcernInVo.setRefId(inVo.getUserId());
-        int fans = userConcernMapper.listTotal(userConcernInVo);//通过refId和type查询关注的数目
+        int fans = userConcernMapper.listTotal(userConcernInVo);//通过refId和type查询粉丝的数目
         UserConcernInVo viewInVo = new UserConcernInVo();
         viewInVo.setUserId(inVo.getViewUserId());
         viewInVo.setType(inVo.getType());
         viewInVo.setRefId(inVo.getUserId());
         UserConcernOut collected = null;
         if(inVo.getViewUserId()!=null) {
-            collected = userConcernMapper.isCollected(viewInVo);
+            collected = userConcernMapper.isCollected(viewInVo);//查询是否已经关注
         }
         Integer isCollected = collected==null?0:1;
         Map<String,Integer> map = new HashMap<String,Integer>();

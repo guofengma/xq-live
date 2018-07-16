@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ${DESCRIPTION}
@@ -128,7 +126,7 @@ public class SoWriteOffForAppController {
         return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.SUCCESS,list);
     }
     /**
-     * 返回时间段内各个月份的金额
+     * 返回时间段内各个月份的金额(shopid和时间段)
      * @param inVo
      * @return
      */
@@ -140,6 +138,13 @@ public class SoWriteOffForAppController {
             return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);
         }
         Map<Integer,SoWriteOffOut> map = new HashMap<Integer,SoWriteOffOut>();
+
+        for (int ivo=0;ivo<listInVo.size();ivo++){
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(listInVo.get(ivo).getEndTime());
+            calendar.add(calendar.DATE, 1);//把日期往后增加一天.整数往后推,负数往前移动
+            listInVo.get(ivo).setEndTime(calendar.getTime());//这个时间就是日期往后推一天的结果
+        }
 
         for (int i=0;i<listInVo.size();i++){
             //可以将没有记录的月份不返回

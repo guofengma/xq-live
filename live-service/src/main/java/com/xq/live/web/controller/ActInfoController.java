@@ -163,7 +163,7 @@ public class ActInfoController {
     @RequestMapping(value = "/flag")
     public BaseResp<Integer> getFlag(){
         //0是显示，1是不显示
-        return new BaseResp<Integer>(ResultStatus.SUCCESS,1);
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,0);
     }
 
     /**

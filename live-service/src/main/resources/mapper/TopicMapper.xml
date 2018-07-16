@@ -234,6 +234,7 @@
       <if test="choiceType != null">
         and u.user_type = #{choiceType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
     order by
@@ -288,6 +289,7 @@
       <if test="topicType != null">
         and t.topic_type = #{topicType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
     order by

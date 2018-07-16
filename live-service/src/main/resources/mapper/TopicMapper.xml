@@ -315,6 +315,7 @@
       <if test="shopId !=null">
         and t.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      AND t.tp_status=1
       and t.is_deleted = 0
       <!--<![CDATA[  and t.create_time >= DATE_FORMAT('2018-06-26 00:00:00','%Y-%m-%d %H:%i:%S')  ]]>-->
     </where>
@@ -338,6 +339,7 @@
       <if test="topicType != null">
         and t.topic_type = #{topicType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
     order by t.id desc
@@ -367,6 +369,7 @@
       <if test="choiceType != null">
         and u.user_type = #{choiceType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
   </select>

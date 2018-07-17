@@ -39,6 +39,10 @@ public class WeixinInVo {
 
     private String subMchId;//特约商户的mchId
 
+    private Long actId;//活动中购买券中的活动id
+
+    private Long skuId;//活动中购买的对应的推荐菜id
+
     public String getAppid() {
         return appid;
     }
@@ -221,5 +225,21 @@ public class WeixinInVo {
 
     public void setSubMchId(String subMchId) {
         this.subMchId = subMchId;
+    }
+
+    public Long getActId() {
+        return actId;
+    }
+
+    public void setActId(Long actId) {
+        this.actId = actId;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 }

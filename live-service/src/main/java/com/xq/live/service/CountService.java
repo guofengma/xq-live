@@ -1,6 +1,9 @@
 package com.xq.live.service;
 
+import com.xq.live.model.Zan;
 import com.xq.live.vo.in.VoteInVo;
+
+import java.util.Map;
 
 /**
  * @package: com.xq.live.service
@@ -46,11 +49,25 @@ public interface CountService {
     Integer voteNumsNow(VoteInVo invo);
 
     /**
+     * 实时更新人气数目
+     * @param zan
+     * @return
+     */
+    Integer zanNumsNow(Zan zan);
+
+    /**
+     * 根据userId查询个人主页的点赞数目
+     * @param userId
+     * @return
+     */
+    Integer zanTotal(Long userId);
+
+    /**
      * 根据userId查询用户在某个活动的可用投票数目
      * 注:这里没有加入actId，后期业务扩展可自行添加
      * @param userId
      * @return
      */
-    Integer actVoteNums(Long userId);
+    Map<String,Integer> actVoteNums(Long userId,Long actId);
 
 }

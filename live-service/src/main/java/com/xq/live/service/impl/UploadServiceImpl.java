@@ -74,6 +74,29 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
+    public Attachment uploadPicToCosForNew(String localPath, String name) {
+        Attachment attachment = new Attachment();
+        //图片压缩
+        String sourceImgPath = ImageUtil.compressByQuality(localPath, 1.0f);
+        String smallImgPath = ImageUtil.compressByQuality(localPath, 0.3f);
+        String sourceImgRet = this.uploadFileToCos(sourceImgPath, name);      //上传原图到cos，压缩比例0.8
+        if(StringUtils.isNotEmpty(sourceImgRet)){
+            attachment.setPicUrl(sourceImgRet);
+            String smallImgRet = this.uploadFileToCos(smallImgPath, name);      //上传原图到cos，压缩比例0.3
+            if(StringUtils.isNotEmpty(smallImgRet)){
+                attachment.setSmallPicUrl(smallImgRet);
+                //图片都上传成功了，写入attachment文件附件表
+                this.insertAttachment(attachment);
+            }
+        }
+        /**
+         * 删除服务器上的临时图片文件
+         */
+        this.deleteTempImage(new Triplet<String, String, String>(localPath, sourceImgPath, smallImgPath));
+        return attachment;
+    }
+
+    @Override
     public Attachment uploadPicToCosForMp4(String localPath,  String name){
         Attachment attachment = new Attachment();
         String sourceImgRet = this.uploadFileToCosForMp4(localPath, name);

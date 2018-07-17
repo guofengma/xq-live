@@ -44,6 +44,12 @@ public class ShopEnterOut {
 
     private String city;//城市
 
+    private String logoPic;//主图
+
+    private String shopHours;//商家营业时间
+
+    private String otherService;//其他服务
+
     public Long getId() {
         return id;
     }
@@ -170,5 +176,29 @@ public class ShopEnterOut {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getLogoPic() {
+        return logoPic;
+    }
+
+    public void setLogoPic(String logoPic) {
+        this.logoPic = logoPic;
+    }
+
+    public String getShopHours() {
+        return shopHours;
+    }
+
+    public void setShopHours(String shopHours) {
+        this.shopHours = shopHours;
+    }
+
+    public String getOtherService() {
+        return otherService;
+    }
+
+    public void setOtherService(String otherService) {
+        this.otherService = otherService;
     }
 }

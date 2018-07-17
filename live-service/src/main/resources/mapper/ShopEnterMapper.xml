@@ -18,6 +18,9 @@
     <result column="location_x" jdbcType="DECIMAL" property="locationX"/>
     <result column="location_y" jdbcType="DECIMAL" property="locationY"/>
     <result column="city" jdbcType="VARCHAR" property="city"/>
+    <result column="logo_pic" jdbcType="VARCHAR" property="logoPic" />
+    <result column="shop_hours" jdbcType="VARCHAR" property="shopHours" />
+    <result column="other_service" jdbcType="VARCHAR" property="otherService" />
   </resultMap>
 
   <resultMap id="ShopEnterOutMap" extends="BaseResultMap" type="com.xq.live.vo.out.ShopEnterOut">
@@ -26,9 +29,9 @@
 
   <sql id="Base_Column_List">
     id, user_name, mobile, shop_name, address, business_cate, license_pic, health_pic,
-    door_pic, create_time, update_time, user_id,status,location_x,location_y,city
+    door_pic, create_time, update_time, user_id,status,location_x,location_y,city,logo_pic,shop_hours,other_service
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ShopEnterOutMap">
     select
     <include refid="Base_Column_List" />
     from shop_enter
@@ -58,13 +61,13 @@
     insert into shop_enter (id, user_name, mobile,
     shop_name, address, business_cate,
     license_pic, health_pic, door_pic,
-    create_time, update_time, user_id,location_x,location_y,city
+    create_time, update_time, user_id,location_x,location_y,city,logo_pic,shop_hours,other_service
     )
     values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
     #{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{businessCate,jdbcType=VARCHAR},
     #{licensePic,jdbcType=VARCHAR}, #{healthPic,jdbcType=VARCHAR}, #{doorPic,jdbcType=VARCHAR},
     now(), now(), #{userId,jdbcType=BIGINT},#{locationX,jdbcType=DECIMAL},
-    #{locationY,jdbcType=DECIMAL},#{city,jdbcType=VARCHAR}
+    #{locationY,jdbcType=DECIMAL},#{city,jdbcType=VARCHAR},#{logoPic,jdbcType=VARCHAR},#{shopHours,jdbcType=VARCHAR},#{otherService,jdbcType=VARCHAR}
     )
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
@@ -121,6 +124,15 @@
       <if test="city != null">
         city,
       </if>
+      <if test="logoPic != null">
+        logo_pic,
+      </if>
+      <if test="shopHours != null">
+        shop_hours,
+      </if>
+      <if test="otherService != null">
+        other_service,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -170,6 +182,15 @@
       </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="logoPic != null">
+        #{logoPic,jdbcType=VARCHAR},
+      </if>
+      <if test="shopHours != null">
+        #{shopHours,jdbcType=VARCHAR},
+      </if>
+      <if test="otherService != null">
+        #{otherService,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -221,6 +242,15 @@
       <if test="city != null">
         city = #{city,jdbcType=VARCHAR},
       </if>
+      <if test="logoPic != null">
+       logo_pic = #{logoPic,jdbcType=VARCHAR},
+      </if>
+      <if test="shopHours != null">
+       shop_hours = #{shopHours,jdbcType=VARCHAR},
+      </if>
+      <if test="otherService != null">
+       other_service = #{otherService,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -239,7 +269,10 @@
       user_id = #{userId,jdbcType=BIGINT},
       location_x = #{locationX,jdbcType=DECIMAL},
       location_y = #{locationY,jdbcType=DECIMAL},
-      city = #{city,jdbcType=VARCHAR}
+      city = #{city,jdbcType=VARCHAR},
+      logo_pic = #{logoPic,jdbcType=VARCHAR},
+      shop_hours = #{shopHours,jdbcType=VARCHAR},
+      other_service = #{otherService,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

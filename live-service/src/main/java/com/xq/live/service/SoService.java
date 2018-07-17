@@ -139,6 +139,13 @@ public interface SoService {
     Integer paidForShop(SoInVo inVo);
 
     /**
+     * 活动订单支付
+     * @param inVo
+     * @return
+     */
+    int paidForAct(SoInVo inVo);
+
+    /**
      * 根据订单ID获取userId
      * @param inVo
      * @return

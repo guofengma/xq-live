@@ -22,10 +22,11 @@
     <result column="union_id" jdbcType="VARCHAR" property="unionId" />
     <result column="age" jdbcType="INTEGER" property="age" />
     <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, password, nick_name, icon_url, mobile, location_x, location_y, user_type, shop_id, create_time,
-    update_time, last_login_time, login_times, user_ip, source_type, open_id,union_id,age,height
+    update_time, last_login_time, login_times, user_ip, source_type, open_id,union_id,age,height,sex
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -66,21 +67,21 @@
     select
     <include refid="Base_Column_List" />
     from user
-      <where>
-          <if test="id != null ">
-              id=#{id}
-          </if>
-          <if test="userName != null">
-              and user_name = #{userName}
-          </if>
-          <if test="sourceType != null">
-            and source_type = #{sourceType}
-          </if>
-          <if test="nickName != null">
-            and nick_name like concat('%',#{nickName},'%')
-          </if>
-      </where>
-      limit #{start}, #{rows}
+    <where>
+      <if test="id != null ">
+        id=#{id}
+      </if>
+      <if test="userName != null">
+        and user_name = #{userName}
+      </if>
+      <if test="sourceType != null">
+        and source_type = #{sourceType}
+      </if>
+      <if test="nickName != null">
+        and nick_name like concat('%',#{nickName},'%')
+      </if>
+    </where>
+    limit #{start}, #{rows}
   </select>
 
   <select id="listForShopId" resultMap="BaseResultMap">
@@ -111,18 +112,18 @@
   <select id="listTotal" resultType="java.lang.Integer">
     select count(1) from user
     <where>
-        <if test="id != null ">
-            id=#{id}
-        </if>
-        <if test="userName != null">
-            and user_name = #{userName}
-        </if>
-        <if test="sourceType != null">
-          and source_type = #{sourceType}
-        </if>
-        <if test="nickName != null">
-          and nick_name like concat('%',#{nickName},'%')
-        </if>
+      <if test="id != null ">
+        id=#{id}
+      </if>
+      <if test="userName != null">
+        and user_name = #{userName}
+      </if>
+      <if test="sourceType != null">
+        and source_type = #{sourceType}
+      </if>
+      <if test="nickName != null">
+        and nick_name like concat('%',#{nickName},'%')
+      </if>
     </where>
   </select>
 
@@ -132,16 +133,16 @@
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.User">
     insert into user (user_name, password,
-      nick_name, icon_url, mobile,
-      location_x, location_y, create_time,
-      update_time, last_login_time, user_ip, source_type, login_times, open_id,union_id,age,height
-      )
+    nick_name, icon_url, mobile,
+    location_x, location_y, create_time,
+    update_time, last_login_time, user_ip, source_type, login_times, open_id,union_id,age,height
+    )
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-      #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
-      #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},#{sourceType,jdbcType=TINYINT}, 0, #{openId, jdbcType=VARCHAR},
-      #{unionId, jdbcType=VARCHAR},#{age,jdbcType=INTEGER},#{height,jdbcType=INTEGER}
-      )
+    #{nickName,jdbcType=VARCHAR}, #{iconUrl,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+    #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL}, now(),
+    now(), #{lastLoginTime,jdbcType=TIMESTAMP}, #{userIp,jdbcType=VARCHAR},#{sourceType,jdbcType=TINYINT}, 0, #{openId, jdbcType=VARCHAR},
+    #{unionId, jdbcType=VARCHAR},#{age,jdbcType=INTEGER},#{height,jdbcType=INTEGER}
+    )
     <selectKey resultType="java.lang.Long" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -292,10 +293,10 @@
         login_times = #{loginTimes,jdbcType=INTEGER},
       </if>
       <if test="openId != null">
-       open_id = #{openId,jdbcType=VARCHAR},
+        open_id = #{openId,jdbcType=VARCHAR},
       </if>
       <if test="unionId != null">
-       union_id = #{unionId,jdbcType=VARCHAR},
+        union_id = #{unionId,jdbcType=VARCHAR},
       </if>
       <if test="age != null">
         age = #{age,jdbcType=INTEGER},
@@ -341,7 +342,7 @@
     <include refid="Base_Column_List" />
     from user
     where user_name = #{userName}
-      and password = #{password}
+    and password = #{password}
     limit 1
   </select>
 

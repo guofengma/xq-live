@@ -13,6 +13,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_luoxuan" jdbcType="INTEGER" property="isLuoxuan"/>
+    <result column="user_info" jdbcType="VARCHAR" property="userInfo" />
   </resultMap>
 
   <resultMap id="ActUserOutMap" type="com.xq.live.vo.out.ActUserOut" extends="BaseResultMap">
@@ -33,13 +34,24 @@
 
   <sql id="Base_Column_List">
     id, act_id, user_id, user_code, act_user_name, pic_ids, apply_status, vote_num,create_time,
-    update_time,is_luoxuan
+    update_time,is_luoxuan,user_info
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from act_user
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByUserId"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_user
+    where user_id = #{userId,jdbcType=BIGINT}
+    <if test="actId != null">
+      and act_id = #{actId,jdbcType=BIGINT}
+    </if>
+    and apply_status = 1
+    and is_luoxuan = 0
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from act_user
@@ -48,11 +60,11 @@
   <insert id="insert" parameterType="com.xq.live.vo.in.ActUserInVo">
     insert into act_user (id, act_id, user_id, 
       user_code, act_user_name, pic_ids, 
-      apply_status, create_time, update_time
+      apply_status, create_time, update_time,user_info
       )
     values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{userCode,jdbcType=VARCHAR}, #{actUserName,jdbcType=VARCHAR}, #{picIds,jdbcType=VARCHAR}, 
-      1, now(), now()
+      1, now(), now(), #{userInfo,jdbcType=VARCHAR}
       )
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       select last_insert_id() as id
@@ -88,6 +100,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="userInfo != null">
+        user_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -116,6 +131,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userInfo != null">
+        #{userInfo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -152,6 +170,9 @@
       <if test="isLuoxuan != null">
         is_luoxuan = #{isLuoxuan,jdbcType=TINYINT},
       </if>
+      <if test="userInfo != null">
+        user_info = #{userInfo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -164,8 +185,51 @@
       pic_ids = #{picIds,jdbcType=VARCHAR},
       apply_status = #{applyStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      user_info = #{userInfo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateForVoteNums" parameterType="com.xq.live.vo.in.ActUserInVo">
+    update act_user
+    <set>
+      <if test="actId != null">
+        act_id = #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actUserName != null">
+        act_user_name = #{actUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="picIds != null">
+        pic_ids = #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="voteNum != null">
+        vote_num = #{voteNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLuoxuan != null">
+        is_luoxuan = #{isLuoxuan,jdbcType=TINYINT},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+    and apply_status = 1
+    and is_luoxuan = 0
+    <if test="actId != null">
+     and act_id = #{actId,jdbcType=BIGINT}
+    </if>
   </update>
 
   <!--批量更新落选状态-->
@@ -209,9 +273,14 @@
     select
     a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
     a.update_time,
+    a.user_info,
     u.icon_url,
     u.age,
     u.height,
+    u.nick_name,
+    u.user_name,
+    u.mobile,
+    u.sex,
     (select count(1) from vote where player_user_id = a.user_id
     <if test="voteUserId != null and beginTime !=null and endTime !=null">
       AND  user_id = #{voteUserId}
@@ -238,7 +307,7 @@
   <select id="listForNewAct" resultMap="ActUserOutMap">
     select
     a.id, a.act_id, a.user_id, a.user_code, a.act_user_name, a.pic_ids, a.apply_status,a.vote_num, a.create_time,
-    a.update_time,a.is_luoxuan,
+    a.update_time,a.is_luoxuan,a.user_info,
     u.icon_url,
     u.age,
     u.height,
@@ -274,11 +343,11 @@
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null and type == null">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or a.user_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       <if test="searchKey != null and type == 2">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or k.group_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
@@ -312,11 +381,11 @@
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null and type == null">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or a.user_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       <if test="searchKey != null and type == 2">
-        (and (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        and( (a.act_user_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
         or k.group_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1

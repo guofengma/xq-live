@@ -6,6 +6,7 @@ import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -56,4 +57,6 @@ public interface SoMapper {
      * @return
      */
     Long getUserIDBySoId(SoInVo inVo);
+
+    BigDecimal totalAmount(SoInVo inVo);
 }

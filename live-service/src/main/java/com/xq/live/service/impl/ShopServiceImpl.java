@@ -8,6 +8,7 @@ import com.xq.live.model.Shop;
 import com.xq.live.model.User;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.PromotionRulesOut;
 import com.xq.live.vo.out.ShopOut;
 import com.xq.live.vo.out.ShopTopPicOut;
@@ -419,5 +420,11 @@ public class ShopServiceImpl implements ShopService {
         //删除服务器上临时文件
         uploadService.deleteTempImage(new Triplet<String, String, String>(destPath, null, null));
         return imgUrl;
+    }
+
+    @Override
+    public List<ActShopByShopIdOut> listForActByShopId(ShopInVo inVo) {
+        List<ActShopByShopIdOut> result= shopMapper.listForActByShopId(inVo);
+        return result;
     }
 }

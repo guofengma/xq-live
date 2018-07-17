@@ -150,12 +150,12 @@
 
   <insert id="insertList" parameterType="java.util.List">
     insert into act_group (id, act_id, shop_id,
-    user_id,create_time,update_time)
+    user_id,group_code,create_time,update_time)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (
       #{item.id,jdbcType=BIGINT}, #{item.actId,jdbcType=BIGINT}, #{item.shopId,jdbcType=BIGINT},
-      #{item.userId,jdbcType=BIGINT}, now(),
+      #{item.userId,jdbcType=BIGINT},#{item.groupCode,jdbcType=VARCHAR}, now(),
       now()
       )
     </foreach>

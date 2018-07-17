@@ -8,9 +8,11 @@ package com.xq.live.web.controllerForApp;/**
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.model.Zan;
+import com.xq.live.service.CountService;
 import com.xq.live.service.ZanService;
 import com.xq.live.vo.in.ZanInVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,9 @@ public class ZanForAppController {
 
     @Autowired
     private ZanService zanService;
+
+    @Autowired
+    private CountService countService;
     /**
      * 查询一条记录
      *
@@ -51,12 +56,17 @@ public class ZanForAppController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @Transactional
     public BaseResp<Long> add(@Valid Zan zan, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Long>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         Long id = zanService.add(zan);
+        if(zan.getType()==Zan.ZAN_TOPIC){
+            zan.setZanType(Zan.ZAN_ADD);
+            Integer integer = countService.zanNumsNow(zan);
+        }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 
@@ -74,12 +84,17 @@ public class ZanForAppController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
     }*/
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @Transactional
     public BaseResp<Integer> delete(@Valid Zan zan, BindingResult result) {
         if (result.hasErrors()) {
             List<ObjectError> list = result.getAllErrors();
             return new BaseResp<Integer>(ResultStatus.FAIL.getErrorCode(), list.get(0).getDefaultMessage(), null);
         }
         int res = zanService.deleteByZan(zan);
+        if(zan.getType()==Zan.ZAN_TOPIC){
+            zan.setZanType(Zan.ZAN_DELETE);
+            Integer integer = countService.zanNumsNow(zan);
+        }
         return new BaseResp<Integer>(ResultStatus.SUCCESS, res);
     }
 

@@ -93,15 +93,6 @@ public class ShopEnterController {
                  return new BaseResp<Integer>(ResultStatus.error_param_empty);
         }
         Integer integer = shopEnterService.addShop(shopEnter);
-        if(integer==-3){
-            return new BaseResp<Integer>(-3,"用户尚未入驻或审批未通过",null);
-        }
-        if(integer==-2){
-            return new BaseResp<Integer>(-2,"插入shop表失败",null);
-        }
-        if(integer==-1){
-            return new BaseResp<Integer>(-1,"更改用户状态失败",null);
-        }
         if(integer==null){
             return new BaseResp<Integer>(-1,"查询结果异常",null);
         }

@@ -35,6 +35,8 @@ public interface TopicMapper{
 
     List<TopicForZanOut> myList(TopicInVo inVo);
 
+    Integer zanTotalForUser(TopicInVo inVo);
+
     int listTotal(TopicInVo inVo);
 
     int myListTotal(TopicInVo inVo);

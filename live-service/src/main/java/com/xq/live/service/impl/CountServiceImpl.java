@@ -1,19 +1,20 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.RedisCache;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
 import com.xq.live.service.CountService;
-import com.xq.live.vo.in.ActGroupInVo;
-import com.xq.live.vo.in.ActShopInVo;
-import com.xq.live.vo.in.ActUserInVo;
-import com.xq.live.vo.in.VoteInVo;
+import com.xq.live.vo.in.*;
+import com.xq.live.vo.out.ActSkuOut;
 import com.xq.live.vo.out.ActUserOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +31,7 @@ public class CountServiceImpl implements CountService {
     RedisCache redisCache;
 
     @Autowired
-    TopicMapper topicMapper;
+     TopicMapper topicMapper;
 
     @Autowired
     ShopMapper shopMapper;
@@ -43,6 +44,17 @@ public class CountServiceImpl implements CountService {
 
     @Autowired
     ActGroupMapper actGroupMapper;
+
+    @Autowired
+    ActSkuMapper actSkuMapper;
+
+    @Autowired
+    ActTopicMapper actTopicMapper;
+
+    @Autowired
+    ActSkuConfig actSkuConfig;
+
+
 
     private static Long viewArticleTime = System.currentTimeMillis();
 
@@ -177,6 +189,7 @@ public class CountServiceImpl implements CountService {
         ActShop actShop = null;
         ActUserOut actUser = null;
         ActGroup actGroup = null;
+        ActSkuOut actSku = null;
         if(invo.getShopId()!=null&&invo.getPlayerUserId()!=null){
             ActGroupInVo actGroupInVo = new ActGroupInVo();
             actGroupInVo.setActId(invo.getActId());
@@ -199,6 +212,12 @@ public class CountServiceImpl implements CountService {
             //可以后期修改一下
             actUser = actUserMapper.findByInVo(actUserInVo);
             nums = actUser.getVoteNum() == null ? 0 : actUser.getVoteNum();
+        }else if(invo.getSkuId()!=null){
+            ActSkuInVo actSkuInVo = new ActSkuInVo();
+            actSkuInVo.setSkuId(invo.getSkuId());
+            actSkuInVo.setActId(invo.getActId());
+            actSku = actSkuMapper.findByInVo(actSkuInVo);
+            nums = actSku.getVoteNum() == null ? 0 : actSku.getVoteNum();
         }
         if(invo.getType()== Vote.VOTE_ADD){
             nums ++;
@@ -220,18 +239,90 @@ public class CountServiceImpl implements CountService {
                 actGroup.setGroupVoteNum(nums);
                 actGroupMapper.updateByPrimaryKeySelective(actGroup);
             }
+            if(actSku!=null){
+                ActSkuInVo actSkuInVo = new ActSkuInVo();
+                actSkuInVo.setId(actSku.getId());
+                actSkuInVo.setVoteNum(nums);
+                actSkuMapper.updateByPrimaryKeySelective(actSkuInVo);
+            }
+
 
         return nums;
     }
 
     @Override
-    public Integer actVoteNums(Long userId) {
-        String key = "actVoteNums_" + userId;
-        Integer integer = redisCache.get(key, Integer.class);
-        if(integer==null){
-            return 1;
-        }else{
-            return integer;
+    public Integer zanNumsNow(Zan zan) {
+        Topic topic = topicMapper.selectByPrimaryKey(zan.getRefId());
+        /*TopicInVo topicInVo = new TopicInVo();
+        topicInVo.setUserId(topic.getUserId());
+        Integer integer = topicMapper.zanTotalForUser(topicInVo);*/
+        //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
+        ActUserInVo actUserInVo = new ActUserInVo();
+        actUserInVo.setUserId(topic.getUserId());
+        actUserInVo.setActId(actSkuConfig.getActId());//先默认查询37这个活动，准备让同类型的活动的投票数都相同，后期可以扩展的时候变动
+        List<ActUser> actUsers = actUserMapper.selectByUserId(actUserInVo);
+        //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
+        ActTopicInVo actTopicInVo = new ActTopicInVo();
+        actTopicInVo.setTopicId(topic.getId());
+        //actTopicInVo.setActId(actSkuConfig.getActId());//先默认查询37这个活动，准备让同类型的活动的投票数都相同，后期可以扩展的时候变动
+        List<ActTopic> actTopics = actTopicMapper.selectByTopicId(actTopicInVo);
+        Integer integer =0;
+        Integer numForTopic = 0;
+        if(actUsers!=null&&actUsers.size()>0){
+            integer = actUsers.get(0).getVoteNum();
         }
+        if(actTopics!=null&&actTopics.size()>0){
+            numForTopic = actTopics.get(0).getVoteNum();
+        }
+        if(zan.getZanType()== Zan.ZAN_ADD){
+            integer ++;
+            numForTopic++;
+        }else{
+            integer --;
+            numForTopic--;
+        }
+        //当integer小于0的时候,直接返回0
+        if(integer<0){
+            integer = 0;
+        }
+        if(numForTopic<0){
+            numForTopic = 0;
+        }
+        //注意:此处需要修改，为了以后的多个活动做准备，需要根据userId来查询选手参加了哪些活动，然后全部修改其投票数目
+        ActUserInVo invo = new ActUserInVo();
+        invo.setUserId(topic.getUserId());
+        invo.setVoteNum(integer);
+        ActTopicInVo topicInVo = new ActTopicInVo();
+        topicInVo.setTopicId(topic.getId());
+        topicInVo.setVoteNum(numForTopic);
+        /*//此处判断活动id，是为了方便以后的扩展，当需要对单个活动进行投票的时候，就传入acrId
+        if(zan.getActId()!=null) {
+            actUserInVo.setActId(zan.getActId());
+        }*/
+        actUserMapper.updateForVoteNums(invo);
+        actTopicMapper.updateForVoteNums(topicInVo);
+        return integer;
+    }
+
+    @Override
+    public Integer zanTotal(Long userId) {
+        TopicInVo topicInVo = new TopicInVo();
+        topicInVo.setUserId(userId);//个人主页的userId
+        Integer integer = topicMapper.zanTotalForUser(topicInVo);
+        return integer;
+    }
+
+    @Override
+     public   Map<String,Integer> actVoteNums(Long userId,Long actId) {
+        String keyUser = "actVoteNumsUser_" + actId + "_" +userId;
+        String keySku  = "actVoteNumsSku_" + actId + "_" +userId;
+        Integer userNums = redisCache.get(keyUser, Integer.class);
+        Integer skuNums = redisCache.get(keySku, Integer.class);
+        userNums = userNums == null ? 1 : userNums;
+        skuNums = skuNums == null ? 1 : skuNums;
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        map.put("user",userNums);
+        map.put("sku",skuNums);
+        return map;
     }
 }

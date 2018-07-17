@@ -68,6 +68,8 @@ public class ActUserOut {
 
     private String skuName;//分组中与选手绑定的商家推荐菜
 
+    private String userInfo;//选手简介
+
     public Long getId() {
         return id;
     }
@@ -282,5 +284,13 @@ public class ActUserOut {
 
     public void setSkuName(String skuName) {
         this.skuName = skuName;
+    }
+
+    public String getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 }

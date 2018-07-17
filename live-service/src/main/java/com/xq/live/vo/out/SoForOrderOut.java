@@ -52,6 +52,20 @@ public class SoForOrderOut {
 
     private String moblie;
 
+    private Long shopId;
+
+    private Integer isDui;//是否对账
+
+
+    public Integer getIsDui() {
+        return isDui;
+    }
+
+    public void setIsDui(Integer isDui) {
+        this.isDui = isDui;
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -194,5 +208,13 @@ public class SoForOrderOut {
 
     public void setMoblie(String moblie) {
         this.moblie = moblie;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 }

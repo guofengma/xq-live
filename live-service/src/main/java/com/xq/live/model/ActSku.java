@@ -27,6 +27,16 @@ public class ActSku {
 
     private Long id;
 
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    private Long shopId;
+
     @NotNull(message = "actId必填")
     private Long actId;
 

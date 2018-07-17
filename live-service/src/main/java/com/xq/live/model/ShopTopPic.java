@@ -1,12 +1,14 @@
 package com.xq.live.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ShopTopPic {
     private Long id;
-
+    @NotNull(message = "shopId必填")
     private Long shopId;
 
+    @NotNull(message = "attachementId必填")
     private Long attachementId;
 
     private Integer isDeleted;

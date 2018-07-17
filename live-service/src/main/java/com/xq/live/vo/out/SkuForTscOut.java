@@ -52,6 +52,8 @@ public class SkuForTscOut {
 
     private BigDecimal agioLevel;// 折扣力度
 
+    private Integer isSign;//查看推荐是否已报名活动
+
     public Long getId() {
         return id;
     }
@@ -194,5 +196,13 @@ public class SkuForTscOut {
 
     public void setAgioLevel(BigDecimal agioLevel) {
         this.agioLevel = agioLevel;
+    }
+
+    public Integer getIsSign() {
+        return isSign;
+    }
+
+    public void setIsSign(Integer isSign) {
+        this.isSign = isSign;
     }
 }

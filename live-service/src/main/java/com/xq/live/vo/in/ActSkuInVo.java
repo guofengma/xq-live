@@ -9,11 +9,16 @@ import java.util.Date;
 public class ActSkuInVo extends BaseInVo{
     private Long id;
 
+    //状态标记，没有查询全部菜品，查询没有落选的菜品
+    private Long flag;
+
     private Long actId;
 
     private Long skuId;
 
     private String skuCode;
+
+    private Long shopId;
 
     private Long prId;//推荐菜对应的使用规则id
 
@@ -35,12 +40,37 @@ public class ActSkuInVo extends BaseInVo{
 
     private Integer sortType;//排序类型 1最新  null最热
 
+    private String city;//分类城市
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Long getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Long flag) {
+        this.flag = flag;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
     public Long getActId() {

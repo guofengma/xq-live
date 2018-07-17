@@ -44,6 +44,7 @@
     <result column="zan" jdbcType="INTEGER" property="zan"/>
     <result column="is_zan" jdbcType="INTEGER" property="isZan"/>
     <result column="agio_level" jdbcType="DECIMAL" property="agioLevel"/>
+    <result column="is_sign" jdbcType="INTEGER" property="isSign"/>
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -292,6 +293,10 @@
     </if>
     ) as is_zan,
     round((sku.agio_price * 10)/sku.sell_price,1) as agio_level
+    <if test="actId != null">
+      ,(select count(1) from act_sku ak where sku_id = sku.id and act_id = #{actId,jdbcType=BIGINT} and apply_status = 1
+        and is_luoxuan = 0) as is_sign
+    </if>
     from sku sku
       inner join sku_shop ss on sku.id = ss.sku_id
     <where>

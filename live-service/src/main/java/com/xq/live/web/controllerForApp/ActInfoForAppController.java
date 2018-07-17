@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -110,5 +112,18 @@ public class ActInfoForAppController {
         inVo.setUserIp(IpUtils.getIpAddr(request));
         ActInfoOut actInfoOut = actInfoService.detail(inVo);
         return new BaseResp<ActInfoOut>(ResultStatus.SUCCESS, actInfoOut);
+    }
+
+    /**
+     * 给予当前时间
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getDate", method = RequestMethod.GET)
+    public BaseResp<String> detail(){
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //System.out.println(df.format(date));
+        return new BaseResp<String>(ResultStatus.SUCCESS,df.format(date));
     }
 }

@@ -126,16 +126,25 @@ public class VoteController {
         Long id  = voteService.add(vote);
         vote.setType(Vote.VOTE_ADD);
         Integer integer = countService.voteNumsNow(vote);
-        //如果活动id为7.7元的活动券的actId,则每次投票更新投票次数的缓存
-        if(vote.getActId().equals(actSkuConfig.getActId())){
-            String key = "actVoteNums_" + vote.getUserId();
-            Integer i = redisCache.get(key, Integer.class);
+        //如果活动id为37,则每次投票更新投票次数的缓存
+        if(vote.getActId().equals(actSkuConfig.getActId())&&vote.getPlayerUserId()!=null){
+            String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +vote.getUserId();
+            Integer i = redisCache.get(keyUser, Integer.class);
             if(i==null){
-                redisCache.set(key,0,1l, TimeUnit.DAYS);
+                redisCache.set(keyUser,0,1l, TimeUnit.DAYS);
             }else{
-                redisCache.set(key,i-1,1l,TimeUnit.DAYS);
+                redisCache.set(keyUser,i-1,1l,TimeUnit.DAYS);
+            }
+        }else if(vote.getActId().equals(actSkuConfig.getActId())&&vote.getSkuId()!=null){
+            String keySku  = "actVoteNumsSku_" + actSkuConfig.getActId() + "_" +vote.getUserId();
+            Integer i = redisCache.get(keySku, Integer.class);
+            if(i==null){
+                redisCache.set(keySku,0,1l, TimeUnit.DAYS);
+            }else{
+                redisCache.set(keySku,i-1,1l,TimeUnit.DAYS);
             }
         }
+
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
     }
 

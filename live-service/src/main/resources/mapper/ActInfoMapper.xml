@@ -12,6 +12,7 @@
     <result column="act_url" jdbcType="VARCHAR" property="actUrl" />
     <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
 
   <resultMap id="ActInfoOutResultMap" extends="BaseResultMap" type="com.xq.live.vo.out.ActInfoOut">
@@ -21,7 +22,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, act_name, act_status,act_desc, start_time, end_time, main_pic, act_url, is_deleted, create_time
+    id, act_name, act_status,act_desc, start_time, end_time, main_pic, act_url, is_deleted, create_time,type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -160,6 +161,7 @@
       ai.act_url,
       ai.is_deleted,
       ai.create_time,
+      ai.type,
     (select count(1) from vote v where ai.id = v.act_id) as vote_num,
     (select count(1) from act_shop asp where ai.id = asp.act_id) as shop_num,
     (select count(1) from access_log al where ai.id = al.ref_id and al.biz_type = 2) as view_num
@@ -174,7 +176,7 @@
       </if>
       and is_deleted = 0
     </where>
-    order by ai.id desc
+    order by ai.create_time desc
     limit #{start}, #{rows}
   </select>
 
@@ -190,6 +192,7 @@
       ai.act_url,
       ai.is_deleted,
       ai.create_time,
+      ai.type,
     (select count(1) from vote v where ai.id = v.act_id) as vote_num,
     (select count(1) from act_shop asp where ai.id = asp.act_id) as shop_num,
     (select count(1) from access_log al where ai.id = al.ref_id and al.biz_type = 2) as view_num

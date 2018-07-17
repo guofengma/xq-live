@@ -19,4 +19,9 @@ public class RichScanController {
     public String getScan(Model model){
         return "scan";
     }
+
+    @RequestMapping(value="/act",method= RequestMethod.GET)
+    public String getAct(Model model){
+        return "act";
+    }
 }

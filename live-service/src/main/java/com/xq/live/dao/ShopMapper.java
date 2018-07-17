@@ -2,6 +2,7 @@ package com.xq.live.dao;
 
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.ActShopByShopIdOut;
 import com.xq.live.vo.out.ShopOut;
 import org.springframework.stereotype.Repository;
 
@@ -67,4 +68,10 @@ public interface ShopMapper {
      */
     ShopOut findShopOutByCode(String code);
 
+    /**
+     * 查询商家参与的活动列表
+     * @param inVo
+     * @return
+     */
+    List<ActShopByShopIdOut> listForActByShopId(ShopInVo inVo);
 }

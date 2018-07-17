@@ -55,6 +55,8 @@ public class ActUser {
 
     private Integer isLuoxuan;//是否落选
 
+    private String userInfo;//选手简介
+
     public Long getId() {
         return id;
     }
@@ -141,5 +143,13 @@ public class ActUser {
 
     public void setIsLuoxuan(Integer isLuoxuan) {
         this.isLuoxuan = isLuoxuan;
+    }
+
+    public String getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 }

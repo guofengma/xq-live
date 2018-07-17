@@ -21,6 +21,9 @@
     <result column="apply_status" jdbcType="INTEGER" property="applyStatus"/>
     <result column="business_cate" jdbcType="VARCHAR" property="businessCate"/>
     <result column="shop_code" jdbcType="VARCHAR" property="shopCode"/>
+    <result column="shop_hours" jdbcType="VARCHAR" property="shopHours" />
+    <result column="other_service" jdbcType="VARCHAR" property="otherService" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
   </resultMap>
 
   <resultMap id="ShopOutResultMap" type="com.xq.live.vo.out.ShopOut" extends="BaseResultMap">
@@ -31,9 +34,14 @@
     </collection>
   </resultMap>
 
+  <resultMap id="ActShopForVoteByShopIdMap" type="com.xq.live.vo.out.ActShopByShopIdOut">
+    <result column="act_name" jdbcType="VARCHAR" property="actName" />
+    <result column="act_id" jdbcType="BIGINT" property="actId" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, shop_name, address, mobile, phone, index_url, logo_url, shop_info, location_x, location_y,
-    is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate,shop_code
+    is_deleted, pop_num, remark, create_time, update_time,shop_status,apply_status,business_cate,shop_code,shop_hours,other_service,city
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -69,7 +77,10 @@
         s.shop_status,
         s.apply_status,
         s.business_cate,
-        s.shop_code
+        s.shop_code,
+        s.shop_hours,
+        s.other_service,
+        s.city
     FROM
         shop s inner join user u on s.id = u.shop_id
     where u.id = #{id,jdbcType=BIGINT}
@@ -84,11 +95,12 @@
       mobile, phone, index_url,logo_url,
       shop_info, location_x, location_y, 
       remark, create_time,
-      update_time,business_cate,shop_code)
+      update_time,business_cate,shop_code,shop_hours,other_service,city)
     values (#{shopName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{indexUrl,jdbcType=VARCHAR}, #{logoUrl,jdbcType=VARCHAR},
       #{shopInfo,jdbcType=VARCHAR}, #{locationX,jdbcType=DECIMAL}, #{locationY,jdbcType=DECIMAL},
-      #{remark,jdbcType=VARCHAR}, now(), now(), #{businessCate,jdbcType=VARCHAR},#{shopCode,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, now(), now(), #{businessCate,jdbcType=VARCHAR},#{shopCode,jdbcType=VARCHAR},#{shopHours,jdbcType=VARCHAR},#{otherService,jdbcType=VARCHAR}
+      ,#{city,jdbcType=VARCHAR})
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID() AS id
     </selectKey>
@@ -147,6 +159,12 @@
       <if test="shopCode != null">
         shop_code,
       </if>
+      <if test="shopHours != null">
+        shop_hours,
+      </if>
+      <if test="otherService != null">
+        other_service,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopName != null">
@@ -199,6 +217,12 @@
       </if>
       <if test="shopCode != null">
         #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopHours != null">
+        #{shopHours,jdbcType=VARCHAR},
+      </if>
+      <if test="otherService != null">
+        #{otherService,jdbcType=VARCHAR},
       </if>
     </trim>
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
@@ -254,6 +278,12 @@
       <if test="shopCode != null">
         shop_code = #{shopCode,jdbcType=VARCHAR},
       </if>
+      <if test="shopHours != null">
+        shop_hours = #{shopHours,jdbcType=VARCHAR},
+      </if>
+      <if test="otherService != null">
+        other_service = #{otherService,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -272,7 +302,9 @@
       remark = #{remark,jdbcType=VARCHAR},
       update_time = now(),
       shop_code = #{shopCode,jdbcType=VARCHAR},
-      business_cate = #{businessCate,jdbcType=VARCHAR}
+      business_cate = #{businessCate,jdbcType=VARCHAR},
+      shop_hours = #{shopHours,jdbcType=VARCHAR},
+      other_service = #{otherService,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -297,6 +329,9 @@
       s.apply_status,
       s.business_cate,
       s.shop_code,
+      s.shop_hours,
+      s.other_service,
+      s.city,
       <choose>
         <when test="locationX != null and locationY != null"> ROUND(
           6378.138 * 2 * ASIN(
@@ -374,6 +409,9 @@
     s.apply_status,
     s.business_cate,
     s.shop_code,
+    s.shop_hours,
+    s.other_service,
+    s.city,
     <choose>
       <when test="locationX != null and locationY != null"> ROUND(
         6378.138 * 2 * ASIN(
@@ -457,5 +495,33 @@
     from shop
     where
     shop_code = #{shopCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="listForActByShopId" resultMap="ActShopForVoteByShopIdMap">
+    SELECT a.act_id,
+    ai.act_name
+    FROM
+    act_shop a
+    INNER JOIN act_info ai ON a.act_id = ai.id
+    where
+     <if test="id !=null">
+       a.shop_id = #{id,jdbcType=BIGINT}
+     </if>
+    and a.apply_status = 1 and a.is_luoxuan = 0
+    AND ai.is_deleted = 0
+    and ai.act_status = 1
+    union
+    SELECT b.act_id,
+    ai.act_name
+    FROM
+    act_sku b
+    INNER JOIN act_info ai ON b.act_id = ai.id where
+    <if test="id !=null">
+      b.shop_id = #{id,jdbcType=BIGINT}
+    </if>
+    and b.apply_status = 1 and b.is_luoxuan = 0
+    AND ai.is_deleted = 0
+    and ai.act_status = 1
+    ORDER BY act_id
   </select>
 </mapper>

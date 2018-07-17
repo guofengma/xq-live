@@ -16,6 +16,8 @@ public class PromotionRules {
 
     public static final int RULE_TYPE_ADD = 2;
 
+    public static final int RULE_TYPE_ACT=3;
+
     private Long id;
 
     @NotNull(message = "skuId必填")

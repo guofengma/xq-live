@@ -37,4 +37,11 @@ public interface PromotionRulesService {
      * @return
      */
     int deleteById(Long id);
+
+    /**
+     * 通过id去查看一个促销规则
+     * @param id
+     * @return
+     */
+    PromotionRules selectByPrimaryKey(Long id);
 }

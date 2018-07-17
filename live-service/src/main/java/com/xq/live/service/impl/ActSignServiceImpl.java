@@ -62,8 +62,9 @@ public class ActSignServiceImpl implements ActSignService{
             }
 
             int i = actUserMapper.countByActId(inVo.getActId());
-            DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
-            String s = mFormat.format(i + 1);
+            /*DecimalFormat mFormat = new DecimalFormat("000");//确定格式，把1转换为001
+            String s = mFormat.format(i + 1);*/
+            String s =(i + 1)+"";
             invoUser.setUserCode(s);
             int insert = actUserMapper.insert(invoUser);//插入数据
             if (insert < 1) {

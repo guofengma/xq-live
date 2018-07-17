@@ -4,6 +4,8 @@ import com.xq.live.common.Pager;
 import com.xq.live.vo.in.ActSkuInVo;
 import com.xq.live.vo.out.ActSkuOut;
 
+import java.util.List;
+
 /**
  * 推荐菜活动Service
  * Created by lipeng on 2018/6/13.
@@ -22,4 +24,32 @@ public interface ActSkuService {
      * @return
      */
     ActSkuOut findByInVo(ActSkuInVo inVo);
+
+    /**
+     * 根据id来修改信息
+     * @param inVo
+     * @return
+     */
+    Integer update(ActSkuInVo inVo);
+
+    /**
+     * 新增一个活动推荐菜信息
+     * @param record
+     * @return
+     */
+    Long insert(ActSkuInVo record);
+
+    /**
+     * 批量修改活动推荐菜信息（落选）
+     * @param record
+     * @return
+     */
+    int updateLuoXuan(List<ActSkuOut> record);
+
+    /**
+     * 按票数查询活动推荐菜信息
+     * @param record
+     * @return
+     */
+    List<ActSkuOut> listActSkuOut(ActSkuInVo record);
 }

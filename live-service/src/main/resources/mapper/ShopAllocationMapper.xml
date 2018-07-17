@@ -80,10 +80,10 @@
   </delete>
   <insert id="insert" parameterType="com.xq.live.model.ShopAllocation">
     insert into shop_allocation (id, shop_id, operator_id, 
-      is_delete, create_time, update_time, 
+      is_delete, create_time, update_time,
       payment_method)
     values (#{id,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{operatorId,jdbcType=BIGINT}, 
-      #{isDelete,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isDelete,jdbcType=INTEGER}, now(), now(),
       #{paymentMethod,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.xq.live.model.ShopAllocation">

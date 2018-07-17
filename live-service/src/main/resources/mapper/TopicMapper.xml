@@ -44,8 +44,8 @@
   <select id="selectByZan" parameterType="com.xq.live.vo.in.TopicInVo" resultMap="ZanSelect">
     select
     <include refid="Base_Column_List" />,
-    (select count(1) from zan where ref_id = a.id) as zan,
-    (select count(1) from zan where ref_id = a.id
+    (select count(1) from zan where ref_id = a.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = a.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -204,8 +204,8 @@
     t.trans_num,
     (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
     u.user_type,
-    (select count(1) from zan where ref_id = t.id) as zan,
-    (select count(1) from zan where ref_id = t.id
+    (select count(1) from zan where ref_id = t.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = t.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -234,6 +234,7 @@
       <if test="choiceType != null">
         and u.user_type = #{choiceType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
     order by
@@ -264,8 +265,8 @@
     t.trans_num,
     (select count(1) from access_log al where t.id = al.ref_id and al.biz_type = 3) as view_num,
     u.user_type,
-    (select count(1) from zan where ref_id = t.id) as zan,
-    (select count(1) from zan where ref_id = t.id
+    (select count(1) from zan where ref_id = t.id and type = 2) as zan,
+    (select count(1) from zan where ref_id = t.id and type = 2
     <if test="zanUserId != null">
       AND  user_id = #{zanUserId}
     </if>
@@ -285,10 +286,39 @@
       <if test="shopId !=null">
         and u.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      <if test="topicType != null">
+        and t.topic_type = #{topicType}
+      </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
-    order by update_time desc
+    order by
+    <if test="sortType !=null and sortType == 1">
+      t.hit_num desc,
+    </if>
+    t.update_time desc
     limit #{start}, #{rows}
+  </select>
+
+  <select id="zanTotalForUser" resultType="java.lang.Integer">
+    select
+     sum((select count(1) from zan where ref_id = t.id and type = 2)) as zanTotal
+    from topic t
+    <where>
+      1=1
+      <if test="id != null">
+        and t.id =#{id}
+      </if>
+      <if test="userId !=null">
+        and t.user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="shopId !=null">
+        and t.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
+      AND t.tp_status=1
+      and t.is_deleted = 0
+      <!--<![CDATA[  and t.create_time >= DATE_FORMAT('2018-06-26 00:00:00','%Y-%m-%d %H:%i:%S')  ]]>-->
+    </where>
   </select>
 
   <select id="myListTotal" resultType="java.lang.Integer">
@@ -306,6 +336,10 @@
       <if test="shopId !=null">
         and u.shop_id = #{shopId,jdbcType=BIGINT}
       </if>
+      <if test="topicType != null">
+        and t.topic_type = #{topicType}
+      </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
     order by t.id desc
@@ -335,6 +369,7 @@
       <if test="choiceType != null">
         and u.user_type = #{choiceType}
       </if>
+      AND t.tp_status=1
       and is_deleted = 0
     </where>
   </select>

@@ -58,6 +58,13 @@ public class Shop {
     private String shopCode;//商家编码
 
 
+    private String shopHours;//商家营业时间
+
+    private String otherService;//其他服务
+
+    private String city;
+
+
     public String getShopCode() {
         return shopCode;
     }
@@ -217,5 +224,29 @@ public class Shop {
 
     public void setBusinessCate(String businessCate) {
         this.businessCate = businessCate;
+    }
+
+    public String getShopHours() {
+        return shopHours;
+    }
+
+    public void setShopHours(String shopHours) {
+        this.shopHours = shopHours;
+    }
+
+    public String getOtherService() {
+        return otherService;
+    }
+
+    public void setOtherService(String otherService) {
+        this.otherService = otherService;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

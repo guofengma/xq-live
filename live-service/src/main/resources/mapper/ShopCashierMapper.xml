@@ -60,7 +60,7 @@
       is_deleted, create_time, creator_id, 
       updator_id, update_time)
     values (#{id,jdbcType=BIGINT},#{cashierId,jdbcType=BIGINT}, #{cashierName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-      #{shopId,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, 0,
+      #{shopId,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{isAdmin,jdbcType=TINYINT},
       0, now(), #{creatorId,jdbcType=BIGINT},
       #{updatorId,jdbcType=BIGINT}, now())
     <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">

@@ -58,7 +58,13 @@ public class SoWriteOffOut {
 
     private BigDecimal totalService;//总服务费
 
+    private BigDecimal totalNoService;//未结算的总服务费
+
+    private BigDecimal servicePrice;//单个服务费
+
     private Integer isBill;//是否对账 0未对账 1对账
+
+    private String skuName;
 
     public Long getId() {
         return id;
@@ -210,5 +216,29 @@ public class SoWriteOffOut {
 
     public void setIsBill(Integer isBill) {
         this.isBill = isBill;
+    }
+
+    public BigDecimal getTotalNoService() {
+        return totalNoService;
+    }
+
+    public void setTotalNoService(BigDecimal totalNoService) {
+        this.totalNoService = totalNoService;
+    }
+
+    public BigDecimal getServicePrice() {
+        return servicePrice;
+    }
+
+    public void setServicePrice(BigDecimal servicePrice) {
+        this.servicePrice = servicePrice;
+    }
+
+    public String getSkuName() {
+        return skuName;
+    }
+
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 }

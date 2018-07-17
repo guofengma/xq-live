@@ -35,6 +35,9 @@ public class PaymentConfig implements WXPayConfig {
     //商家订单支付成功后的服务器回调url
     public static final String WX_NOTIFY_SHOP_URL = "https://hbxq001.cn/wxpay/wxNotifyForShop";
 
+    //活动订单支付成功后的服务器回调url
+    public static final String WX_NOTIFY_ACT_URL = "https://hbxq001.cn/wxpay/wxNotifyForAct";
+
     public static final String GRANT_TYPE = "authorization_code";
 
     //交易类型，小程序支付的固定值为JSAPI

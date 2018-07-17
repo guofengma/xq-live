@@ -198,8 +198,17 @@ public class ActInfoServiceImpl implements ActInfoService {
     @Override
     public String uploadQRCodeToCos(ActInfoInVo inVo) {
         String imagePath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "static" + File.separator + "images" + File.separator + "logo.jpg";
-        String destPath = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ActInfo"+inVo.getId()+"userId"+inVo.getUserId()+System.currentTimeMillis() +".jpg";
-        String text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=36&userId="+inVo.getUserId();
+
+        String destPath = null;
+        String text=null;
+        if (inVo.getUserId()!=null){
+            destPath= Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ActInfo"+inVo.getId()+"userId"+inVo.getUserId()+System.currentTimeMillis() +".jpg";
+            text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=37&userId="+inVo.getUserId();
+        }else {
+            destPath= Thread.currentThread().getContextClassLoader().getResource("").getPath() + "upload" + File.separator +"ActInfo"+inVo.getId()+"actSku"+inVo.getActSku()+System.currentTimeMillis() +".jpg";
+            text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=37&actSku="+inVo.getActSku();
+        }
+
         //String text = constantsConfig.getDomainXqUrl() + "/service?flag=3&actId=36&userId="+57;
         //生成logo图片到destPath
         try {

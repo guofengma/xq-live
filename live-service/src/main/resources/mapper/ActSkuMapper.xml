@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.xq.live.model.ActSku">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="act_id" jdbcType="BIGINT" property="actId" />
+    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="sku_id" jdbcType="BIGINT" property="skuId" />
     <result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
     <result column="pr_id" jdbcType="BIGINT" property="prId"/>
@@ -20,7 +21,6 @@
     <result column="pr_sku_name" jdbcType="VARCHAR" property="prSkuName" />
     <result column="rule_type" jdbcType="INTEGER" property="ruleType" />
     <result column="rule_desc" jdbcType="VARCHAR" property="ruleDesc" />
-    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="man_amount" jdbcType="DECIMAL" property="manAmount" />
     <result column="jian_amount" jdbcType="DECIMAL" property="jianAmount" />
     <result column="act_sku_code" jdbcType="VARCHAR" property="actSkuCode" />
@@ -34,7 +34,7 @@
 
   </resultMap>
   <sql id="Base_Column_List">
-    id, act_id, sku_id, sku_code,pr_id, apply_status, is_luoxuan, vote_num, create_time, update_time
+    id, act_id, shop_id, sku_id, sku_code,pr_id, apply_status, is_luoxuan, vote_num, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -46,17 +46,20 @@
     delete from act_sku
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.xq.live.vo.in.ActShopInVo">
-    insert into act_sku (id, act_id, sku_id, 
+  <insert id="insert" parameterType="com.xq.live.vo.in.ActSkuInVo">
+    insert into act_sku (id, act_id, shop_id, sku_id,
       sku_code,pr_id, apply_status, is_luoxuan,
       vote_num, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT}, 
-      #{skuCode,jdbcType=VARCHAR},  #{prId,jdbcType=BIGINT},#{applyStatus,jdbcType=TINYINT}, #{isLuoxuan,jdbcType=TINYINT},
-      #{voteNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=BIGINT}, #{actId,jdbcType=BIGINT},#{shopId,jdbcType=BIGINT}, #{skuId,jdbcType=BIGINT},
+      #{skuCode,jdbcType=VARCHAR},  #{prId,jdbcType=BIGINT},1, 0,
+      0, now(), now()
       )
+    <selectKey resultType="java.lang.Long" keyProperty="id">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
   </insert>
-  <insert id="insertSelective" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <insert id="insertSelective" parameterType="com.xq.live.vo.in.ActSkuInVo">
     insert into act_sku
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -64,6 +67,9 @@
       </if>
       <if test="actId != null">
         act_id,
+      </if>
+      <if test="shopId != null">
+        shop_id,
       </if>
       <if test="skuId != null">
         sku_id,
@@ -97,6 +103,9 @@
       <if test="actId != null">
         #{actId,jdbcType=BIGINT},
       </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
       <if test="skuId != null">
         #{skuId,jdbcType=BIGINT},
       </if>
@@ -123,11 +132,14 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.vo.in.ActSkuInVo">
     update act_sku
     <set>
       <if test="actId != null">
         act_id = #{actId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=BIGINT},
       </if>
       <if test="skuId != null">
         sku_id = #{skuId,jdbcType=BIGINT},
@@ -156,9 +168,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.xq.live.vo.in.ActShopInVo">
+  <update id="updateByPrimaryKey" parameterType="com.xq.live.vo.in.ActSkuInVo">
     update act_sku
     set act_id = #{actId,jdbcType=BIGINT},
+      shop_id = #{shopId,jdbcType=BIGINT},
       sku_id = #{skuId,jdbcType=BIGINT},
       sku_code = #{skuCode,jdbcType=VARCHAR},
       pr_id = #{prId,jdbcType=BIGINT},
@@ -173,7 +186,7 @@
   <select id="listForNewAct" resultMap="ActSkuOutResultMap">
     select
     a.id, a.act_id, a.sku_id, a.sku_code,a.pr_id,a.apply_status,a.vote_num, a.create_time,
-    a.update_time,a.is_luoxuan,
+    a.update_time,a.is_luoxuan,a.shop_id,
     pr.sku_id as pr_sku_id,
     pr.sku_code as pr_sku_code,
     pr.sku_name as pr_sku_name,
@@ -200,6 +213,7 @@
     act_sku a
     inner join promotion_rules pr on a.pr_id = pr.id
     inner join sku s on a.sku_id = s.id
+    inner join shop sp on a.shop_id=sp.id
     <where>
       1=1
       <if test="id != null">
@@ -208,13 +222,22 @@
       <if test="actId != null">
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
+      <if test="shopId != null">
+        AND  a.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and
+        ((s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
-      and  a.is_luoxuan = 0
+      <if test="flag == null">
+        and  a.is_luoxuan = 0
+      </if>
       and  s.is_deleted = 0
+      <if test="city != null">
+        and  sp.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
+      </if>
     </where>
     ORDER by
     <if test="sortType == 1">
@@ -231,6 +254,7 @@
     act_sku a
     inner join promotion_rules pr on a.pr_id = pr.id
     inner join sku s on a.sku_id = s.id
+    inner join shop sp on a.shop_id=sp.id
     <where>
       1=1
       <if test="id != null">
@@ -239,26 +263,34 @@
       <if test="actId != null">
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
+      <if test="shopId != null">
+        AND  a.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and( (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status = 1
-      and  a.is_luoxuan = 0
+      <if test="flag == null">
+        and  a.is_luoxuan = 0
+      </if>
       and  s.is_deleted = 0
+      <if test="city != null">
+        and  sp.city like concat('%', #{city,jdbcType=VARCHAR}, '%')
+      </if>
+
     </where>
     ORDER by
     <if test="sortType == 1">
       a.create_time DESC,
     </if>
     a.vote_num DESC
-    limit #{start}, #{rows}
   </select>
 
   <select id="findByInVo" resultMap="ActSkuOutResultMap">
     select
     a.id, a.act_id, a.sku_id, a.sku_code,a.pr_id,a.apply_status,a.vote_num, a.create_time,
-    a.update_time,a.is_luoxuan,
+    a.update_time,a.is_luoxuan,a.shop_id,
     pr.sku_id as pr_sku_id,
     pr.sku_code as pr_sku_code,
     pr.sku_name as pr_sku_name,
@@ -293,16 +325,57 @@
       <if test="actId != null">
         AND  a.act_id = #{actId,jdbcType=BIGINT}
       </if>
+      <if test="shopId != null">
+        AND  a.shop_id = #{shopId,jdbcType=BIGINT}
+      </if>
       <if test="skuId != null">
         and a.sku_id = #{skuId,jdbcType=BIGINT}
       </if>
       <if test="searchKey != null">
-        (and (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
-        or s.sku_code = #{searchKey,jdbcType=VARCHAR}))
+        and( (s.sku_name like concat('%', #{searchKey,jdbcType=VARCHAR}, '%')
+        or a.sku_code = #{searchKey,jdbcType=VARCHAR}))
       </if>
       and  a.apply_status != 2
       and  a.is_luoxuan = 0
       and  s.is_deleted = 0
     </where>
   </select>
+
+  <select id="countByActId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(1) from act_sku where act_id = #{actId,jdbcType=BIGINT}
+  </select>
+
+  <!--落选商家-->
+  <update id="updateLuoXuan" parameterType="java.util.List">
+    update act_sku
+    set
+    is_luoxuan = 1,
+    update_time = now()
+    WHERE 1=1
+    AND id NOT IN
+    <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+      #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+
+  <!--按票数排序查看-->
+  <select id="listActSkuOut" resultMap="ActSkuOutResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from act_sku
+    <where>
+      1=1
+      <if test="actId != null">
+        AND  act_id = #{actId,jdbcType=BIGINT}
+      </if>
+      and is_luoxuan = 0
+      AND apply_status = 1
+    </where>
+    ORDER by vote_num DESC
+  </select>
+
+
+
+
 </mapper>

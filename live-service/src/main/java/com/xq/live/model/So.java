@@ -41,6 +41,19 @@ public class So {
 
     private SoDetail soDetail;
 
+    private Long shopId;
+
+    private Integer isDui;//是否对账
+
+
+    public Integer getIsDui() {
+        return isDui;
+    }
+
+    public void setIsDui(Integer isDui) {
+        this.isDui = isDui;
+    }
+
     public Long getId() {
         return id;
     }
@@ -120,4 +133,14 @@ public class So {
     public void setSoDetail(SoDetail soDetail) {
         this.soDetail = soDetail;
     }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+
 }

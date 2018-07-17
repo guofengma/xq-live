@@ -3,15 +3,10 @@ package com.xq.live.web.controllerForApp;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
 import com.xq.live.common.ResultStatus;
-import com.xq.live.model.Coupon;
-import com.xq.live.model.Shop;
-import com.xq.live.model.SoWriteOff;
-import com.xq.live.model.User;
-import com.xq.live.service.CouponService;
-import com.xq.live.service.ShopService;
-import com.xq.live.service.SoWriteOffService;
-import com.xq.live.service.UserService;
+import com.xq.live.model.*;
+import com.xq.live.service.*;
 import com.xq.live.vo.in.SoWriteOffInVo;
+import com.xq.live.vo.out.SoOut;
 import com.xq.live.vo.out.SoWriteOffOut;
 import com.xq.live.web.utils.CutOutTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * ${DESCRIPTION}
@@ -49,6 +43,9 @@ public class SoWriteOffForAppController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private SoService soService;
 
     /**
      * 根据id查询记录
@@ -94,6 +91,16 @@ public class SoWriteOffForAppController {
             return new BaseResp<Long>(ResultStatus.error_shop_info_empty);
         }
 
+        SoOut soOut = soService.get(soWriteOff.getSoId());
+        if(soOut!=null) {
+            if (soOut.getSoType() == So.SO_TYPE_PT && soOut.getShopId() != null) {
+                if (!soWriteOff.getShopId().equals(soOut.getShopId())) {
+                    return new BaseResp<Long>(ResultStatus.error_act_shop_not_right);
+                }
+            }
+        }else{
+            return new BaseResp<Long>(ResultStatus.error_para_coupon_code_empty);
+        }
 
 
         soWriteOff.setShopId(shop.getId());
@@ -119,7 +126,7 @@ public class SoWriteOffForAppController {
         return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.SUCCESS,list);
     }
     /**
-     * 返回时间段内各个月份的金额
+     * 返回时间段内各个月份的金额(shopid和时间段)
      * @param inVo
      * @return
      */
@@ -132,6 +139,13 @@ public class SoWriteOffForAppController {
         }
         Map<Integer,SoWriteOffOut> map = new HashMap<Integer,SoWriteOffOut>();
 
+        for (int ivo=0;ivo<listInVo.size();ivo++){
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(listInVo.get(ivo).getEndTime());
+            calendar.add(calendar.DATE, 1);//把日期往后增加一天.整数往后推,负数往前移动
+            listInVo.get(ivo).setEndTime(calendar.getTime());//这个时间就是日期往后推一天的结果
+        }
+
         for (int i=0;i<listInVo.size();i++){
             //可以将没有记录的月份不返回
             /*if (soWriteOffService.listAmount(listInVo.get(i)).get(0)!=null){
@@ -143,10 +157,12 @@ public class SoWriteOffForAppController {
             SoWriteOffOut offOutByBill=soWriteOffService.listAmount(listInVo.get(i)).get(0);
             if (offOutByBill!=null){
                 offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                offOut.setTotalNoService(offOutByBill.getTotalService());
                 map.put(i + 1, offOut);
             }else {
                 if (offOut!=null){
                     offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+                    offOut.setTotalNoService(BigDecimal.ZERO);
                 }
                 map.put(i + 1, offOut);
             }

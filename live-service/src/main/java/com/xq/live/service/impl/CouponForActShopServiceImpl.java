@@ -1,6 +1,7 @@
 package com.xq.live.service.impl;
 
 import com.xq.live.common.RedisCache;
+import com.xq.live.config.ActSkuConfig;
 import com.xq.live.dao.ActGroupMapper;
 import com.xq.live.dao.ActShopMapper;
 import com.xq.live.dao.SoWriteOffMapper;
@@ -32,6 +33,9 @@ public class CouponForActShopServiceImpl implements CouponForActShopService{
 
     @Autowired
     private ActGroupMapper actGroupMapper;
+
+    @Autowired
+    private ActSkuConfig actSkuConfig;
 
     @Autowired
     private RedisCache redisCache;
@@ -70,10 +74,14 @@ public class CouponForActShopServiceImpl implements CouponForActShopService{
     }
 
     @Override
-    /*@Scheduled(fixedRate = 5000)*/
+    /*@Scheduled(fixedRate = 50000)*/
+    @Scheduled(cron = "0 0 2 * * ?")
     public void deleteActVoteNums() {
-        String key = "actVoteNums_" + "*";
-        redisCache.delAll(key);
+        //String key = "actVoteNums_" + "*";
+        String keyUser = "actVoteNumsUser_" + actSkuConfig.getActId() + "_" +"*";
+        String keySku  = "actVoteNumsSku_" + actSkuConfig.getActId() + "_" +"*";
+        redisCache.delAll(keyUser);
+        redisCache.delAll(keySku);
         System.out.println("now time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 }

@@ -124,13 +124,56 @@ public class ActInfoController {
 
     /**
      * 查询用户在活动中可用的投票次数
+     * (包含了选手可用投票次数和推荐菜可用投票次数)
      * 注:写此接口，而不是直接加到detail中，是为了减少代码的耦合度，方便以后的业务扩展
      * @param userId
      * @return
      */
     @RequestMapping(value = "/actVoteNums",method = RequestMethod.GET)
-    public BaseResp<Integer> actVoteNums(Long userId){
-        Integer integer = countService.actVoteNums(userId);
+    public BaseResp<Map<String, Integer>> actVoteNums(Long userId,Long actId){
+        Map<String, Integer> map = countService.actVoteNums(userId, actId);
+        return new BaseResp<Map<String, Integer>>(ResultStatus.SUCCESS,map);
+    }
+
+    /**
+     * 生成活动选手分享二维码
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/CreateCode")
+    public BaseResp<Map<String,String>> CreateCode(ActInfoInVo inVo){
+        if (inVo==null||inVo.getId()==null) {
+            return new BaseResp<Map<String,String>>(ResultStatus.error_param_empty);
+        }
+
+        String imge=actInfoService.uploadQRCodeToCos(inVo);
+        if (imge==null){
+            return new BaseResp<Map<String,String>>(ResultStatus.error_shop_code);
+        }
+        Map<String,String> shopUrl=new HashMap<>();
+        shopUrl.put("A",imge);//带背景图的二维码
+        return new BaseResp<Map<String,String>>(ResultStatus.SUCCESS,shopUrl);
+    }
+
+    /**
+     * 返回一个判断条件
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/flag")
+    public BaseResp<Integer> getFlag(){
+        //0是显示，1是不显示
+        return new BaseResp<Integer>(ResultStatus.SUCCESS,0);
+    }
+
+    /**
+     * 针对没有参与活动的个人主页的点赞数目
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/zanTotal")
+    public BaseResp<Integer> zanTotal(Long userId){
+        Integer integer = countService.zanTotal(userId);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
 

@@ -177,23 +177,5 @@ public class ActInfoController {
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
 
-    /**
-     * 生成活动选手分享二维码
-     * @param inVo
-     * @return
-     */
-    @RequestMapping(value = "/CreateCode")
-    public BaseResp<Map<String,String>> CreateCode(ActInfoInVo inVo){
-        if (inVo==null||inVo.getId()==null||inVo.getUserId()==null) {
-            return new BaseResp<Map<String,String>>(ResultStatus.error_param_empty);
-        }
 
-        String imge=actInfoService.uploadQRCodeToCos(inVo);
-        if (imge==null){
-            return new BaseResp<Map<String,String>>(ResultStatus.error_shop_code);
-        }
-        Map<String,String> shopUrl=new HashMap<>();
-        shopUrl.put("A",imge);//带背景图的二维码
-        return new BaseResp<Map<String,String>>(ResultStatus.SUCCESS,shopUrl);
-    }
 }

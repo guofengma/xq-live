@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 /**
  * @package: com.xq.live.web.exception
- * @description: jwt 未授权
+ * @description: jwt 未授权(身份验证异常处理)
  * @author: zhangpeng32
  * @date: 2018/4/20 17:26
  * @version: 1.0

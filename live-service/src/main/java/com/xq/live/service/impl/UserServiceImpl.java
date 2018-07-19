@@ -2,6 +2,7 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Constants;
 import com.xq.live.common.Pager;
+import com.xq.live.common.RedisCache;
 import com.xq.live.dao.AccessLogMapper;
 import com.xq.live.dao.SoMapper;
 import com.xq.live.dao.UserAccountMapper;
@@ -62,8 +63,14 @@ public class UserServiceImpl implements UserService {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    @Value("${jwt.password.salt}")
+    private String salt;
+
     @Autowired
     private UserAccountMapper userAccountMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public User getUserById(@Param("id") Long id) {
@@ -73,6 +80,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long add(User user) {
         user.setIconUrl(Constants.DEFAULT_ICON_URL);
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName()+salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
         int ret = userMapper.insert(user);
         if(ret > 0){
             //新增用户成功后，新增一条账户信息
@@ -124,6 +136,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer update(User user) {
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName()+salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
@@ -165,6 +182,11 @@ public class UserServiceImpl implements UserService {
         //1、更新用户表登录ip，登录次数等
         user.setUpdateTime(now);
         user.setLastLoginTime(now);
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName() + salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
@@ -179,6 +201,11 @@ public class UserServiceImpl implements UserService {
             user.setUserName(rmp.get("mobile"));*/
             user.setUserName(user.getMobile());
         }
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName() + salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
         return userMapper.updateByOpenId(user);
     }
 
@@ -202,6 +229,14 @@ public class UserServiceImpl implements UserService {
         if(user!=null&&user.getMobile()!=null){
             user.setUserName(user.getMobile());
         }
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName()+salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
+        String aa = user.getPassword();
+        String bb = user.getUserName()+salt;
+        boolean kk = encoder.matches(bb, aa);
         Integer integer = userMapper.updateByMobile(user);
         return integer;
     }
@@ -209,7 +244,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String login(String username, String password){
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, username+salt);
+        //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        //boolean kk = encoder.matches("1999900099abc", "$2a$10$I3hlDXQqWI9S9XA8kKcj6uLNUc2NO1uAuSjTO6aqWfvaZXD0cmfha");
         Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -248,6 +285,11 @@ public class UserServiceImpl implements UserService {
          */
         if(byUnionId==null){
             if(byMobile==null){
+                //修改密码----begain
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                user.setPassword(user.getUserName() + salt);//密码为userName + salt
+                user.setPassword(encoder.encode(user.getPassword()));
+                //end
                     int i = userMapper.insert(user);
                     if (i < 1) {
                         return null;
@@ -258,6 +300,11 @@ public class UserServiceImpl implements UserService {
             }
             byMobile.setOpenId(user.getOpenId());
             byMobile.setUnionId(user.getUnionId());
+            //修改密码----begain
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            byMobile.setPassword(byMobile.getUserName() + salt);//密码为userName + salt
+            byMobile.setPassword(encoder.encode(byMobile.getPassword()));
+            //end
             Integer k = userMapper.updateByMobile(byMobile);
             if(k<1){
                 return null;
@@ -267,12 +314,29 @@ public class UserServiceImpl implements UserService {
             if(byUnionId.getMobile()!=null&&!StringUtils.equals("",byUnionId.getMobile())){
                 if(!StringUtils.equals(byUnionId.getOpenId(), user.getOpenId())){
                     byUnionId.setOpenId(user.getOpenId());
+                    //修改密码----begain
+                    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                    byUnionId.setPassword(byUnionId.getUserName() + salt);//密码为userName + salt
+                    byUnionId.setPassword(encoder.encode(byUnionId.getPassword()));
+                    //end
                     userMapper.updateByPrimaryKeySelective(byUnionId);
                 }
                 return byUnionId.getId();
             }
             if(byMobile==null){
                 byUnionId.setMobile(user.getMobile());
+                //删除不要的缓存----begin
+                String[] k = new String[2];
+                k[0] = "login_username_" + byUnionId.getUserName();
+                k[1] = byUnionId.getUserName();
+                redisCache.del(k);
+                //end
+                byUnionId.setUserName(user.getMobile());
+                //修改密码----begain
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                byUnionId.setPassword(byUnionId.getUserName() + salt);//密码为userName + salt
+                byUnionId.setPassword(encoder.encode(byUnionId.getPassword()));
+                //end
                 Integer j = userMapper.updateByPrimaryKeySelective(byUnionId);
                 if (j < 1) {
                     return null;
@@ -281,7 +345,19 @@ public class UserServiceImpl implements UserService {
             }
             byMobile.setOpenId(user.getOpenId());
             byMobile.setUnionId(user.getUnionId());
+            //修改密码----begain
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            byMobile.setPassword(byMobile.getUserName() + salt);//密码为userName + salt
+            byMobile.setPassword(encoder.encode(byMobile.getPassword()));
+            //end
             userMapper.updateByMobile(byMobile);
+            //删除不要的缓存----begin
+            String[] k = new String[3];
+            k[0] = "login_username_" + byUnionId.getUserName();
+            k[1] = byUnionId.getUserName();
+            k[2] = byUnionId.getId().toString();
+            redisCache.del(k);
+            //end
             userMapper.deleteByPrimaryKey(byUnionId.getId());
             return byMobile.getId();
         }

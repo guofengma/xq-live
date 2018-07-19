@@ -8,7 +8,7 @@ import com.xq.live.service.*;
 import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.vo.out.SoWriteOffOut;
-import com.xq.live.web.utils.CutOutTimeUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ${DESCRIPTION}

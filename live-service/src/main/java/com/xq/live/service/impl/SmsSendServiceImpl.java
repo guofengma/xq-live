@@ -10,6 +10,8 @@ import com.xq.live.vo.in.SmsSendInVo;
 import com.xq.live.vo.out.SmsOut;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,9 @@ public class SmsSendServiceImpl implements SmsSendService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Value("${jwt.password.salt}")
+    private String salt;
 
 
     @Override
@@ -173,15 +178,38 @@ public class SmsSendServiceImpl implements SmsSendService {
         User byMobile = userMapper.findByMobile(inVo.getShopMobile());
         User user = userMapper.selectByPrimaryKey(inVo.getUserId());
         if(byMobile==null){
+            //删除不要的缓存----begin
+            String[] k = new String[2];
+            k[0] = "login_username_" + user.getUserName();
+            k[1] = user.getUserName();
+            redisCache.del(k);
+            //end
             user.setUserName(smsSend.getShopMobile());
             user.setMobile(smsSend.getShopMobile());
+            //修改密码----begain
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(user.getUserName() + salt);//密码为userName + salt
+            user.setPassword(encoder.encode(user.getPassword()));
+            //end
             userMapper.updateByPrimaryKeySelective(user);
             return user.getId();
         }
 
         byMobile.setOpenId(user.getOpenId());
         byMobile.setUnionId(user.getUnionId());
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        byMobile.setPassword(byMobile.getUserName() + salt);//密码为userName + salt
+        byMobile.setPassword(encoder.encode(byMobile.getPassword()));
+        //end
         userMapper.updateByMobile(byMobile);
+        //删除不要的缓存----begin
+        String[] k = new String[2];
+        k[0] = "login_username_" + user.getUserName();
+        k[1] = user.getUserName();
+        k[2] = user.getId().toString();
+        redisCache.del(k);
+        //end
         userMapper.deleteByPrimaryKey(user.getId());
         return byMobile.getId();
     }

@@ -10,6 +10,8 @@ import com.xq.live.vo.out.ActUserOut;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -40,6 +42,9 @@ public class ActUserServiceImpl implements ActUserService{
 
     @Autowired
     private ActSignMapper actSignMapper;
+
+    @Value("${jwt.password.salt}")
+    private String salt;
 
     private static Logger logger = Logger.getLogger(ActInfoServiceImpl.class);
 
@@ -97,6 +102,11 @@ public class ActUserServiceImpl implements ActUserService{
         User user = userMapper.selectByPrimaryKey(inVo.getUserId());
         user.setAge(inVo.getAge());
         user.setHeight(inVo.getHeight());
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(user.getUserName() + salt);//密码为userName + salt
+        user.setPassword(encoder.encode(user.getPassword()));
+        //end
         int k = userMapper.updateByPrimaryKeySelective(user);//修改user表的信息
         if (k < 1) {
             return null;

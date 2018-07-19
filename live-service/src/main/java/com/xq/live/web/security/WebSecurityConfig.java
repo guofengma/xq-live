@@ -1,7 +1,6 @@
 package com.xq.live.web.security;
 
 
-import com.xq.live.service.impl.CustomAuthenticationProvider;
 import com.xq.live.web.exception.JwtAuthenticationEntryPoint;
 import com.xq.live.web.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +31,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     private PasswordEncoder passwordEncoder;
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+    //private RestAccessDeniedHandler restAccessDeniedHandler;
 
     @Value("${jwt.except.path}")
     private String exceptPath;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
+                             JwtAuthenticationEntryPoint unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        //this.restAccessDeniedHandler = restAccessDeniedHandler;
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
@@ -55,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()   // 由于使用的是JWT，我们这里不需要csrf
+                //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler).and()//未授权处理
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()//未授权处理
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // 基于token，所以不需要session
                 .authorizeRequests()

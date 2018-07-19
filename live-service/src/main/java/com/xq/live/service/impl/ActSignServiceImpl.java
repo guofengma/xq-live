@@ -14,6 +14,8 @@ import com.xq.live.vo.in.SkuInVo;
 import com.xq.live.vo.out.SkuForTscOut;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,9 @@ public class ActSignServiceImpl implements ActSignService{
 
     @Autowired
     private ActShopMapper actShopMapper;
+
+    @Value("${jwt.password.salt}")
+    private String salt;
 
 
     @Override
@@ -73,6 +78,11 @@ public class ActSignServiceImpl implements ActSignService{
             User user = userMapper.selectByPrimaryKey(invoUser.getUserId());
             user.setAge(inVo.getAge());
             user.setHeight(inVo.getHeight());
+            //修改密码----begain
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(user.getUserName() + salt);//密码为userName + salt
+            user.setPassword(encoder.encode(user.getPassword()));
+            //end
             int k = userMapper.updateByPrimaryKeySelective(user);//修改user表的信息
             if (k < 1) {
                 throw new ActSignFailException("报名失败，请检查报名材料!");

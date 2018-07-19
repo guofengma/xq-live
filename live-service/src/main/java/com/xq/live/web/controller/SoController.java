@@ -5,15 +5,12 @@ import com.xq.live.common.Pager;
 import com.xq.live.common.RedisCache;
 import com.xq.live.common.ResultStatus;
 import com.xq.live.config.ActSkuConfig;
-import com.xq.live.config.AgioSkuConfig;
 import com.xq.live.config.FreeSkuConfig;
 import com.xq.live.model.So;
 import com.xq.live.model.User;
-import com.xq.live.model.UserAccount;
 import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
 import com.xq.live.service.SoWriteOffService;
-import com.xq.live.service.UserService;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
@@ -30,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

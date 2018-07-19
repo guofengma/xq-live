@@ -5,6 +5,7 @@ import com.xq.live.vo.in.UserInVo;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +23,11 @@ public interface UserMapper{
     @Cacheable(value = "1h",key = "'userId_'+#p0.toString()")     //缓存时间1小时，key为自动生成
     User selectByPrimaryKey(Long id);
 
-    @CacheEvict(key = "'userId_'+#p0.id.toString()")
+    @Caching(evict = {
+            @CacheEvict(key = "'userId_'+#p0.id.toString()"),
+            @CacheEvict(key = "'login_username_'+#p0.userName.toString()"),
+            @CacheEvict(key = "#p0.userName.toString()")
+    })
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
@@ -43,10 +48,14 @@ public interface UserMapper{
      * @param record
      * @return
      */
-    @CacheEvict(key = "'userId_'+#p0.id.toString()")
+    @Caching(evict = {
+            @CacheEvict(key = "'userId_'+#p0.id.toString()"),
+            @CacheEvict(key = "'login_username_'+#p0.userName.toString()"),
+            @CacheEvict(key = "#p0.userName.toString()")
+    })
     int updateUserType(User record);
 
-    @Cacheable(value = "1h",key = "'openId_'+#p0.toString()")
+    //@Cacheable(value = "1h",key = "'openId_'+#p0.toString()")
     User findByOpenId(String openId);
 
     User findByUnionId(String unionId);
@@ -54,9 +63,18 @@ public interface UserMapper{
     //@Cacheable(value = "1h")
     User findByMobile(String mobile);
 
-    @CacheEvict(key = "'userId_'+#p0.id.toString()")
+    //@CacheEvict(key = "'userId_'+#p0.id.toString()")
+    @Caching(evict = {
+            @CacheEvict(key = "'userId_'+#p0.id.toString()"),
+            @CacheEvict(key = "'login_username_'+#p0.userName.toString()"),
+            @CacheEvict(key = "#p0.userName.toString()")
+    })
     Integer updateByOpenId(User user);
 
-    @CacheEvict(key = "'userId_'+#p0.id.toString()")
+    @Caching(evict = {
+            @CacheEvict(key = "'userId_'+#p0.id.toString()"),
+            @CacheEvict(key = "'login_username_'+#p0.userName.toString()"),
+            @CacheEvict(key = "#p0.userName.toString()")
+    })
     Integer updateByMobile(User user);
 }

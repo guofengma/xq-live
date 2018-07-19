@@ -360,6 +360,9 @@
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
       <if test="nickName != null">
         nick_name = #{nickName,jdbcType=VARCHAR},
       </if>
@@ -396,6 +399,9 @@
       </if>
       <if test="nickName != null">
         nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="iconUrl != null">
         icon_url = #{iconUrl,jdbcType=VARCHAR},

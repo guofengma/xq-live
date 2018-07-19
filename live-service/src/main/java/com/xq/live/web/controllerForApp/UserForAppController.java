@@ -10,6 +10,8 @@ import com.xq.live.web.utils.IpUtils;
 import com.xq.live.web.utils.PayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,12 @@ public class UserForAppController {
 
     @Autowired
     private AccessLogService accessLogService;
+
+    @Value("${jwt.password.salt}")
+    private String salt;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 根据id查询用户信息
@@ -94,9 +102,9 @@ public class UserForAppController {
             user.setUserIp(IpUtils.getIpAddr(request));
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssmm");
-            user.setUserName("xq_"+sdf.format(date));
-            user.setPassword(RandomStringUtil.getRandomCode(6,3));
-            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+            user.setUserName("xq_" + sdf.format(date));
+            /*user.setPassword(RandomStringUtil.getRandomCode(6,3));
+            user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));*/
             user.setSourceType(1);  //来源小程序
             Long id  = userService.add(user);
             return new BaseResp<Long>(ResultStatus.SUCCESS, id);
@@ -116,8 +124,8 @@ public class UserForAppController {
          }
         user.setUserIp(IpUtils.getIpAddr(request));
         user.setUserName(user.getMobile());
-        user.setPassword(RandomStringUtil.getRandomCode(6, 3));
-        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        /*user.setPassword(RandomStringUtil.getRandomCode(6, 3));
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));*/
         Long add = userService.add(user);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }
@@ -146,8 +154,8 @@ public class UserForAppController {
         }
         user.setUserIp(IpUtils.getIpAddr(request));
         user.setUserName(user.getMobile());
-        user.setPassword(RandomStringUtil.getRandomCode(6, 3));
-        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+        /*user.setPassword(RandomStringUtil.getRandomCode(6, 3));
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));*/
         Long add = userService.addAppUser(user);
         return new BaseResp<Long>(ResultStatus.SUCCESS,add);
     }
@@ -307,6 +315,13 @@ public class UserForAppController {
         if(u == null){
             return new BaseResp<Integer>(ResultStatus.error_param_open_id);
         }
+        user.setUserName(u.getUserName());
+        //删除不要的缓存----begin
+        String[] k = new String[2];
+        k[0] = "login_username_" + user.getUserName();
+        k[1] = user.getUserName();
+        redisCache.del(k);
+        //end
         Integer result = userService.updateByOpenId(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS, result);
     }
@@ -326,7 +341,14 @@ public class UserForAppController {
         if(byMobile==null){
             return new BaseResp<>(ResultStatus.error_para_user_empty);
         }
+        //删除不要的缓存----begin
+        String[] k = new String[2];
+        k[0] = "login_username_" + byMobile.getUserName();
+        k[1] = byMobile.getUserName();
+        redisCache.del(k);
+        //end
         user.setId(byMobile.getId());//为了能正确的清空缓存，带上id
+        user.setUserName(byMobile.getUserName());
         Integer integer = userService.updateByMobile(user);
         return new BaseResp<Integer>(ResultStatus.SUCCESS,integer);
     }
@@ -352,7 +374,11 @@ public class UserForAppController {
         if(inVo == null || inVo.getUserName() == null || inVo.getPassword() == null){
             return new BaseResp<User>(ResultStatus.error_para_user_empty);
         }
-        inVo.setPassword(DigestUtils.md5DigestAsHex(inVo.getPassword().getBytes()));
+        //修改密码----begain
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        inVo.setPassword(inVo.getUserName()+salt);//密码为userName + salt
+        inVo.setPassword(encoder.encode(inVo.getPassword()));
+        //end
         User user = userService.findByUserNameAndPwd(inVo);
         if(user != null){
             //更新登录时间，更新登录次数

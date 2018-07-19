@@ -231,6 +231,7 @@ public class UserServiceImpl implements UserService {
             }
             if(byMobile==null){
                 byUnionId.setMobile(user.getMobile());
+                byUnionId.setUserName(user.getMobile());
                 Integer j = userMapper.updateByPrimaryKeySelective(byUnionId);
                 if (j < 1) {
                     return null;

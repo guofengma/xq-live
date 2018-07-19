@@ -63,7 +63,7 @@ public class TopicController {
     }
 
     /**
-     * 新增一条商家记录
+     * 新增一条视频记录
      *
      * @param topic
      * @return
@@ -79,7 +79,7 @@ public class TopicController {
     }
 
     /**
-     * 逻辑删除一条商家记录
+     * 逻辑删除一条视频记录
      * @param id
      * @return
      */

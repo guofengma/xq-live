@@ -129,6 +129,7 @@ public class SoServiceImpl implements SoService {
     public List<SoOut> findSoList(SoInVo inVo) {
         List<SoOut> list = soMapper.list(inVo);
         for (SoOut soOut : list) {
+            soOut.setSkuType(skuMapper.selectByPrimaryKey(soOut.getSkuId()).getSkuType());
             soOut.setRuleDesc(" ");
         }
         return list;

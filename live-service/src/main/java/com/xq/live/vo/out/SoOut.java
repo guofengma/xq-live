@@ -67,6 +67,15 @@ public class SoOut {
 
     private Integer isDui;//是否对账
 
+    private Integer skuType;//产品分类
+
+    public Integer getSkuType() {
+        return skuType;
+    }
+
+    public void setSkuType(Integer skuType) {
+        this.skuType = skuType;
+    }
 
     public Integer getIsDui() {
         return isDui;

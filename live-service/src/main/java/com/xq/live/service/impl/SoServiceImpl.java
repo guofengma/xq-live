@@ -27,6 +27,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -131,6 +132,14 @@ public class SoServiceImpl implements SoService {
         for (SoOut soOut : list) {
             soOut.setSkuType(skuMapper.selectByPrimaryKey(soOut.getSkuId()).getSkuType());
             soOut.setRuleDesc(" ");
+        }
+
+        Iterator<SoOut> sListIterator = list.iterator();
+        while (sListIterator.hasNext()) {
+            SoOut str = sListIterator.next();
+            if (str.getSkuType()==Sku.SKU_TYPE_HDQ&&str.getSoStatus()==So.SO_STATUS_WAIT_PAID) {
+                sListIterator.remove();
+            }
         }
         return list;
     }

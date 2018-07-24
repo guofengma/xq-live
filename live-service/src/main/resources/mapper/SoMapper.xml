@@ -117,6 +117,7 @@
         s.update_time,s.paid_time,s.is_dui,sd.so_id, sd.sku_id, sd.sku_code, sd.sku_name, sd.sku_num, sd.unit_price
         from so s
         inner join so_detail sd on s.id = sd.so_id
+        inner join sku su on sd.sku_id=su.id
         <where>
             <if test="id != null">
                 s.id = #{id,jdbcType=BIGINT}
@@ -136,6 +137,7 @@
             <if test="isDui != null">
                 and s.is_dui =  #{isDui,jdbcType=TINYINT}
             </if>
+            AND su.is_deleted=0
         </where>
         order by id desc
         limit #{start}, #{rows}

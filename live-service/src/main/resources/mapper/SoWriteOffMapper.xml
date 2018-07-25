@@ -301,13 +301,13 @@
     (
     (
     SELECT
-    FORMAT(IFNULL(COUNT(1),0),2)
+    FORMAT(IFNULL(COUNT(1)-COUNT(1),0),2)
     FROM
     so_write_off swo,
     sku ss
     WHERE
     swo.sku_id = ss.id
-    AND (ss.sku_type != 1 or (ss.sku_type =1 and ss.id = 406))
+    AND (ss.sku_type = 3 or (ss.sku_type =1 and ss.id = 406))
     <if test="shopId != null">
       and swo.shop_id = #{shopId}
     </if>

@@ -69,8 +69,8 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
             for (SoWriteOffOut soWriteOffOut : list) {
                 Sku sku = skuMapper.selectByPrimaryKey(soWriteOffOut.getSkuId());
                 if((sku.getSkuType()==Sku.SKU_TYPE_XQQ&&sku.getId().equals(agioSkuConfig.getSkuId()))||
-                        (sku.getSkuType()!=Sku.SKU_TYPE_XQQ)){
-                    soWriteOffOut.setServicePrice(BigDecimal.ONE);
+                        (sku.getSkuType()==Sku.SKU_TYPE_HDQ)){
+                    soWriteOffOut.setServicePrice(BigDecimal.ZERO);
                 }else{
                     soWriteOffOut.setServicePrice(soWriteOffOut.getCouponAmount().divide(new BigDecimal(10), 2, RoundingMode.HALF_UP));
                 }

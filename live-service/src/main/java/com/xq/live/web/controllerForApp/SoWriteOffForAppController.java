@@ -155,7 +155,7 @@ public class SoWriteOffForAppController {
             //offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
             listInVo.get(i).setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
             SoWriteOffOut offOutByBill=soWriteOffService.listAmount(listInVo.get(i)).get(0);
-            if (offOutByBill!=null){
+            if (offOutByBill!=null&&offOutByBill.getTotalService().compareTo(BigDecimal.ZERO)!=0){
                 offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
                 offOut.setTotalNoService(offOutByBill.getTotalService());
                 map.put(i + 1, offOut);

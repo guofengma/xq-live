@@ -107,9 +107,9 @@
         from so s
         where s.shop_id = #{shopId,jdbcType=BIGINT}
         and s.so_type = 1
-        and s.so_status = 2
+        and s.so_status = 3
         <if test="beginTime !=null and endTime != null">
-            and (s.create_time BETWEEN #{beginTime} and #{endTime})
+            and (s.hx_time BETWEEN #{beginTime} and #{endTime})
         </if>
     </select>
 
@@ -137,6 +137,9 @@
             </if>
             <if test="isDui != null">
                 and s.is_dui =  #{isDui,jdbcType=TINYINT}
+            </if>
+            <if test="beginTime !=null and endTime != null">
+                and (s.hx_time BETWEEN #{beginTime} and #{endTime})
             </if>
             AND su.is_deleted=0
         </where>

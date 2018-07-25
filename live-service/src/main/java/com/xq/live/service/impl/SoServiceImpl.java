@@ -116,8 +116,8 @@ public class SoServiceImpl implements SoService {
 
     @Override
     public BigDecimal totalAmount(SoInVo inVo){
-        BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);
-        BigDecimal bigDecimal1 = soMapper.totalAmount(inVo);
+        BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);//只查询平台代收的商家订单
+        BigDecimal bigDecimal1 = soMapper.totalAmount(inVo);//只查询已核销的食典券
         if(bigDecimal1==null){
             bigDecimal1 = BigDecimal.ZERO;
         }

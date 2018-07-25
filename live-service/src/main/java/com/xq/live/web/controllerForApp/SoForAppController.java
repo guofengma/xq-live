@@ -96,7 +96,7 @@ public class SoForAppController {
 
     /**
      * 查我的订单
-     *
+     *注意:在查询商家端的订单的时候，只查询平台自收的食典券(被核销的),及soStatus为3
      * @param inVo
      * @return
      */

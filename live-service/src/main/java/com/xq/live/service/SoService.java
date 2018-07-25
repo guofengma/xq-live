@@ -3,12 +3,14 @@ package com.xq.live.service;
 import com.xq.live.common.Pager;
 import com.xq.live.model.So;
 import com.xq.live.model.SoDetail;
+import com.xq.live.poientity.SoDetailEntity;
 import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.out.SoForOrderOut;
 import com.xq.live.vo.out.SoOut;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单service
@@ -144,6 +146,13 @@ public interface SoService {
      * @return
      */
     int paidForAct(SoInVo inVo);
+
+    /**
+     * 订单明细导出
+     * @param inVo
+     * @return
+     */
+    Map<String,Object> soDetailExport(SoInVo inVo);
 
     /**
      * 根据订单ID获取userId

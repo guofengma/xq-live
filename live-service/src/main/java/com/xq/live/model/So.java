@@ -39,6 +39,8 @@ public class So {
 
     private Date updateTime;
 
+    private Date hxTime;
+
     private SoDetail soDetail;
 
     private Long shopId;
@@ -142,5 +144,11 @@ public class So {
         this.shopId = shopId;
     }
 
+    public Date getHxTime() {
+        return hxTime;
+    }
 
+    public void setHxTime(Date hxTime) {
+        this.hxTime = hxTime;
+    }
 }

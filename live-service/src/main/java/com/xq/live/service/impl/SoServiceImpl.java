@@ -5,6 +5,7 @@ import com.xq.live.config.ActSkuConfig;
 import com.xq.live.config.ConstantsConfig;
 import com.xq.live.dao.*;
 import com.xq.live.model.*;
+import com.xq.live.poientity.SoDetailEntity;
 import com.xq.live.service.AccountService;
 import com.xq.live.service.SoService;
 import com.xq.live.service.UploadService;
@@ -25,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -180,6 +179,77 @@ public class SoServiceImpl implements SoService {
         ret.setTotal(total);
         ret.setPage(inVo.getPage());
         return ret;
+    }
+
+    @Override
+    public Map<String,Object> soDetailExport(SoInVo inVo) {
+        //查询平台订单(食典券订单)-----只查询已被核销的食典券
+        List<SoOut> list = soMapper.listNoPage(inVo);//里面的soStatus为3
+        for (SoOut soOut : list) {
+            soOut.setRuleDesc(" ");
+            soOut.setServicePrice(BigDecimal.ZERO);
+            soOut.setRealAmount(soOut.getUnitPrice().subtract(BigDecimal.ONE));
+            soOut.setCoupon("无");
+            soOut.setAccountAmount(soOut.getUnitPrice().subtract(BigDecimal.ONE));
+        }
+
+
+        //查询商家订单(平台代收的商家订单)
+        List<SoOut> listForShop = soMapper.listForShopNoPage(inVo);
+        for (SoOut soOut : listForShop) {
+
+            Sku sku = skuMapper.selectByPrimaryKey(soOut.getSkuId());
+            if(sku!=null) {
+                soOut.setInPrice(sku.getInPrice());
+                soOut.setSkuName(sku.getSkuName());
+                soOut.setServicePrice(sku.getSellPrice());
+                soOut.setRealAmount(soOut.getSoAmount().subtract(sku.getSellPrice()));
+                soOut.setCoupon(sku.getSkuName());
+                soOut.setAccountAmount(soOut.getSoAmount().add(sku.getInPrice()));
+            }else{
+               soOut.setServicePrice(BigDecimal.ZERO);
+                soOut.setRealAmount(soOut.getSoAmount());
+                soOut.setCoupon("无");
+                soOut.setAccountAmount(soOut.getSoAmount());
+            }
+        }
+
+        //将两个结果集合并
+        list.addAll(listForShop);
+        Collections.sort(list);//根据交易时间进行排序
+        Map<String,Object> map = new HashMap<String, Object>();
+        List<SoDetailEntity> SoDetailEntityList = new ArrayList<SoDetailEntity>();
+        int i=0;
+        BigDecimal totalAcAmount = BigDecimal.ZERO;
+        BigDecimal totalService = BigDecimal.ZERO;
+        BigDecimal totalReAmount = BigDecimal.ZERO;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (SoOut soOut : list) {
+            i++;
+            SoDetailEntity entity = new SoDetailEntity();
+            entity.setIndex(i + "");
+            entity.setPaidTime(formatter.format(soOut.getPaidTime()));
+            entity.setSoId(soOut.getId());
+            if(soOut.getSoType()==1) {
+                entity.setType("食典券");
+            }else if(soOut.getSoType()==2){
+                entity.setType("买单");
+            }
+            entity.setAccountAmount(soOut.getAccountAmount().toString());
+            entity.setCoupon(soOut.getCoupon());
+            entity.setServicePrice(soOut.getServicePrice().toString());
+            entity.setRealAmount(soOut.getRealAmount().toString());
+            SoDetailEntityList.add(entity);
+            totalAcAmount = totalAcAmount.add(soOut.getAccountAmount());
+            totalService = totalService.add(soOut.getServicePrice());
+            totalReAmount = totalReAmount.add(soOut.getRealAmount());
+        }
+        map.put("list",SoDetailEntityList);
+        map.put("totalAcAmount",totalAcAmount);
+        map.put("totalService",totalService);
+        map.put("totalReAmount",totalReAmount);
+
+        return map;
     }
 
     @Override
@@ -507,6 +577,8 @@ public class SoServiceImpl implements SoService {
         }
         return ret;
     }
+
+
 
     @Override
     public Integer finished(SoInVo inVo) {

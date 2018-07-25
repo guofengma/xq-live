@@ -15,7 +15,7 @@ public class Sku {
 
     public final static int SKU_TYPE_TSC = 2;   //特色菜
 
-    public final static int SKU_TYPE_HDQ = 3;   //活动券
+    public final static int SKU_TYPE_HDQ = 3;   //食典券
 
     /*public final static int SKU_TYPE_AGIO = 4;   //平台折扣券*/
 

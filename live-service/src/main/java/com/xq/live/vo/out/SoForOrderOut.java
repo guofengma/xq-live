@@ -47,6 +47,8 @@ public class SoForOrderOut {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paidTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private  Date hxTime;
 
     private List<CouponForOrderOut> coupons;
 
@@ -216,5 +218,13 @@ public class SoForOrderOut {
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public Date getHxTime() {
+        return hxTime;
+    }
+
+    public void setHxTime(Date hxTime) {
+        this.hxTime = hxTime;
     }
 }

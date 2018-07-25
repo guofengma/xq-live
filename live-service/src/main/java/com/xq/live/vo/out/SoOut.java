@@ -13,7 +13,7 @@ import java.util.Date;
  * @date 2018-02-09 14:43
  * @copyright:hbxq
  **/
-public class SoOut {
+public class SoOut implements Comparable<SoOut>{
 
     private Long id;
 
@@ -52,6 +52,8 @@ public class SoOut {
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paidTime;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private  Date hxTime;
 
     private Long shopId;//商家订单绑定的shopId
 
@@ -68,6 +70,14 @@ public class SoOut {
     private Integer isDui;//是否对账
 
     private Integer skuType;//产品分类
+
+    private BigDecimal servicePrice;//单个服务费
+
+    private BigDecimal accountAmount;//应收款
+
+    private String coupon;//优惠券
+
+    private BigDecimal realAmount;//实收款
 
     public Integer getSkuType() {
         return skuType;
@@ -270,4 +280,54 @@ public class SoOut {
         this.userIconUrl = userIconUrl;
     }
 
+    public Date getHxTime() {
+        return hxTime;
+    }
+
+    public void setHxTime(Date hxTime) {
+        this.hxTime = hxTime;
+    }
+
+    public BigDecimal getServicePrice() {
+        return servicePrice;
+    }
+
+    public void setServicePrice(BigDecimal servicePrice) {
+        this.servicePrice = servicePrice;
+    }
+
+    public BigDecimal getAccountAmount() {
+        return accountAmount;
+    }
+
+    public void setAccountAmount(BigDecimal accountAmount) {
+        this.accountAmount = accountAmount;
+    }
+
+    public String getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(String coupon) {
+        this.coupon = coupon;
+    }
+
+    public BigDecimal getRealAmount() {
+        return realAmount;
+    }
+
+    public void setRealAmount(BigDecimal realAmount) {
+        this.realAmount = realAmount;
+    }
+
+    //由大到小排序
+    @Override
+    public int compareTo(SoOut o) {
+        Date a = this.getPaidTime();
+        Date b = o.getPaidTime();
+        if(a.getTime()>b.getTime()){
+            return -1;
+        }
+        return 1;
+    }
 }

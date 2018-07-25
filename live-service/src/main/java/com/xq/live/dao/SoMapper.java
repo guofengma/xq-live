@@ -32,6 +32,10 @@ public interface SoMapper {
 
     List<SoOut> listForShop(SoInVo inVo);
 
+    List<SoOut> listNoPage(SoInVo inVo);
+
+    List<SoOut> listForShopNoPage(SoInVo inVo);
+
     SoOut selectByPk(Long id);
 
     SoOut selectByPkForShop(Long id);

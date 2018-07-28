@@ -125,6 +125,7 @@ public class SoWriteOffForAppController {
         Pager<SoWriteOffOut> list = soWriteOffService.list(inVo);
         return new BaseResp<Pager<SoWriteOffOut>>(ResultStatus.SUCCESS,list);
     }
+
     /**
      * 返回时间段内各个月份的金额(shopid和时间段)
      * @param inVo
@@ -148,9 +149,9 @@ public class SoWriteOffForAppController {
 
         for (int i=0;i<listInVo.size();i++){
             //可以将没有记录的月份不返回
-            /*if (soWriteOffService.listAmount(listInVo.get(i)).get(0)!=null){
+            if (soWriteOffService.listAmount(listInVo.get(i)).get(0)!=null){
                 map.put(i+1, soWriteOffService.listAmount(listInVo.get(i)).get(0));
-            }*/
+            }
             SoWriteOffOut offOut=soWriteOffService.listAmount(listInVo.get(i)).get(0);
             //offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
             listInVo.get(i).setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
@@ -172,5 +173,34 @@ public class SoWriteOffForAppController {
         }
         return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.SUCCESS,map);
     }
+
+
+    /**
+     * 返回时间段内各个月份的金额(shopid和时间段)
+     * @param inVo
+     * @return
+     *//*
+    @RequestMapping(value = "/listAmount",method = RequestMethod.GET)
+    public BaseResp<Map<Integer,SoWriteOffOut>> listAmount(SoWriteOffInVo inVo){
+        Map<Integer,SoWriteOffOut> map = new HashMap<Integer,SoWriteOffOut>();
+            SoWriteOffOut offOut=soWriteOffService.listAmount(inVo).get(0);
+        inVo.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+        SoWriteOffOut offOutByBill=soWriteOffService.listAmount(inVo).get(0);
+            if (offOutByBill!=null&&offOutByBill.getTotalService().compareTo(BigDecimal.ZERO)!=0){
+                offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
+                offOut.setTotalNoService(offOutByBill.getTotalService());
+                map.put(1, offOut);
+            }else {
+                if (offOut!=null){
+                    offOut.setIsBill(SoWriteOff.SO_WRITE_OFF_IS_BILL);
+                    offOut.setTotalNoService(BigDecimal.ZERO);
+                }
+                map.put(1, offOut);
+            }
+        if (map==null){
+            return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);
+        }
+        return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.SUCCESS,map);
+    }*/
 
 }

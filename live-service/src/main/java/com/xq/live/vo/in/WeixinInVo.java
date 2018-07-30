@@ -1,6 +1,8 @@
 package com.xq.live.vo.in;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * ${DESCRIPTION}
@@ -31,17 +33,25 @@ public class WeixinInVo {
     @NotNull(message = "openId必填")
     private String openId;//用户标识
     @NotNull(message = "soId必填")
-    private Long soId;
+    private Long soId;//支付服务费的时候没有订单id
 
     private Long couponId;//为了完成之后的对账操作，加入的票卷的id,主要是商家订单中的平台代收，直接把服务费扣掉
 
-    private Long shopId;//商家单中对应的shopId
+    private Long shopId;//1.商家单中对应的shopId 2.商家支付服务费的shopId
 
     private String subMchId;//特约商户的mchId
 
     private Long actId;//活动中购买券中的活动id
 
     private Long skuId;//活动中购买的对应的推荐菜id
+
+    private BigDecimal servicePrice;//支付的服务费
+
+    private Date beginTime;//服务费计算的开始时间
+
+    private Date endTime;//服务费计算的结束时间
+
+    private Long userId;//支付人的用户id
 
     public String getAppid() {
         return appid;
@@ -241,5 +251,37 @@ public class WeixinInVo {
 
     public void setSkuId(Long skuId) {
         this.skuId = skuId;
+    }
+
+    public BigDecimal getServicePrice() {
+        return servicePrice;
+    }
+
+    public void setServicePrice(BigDecimal servicePrice) {
+        this.servicePrice = servicePrice;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

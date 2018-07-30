@@ -23,4 +23,6 @@ public interface CashApplyMapper {
     int listTotal(CashApplyInVo inVo);
 
     List<CashApply> list(CashApplyInVo inVo);
+
+    List<CashApply> selectByUserId(Long userId);
 }

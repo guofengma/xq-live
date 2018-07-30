@@ -12,6 +12,8 @@ public class AccountLogInVo extends BaseInVo{
 
     private Long userId;
 
+    private Integer operateType;//1支出 2收入
+
     public Long getUserId() {
         return userId;
     }
@@ -26,5 +28,13 @@ public class AccountLogInVo extends BaseInVo{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(Integer operateType) {
+        this.operateType = operateType;
     }
 }

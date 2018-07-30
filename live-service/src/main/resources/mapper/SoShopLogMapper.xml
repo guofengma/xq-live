@@ -11,6 +11,8 @@
     <result column="operate_type" jdbcType="INTEGER" property="operateType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="user_ip" jdbcType="VARCHAR" property="userIp" />
+    <result column="so_amount" jdbcType="DECIMAL" property="soAmount"/>
+    <result column="service_price" jdbcType="DECIMAL" property="servicePrice"/>
   </resultMap>
   <sql id="Base_Column_List">
     id, so_id, shop_id, sku_id, user_id, user_name, operate_type, create_time, user_ip
@@ -146,11 +148,14 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="totalAmount" resultType="java.math.BigDecimal">
-    select sum(ss.so_amount)
+  <select id="totalAmount" resultMap="BaseResultMap">
+    select
+    convert(IFNULL(sum(ss.so_amount),0),decimal(11,2)) as so_amount,
+    convert(IFNULL(sum(sk.sell_price),0),decimal(11,2)) as service_price
     from so_shop_log s
     inner join shop_allocation sa on s.shop_id = sa.shop_id
     inner join so ss on s.so_id = ss.id
+    left join sku sk on s.sku_id = sk.id and sk.is_deleted = 0
     where s.shop_id = #{shopId,jdbcType=BIGINT}
     and s.operate_type = 2
     and sa.payment_method = 2
@@ -158,6 +163,9 @@
     and ss.so_type = 2
     <if test="beginTime !=null and endTime != null">
       and (ss.create_time BETWEEN #{beginTime} and #{endTime})
+    </if>
+    <if test="isDui !=null">
+      and ss.is_dui = #{isDui,jdbcType=INTEGER}
     </if>
   </select>
 </mapper>

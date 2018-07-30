@@ -62,5 +62,5 @@ public interface SoMapper {
      */
     Long getUserIDBySoId(SoInVo inVo);
 
-    BigDecimal totalAmount(SoInVo inVo);
+    SoOut totalAmount(SoInVo inVo);
 }

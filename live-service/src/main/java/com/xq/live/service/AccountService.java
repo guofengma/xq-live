@@ -21,7 +21,7 @@ public interface AccountService {
      * @param userAccount
      * @return
      */
-    Integer update(UserAccount userAccount);
+    Integer update(UserAccountInVo userAccount);
 
     /**
      * 账户收入

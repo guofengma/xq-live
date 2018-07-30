@@ -1,5 +1,8 @@
 package com.xq.live.web.utils;
 
+import com.gexin.fastjson.JSON;
+import com.gexin.fastjson.JSONObject;
+import com.xq.live.model.So;
 import com.xq.live.vo.in.ActShopInVo;
 import com.xq.live.vo.in.ActUserInVo;
 import com.xq.live.vo.out.ActShopOut;
@@ -14,6 +17,14 @@ import java.util.*;
  */
 public class GroupUtil {
     public static void main(String[] args) throws Exception {
+        So a = new So();
+        a.setUserName("李鹏");
+        a.setIsDui(1);
+        a.setPayType(2);
+        String s = JSON.toJSONString(a);
+        So jsonObject = JSON.parseObject(s,So.class);
+
+        int i = 0;
         /***循环添加
          * listShop.add(0,"A");
          listUser.add(0,"A");
@@ -26,7 +37,7 @@ public class GroupUtil {
          listShop.add(4,"E");
          listUser.add(4,"E");
          */
-        System.out.println(getBigDecimalRandom(0.2,2));
+        //System.out.println(getBigDecimalRandom(0.2,2));
     }
 
     //将商家和用户列表进行匹配分组(传递一个商家ID和用户实体集合)

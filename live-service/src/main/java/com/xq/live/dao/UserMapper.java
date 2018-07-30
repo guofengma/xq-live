@@ -45,7 +45,7 @@ public interface UserMapper{
     @CacheEvict(key = "'userId_'+#p0.id.toString()")
     int updateUserType(User record);
 
-    @Cacheable(value = "1h",key = "'openId_'+#p0.toString()")
+    //@Cacheable(value = "1h",key = "'openId_'+#p0.toString()")
     User findByOpenId(String openId);
 
     User findByUnionId(String unionId);

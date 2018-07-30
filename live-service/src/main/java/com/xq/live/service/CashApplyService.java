@@ -4,6 +4,8 @@ import com.xq.live.common.Pager;
 import com.xq.live.model.CashApply;
 import com.xq.live.vo.in.CashApplyInVo;
 
+import java.util.List;
+
 /**
  * com.xq.live.service
  *  提现业务service
@@ -25,4 +27,18 @@ public interface CashApplyService {
      * @return
      */
     public Pager<CashApply> list(CashApplyInVo inVo);
+
+    /**
+     * 通过shopId查询商家的提现
+     * @param shopId
+     * @return
+     */
+    List<CashApply> selectByUserId(Long shopId);
+
+    /**
+     * 通过id查询单个提现详情
+     * @param id
+     * @return
+     */
+    CashApply get(Long id);
 }

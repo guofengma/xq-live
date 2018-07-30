@@ -14,16 +14,26 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="paid_user_id" jdbcType="BIGINT" property="paidUserId" />
     <result column="paid_user_name" jdbcType="VARCHAR" property="paidUserName" />
+    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, user_name, account_id, account_name, cash_amount,
-    apply_status, create_time, paid_time, update_time, paid_user_id, paid_user_name
+    apply_status, create_time, paid_time, update_time, paid_user_id, paid_user_name,begin_time,end_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from cash_apply
     where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cash_apply
+    where user_id = #{userId,jdbcType=BIGINT}
+    order by id
   </select>
 
   <!-- 查询记录总数-->
@@ -70,11 +80,11 @@
     insert into cash_apply (id, user_id, user_name, 
       account_id, account_name, cash_amount, apply_status,
       create_time, paid_time, update_time, 
-      paid_user_id, paid_user_name)
+      paid_user_id, paid_user_name,begin_time,end_time)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=BIGINT}, #{accountName,jdbcType=VARCHAR},  #{cashAmount,jdbcType=DECIMAL}, 1,
       now(), #{paidTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{paidUserId,jdbcType=BIGINT}, #{paidUserName,jdbcType=VARCHAR})
+      #{paidUserId,jdbcType=BIGINT}, #{paidUserName,jdbcType=VARCHAR}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP})
       <selectKey keyProperty="id" resultType="java.lang.Long" order="AFTER" >
         select last_insert_id() as id
       </selectKey>
@@ -118,6 +128,12 @@
       <if test="paidUserName != null">
         paid_user_name,
       </if>
+      <if test="beginTime != null">
+        begin_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -155,6 +171,12 @@
       </if>
       <if test="paidUserName != null">
         #{paidUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null">
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -194,6 +216,12 @@
       <if test="paidUserName != null">
         paid_user_name = #{paidUserName,jdbcType=VARCHAR},
       </if>
+      <if test="beginTime != null">
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -209,7 +237,9 @@
       paid_time = #{paidTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       paid_user_id = #{paidUserId,jdbcType=BIGINT},
-      paid_user_name = #{paidUserName,jdbcType=VARCHAR}
+      paid_user_name = #{paidUserName,jdbcType=VARCHAR},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

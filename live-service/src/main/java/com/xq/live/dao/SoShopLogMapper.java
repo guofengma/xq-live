@@ -4,8 +4,6 @@ import com.xq.live.model.SoShopLog;
 import com.xq.live.vo.in.SoInVo;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-
 @Repository
 public interface SoShopLogMapper {
     int deleteByPrimaryKey(Long id);
@@ -22,5 +20,5 @@ public interface SoShopLogMapper {
 
     int updateByPrimaryKey(SoShopLog record);
 
-    BigDecimal totalAmount(SoInVo inVo);
+    SoShopLog totalAmount(SoInVo inVo);
 }

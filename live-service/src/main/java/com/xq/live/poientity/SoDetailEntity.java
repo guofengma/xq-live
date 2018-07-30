@@ -31,7 +31,7 @@ public class SoDetailEntity{
     @Excel(name = "服务费")
     private String servicePrice;
 
-    @Excel(name = "实收款")
+    @Excel(name = "实收款",suffix = "元")
     private String realAmount;
 
     public String getIndex() {

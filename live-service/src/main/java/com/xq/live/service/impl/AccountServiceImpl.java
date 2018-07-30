@@ -39,8 +39,9 @@ public class AccountServiceImpl implements AccountService {
     private UserMapper userMapper;
 
     @Override
-    public Integer update(UserAccount userAccount) {
-        return userAccountMapper.updateByPrimaryKey(userAccount);
+    @Transactional
+    public Integer update(UserAccountInVo userAccount) {
+        return userAccountMapper.updateByPrimaryKeySelective(userAccount);
     }
 
     @Override

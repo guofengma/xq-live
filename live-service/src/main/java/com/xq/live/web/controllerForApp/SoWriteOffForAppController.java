@@ -128,6 +128,7 @@ public class SoWriteOffForAppController {
 
     /**
      * 返回时间段内各个月份的金额(shopid和时间段)
+     * 注:入参shopId=35&begainTime=2018-07-01&endTime=2018-07-28
      * @param inVo
      * @return
      */
@@ -176,12 +177,13 @@ public class SoWriteOffForAppController {
 
 
     /**
-     * 返回时间段内各个月份的金额(shopid和时间段)
+     * 查询某个时间段的服务费信息
+     * 注:入参shopId=35&begainTime=2018-07-01&endTime=2018-07-28
      * @param inVo
      * @return
-     *//*
-    @RequestMapping(value = "/listAmount",method = RequestMethod.GET)
-    public BaseResp<Map<Integer,SoWriteOffOut>> listAmount(SoWriteOffInVo inVo){
+     */
+    @RequestMapping(value = "/amount",method = RequestMethod.GET)
+    public BaseResp<Map<Integer,SoWriteOffOut>> amount(SoWriteOffInVo inVo){
         Map<Integer,SoWriteOffOut> map = new HashMap<Integer,SoWriteOffOut>();
             SoWriteOffOut offOut=soWriteOffService.listAmount(inVo).get(0);
         inVo.setIsBill(SoWriteOff.SO_WRITE_OFF_NO_BILL);
@@ -201,6 +203,6 @@ public class SoWriteOffForAppController {
             return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.error_sowriteoff_amount);
         }
         return new BaseResp<Map<Integer,SoWriteOffOut>>(ResultStatus.SUCCESS,map);
-    }*/
+    }
 
 }

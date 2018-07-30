@@ -24,6 +24,7 @@
         <result column="sku_num" jdbcType="INTEGER" property="skuNum"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
         <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime"/>
+        <result column="service_price" jdbcType="DECIMAL" property="servicePrice"/>
     </resultMap>
 
     <resultMap id="SoOutForOrderResultMap" type="com.xq.live.vo.out.SoForOrderOut" extends="BaseResultMap">
@@ -102,14 +103,22 @@
         where s.id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="totalAmount" resultType="java.math.BigDecimal">
-        select sum(s.so_amount)
+    <select id="totalAmount" resultMap="SoOutResultMap">
+        select
+        convert(IFNULL(sum(s.so_amount),0),decimal(11,2)) as so_amount,
+        convert(IFNULL(COUNT(1),0),decimal(11,2)) as service_price
         from so s
+        inner join so_detail sd on s.id = sd.so_id
+        inner join sku sk on sd.sku_id = sk.id
         where s.shop_id = #{shopId,jdbcType=BIGINT}
         and s.so_type = 1
         and s.so_status = 3
+        and sk.is_deleted = 0
         <if test="beginTime !=null and endTime != null">
             and (s.hx_time BETWEEN #{beginTime} and #{endTime})
+        </if>
+        <if test="isDui !=null">
+            and s.is_dui = #{isDui,jdbcType=INTEGER}
         </if>
     </select>
 
@@ -204,6 +213,9 @@
             </if>
             <if test="isDui != null">
                 and s.is_dui =  #{isDui,jdbcType=TINYINT}
+            </if>
+            <if test="beginTime !=null and endTime != null">
+                and (s.hx_time BETWEEN #{beginTime} and #{endTime})
             </if>
             AND su.is_deleted=0
         </where>

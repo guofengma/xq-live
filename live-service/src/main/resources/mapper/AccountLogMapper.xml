@@ -52,6 +52,9 @@
       <if test="userId != null">
         and user_id = #{userId,jdbcType=BIGINT}
       </if>
+      <if test="operateType != null">
+        and operate_type = #{operateType,jdbcType=INTEGER}
+      </if>
     </where>
   </select>
 
@@ -65,6 +68,9 @@
       </if>
       <if test="userId != null">
         and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="operateType != null">
+        and operate_type = #{operateType,jdbcType=INTEGER}
       </if>
     </where>
     order by id desc

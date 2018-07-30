@@ -9,13 +9,15 @@ import java.util.Date;
 public class UserAccount {
 
     /**
-     * 用户账户类型 0 享七 1 微信 2 支付宝
+     * 用户账户类型 0 享七 1 微信 2 支付宝 3 银行卡
      */
     public final static int ACCOUNT_TYPE_XQ = 0;
 
     public final static int ACCOUNT_TYPE_WX = 1;
 
     public final static int ACCOUNT_TYPE_ZFB = 2;
+
+    public final static int ACCOUNT_TYPE_BANK = 3;
 
     /**
      * 账户状态  1 正常 2 冻结
@@ -45,6 +47,8 @@ public class UserAccount {
     private Date updateTime;    //更新时间
 
     private Integer versionNo;  //版本号
+
+    private String accountCardholder;//账户的持卡人姓名
 
     public Long getId() {
         return id;
@@ -132,5 +136,13 @@ public class UserAccount {
 
     public void setVersionNo(Integer versionNo) {
         this.versionNo = versionNo;
+    }
+
+    public String getAccountCardholder() {
+        return accountCardholder;
+    }
+
+    public void setAccountCardholder(String accountCardholder) {
+        this.accountCardholder = accountCardholder;
     }
 }

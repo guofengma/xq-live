@@ -201,4 +201,11 @@ public class SoWriteOffServiceImpl implements SoWriteOffService {
     public int listTotal(SoWriteOffInVo inVo) {
         return soWriteOffMapper.listTotal(inVo);
     }
+
+    @Override
+    @Transactional
+    public int updateByShopId(SoWriteOffInVo soWriteOffInVo) {
+        int i = soWriteOffMapper.updateByShopId(soWriteOffInVo);
+        return i;
+    }
 }

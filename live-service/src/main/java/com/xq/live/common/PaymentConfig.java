@@ -15,6 +15,8 @@ public class PaymentConfig implements WXPayConfig {
 
     //小程序appid
     public static final String APPID = "wxf91e2a026658e78e";
+
+    public static final String SHOPAPPID = "wx1724a3abf5520458";
     //微信支付的商户id
     public static final String MCH_ID = "1499658152";
     //微信支付的商户密钥
@@ -38,10 +40,17 @@ public class PaymentConfig implements WXPayConfig {
     //活动订单支付成功后的服务器回调url
     public static final String WX_NOTIFY_ACT_URL = "https://hbxq001.cn/wxpay/wxNotifyForAct";
 
+    //商家端服务费支付成功后的服务器回调url
+    public static final String WX_NOTIFY_SHOP_APP_URL = "https://hbxq001.cn/app/wxpay/wxNotifyForShopApp";
+
     public static final String GRANT_TYPE = "authorization_code";
 
     //交易类型，小程序支付的固定值为JSAPI
     public static final String TRADE_TYPE = "JSAPI";
+
+    //交易类型，小程序支付的固定值为JSAPI
+    public static final String TRADE_TYPE_APP = "APP";
+
     //微信统一下单接口地址
     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
@@ -83,6 +92,10 @@ public class PaymentConfig implements WXPayConfig {
 
     public String getAppID() {
         return APPID;
+    }
+
+    public String getShopAppID() {
+        return SHOPAPPID;
     }
 
     public String getMchID() {

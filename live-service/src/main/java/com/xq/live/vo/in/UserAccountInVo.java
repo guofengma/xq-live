@@ -35,6 +35,8 @@ public class UserAccountInVo extends BaseInVo {
 
     private Integer versionNo;  //版本号
 
+    private String accountCardholder;//账户的持卡人姓名
+
     public Long getId() {
         return id;
     }
@@ -129,5 +131,13 @@ public class UserAccountInVo extends BaseInVo {
 
     public void setOccurAmount(BigDecimal occurAmount) {
         this.occurAmount = occurAmount;
+    }
+
+    public String getAccountCardholder() {
+        return accountCardholder;
+    }
+
+    public void setAccountCardholder(String accountCardholder) {
+        this.accountCardholder = accountCardholder;
     }
 }

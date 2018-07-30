@@ -24,6 +24,8 @@ public interface SoWriteOffMapper {
 
     int updateByPrimaryKey(SoWriteOff record);
 
+    int updateByShopId(SoWriteOffInVo soWriteOffInVo);
+
     List<SoWriteOffOut> list(SoWriteOffInVo inVo);
 
     int listTotal(SoWriteOffInVo inVo);

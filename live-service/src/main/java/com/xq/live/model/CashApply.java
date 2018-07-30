@@ -5,6 +5,19 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CashApply {
+    /**
+     * 审批状态 1 待审批 2 审批通过 3 审批不通过 4 取消 5 终止
+     */
+    public final static int CASH_APPLY_STATUS_WAIT = 1;
+
+    public final static int CASH_APPLY_STATUS_TG= 2;
+
+    public final static int CASH_APPLY_STATUS_BTG= 3;
+
+    public final static int CASH_APPLY_STATUS_QX= 4;
+
+    public final static int CASH_APPLY_STATUS_ZZ= 5;
+
     private Long id;
     @NotNull(message = "userId必填")
     private Long userId;
@@ -29,6 +42,10 @@ public class CashApply {
     private Long paidUserId;
 
     private String paidUserName;
+
+    private Date beginTime;
+
+    private Date endTime;
 
     public Long getId() {
         return id;
@@ -124,5 +141,21 @@ public class CashApply {
 
     public void setPaidUserName(String paidUserName) {
         this.paidUserName = paidUserName == null ? null : paidUserName.trim();
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

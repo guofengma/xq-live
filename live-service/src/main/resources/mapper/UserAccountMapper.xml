@@ -13,10 +13,11 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="version_no" jdbcType="INTEGER" property="versionNo"/>
+        <result column="account_cardholder" jdbcType="VARCHAR" property="accountCardholder"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, user_id, user_name, account_name, account_type, account_amount, account_status, 
-    is_deleted, create_time, update_time, version_no
+    is_deleted, create_time, update_time, version_no,account_cardholder
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -41,11 +42,11 @@
     <insert id="insert" parameterType="com.xq.live.model.UserAccount">
         insert into user_account (id, user_id, user_name,
         account_name, account_type, account_amount,
-        account_status, is_deleted, create_time,update_time, version_no
+        account_status, is_deleted, create_time,update_time, version_no,account_cardholder
         )
         values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},
         #{accountName,jdbcType=VARCHAR}, #{accountType,jdbcType=TINYINT}, #{accountAmount,jdbcType=DECIMAL},
-        1, 0, now(), now(), 0
+        1, 0, now(), now(), 0,#{accountCardholder,jdbcType=VARCHAR}
         )
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             select last_insert_id() as id
@@ -81,6 +82,9 @@
             <if test="createTime != null">
                 create_time,
             </if>
+            <if test="accountCardholder != null">
+                account_cardholder,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -110,6 +114,9 @@
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="accountCardholder != null">
+                #{accountCardholder,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.xq.live.model.UserAccount">
@@ -138,6 +145,9 @@
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountCardholder != null">
+                account_cardholder = #{accountCardholder,jdbcType=VARCHAR},
             </if>
         </set>
         <where>
@@ -169,6 +179,9 @@
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="accountCardholder != null">
+                account_cardholder = #{accountCardholder,jdbcType=VARCHAR},
+            </if>
         </set>
         <where>
             <if test="id!=null">id=#{id,jdbcType=BIGINT}</if>
@@ -184,7 +197,8 @@
               account_amount = #{accountAmount,jdbcType=DECIMAL},
               account_status = #{accountStatus,jdbcType=TINYINT},
               is_deleted = #{isDeleted,jdbcType=TINYINT},
-              update_time = now()
+              update_time = now(),
+              account_cardholder = #{accountCardholder,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
 

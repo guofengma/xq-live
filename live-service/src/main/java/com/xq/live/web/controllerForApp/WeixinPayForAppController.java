@@ -1,5 +1,6 @@
 package com.xq.live.web.controllerForApp;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
@@ -7,9 +8,15 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.PaymentConfig;
 import com.xq.live.common.ResultStatus;
+import com.xq.live.model.Shop;
 import com.xq.live.model.So;
+import com.xq.live.service.ShopService;
+import com.xq.live.service.ServiceAmountService;
 import com.xq.live.service.SoService;
+import com.xq.live.service.SoWriteOffService;
+import com.xq.live.vo.in.ServiceAmountInVo;
 import com.xq.live.vo.in.SoInVo;
+import com.xq.live.vo.in.SoWriteOffInVo;
 import com.xq.live.vo.in.WeixinInVo;
 import com.xq.live.vo.out.SoOut;
 import com.xq.live.web.utils.IpUtils;
@@ -31,6 +38,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +56,15 @@ public class WeixinPayForAppController {
 
     @Autowired
     private SoService soService;
+
+    @Autowired
+    private ShopService ShopService;
+
+    @Autowired
+    private ServiceAmountService serviceAmountService;
+
+    @Autowired
+    private SoWriteOffService soWriteOffService;
 
     private WXPay wxpay;
     private PaymentConfig config;
@@ -176,6 +193,13 @@ public class WeixinPayForAppController {
         return new BaseResp<Map<String, String>>(ResultStatus.FAIL);
     }
 
+    /**
+     * 小程序上的支付(支付到享7平台)
+     * @param inVo
+     * @param request
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/doUnifiedOrder", method = RequestMethod.POST)
     public BaseResp<Map<String, String>> doUnifiedOrder(@Valid WeixinInVo inVo, HttpServletRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -245,9 +269,86 @@ public class WeixinPayForAppController {
         }
     }
 
+    /**
+     * 商家端app上面的支付(支付到享7平台)
+     * @param inVo
+     * @param request
+     * @param bindingResult
+     * @return
+     */
+    @RequestMapping(value = "/payForShopApp", method = RequestMethod.POST)
+    public BaseResp<Map<String, String>> payForShopApp(@Valid WeixinInVo inVo, HttpServletRequest request, BindingResult bindingResult) {
+        if(inVo.getShopId()==null||inVo.getServicePrice()==null||inVo.getBeginTime()==null||inVo.getEndTime()==null||inVo.getUserId()==null){
+            return new BaseResp<Map<String, String>>(ResultStatus.error_param_empty);
+        }
+
+
+        //判断商家是否存在
+        Shop shopById = ShopService.getShopById(inVo.getShopId());
+        if(shopById==null||shopById.getIsDeleted()==1){
+            return new BaseResp<Map<String, String>>(ResultStatus.error_shop_info_empty);
+        }
+
+
+        //生成的随机字符串
+        String nonce_str = WXPayUtil.generateNonceStr();
+        //获取客户端的ip地址
+        String spbill_create_ip = IpUtils.getIpAddr(request);
+
+        int price100 = inVo.getServicePrice().multiply(new BigDecimal(100)).intValue();
+
+        Long date = new Date().getTime();
+        //统一下单接口
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put("appid", config.getShopAppID());//用商家端的APPID
+        data.put("mch_id", config.getMchID());
+        data.put("nonce_str", nonce_str);
+        data.put("body", shopById.getShopName()+"-缴纳服务费");    //商品描述
+        data.put("out_trade_no", data.toString());//商户订单号------用的是当前系统时间
+        data.put("total_fee", String.valueOf(price100));//支付金额，这边需要转成字符串类型，否则后面的签名会失败
+        data.put("spbill_create_ip", spbill_create_ip);
+        data.put("notify_url", PaymentConfig.WX_NOTIFY_SHOP_APP_URL);//支付成功后的回调地址
+        data.put("trade_type", PaymentConfig.TRADE_TYPE_APP);//支付方式
+        data.put("attach", JSON.toJSONString(inVo));
+        //data.put("openid", inVo.getOpenId());//app微信支付不需要openId
+
+        //返回给小程序端需要的参数
+        Map<String, String> response = new HashMap<String, String>();
+        response.put("appid", config.getShopAppID());
+        try {
+            Map<String, String> rMap = wxpay.unifiedOrder(data);
+            System.out.println("统一下单接口返回: " + rMap);
+            String return_code = rMap.get("return_code");//返回状态码
+            String result_code = rMap.get("result_code");//
+            String nonceStr = WXPayUtil.generateNonceStr();
+            response.put("noncestr", nonceStr);
+            Long timeStamp = System.currentTimeMillis() / 1000;
+            if ("SUCCESS".equals(return_code) && return_code.equals(result_code)) {
+                String prepayid = rMap.get("prepay_id");
+                response.put("prepayid", rMap.get("prepay_id"));//app微信支付需要prepayid
+                response.put("package", "Sign=WXPay");
+//                response.put("signType", "MD5");//app微信支付不需要signType
+                response.put("partnerid", config.getMchID());
+                response.put("timestamp", timeStamp + "");//这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
+                System.out.println("二次签名参数response ： "+response);
+
+                //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
+                String sign = WXPayUtil.generateSignature(response, PaymentConfig.API_KEY);
+                response.put("sign", sign);//小程序里面是paySign,app支付里面是sign
+                System.out.println("生成的签名paySign : "+ sign);
+                return new BaseResp<Map<String, String>>(ResultStatus.SUCCESS, response);
+            }else{
+                return new BaseResp<Map<String, String>>(ResultStatus.error_unified_order_fail.getErrorCode(), rMap.get("err_code_des"), null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BaseResp<Map<String, String>>(ResultStatus.FAIL, response);
+        }
+    }
+
 
     /**
-     * 微信支付结果通知
+     * 微信支付结果通知(小程序)
      * @param request
      * @param response
      * @throws Exception
@@ -300,6 +401,80 @@ public class WeixinPayForAppController {
                         resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                         logger.info("订单已处理");
                     }
+                }
+            } else {
+                logger.info("支付失败,错误信息：" + notifyMap.get("err_code"));
+                resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+            }
+        } else {
+            // 签名错误，如果数据里没有sign字段，也认为是签名错误
+            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[通知签名验证失败]]></return_msg>" + "</xml> ";
+            logger.info("通知签名验证失败");
+        }
+        //------------------------------
+        //处理业务完毕
+        //------------------------------
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        out.write(resXml.getBytes());
+        out.flush();
+        out.close();
+    }
+
+    /**
+     * 微信支付结果通知(商家端app)
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/wxNotifyForShopApp")
+    public void wxNotifyForShopApp(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //读取参数
+        BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream) request.getInputStream()));
+        String line = null;
+        StringBuilder sb = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+
+        //sb为微信返回的xml
+        String notifyData = sb.toString();  //支付结果通知的xml格式数据
+        System.out.println("支付结果通知的xml格式数据：" + notifyData);
+
+        Map notifyMap = WXPayUtil.xmlToMap(notifyData);       // 转换成map
+        String resXml = "";
+        if (wxpay.isPayResultNotifySignatureValid(notifyMap)) {
+            // 签名正确
+            if ("SUCCESS".equals(notifyMap.get("result_code"))) {
+                //这里是支付成功
+                //////////执行自己的业务逻辑////////////////
+                String mch_id = (String) notifyMap.get("mch_id"); //商户号
+                String out_trade_no = (String) notifyMap.get("out_trade_no"); //商户订单号
+                String total_fee = (String) notifyMap.get("total_fee");
+                String transaction_id = (String) notifyMap.get("transaction_id"); //微信支付订单号
+                String attach = (String) notifyMap.get("attach");
+                WeixinInVo weixinInVo = JSON.parseObject(attach, WeixinInVo.class);//将附带参数读取出来
+
+                if (!PaymentConfig.MCH_ID.equals(mch_id)) {
+                    logger.info("支付失败,错误信息：" + "参数错误");
+                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>" + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
+                } else {
+                    //添加缴费记录begin
+                    ServiceAmountInVo serviceAmountInVo = new ServiceAmountInVo();
+                    serviceAmountInVo.setPaidUserId(weixinInVo.getUserId());
+                    serviceAmountInVo.setShopId(weixinInVo.getShopId());
+                    serviceAmountInVo.setServicePrice(weixinInVo.getServicePrice());
+                    serviceAmountInVo.setBeginTime(weixinInVo.getBeginTime());
+                    serviceAmountInVo.setEndTime(weixinInVo.getEndTime());
+                    Long id = serviceAmountService.add(serviceAmountInVo);
+                    //添加缴费记录end
+                    //将缴费时间段内的核销的票券给结算掉
+                    SoWriteOffInVo soWriteOffInVo = new SoWriteOffInVo();
+                    soWriteOffInVo.setShopId(weixinInVo.getShopId());
+                    soWriteOffInVo.setBegainTime(weixinInVo.getBeginTime());
+                    soWriteOffInVo.setEndTime(weixinInVo.getEndTime());
+                    int kk = soWriteOffService.updateByShopId(soWriteOffInVo);
+                    resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>" + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+
                 }
             } else {
                 logger.info("支付失败,错误信息：" + notifyMap.get("err_code"));

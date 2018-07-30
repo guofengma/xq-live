@@ -151,6 +151,14 @@ public enum ResultStatus {
 
     error_act_shop_not_right(200058, "此张食典券并不是到该商家购买"),
 
+    error_shop_admin(200059, "不是商家的管理员"),
+
+    error_shop_no_service(200060, "还有待缴清的服务费"),
+
+    error_shop_have_freeze(200061, "该商家账户已被冻结"),
+
+    error_shop_have_apply(200062, "该商家账户存在未处理的提现申请"),
+
     error_pic_file(3, "非法图片文件"), error_pic_upload(4, "图片上传失败"), error_record_not_found(5, "没有找到对应的数据"), error_max_page_size(6, "请求记录数超出每次请求最大允许值"), error_create_failed(7, "新增失败"), error_update_failed(8, "修改失败"), error_delete_failed(9, "删除失败"), error_search_failed(10, "查询失败"), error_count_failed(11, "查询数据总数失败"), error_string_to_obj(12, "字符串转java对象失败"), error_invalid_argument(13, "参数不合法"), error_update_not_allowed(14, "更新失败：%s"), error_duplicated_data(15, "数据已存在"), error_unknown_database_operation(16, "未知数据库操作失败，请联系管理员解决"), error_column_unique(17, "字段s%违反唯一约束性条件"), error_file_download(18, "文件下载失败"), error_file_upload(19, "文件上传失败"),
 
     //100-511为http 状态码

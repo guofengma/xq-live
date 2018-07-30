@@ -54,6 +54,17 @@ public class CashApplyServiceImpl implements CashApplyService {
         return result;
     }
 
+    @Override
+    public List<CashApply> selectByUserId(Long userId) {
+        List<CashApply> list = cashApplyMapper.selectByUserId(userId);
+        return list;
+    }
+
+    @Override
+    public CashApply get(Long id) {
+        return cashApplyMapper.selectByPrimaryKey(id);
+    }
+
     /**
      * 更新账户信息——提现
      * @param cashApply

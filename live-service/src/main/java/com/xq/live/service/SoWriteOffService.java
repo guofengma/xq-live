@@ -73,4 +73,12 @@ public interface SoWriteOffService {
      * @return
      */
     int listTotal(SoWriteOffInVo inVo);
+
+
+    /**
+     * 批量修改符合条件订单的结算状态(适用版，通过shopid和时间段批量修改)
+     * @param soWriteOffInVo
+     * @return
+     */
+    int updateByShopId(SoWriteOffInVo soWriteOffInVo);
 }

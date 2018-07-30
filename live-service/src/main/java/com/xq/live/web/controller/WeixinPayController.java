@@ -659,7 +659,7 @@ public class WeixinPayController {
                             Shop shopById = shopService.getShopById(shopId);
                             Sku sku = skuService.get(soOut.getSkuId());
                             SoWriteOff soWriteOff = new SoWriteOff();
-                            soWriteOff.setSoId(soOut.getId());
+                            soWriteOff.setSoId(cp.getSoId());//商家订单更改券的状态，是该券对应的soId
                             soWriteOff.setShopId(shopId);
                             soWriteOff.setShopName(shopById.getShopName());
                             soWriteOff.setShopAmount(soOut.getSoAmount().add(sku.getInPrice()));

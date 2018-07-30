@@ -97,6 +97,9 @@ public class SoForAppController {
     /**
      * 查我的订单
      *注意:在查询商家端的订单的时候，只查询平台自收的食典券(被核销的),及soStatus为3
+     *
+     * 注意:这里面如果传beginTime和endTime的话，在sql里面是对hx_time进行筛选，后期如果要改的话可以加入一个入参
+     * 比如flag，通过这个来判断是对哪个时间来筛选
      * @param inVo
      * @return
      */
@@ -107,8 +110,10 @@ public class SoForAppController {
     }
 
     /**
-     * 查询商家端中平台代收的营业额
+     * 查询商家端中平台代收的营业额(扣除已对账的订单就是商家可提现的金额)
+     *注意:shopId=35&soStatus=2&beginTime=2018/03/24&endTime=2018/07/25
      *
+     * 当不传isDui的时候是看的总营业额，当isDui传0的时候，查询的是全部未对账的数据，就是可提现的金额
      * @param inVo
      * @return
      */

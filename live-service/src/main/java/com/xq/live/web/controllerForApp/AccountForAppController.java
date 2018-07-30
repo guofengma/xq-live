@@ -1,4 +1,4 @@
-package com.xq.live.web.controller;
+package com.xq.live.web.controllerForApp;
 
 import com.xq.live.common.BaseResp;
 import com.xq.live.common.Pager;
@@ -11,29 +11,24 @@ import com.xq.live.service.AccountService;
 import com.xq.live.service.CouponService;
 import com.xq.live.vo.in.AccountLogInVo;
 import com.xq.live.vo.in.CouponInVo;
-import com.xq.live.vo.in.SoInVo;
 import com.xq.live.vo.in.UserAccountInVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * com.xq.live.web.controller
  *
- * @author zhangpeng32
+ * @author lipeng
  * Created on 2018/5/5 下午3:35
  * @Description:
  */
 @RestController
-@RequestMapping("/account")
-public class AccountController {
+@RequestMapping("app/account")
+public class AccountForAppController {
 
     @Autowired
     private AccountService accountService;

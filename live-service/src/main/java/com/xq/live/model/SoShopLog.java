@@ -1,5 +1,6 @@
 package com.xq.live.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SoShopLog {
@@ -26,6 +27,10 @@ public class SoShopLog {
     private Date createTime;
 
     private String userIp;
+
+    private BigDecimal soAmount;//总应收款
+
+    private BigDecimal servicePrice;//总服务费
 
     public Long getId() {
         return id;
@@ -97,5 +102,21 @@ public class SoShopLog {
 
     public void setUserIp(String userIp) {
         this.userIp = userIp == null ? null : userIp.trim();
+    }
+
+    public BigDecimal getSoAmount() {
+        return soAmount;
+    }
+
+    public void setSoAmount(BigDecimal soAmount) {
+        this.soAmount = soAmount;
+    }
+
+    public BigDecimal getServicePrice() {
+        return servicePrice;
+    }
+
+    public void setServicePrice(BigDecimal servicePrice) {
+        this.servicePrice = servicePrice;
     }
 }

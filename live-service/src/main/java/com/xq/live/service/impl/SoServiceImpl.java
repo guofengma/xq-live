@@ -116,12 +116,17 @@ public class SoServiceImpl implements SoService {
 
     @Override
     public BigDecimal totalAmount(SoInVo inVo){
-        BigDecimal bigDecimal = soShopLogMapper.totalAmount(inVo);//只查询平台代收的商家订单
-        BigDecimal bigDecimal1 = soMapper.totalAmount(inVo);//只查询已核销的食典券
-        if(bigDecimal1==null){
-            bigDecimal1 = BigDecimal.ZERO;
+        SoShopLog aa = soShopLogMapper.totalAmount(inVo);//只查询平台代收的商家订单
+        SoOut bb = soMapper.totalAmount(inVo);//只查询已核销的食典券
+        BigDecimal a = BigDecimal.ZERO;
+        BigDecimal b = BigDecimal.ZERO;
+        if(aa!=null){
+            a =  aa.getSoAmount().subtract(aa.getServicePrice()).setScale(2, BigDecimal.ROUND_UP);
         }
-        BigDecimal total = bigDecimal.add(bigDecimal1).setScale(2,BigDecimal.ROUND_UP);
+        if(bb!=null){
+            b =  bb.getSoAmount().subtract(bb.getServicePrice()).setScale(2, BigDecimal.ROUND_UP);
+        }
+        BigDecimal total = a.add(b).setScale(2,BigDecimal.ROUND_UP);
         return total;
     }
 
@@ -130,6 +135,7 @@ public class SoServiceImpl implements SoService {
         List<SoOut> list = soMapper.list(inVo);
         for (SoOut soOut : list) {
             soOut.setSkuType(skuMapper.selectByPrimaryKey(soOut.getSkuId()).getSkuType());
+            soOut.setRealAmount(soOut.getUnitPrice().subtract(BigDecimal.ONE));
             soOut.setRuleDesc(" ");
         }
 
@@ -172,6 +178,9 @@ public class SoServiceImpl implements SoService {
                      if(sku!=null) {
                          soOut.setInPrice(sku.getInPrice());
                          soOut.setSkuName(sku.getSkuName());
+                         soOut.setRealAmount(soOut.getSoAmount().subtract(sku.getSellPrice()));
+                     }else{
+                         soOut.setRealAmount(soOut.getSoAmount());
                      }
              }
             ret.setList(list);
@@ -205,7 +214,8 @@ public class SoServiceImpl implements SoService {
                 soOut.setServicePrice(sku.getSellPrice());
                 soOut.setRealAmount(soOut.getSoAmount().subtract(sku.getSellPrice()));
                 soOut.setCoupon(sku.getSkuName());
-                soOut.setAccountAmount(soOut.getSoAmount().add(sku.getInPrice()));
+                /*soOut.setAccountAmount(soOut.getSoAmount().add(sku.getInPrice()));*/
+                soOut.setAccountAmount(soOut.getSoAmount());
             }else{
                soOut.setServicePrice(BigDecimal.ZERO);
                 soOut.setRealAmount(soOut.getSoAmount());

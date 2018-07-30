@@ -252,6 +252,21 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <!--批量修改符合条件订单的结算状态(适用版，通过shopid和时间段批量修改)-->
+  <update id="updateByShopId" parameterType="com.xq.live.vo.in.SoWriteOffInVo">
+    UPDATE so_write_off woff
+    INNER JOIN so s ON woff.so_id=s.id
+    INNER JOIN sku sk ON woff.sku_id = sk.id
+    SET woff.is_bill=1
+    WHERE
+    woff.shop_id=#{shopId,jdbcType=BIGINT}
+    AND  woff.is_bill=0
+    AND sk.is_deleted=0
+    <if test="begainTime !=null and endTime != null">
+      and (woff.create_time BETWEEN #{begainTime} and #{endTime})
+    </if>
+  </update>
+
   <select id="list" resultMap="SoWriteOffOutMap">
     select
     sw.*,
@@ -301,7 +316,7 @@
     (
     (
     SELECT
-    FORMAT(IFNULL(COUNT(1)-COUNT(1),0),2)
+    convert(IFNULL(COUNT(1)-COUNT(1),0),decimal(11,2))
     FROM
     so_write_off swo,
     sku ss
@@ -319,7 +334,7 @@
     </if>
     ) + (
     SELECT
-    FORMAT(IFNULL(sum(coupon_amount) / 10,0),2)
+    convert(IFNULL(sum(coupon_amount) / 10,0),decimal(11,2))
     FROM
     so_write_off swo,
     sku ss

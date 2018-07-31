@@ -9,7 +9,9 @@ import com.xq.live.vo.out.ActShopOut;
 import com.xq.live.vo.out.ActUserOut;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -17,14 +19,18 @@ import java.util.*;
  */
 public class GroupUtil {
     public static void main(String[] args) throws Exception {
-        So a = new So();
+        /*So a = new So();
         a.setUserName("李鹏");
         a.setIsDui(1);
         a.setPayType(2);
         String s = JSON.toJSONString(a);
         So jsonObject = JSON.parseObject(s,So.class);
 
-        int i = 0;
+        int i = 0;*/
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date newDate = dateFormat1.parse("2018-01-01 00:00:00");
+        System.out.println(newDate);
         /***循环添加
          * listShop.add(0,"A");
          listUser.add(0,"A");

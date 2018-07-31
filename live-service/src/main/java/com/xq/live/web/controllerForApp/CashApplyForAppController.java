@@ -108,6 +108,34 @@ public class CashApplyForAppController {
     }
 
     /**
+     * 通过shopId查询商家的缴费记录从而查出他可提现的发起时间和结束时间
+     * @param shopId
+     * @return
+     */
+    @RequestMapping(value = "/selectCashTime",method = RequestMethod.GET)
+    public BaseResp<CashApply> selectCashTime(Long shopId){
+        //判断该商家是否存在管理员
+        ShopCashier shopCashier = shopCashierService.adminByShopId(shopId);
+        if(shopCashier==null||shopCashier.getCashierId()==null){
+            return new BaseResp<CashApply>(ResultStatus.error_shop_admin);
+        }
+
+        List<CashApply> list = cashApplyService.selectByUserId(shopCashier.getCashierId());
+        if(list==null||list.size()==0){
+            return new BaseResp<CashApply>(ResultStatus.SUCCESS,null);
+        }
+        CashApply newCash = null;
+        for (CashApply apply : list) {
+            //获取最近的审核通过数据
+            if((apply.getApplyStatus()==CashApply.CASH_APPLY_STATUS_TG)||(apply.getApplyStatus()==CashApply.CASH_APPLY_STATUS_WAIT)){
+                newCash = apply;
+                break;
+            }
+        }
+        return new BaseResp<CashApply>(ResultStatus.SUCCESS,newCash);
+    }
+
+    /**
      * 通过shopId查询商家的提现
      * 注:这里面可以判断商家是否有权限发起提交申请
      *
@@ -133,11 +161,8 @@ public class CashApplyForAppController {
         }
 
         //获取当前日期的前一天
-        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date newDate = dateFormat1.parse(dateFormat1.format(calendar.getTime()));
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date newDate = dateFormat1.parse(dateFormat1.format(new Date()));
         List<CashApply> list = cashApplyService.selectByUserId(shopCashier.getCashierId());
         //当查询为空的时候，证明尚未发起任何提现申请，则提现申请的开始时间默认为2018/01/01
         if(list==null||list.size()==0){

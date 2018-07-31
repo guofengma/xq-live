@@ -183,7 +183,7 @@ public class SmsForAppController {
         inVo.setSmsType(SmsSend.SMS_TYPE_VERTIFY);
         Integer verify = smsSendService.isVerifyForShopApp(inVo);
         if(verify==-1||verify==null){
-            return new BaseResp<Integer>(ResultStatus.FAIL,verify);
+            return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
         }
         return new BaseResp<Integer>(ResultStatus.SUCCESS,verify);
     }

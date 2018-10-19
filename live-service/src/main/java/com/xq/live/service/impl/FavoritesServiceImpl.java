@@ -2,6 +2,7 @@ package com.xq.live.service.impl;
 
 import com.xq.live.common.Pager;
 import com.xq.live.dao.FavoritesMapper;
+import com.xq.live.dao.PromotionRulesMapper;
 import com.xq.live.dao.ShopMapper;
 import com.xq.live.dao.TopicMapper;
 import com.xq.live.model.Favorites;
@@ -9,6 +10,9 @@ import com.xq.live.model.Shop;
 import com.xq.live.model.Topic;
 import com.xq.live.service.FavoritesService;
 import com.xq.live.vo.in.FavoritesInVo;
+import com.xq.live.vo.in.ShopInVo;
+import com.xq.live.vo.out.PromotionRulesOut;
+import com.xq.live.vo.out.ShopOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,9 @@ public class FavoritesServiceImpl implements FavoritesService {
 
     @Autowired
     private ShopMapper shopMapper;
+
+    @Autowired
+    private PromotionRulesMapper promotionRulesMapper;
 
     @Autowired
     private TopicMapper topicMapper;
@@ -47,6 +54,43 @@ public class FavoritesServiceImpl implements FavoritesService {
                 listForShops.add(shop);
             }
             result.setList(listForShops);
+        }
+        result.setTotal(total);
+        result.setPage(inVo.getPage());
+        return result;
+    }
+
+    /**
+     * 根据用户id查询收藏列表，并且查询商家详情 分页查询(修改版)
+     * @param inVo
+     * @return
+     */
+    @Override
+    public Pager<ShopOut> getSCForList(FavoritesInVo inVo) {
+        Pager<ShopOut> result = new Pager<ShopOut>();
+        int total = favoritesMapper.listTotal(inVo);
+        if(total > 0){
+            List<Favorites> list = favoritesMapper.list(inVo);
+            List<ShopInVo> listInVo = new ArrayList<ShopInVo>();
+            for (Favorites favorites : list) {
+                Shop shop = shopMapper.selectByPrimaryKey(favorites.getShopId());
+                ShopInVo shopInVo = new ShopInVo();
+                shopInVo.setId(shop.getId());
+                listInVo.add(shopInVo);
+            }
+            List<ShopOut> shopOuts = shopMapper.getSCForList(listInVo);
+            /**
+             * 将用户减免规则加入
+             */
+            for (ShopOut shopOut : shopOuts) {
+                List<PromotionRulesOut> promotionRulesOuts = promotionRulesMapper.selectByShopId(shopOut.getId().intValue());
+                List<String> stringList = new ArrayList<String>();
+                for (PromotionRulesOut promotionRulesOut : promotionRulesOuts) {
+                    stringList.add(promotionRulesOut.getRuleDesc());
+                }
+                shopOut.setRuleDescs(stringList);
+            }
+            result.setList(shopOuts);
         }
         result.setTotal(total);
         result.setPage(inVo.getPage());

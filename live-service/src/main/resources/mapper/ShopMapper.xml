@@ -308,6 +308,46 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <!--查看符合条件商家列表-->
+  <select id="getSCForList" parameterType="java.util.List" resultMap="ShopOutResultMap">
+    SELECT
+    s.id,
+    s.shop_name,
+    s.address,
+    s.mobile,
+    s.phone,
+    s.index_url,
+    s.logo_url,
+    s.shop_info,
+    s.location_x,
+    s.location_y,
+    s.is_deleted,
+    s.pop_num,
+    s.remark,
+    s.create_time,
+    s.update_time,
+    s.shop_status,
+    s.apply_status,
+    s.business_cate,
+    s.shop_code,
+    s.shop_hours,
+    s.other_service,
+    s.city,
+    (select u.sku_name from sku u inner join sku_shop ss ON u.id = ss.sku_id where ss.shop_id = s.id limit 1) as sku_name,
+    ' ' as rule_desc
+    FROM
+    shop s
+    <where>
+      s.id IN
+      <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+       #{item.id,jdbcType=BIGINT}
+      </foreach>
+      and is_deleted = 0
+    </where>
+    order by
+    pop_num desc
+  </select>
+
   <select id="list" resultMap="ShopOutResultMap">
     SELECT
       s.id,

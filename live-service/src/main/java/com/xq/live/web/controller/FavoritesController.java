@@ -9,6 +9,7 @@ import com.xq.live.model.Shop;
 import com.xq.live.service.FavoritesService;
 import com.xq.live.service.ShopService;
 import com.xq.live.vo.in.FavoritesInVo;
+import com.xq.live.vo.out.ShopOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -76,6 +77,17 @@ public class FavoritesController {
             return new BaseResp<Long>(ResultStatus.FAIL, id);
         }
         return new BaseResp<Long>(ResultStatus.SUCCESS, id);
+    }
+
+    /**
+     * 根据用户id查询收藏列表，并且查询商家详情 分页查询(修改版)
+     * @param inVo
+     * @return
+     */
+    @RequestMapping(value = "/getSCForList", method = RequestMethod.GET)
+    public BaseResp<Pager<ShopOut>> SCForList(FavoritesInVo inVo) {
+        Pager<ShopOut> result = favoritesService.getSCForList(inVo);
+        return new BaseResp<Pager<ShopOut>>(ResultStatus.SUCCESS, result);
     }
 
 

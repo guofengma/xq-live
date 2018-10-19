@@ -9,6 +9,7 @@ import com.xq.live.common.Pager;
 import com.xq.live.model.Favorites;
 import com.xq.live.model.Shop;
 import com.xq.live.vo.in.FavoritesInVo;
+import com.xq.live.vo.out.ShopOut;
 
 import java.util.List;
 
@@ -35,6 +36,16 @@ public interface FavoritesService {
      * @return
      */
     Pager<Shop> list(FavoritesInVo inVo);
+
+    /**
+     * 根据用户id查询收藏列表，并且查询商家详情
+     */
+    /**
+     * 分页查询
+     * @param inVo
+     * @return
+     */
+    public Pager<ShopOut> getSCForList(FavoritesInVo inVo);
 
     /**
      * 根据用户id和商家id,增加一条记录到收藏列表中

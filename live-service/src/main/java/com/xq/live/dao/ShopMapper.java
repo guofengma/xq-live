@@ -32,6 +32,13 @@ public interface ShopMapper {
     List<ShopOut> list(ShopInVo inVo);
 
     /**
+     * 分页查询收藏商家列表
+     * @param inVo
+     * @return
+     */
+    List<ShopOut> getSCForList(List<ShopInVo> inVo);
+
+    /**
      * 查询首页的川湘菜
      * @param inVo
      * @return
